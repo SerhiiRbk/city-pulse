@@ -76,7 +76,7 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
 
   return (
     <Link href={`/events/${event.id}`}>
-      <Card className="group overflow-hidden transition-shadow hover:shadow-lg">
+      <Card className="group gap-0 overflow-hidden pt-0 transition-shadow hover:shadow-lg">
         <div className="relative h-48 overflow-hidden">
           {event.photos[0] ? (
             <img
