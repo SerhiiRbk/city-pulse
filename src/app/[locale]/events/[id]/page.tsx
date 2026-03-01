@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { getEvent, getUserAttendance, getEventAttendees, getComments } from '@/lib/actions/events';
+import { getEvent, getUserAttendance, getEventAttendees, getComments, canEditEvent } from '@/lib/actions/events';
+import { Button } from '@/components/ui/button';
 import { getUser } from '@/lib/actions/auth';
 import { EventActions } from '@/components/events/event-actions';
 import { EventComments } from '@/components/events/event-comments';
@@ -9,13 +10,14 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Link } from '@/i18n/navigation';
-import { MapPin, Calendar, Clock, Users, Globe, Star, Lock } from 'lucide-react';
+import { MapPin, Calendar, Clock, Users, Globe, Star, Lock, Pencil } from 'lucide-react';
 import { formatDate, formatDuration } from '@/lib/utils';
 import { SITE_NAME } from '@/lib/constants';
 import { EventMap } from '@/components/maps/event-map';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { EventManagement } from '@/components/events/event-management';
 import { EventReviewForm } from '@/components/events/event-review-form';
+import { EventPhotoGallery } from '@/components/events/event-photo-gallery';
 import { generateEventJsonLd } from '@/lib/json-ld';
 import type { Metadata } from 'next';
 
@@ -52,6 +54,7 @@ export default async function EventDetailPage({ params }: Props) {
   const user = await getUser();
   const isAuthenticated = !!user;
   const isOrganizer = user?.id === event.organizer_id;
+  const canEdit = isAuthenticated ? await canEditEvent(id) : false;
   const { going, favorited } = isAuthenticated
     ? await getUserAttendance(id)
     : { going: false, favorited: false };
@@ -77,25 +80,7 @@ export default async function EventDetailPage({ params }: Props) {
       />
       {/* Photos */}
       {event.photos && event.photos.length > 0 && (
-        <div className="mb-6 grid gap-2 overflow-hidden rounded-xl">
-          <img
-            src={event.photos[0]}
-            alt={event.title}
-            className="h-64 w-full object-cover sm:h-96"
-          />
-          {event.photos.length > 1 && (
-            <div className="grid grid-cols-4 gap-2">
-              {event.photos.slice(1, 5).map((photo: string, i: number) => (
-                <img
-                  key={i}
-                  src={photo}
-                  alt=""
-                  className="h-24 w-full rounded-lg object-cover"
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        <EventPhotoGallery photos={event.photos} title={event.title} />
       )}
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -131,8 +116,18 @@ export default async function EventDetailPage({ params }: Props) {
             )}
           </div>
 
-          {isOrganizer && (
-            <EventManagement eventId={id} status={event.status} />
+          {canEdit && (
+            <div className="flex flex-wrap items-center gap-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link href={`/events/${id}/edit`} className="flex items-center gap-2">
+                  <Pencil className="h-4 w-4" />
+                  Edit Event
+                </Link>
+              </Button>
+              {isOrganizer && (
+                <EventManagement eventId={id} status={event.status} />
+              )}
+            </div>
           )}
 
           {/* Organizer */}

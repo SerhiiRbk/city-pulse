@@ -15,36 +15,49 @@ import {
 } from '@/components/ui/popover';
 import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2 } from 'lucide-react';
 import { LocationPicker } from '@/components/maps/location-picker';
-import { createEvent, uploadEventPhoto } from '@/lib/actions/events';
+import { updateEvent, uploadEventPhoto } from '@/lib/actions/events';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import type { Interest, InterestCategory } from '@/types/database';
+import type { Event, Interest, InterestCategory } from '@/types/database';
 
-interface CreateEventFormProps {
+interface EditEventFormProps {
+  event: Event;
   interests: Interest[];
   categories: InterestCategory[];
 }
 
-export function CreateEventForm({ interests, categories }: CreateEventFormProps) {
+export function EditEventForm({ event, interests, categories }: EditEventFormProps) {
   const t = useTranslations('events.create');
   const locale = useLocale();
   const router = useRouter();
 
+  const startsAt = new Date(event.starts_at);
+  const dateStr = startsAt.toISOString().split('T')[0];
+  const timeStr = startsAt.toTimeString().slice(0, 5);
+
   const [isLoading, setIsLoading] = useState(false);
-  const [isOnline, setIsOnline] = useState(false);
-  const [isFree, setIsFree] = useState(true);
-  const [isPrivate, setIsPrivate] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [isOnline, setIsOnline] = useState(event.is_online);
+  const [isFree, setIsFree] = useState(event.is_free);
+  const [isPrivate, setIsPrivate] = useState(event.is_private);
+  const [selectedCategory, setSelectedCategory] = useState(event.category_id || '');
+  const [selectedInterests, setSelectedInterests] = useState<string[]>(
+    event.category_id ? [event.category_id] : [],
+  );
   const [interestsPopoverOpen, setInterestsPopoverOpen] = useState(false);
   const [location, setLocation] = useState<{
-    lat?: number;
-    lng?: number;
-    address?: string;
+    lat: number;
+    lng: number;
+    address: string;
     city?: string;
     country?: string;
-  }>({});
-  const [photos, setPhotos] = useState<string[]>([]);
+  }>({
+    lat: event.lat ?? 0,
+    lng: event.lng ?? 0,
+    address: event.address ?? '',
+    city: event.city ?? undefined,
+    country: event.country ?? undefined,
+  });
+  const [photos, setPhotos] = useState<string[]>(event.photos || []);
   const [coverIndex, setCoverIndex] = useState(0);
   const [uploading, setUploading] = useState(false);
 
@@ -65,14 +78,16 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
 
   const uncategorizedCatId = categories.find((c) => c.slug === 'other')?.id;
 
-  const groupedInterests = categories.map((cat) => ({
-    ...cat,
-    label: getCategoryLabel(cat),
-    items: interests.filter((i) => {
-      if (i.category_id) return i.category_id === cat.id;
-      return cat.id === uncategorizedCatId;
-    }),
-  })).filter((g) => g.items.length > 0);
+  const groupedInterests = categories
+    .map((cat) => ({
+      ...cat,
+      label: getCategoryLabel(cat),
+      items: interests.filter((i) => {
+        if (i.category_id) return i.category_id === cat.id;
+        return cat.id === uncategorizedCatId;
+      }),
+    }))
+    .filter((g) => g.items.length > 0);
 
   function removePhoto(index: number) {
     setPhotos((prev) => prev.filter((_, i) => i !== index));
@@ -91,7 +106,7 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
     for (let i = 0; i < files.length && photos.length + i < 5; i++) {
       const formData = new FormData();
       formData.append('photo', files[i]);
-      const result = await uploadEventPhoto(formData, 'temp');
+      const result = await uploadEventPhoto(formData, event.id);
       if (result.url) {
         setPhotos((prev) => [...prev, result.url!]);
       } else if (result.error) {
@@ -106,7 +121,6 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
     setIsLoading(true);
 
     const form = new FormData(e.currentTarget);
-
     const primaryCategory = selectedInterests[0] || selectedCategory;
 
     const data = {
@@ -117,36 +131,31 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
       duration_minutes: Number(form.get('duration')) || 60,
       is_online: isOnline,
       is_free: isFree,
-      price: isFree ? undefined : Number(form.get('price')) || undefined,
-      currency: isFree ? undefined : (form.get('currency') as string) || 'EUR',
-      max_attendees: form.get('max_attendees') ? Number(form.get('max_attendees')) : undefined,
+      price: isFree ? null : Number(form.get('price')) || null,
+      currency: isFree ? 'EUR' : (form.get('currency') as string) || 'EUR',
+      max_attendees: form.get('max_attendees') ? Number(form.get('max_attendees')) : null,
       is_private: isPrivate,
-      country: location.country,
-      city: location.city,
-      address: location.address,
-      lat: location.lat,
-      lng: location.lng,
-      photos: photos.length > 0
-        ? [photos[coverIndex], ...photos.filter((_, i) => i !== coverIndex)]
-        : [],
+      country: location.country || null,
+      city: location.city || null,
+      address: location.address || null,
+      lat: location.lat ?? null,
+      lng: location.lng ?? null,
+      photos:
+        photos.length > 0
+          ? [photos[coverIndex], ...photos.filter((_, i) => i !== coverIndex)]
+          : [],
     };
 
-    if (!data.title || !data.starts_at || !primaryCategory) {
-      toast.error('Please fill all required fields');
-      setIsLoading(false);
-      return;
-    }
-
-    const result = await createEvent(data);
+    const result = await updateEvent(event.id, data);
 
     if (result.error) {
       toast.error(result.error);
-      setIsLoading(false);
-      return;
+    } else {
+      toast.success('Event updated!');
+      router.push(`/events/${event.id}`);
     }
 
-    toast.success('Event created!');
-    router.push(`/events/${result.event?.id}`);
+    setIsLoading(false);
   }
 
   return (
@@ -159,17 +168,20 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title">{t('name')}</Label>
-            <Input id="title" name="title" required />
+            <Input id="title" name="title" defaultValue={event.title} required />
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">{t('description')}</Label>
             <textarea
               id="description"
               name="description"
+              defaultValue={event.description}
               rows={4}
               className="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             />
           </div>
+
+          {/* Category multi-select */}
           <div className="space-y-2">
             <Label>{t('category')}</Label>
             <div className="mb-2 flex flex-wrap gap-2">
@@ -181,7 +193,9 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
                     key={id}
                     className="bg-background inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium shadow-sm"
                   >
-                    {interest.icon && <span className="text-base leading-none">{interest.icon}</span>}
+                    {interest.icon && (
+                      <span className="text-base leading-none">{interest.icon}</span>
+                    )}
                     {getInterestLabel(interest)}
                     <button
                       type="button"
@@ -227,8 +241,15 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
                           )}
                           onClick={() => toggleInterest(interest.id)}
                         >
-                          <Check className={cn('h-4 w-4 shrink-0', selected ? 'opacity-100' : 'opacity-0')} />
-                          {interest.icon && <span className="text-base leading-none">{interest.icon}</span>}
+                          <Check
+                            className={cn(
+                              'h-4 w-4 shrink-0',
+                              selected ? 'opacity-100' : 'opacity-0',
+                            )}
+                          />
+                          {interest.icon && (
+                            <span className="text-base leading-none">{interest.icon}</span>
+                          )}
                           {getInterestLabel(interest)}
                         </button>
                       );
@@ -247,15 +268,22 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="space-y-2">
               <Label htmlFor="date">{t('date')}</Label>
-              <Input id="date" name="date" type="date" required />
+              <Input id="date" name="date" type="date" defaultValue={dateStr} required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="time">{t('time')}</Label>
-              <Input id="time" name="time" type="time" required />
+              <Input id="time" name="time" type="time" defaultValue={timeStr} required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="duration">{t('duration')}</Label>
-              <Input id="duration" name="duration" type="number" defaultValue={60} min={15} step={15} />
+              <Input
+                id="duration"
+                name="duration"
+                type="number"
+                defaultValue={event.duration_minutes}
+                min={15}
+                step={15}
+              />
             </div>
           </div>
         </CardContent>
@@ -276,17 +304,35 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="price">{t('price')}</Label>
-                <Input id="price" name="price" type="number" min={0} step={0.01} />
+                <Input
+                  id="price"
+                  name="price"
+                  type="number"
+                  min={0}
+                  step={0.01}
+                  defaultValue={event.price ?? ''}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="currency">Currency</Label>
-                <Input id="currency" name="currency" defaultValue="EUR" />
+                <Input
+                  id="currency"
+                  name="currency"
+                  defaultValue={event.currency || 'EUR'}
+                />
               </div>
             </div>
           )}
           <div className="space-y-2">
             <Label htmlFor="max_attendees">{t('maxAttendees')}</Label>
-            <Input id="max_attendees" name="max_attendees" type="number" min={1} placeholder="Unlimited" />
+            <Input
+              id="max_attendees"
+              name="max_attendees"
+              type="number"
+              min={1}
+              defaultValue={event.max_attendees ?? ''}
+              placeholder="Unlimited"
+            />
           </div>
           <div className="flex items-center justify-between">
             <div>
@@ -322,7 +368,6 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
           <CardTitle>{t('photos')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Upload drop zone */}
           <label className="border-muted-foreground/30 hover:border-primary/50 hover:bg-accent/50 flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed py-10 transition-colors">
             {uploading ? (
               <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
@@ -347,7 +392,6 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
             />
           </label>
 
-          {/* Photo grid */}
           <div className="grid grid-cols-3 gap-3">
             {photos.map((url, i) => {
               const isCover = i === coverIndex;
@@ -356,21 +400,19 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
                   key={i}
                   className={cn(
                     'group relative aspect-square overflow-hidden rounded-xl border-2 transition-colors',
-                    isCover ? 'border-primary' : 'border-transparent hover:border-muted-foreground/30',
+                    isCover
+                      ? 'border-primary'
+                      : 'border-transparent hover:border-muted-foreground/30',
                   )}
                 >
                   <img src={url} alt="" className="h-full w-full object-cover" />
-
-                  {/* Cover badge */}
                   {isCover && (
-                    <div className="absolute top-2 left-2 flex flex-col gap-1">
+                    <div className="absolute top-2 left-2">
                       <span className="inline-flex items-center gap-1 rounded-full bg-green-500 px-2 py-0.5 text-[10px] font-semibold text-white shadow">
                         <Star className="h-3 w-3" fill="white" /> Cover
                       </span>
                     </div>
                   )}
-
-                  {/* Actions overlay */}
                   <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1.5 bg-gradient-to-t from-black/70 to-transparent p-2 pt-8 opacity-0 transition-opacity group-hover:opacity-100">
                     {!isCover && (
                       <button
@@ -392,8 +434,6 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
                 </div>
               );
             })}
-
-            {/* Empty slots */}
             {Array.from({ length: Math.max(0, 5 - photos.length) }).map((_, i) => (
               <label
                 key={`empty-${i}`}
@@ -414,10 +454,15 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
         </CardContent>
       </Card>
 
-      <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
-        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        {t('submit')}
-      </Button>
+      <div className="flex gap-4">
+        <Button type="submit" size="lg" className="flex-1" disabled={isLoading}>
+          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Save Changes
+        </Button>
+        <Button type="button" variant="outline" size="lg" onClick={() => router.back()}>
+          Cancel
+        </Button>
+      </div>
     </form>
   );
 }

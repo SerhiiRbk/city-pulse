@@ -46,6 +46,37 @@ export async function createEvent(data: {
   return { success: true, event };
 }
 
+export async function canEditEvent(eventId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return false;
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  if (profile?.role === 'admin' || profile?.role === 'moderator') return true;
+
+  const { data: event } = await supabase
+    .from('events')
+    .select('organizer_id')
+    .eq('id', eventId)
+    .single();
+
+  if (event?.organizer_id === user.id) return true;
+
+  const { data: mod } = await supabase
+    .from('event_moderators')
+    .select('user_id')
+    .eq('event_id', eventId)
+    .eq('user_id', user.id)
+    .single();
+
+  return !!mod;
+}
+
 export async function updateEvent(
   eventId: string,
   data: Partial<{
@@ -57,22 +88,38 @@ export async function updateEvent(
     is_online: boolean;
     is_free: boolean;
     price: number | null;
-    currency: string;
+    currency: string | null;
     max_attendees: number | null;
-    country: string;
-    city: string;
-    address: string;
-    lat: number;
-    lng: number;
+    country: string | null;
+    city: string | null;
+    address: string | null;
+    lat: number | null;
+    lng: number | null;
     is_private: boolean;
     status: string;
     photos: string[];
   }>,
 ) {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const allowed = await canEditEvent(eventId);
+  if (!allowed) return { error: 'No permission to edit this event' };
+
   const { error } = await supabase.from('events').update(data).eq('id', eventId);
   if (error) return { error: error.message };
   return { success: true };
+}
+
+export async function getEventRaw(eventId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('events')
+    .select('*')
+    .eq('id', eventId)
+    .single();
+  return data;
 }
 
 export async function getEvent(eventId: string) {
