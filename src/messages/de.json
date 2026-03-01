@@ -1,0 +1,296 @@
+{
+  "common": {
+    "appName": "City-Pulse",
+    "loading": "Wird geladen...",
+    "error": "Etwas ist schiefgelaufen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "create": "Erstellen",
+    "search": "Suchen",
+    "filter": "Filter",
+    "showMore": "Mehr anzeigen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "submit": "Absenden",
+    "close": "Schließen",
+    "yes": "Ja",
+    "no": "Nein",
+    "or": "oder",
+    "and": "und"
+  },
+  "nav": {
+    "home": "Startseite",
+    "events": "Veranstaltungen",
+    "groups": "Gruppen",
+    "calendar": "Kalender",
+    "messages": "Nachrichten",
+    "profile": "Profil",
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "logout": "Abmelden",
+    "settings": "Einstellungen",
+    "createEvent": "Veranstaltung erstellen",
+    "createGroup": "Gruppe erstellen",
+    "cityEvents": "Stadtevents"
+  },
+  "landing": {
+    "hero": {
+      "title": "Finde deine Leute in der Stadt",
+      "subtitle": "Tritt lokalen Communities bei, entdecke Events und knüpfe echte Kontakte",
+      "cta": "Leute nach Interessen finden"
+    },
+    "sections": {
+      "todayEvents": "Veranstaltungen heute",
+      "tomorrowEvents": "Veranstaltungen morgen",
+      "weekendEvents": "Am Wochenende",
+      "topEvents": "Beliebte Veranstaltungen",
+      "topGroups": "Aktive Gruppen",
+      "filterByInterests": "Nach Interessen filtern",
+      "viewAll": "Alle anzeigen",
+      "viewAllEvents": "Alle Veranstaltungen",
+      "viewAllGroups": "Alle Gruppen"
+    },
+    "features": {
+      "localEvents": "Lokale Events",
+      "localEventsDesc": "Entdecken Sie Events in Ihrer Nähe — Sprachtandems, Wanderungen, Brettspiele, Kunst-Workshops und mehr.",
+      "communities": "Kleine Communities",
+      "communitiesDesc": "Treten Sie Interessengruppen bei oder gründen Sie Ihre eigene. Lernen Sie Gleichgesinnte in Ihrer Stadt kennen.",
+      "calendar": "Stadtkalender",
+      "calendarDesc": "Verpassen Sie keine Veranstaltung. Durchsuchen Sie den Kalender und filtern Sie nach Interessen.",
+      "connections": "Echte Verbindungen",
+      "connectionsDesc": "Verwandeln Sie Einsamkeit in soziale Teilhabe. Verbinden Sie sich mit Expats und offenen Einheimischen.",
+      "multilingual": "Mehrsprachig",
+      "multilingualDesc": "In mehreren Sprachen verfügbar. Finden Sie Events in Ihrer bevorzugten Sprache, egal wo Sie sind.",
+      "safety": "Vertrauen & Sicherheit",
+      "safetyDesc": "Verifizierte Profile, moderierte Inhalte und Reputationssystem. Sichere Begegnungen."
+    },
+    "cta": {
+      "title": "Bereit, Ihre Community zu finden?",
+      "subtitle": "Treten Sie City-Pulse bei und verbinden Sie sich mit Menschen, die Ihre Interessen teilen.",
+      "button": "Loslegen"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Willkommen zurück",
+      "subtitle": "Melden Sie sich an",
+      "email": "Email",
+      "password": "Passwort",
+      "submit": "Anmelden",
+      "forgotPassword": "Passwort vergessen?",
+      "noAccount": "Kein Konto?",
+      "signUp": "Registrieren",
+      "orContinueWith": "oder weiter mit",
+      "google": "Mit Google fortfahren"
+    },
+    "register": {
+      "title": "Konto erstellen",
+      "subtitle": "Treten Sie der Community bei",
+      "displayName": "Name",
+      "email": "Email",
+      "password": "Passwort",
+      "confirmPassword": "Passwort bestätigen",
+      "submit": "Registrieren",
+      "hasAccount": "Bereits ein Konto?",
+      "signIn": "Anmelden",
+      "orContinueWith": "oder weiter mit",
+      "google": "Mit Google fortfahren"
+    },
+    "forgotPassword": {
+      "title": "Passwort zurücksetzen",
+      "subtitle": "Wir senden Ihnen einen Link zum Zurücksetzen",
+      "email": "Email",
+      "submit": "Link senden",
+      "backToLogin": "Zurück zur Anmeldung"
+    },
+    "verifyEmail": {
+      "title": "Email überprüfen",
+      "subtitle": "Wir haben einen Bestätigungslink an Ihre Email gesendet"
+    }
+  },
+  "events": {
+    "title": "Veranstaltungen",
+    "noEvents": "Keine Veranstaltungen gefunden",
+    "filters": {
+      "country": "Land",
+      "city": "Stadt",
+      "language": "Sprache",
+      "interests": "Interessen",
+      "date": "Datum",
+      "today": "Heute",
+      "tomorrow": "Morgen",
+      "weekend": "Wochenende",
+      "dateRange": "Zeitraum",
+      "free": "Kostenlos",
+      "paid": "Kostenpflichtig",
+      "all": "Alle",
+      "online": "Online",
+      "offline": "Offline"
+    },
+    "card": {
+      "free": "Kostenlos",
+      "spotsLeft": "{count, plural, one {# Platz frei} other {# Plätze frei}}",
+      "noSpotsLeft": "Keine Plätze mehr",
+      "going": "Du gehst",
+      "notGoing": "Teilnahme absagen",
+      "join": "Ich gehe",
+      "favorite": "Zu Favoriten",
+      "unfavorite": "Aus Favoriten entfernen",
+      "share": "Teilen",
+      "attendees": "{count, plural, one {# Teilnehmer} other {# Teilnehmer}}"
+    },
+    "detail": {
+      "organizer": "Veranstalter",
+      "description": "Beschreibung",
+      "location": "Ort",
+      "dateTime": "Datum und Uhrzeit",
+      "duration": "Dauer",
+      "price": "Preis",
+      "attendees": "Teilnehmer",
+      "comments": "Kommentare",
+      "reviews": "Bewertungen",
+      "photos": "Fotos",
+      "writeReview": "Bewertung schreiben",
+      "addComment": "Kommentar hinzufügen",
+      "private": "Private Veranstaltung",
+      "online": "Online-Veranstaltung",
+      "addedToFavorites": "Zu Favoriten hinzugefügt",
+      "removedFromFavorites": "Aus Favoriten entfernt",
+      "registeredForEvent": "Du bist angemeldet!",
+      "cancelledAttendance": "Teilnahme abgesagt"
+    },
+    "create": {
+      "title": "Veranstaltung erstellen",
+      "name": "Name",
+      "description": "Beschreibung",
+      "category": "Kategorie",
+      "date": "Datum",
+      "time": "Uhrzeit",
+      "duration": "Dauer (Minuten)",
+      "isOnline": "Online-Veranstaltung",
+      "isFree": "Kostenlos",
+      "price": "Preis",
+      "maxAttendees": "Max. Teilnehmer",
+      "location": "Veranstaltungsort",
+      "address": "Adresse",
+      "clickMap": "Klicken Sie auf die Karte, um den Ort auszuwählen",
+      "isPrivate": "Private Veranstaltung",
+      "privateHint": "Zugang nur über Speziallink",
+      "photos": "Fotos (max. 5)",
+      "submit": "Veröffentlichen"
+    }
+  },
+  "groups": {
+    "title": "Gruppen",
+    "noGroups": "Keine Gruppen gefunden",
+    "create": "Gruppe erstellen",
+    "join": "Beitreten",
+    "leave": "Verlassen",
+    "subscribe": "Updates abonnieren",
+    "unsubscribe": "Abbestellen",
+    "members": "{count, plural, one {# Mitglied} other {# Mitglieder}}",
+    "events": "Gruppenveranstaltungen",
+    "photos": "Fotos",
+    "createGroup": {
+      "title": "Gruppe erstellen",
+      "name": "Gruppenname",
+      "description": "Beschreibung",
+      "cover": "Titelbild",
+      "submit": "Gruppe erstellen"
+    },
+    "detail": {
+      "creator": "Erstellt von",
+      "membersList": "Mitglieder",
+      "eventsTitle": "Kommende Veranstaltungen",
+      "noEvents": "Keine kommenden Veranstaltungen",
+      "admin": "Admin",
+      "moderator": "Moderator"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "edit": "Profil bearbeiten",
+    "bio": "Über mich",
+    "interests": "Interessen",
+    "languages": "Sprachen",
+    "city": "Stadt",
+    "country": "Land",
+    "cityPlaceholder": "Ihre Stadt",
+    "cityHint": "Beginnen Sie mit der Eingabe Ihrer Stadt",
+    "age": "Alter",
+    "available": "Für Kommunikation verfügbar",
+    "unavailable": "Nicht verfügbar",
+    "eventsCreated": "Veranstaltungen erstellt",
+    "eventsAttended": "Veranstaltungen besucht",
+    "rating": "Bewertung",
+    "socialLinks": "Soziale Netzwerke",
+    "privateProfile": "Privates Profil",
+    "hideAge": "Alter verbergen",
+    "hideEvents": "Veranstaltungen verbergen"
+  },
+  "calendar": {
+    "title": "Kalender",
+    "myEvents": "Meine Veranstaltungen",
+    "allEvents": "Alle Veranstaltungen",
+    "exportGoogle": "In Google Kalender exportieren",
+    "exportICal": "In iCal exportieren"
+  },
+  "messages": {
+    "title": "Nachrichten",
+    "noMessages": "Noch keine Nachrichten",
+    "newMessage": "Neue Nachricht",
+    "typeMessage": "Nachricht eingeben...",
+    "send": "Senden",
+    "requestChat": "Chat anfragen",
+    "chatRequested": "Anfrage gesendet",
+    "approve": "Genehmigen",
+    "decline": "Ablehnen",
+    "block": "Blockieren",
+    "unblock": "Entblockieren",
+    "blocked": "Benutzer ist blockiert"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "empty": "Keine Benachrichtigungen",
+    "markAllRead": "Alle als gelesen markieren",
+    "newEvent": "Neue Veranstaltung nach Ihren Interessen",
+    "commentReply": "Jemand hat auf Ihren Kommentar geantwortet",
+    "newMessage": "Sie haben eine neue Nachricht",
+    "spotsAlmost": "Nur noch {count} Plätze!",
+    "reminder24h": "Morgen Veranstaltung: {name}",
+    "reminder2h": "Veranstaltung in 2 Stunden: {name}"
+  },
+  "cityEvents": {
+    "title": "Stadtveranstaltungen",
+    "subtitle": "Kulturveranstaltungen, Ausstellungen, Konzerte und mehr in Ihrer Stadt",
+    "source": "Quelle",
+    "systemBadge": "Stadtveranstaltung"
+  },
+  "report": {
+    "report": "Melden",
+    "title": "Inhalt melden",
+    "description": "Helfen Sie uns, die Community sicher zu halten",
+    "reason": "Grund",
+    "reasons": {
+      "spam": "Spam",
+      "harassment": "Belästigung",
+      "inappropriate": "Unangemessener Inhalt",
+      "fake": "Falsch / irreführend",
+      "other": "Sonstiges"
+    },
+    "details": "Weitere Details",
+    "detailsPlaceholder": "Beschreiben Sie das Problem (optional)...",
+    "submit": "Meldung senden",
+    "submitted": "Meldung gesendet. Vielen Dank!"
+  },
+  "footer": {
+    "terms": "Nutzungsbedingungen",
+    "privacy": "Datenschutzrichtlinie",
+    "howItWorks": "So funktioniert's",
+    "about": "Über City-Pulse",
+    "contact": "Kontakt",
+    "copyright": "© {year} City-Pulse. Alle Rechte vorbehalten."
+  }
+}

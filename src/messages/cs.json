@@ -1,0 +1,296 @@
+{
+  "common": {
+    "appName": "City-Pulse",
+    "loading": "Načítání...",
+    "error": "Něco se pokazilo",
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "delete": "Smazat",
+    "edit": "Upravit",
+    "create": "Vytvořit",
+    "search": "Hledat",
+    "filter": "Filtr",
+    "showMore": "Zobrazit více",
+    "back": "Zpět",
+    "next": "Další",
+    "submit": "Odeslat",
+    "close": "Zavřít",
+    "yes": "Ano",
+    "no": "Ne",
+    "or": "nebo",
+    "and": "a"
+  },
+  "nav": {
+    "home": "Domů",
+    "events": "Akce",
+    "groups": "Skupiny",
+    "calendar": "Kalendář",
+    "messages": "Zprávy",
+    "profile": "Profil",
+    "login": "Přihlásit se",
+    "register": "Registrace",
+    "logout": "Odhlásit se",
+    "settings": "Nastavení",
+    "createEvent": "Vytvořit akci",
+    "createGroup": "Vytvořit skupinu",
+    "cityEvents": "Městské akce"
+  },
+  "landing": {
+    "hero": {
+      "title": "Najdi své lidi ve městě",
+      "subtitle": "Připoj se k místním komunitám, objevuj akce a navazuj skutečná přátelství",
+      "cta": "Najít lidi podle zájmů"
+    },
+    "sections": {
+      "todayEvents": "Akce dnes",
+      "tomorrowEvents": "Akce zítra",
+      "weekendEvents": "O víkendu",
+      "topEvents": "Populární akce",
+      "topGroups": "Aktivní skupiny",
+      "filterByInterests": "Filtrovat podle zájmů",
+      "viewAll": "Zobrazit vše",
+      "viewAllEvents": "Všechny akce",
+      "viewAllGroups": "Všechny skupiny"
+    },
+    "features": {
+      "localEvents": "Místní akce",
+      "localEventsDesc": "Objevte akce ve svém okolí — jazykové výměny, turistiku, deskové hry, umělecké workshopy a mnoho dalšího.",
+      "communities": "Malé komunity",
+      "communitiesDesc": "Připojte se ke skupinám podle zájmů nebo vytvořte vlastní. Poznejte stejně smýšlející lidi ve svém městě.",
+      "calendar": "Kalendář města",
+      "calendarDesc": "Nepropásněte žádnou akci. Procházejte kalendář a filtrujte podle zájmů.",
+      "connections": "Skutečná propojení",
+      "connectionsDesc": "Proměňte samotu v sociální začlenění. Spojte se s expaty a otevřenými místními.",
+      "multilingual": "Vícejazyčnost",
+      "multilingualDesc": "K dispozici v několika jazycích. Najděte akce ve svém preferovaném jazyce, ať jste kdekoli.",
+      "safety": "Důvěra a bezpečnost",
+      "safetyDesc": "Ověřené profily, moderovaný obsah a reputační systém. Bezpečné setkávání."
+    },
+    "cta": {
+      "title": "Připraveni najít svou komunitu?",
+      "subtitle": "Přidejte se k City-Pulse a spojte se s lidmi, kteří sdílí vaše zájmy.",
+      "button": "Začít"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Vítejte zpět",
+      "subtitle": "Přihlaste se ke svému účtu",
+      "email": "Email",
+      "password": "Heslo",
+      "submit": "Přihlásit se",
+      "forgotPassword": "Zapomněli jste heslo?",
+      "noAccount": "Nemáte účet?",
+      "signUp": "Zaregistrovat se",
+      "orContinueWith": "nebo pokračujte přes",
+      "google": "Pokračovat s Google"
+    },
+    "register": {
+      "title": "Vytvořte si účet",
+      "subtitle": "Připojte se ke komunitě",
+      "displayName": "Jméno",
+      "email": "Email",
+      "password": "Heslo",
+      "confirmPassword": "Potvrďte heslo",
+      "submit": "Zaregistrovat se",
+      "hasAccount": "Již máte účet?",
+      "signIn": "Přihlásit se",
+      "orContinueWith": "nebo pokračujte přes",
+      "google": "Pokračovat s Google"
+    },
+    "forgotPassword": {
+      "title": "Obnovení hesla",
+      "subtitle": "Pošleme vám odkaz pro obnovení hesla",
+      "email": "Email",
+      "submit": "Odeslat odkaz",
+      "backToLogin": "Zpět na přihlášení"
+    },
+    "verifyEmail": {
+      "title": "Zkontrolujte email",
+      "subtitle": "Poslali jsme ověřovací odkaz na váš email"
+    }
+  },
+  "events": {
+    "title": "Akce",
+    "noEvents": "Žádné akce nenalezeny",
+    "filters": {
+      "country": "Země",
+      "city": "Město",
+      "language": "Jazyk",
+      "interests": "Zájmy",
+      "date": "Datum",
+      "today": "Dnes",
+      "tomorrow": "Zítra",
+      "weekend": "Víkend",
+      "dateRange": "Období",
+      "free": "Zdarma",
+      "paid": "Placené",
+      "all": "Vše",
+      "online": "Online",
+      "offline": "Offline"
+    },
+    "card": {
+      "free": "Zdarma",
+      "spotsLeft": "{count, plural, one {# místo} few {# místa} other {# míst}}",
+      "noSpotsLeft": "Žádná místa",
+      "going": "Jdete",
+      "notGoing": "Zrušit účast",
+      "join": "Půjdu",
+      "favorite": "Do oblíbených",
+      "unfavorite": "Odebrat z oblíbených",
+      "share": "Sdílet",
+      "attendees": "{count, plural, one {# účastník} few {# účastníci} other {# účastníků}}"
+    },
+    "detail": {
+      "organizer": "Organizátor",
+      "description": "Popis",
+      "location": "Místo",
+      "dateTime": "Datum a čas",
+      "duration": "Délka",
+      "price": "Cena",
+      "attendees": "Účastníci",
+      "comments": "Komentáře",
+      "reviews": "Recenze",
+      "photos": "Fotografie",
+      "writeReview": "Napsat recenzi",
+      "addComment": "Přidat komentář",
+      "private": "Soukromá akce",
+      "online": "Online akce",
+      "addedToFavorites": "Přidáno do oblíbených",
+      "removedFromFavorites": "Odebráno z oblíbených",
+      "registeredForEvent": "Jste přihlášeni na akci!",
+      "cancelledAttendance": "Účast zrušena"
+    },
+    "create": {
+      "title": "Vytvořit akci",
+      "name": "Název",
+      "description": "Popis",
+      "category": "Kategorie",
+      "date": "Datum",
+      "time": "Čas",
+      "duration": "Délka (minuty)",
+      "isOnline": "Online akce",
+      "isFree": "Zdarma",
+      "price": "Cena",
+      "maxAttendees": "Max. účastníků",
+      "location": "Místo konání",
+      "address": "Adresa",
+      "clickMap": "Klikněte na mapu pro výběr místa",
+      "isPrivate": "Soukromá akce",
+      "privateHint": "Přístup pouze přes speciální odkaz",
+      "photos": "Fotografie (max 5)",
+      "submit": "Publikovat"
+    }
+  },
+  "groups": {
+    "title": "Skupiny",
+    "noGroups": "Žádné skupiny nenalezeny",
+    "create": "Vytvořit skupinu",
+    "join": "Připojit se",
+    "leave": "Odejít",
+    "subscribe": "Odebírat novinky",
+    "unsubscribe": "Zrušit odběr",
+    "members": "{count, plural, one {# člen} few {# členové} other {# členů}}",
+    "events": "Akce skupiny",
+    "photos": "Fotografie",
+    "createGroup": {
+      "title": "Vytvořit skupinu",
+      "name": "Název skupiny",
+      "description": "Popis",
+      "cover": "Titulní obrázek",
+      "submit": "Vytvořit skupinu"
+    },
+    "detail": {
+      "creator": "Vytvořil",
+      "membersList": "Členové",
+      "eventsTitle": "Nadcházející akce",
+      "noEvents": "Žádné nadcházející akce",
+      "admin": "Admin",
+      "moderator": "Moderátor"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "edit": "Upravit profil",
+    "bio": "O mně",
+    "interests": "Zájmy",
+    "languages": "Jazyky",
+    "city": "Město",
+    "country": "Země",
+    "cityPlaceholder": "Vaše město",
+    "cityHint": "Začněte psát název města",
+    "age": "Věk",
+    "available": "Dostupný pro komunikaci",
+    "unavailable": "Nedostupný",
+    "eventsCreated": "Vytvořených akcí",
+    "eventsAttended": "Navštívených akcí",
+    "rating": "Hodnocení",
+    "socialLinks": "Sociální sítě",
+    "privateProfile": "Soukromý profil",
+    "hideAge": "Skrýt věk",
+    "hideEvents": "Skrýt akce"
+  },
+  "calendar": {
+    "title": "Kalendář",
+    "myEvents": "Moje akce",
+    "allEvents": "Všechny akce",
+    "exportGoogle": "Export do Google Kalendáře",
+    "exportICal": "Export do iCal"
+  },
+  "messages": {
+    "title": "Zprávy",
+    "noMessages": "Zatím žádné zprávy",
+    "newMessage": "Nová zpráva",
+    "typeMessage": "Napište zprávu...",
+    "send": "Odeslat",
+    "requestChat": "Požádat o konverzaci",
+    "chatRequested": "Žádost odeslána",
+    "approve": "Schválit",
+    "decline": "Odmítnout",
+    "block": "Zablokovat",
+    "unblock": "Odblokovat",
+    "blocked": "Uživatel je zablokován"
+  },
+  "notifications": {
+    "title": "Oznámení",
+    "empty": "Žádná oznámení",
+    "markAllRead": "Označit vše jako přečtené",
+    "newEvent": "Nová akce podle vašich zájmů",
+    "commentReply": "Někdo odpověděl na váš komentář",
+    "newMessage": "Máte novou zprávu",
+    "spotsAlmost": "Zbývá pouze {count} míst!",
+    "reminder24h": "Zítra akce: {name}",
+    "reminder2h": "Akce za 2 hodiny: {name}"
+  },
+  "cityEvents": {
+    "title": "Městské akce",
+    "subtitle": "Kulturní akce, výstavy, koncerty a další ve vašem městě",
+    "source": "Zdroj",
+    "systemBadge": "Městská akce"
+  },
+  "report": {
+    "report": "Nahlásit",
+    "title": "Nahlásit obsah",
+    "description": "Pomozte nám udržet komunitu bezpečnou",
+    "reason": "Důvod",
+    "reasons": {
+      "spam": "Spam",
+      "harassment": "Obtěžování",
+      "inappropriate": "Nevhodný obsah",
+      "fake": "Podvod / klamavé",
+      "other": "Jiné"
+    },
+    "details": "Další podrobnosti",
+    "detailsPlaceholder": "Popište problém (nepovinné)...",
+    "submit": "Odeslat hlášení",
+    "submitted": "Hlášení odesláno. Děkujeme!"
+  },
+  "footer": {
+    "terms": "Podmínky použití",
+    "privacy": "Zásady ochrany osobních údajů",
+    "howItWorks": "Jak to funguje",
+    "about": "O City-Pulse",
+    "contact": "Kontaktujte nás",
+    "copyright": "© {year} City-Pulse. Všechna práva vyhrazena."
+  }
+}
