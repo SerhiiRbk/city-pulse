@@ -76,8 +76,9 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
 
   return (
     <Link href={`/events/${event.id}`}>
-      <Card className="group gap-0 overflow-hidden pt-0 transition-shadow hover:shadow-lg">
-        <div className="relative h-48 overflow-hidden">
+      <Card className="group gap-0 overflow-hidden pt-0 pb-0 transition-shadow hover:shadow-lg">
+        {/* Cover — ~55% of card */}
+        <div className="relative h-52 overflow-hidden">
           {event.photos[0] ? (
             <img
               src={event.photos[0]}
@@ -89,6 +90,7 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
               <Calendar className="text-muted-foreground h-12 w-12" />
             </div>
           )}
+          {/* Badges on image */}
           <div className="absolute top-2 left-2 flex gap-1">
             {event.is_free ? (
               <Badge className="bg-green-500 text-white">{t('free')}</Badge>
@@ -104,64 +106,86 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
               </Badge>
             )}
           </div>
+          {/* Favorite + share overlay */}
           {isAuthenticated && (
-            <button
-              onClick={handleToggleFavorite}
-              className="absolute top-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white"
-            >
-              <Heart
-                className={`h-4 w-4 ${favorited ? 'fill-red-500 text-red-500' : 'text-gray-600'}`}
-              />
-            </button>
+            <div className="absolute top-2 right-2 flex gap-1.5">
+              <button
+                onClick={handleToggleFavorite}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-white/80 transition-colors hover:bg-white"
+              >
+                <Heart
+                  className={`h-4 w-4 ${favorited ? 'fill-red-500 text-red-500' : 'text-gray-600'}`}
+                />
+              </button>
+            </div>
           )}
         </div>
-        <CardContent className="p-4">
-          {categoryLabel && (
-            <Badge variant="outline" className="mb-2 text-xs">
-              {categoryLabel}
-            </Badge>
-          )}
-          <h3 className="mb-1 line-clamp-2 font-semibold">{event.title}</h3>
-          <p className="text-muted-foreground mb-2 text-sm">{formatDate(event.starts_at, locale)}</p>
-          <div className="text-muted-foreground mb-3 flex items-center gap-1 text-sm">
-            {event.is_online ? (
-              <>
-                <Globe className="h-3.5 w-3.5" />
-                <span>Online</span>
-              </>
+
+        {/* Content — compact */}
+        <div className="px-3 pt-2.5 pb-3">
+          {/* Category + attendees row */}
+          <div className="mb-1.5 flex items-center justify-between">
+            {categoryLabel ? (
+              <Badge variant="outline" className="text-xs">
+                {categoryLabel}
+              </Badge>
             ) : (
-              <>
-                <MapPin className="h-3.5 w-3.5" />
-                <span className="truncate">{event.city}{event.country ? `, ${event.country}` : ''}</span>
-              </>
+              <span />
             )}
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="text-muted-foreground flex items-center gap-1 text-sm">
-              <Users className="h-3.5 w-3.5" />
-              <span>{t('attendees', { count: goingCount })}</span>
+            <div className="text-muted-foreground flex items-center gap-1 text-xs">
+              <Users className="h-3 w-3" />
+              <span>{goingCount}</span>
               {spotsLeft !== null && spotsLeft > 0 && spotsLeft <= 5 && (
-                <Badge variant="destructive" className="ml-1 text-xs">
+                <Badge variant="destructive" className="ml-1 text-[10px] px-1 py-0">
                   {t('spotsLeft', { count: spotsLeft })}
                 </Badge>
               )}
               {spotsLeft !== null && spotsLeft <= 0 && (
-                <Badge variant="destructive" className="ml-1 text-xs">
+                <Badge variant="destructive" className="ml-1 text-[10px] px-1 py-0">
                   {t('noSpotsLeft')}
                 </Badge>
               )}
             </div>
-            {isAuthenticated && (
+          </div>
+
+          {/* Title */}
+          <h3 className="mb-1 line-clamp-2 text-sm font-semibold leading-snug">{event.title}</h3>
+
+          {/* Date + Location in one row */}
+          <div className="text-muted-foreground mb-2 flex items-center gap-3 text-xs">
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              {formatDate(event.starts_at, locale)}
+            </span>
+            <span className="flex items-center gap-1 truncate">
+              {event.is_online ? (
+                <>
+                  <Globe className="h-3 w-3 shrink-0" />
+                  Online
+                </>
+              ) : (
+                <>
+                  <MapPin className="h-3 w-3 shrink-0" />
+                  <span className="truncate">{event.city || event.country}</span>
+                </>
+              )}
+            </span>
+          </div>
+
+          {/* Join button */}
+          {isAuthenticated && (
+            <div className="flex justify-end">
               <Button
                 size="sm"
                 variant={going ? 'secondary' : 'default'}
+                className="h-7 px-3 text-xs"
                 onClick={handleToggleGoing}
               >
                 {going ? t('going') : t('join')}
               </Button>
-            )}
-          </div>
-        </CardContent>
+            </div>
+          )}
+        </div>
       </Card>
     </Link>
   );

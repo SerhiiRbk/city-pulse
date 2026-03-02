@@ -23,7 +23,7 @@ export function GroupCard({ group }: GroupCardProps) {
 
   return (
     <Link href={`/groups/${group.id}`}>
-      <Card className="group overflow-hidden transition-shadow hover:shadow-lg">
+      <Card className="group gap-0 overflow-hidden pt-0 pb-0 transition-shadow hover:shadow-lg">
         <div className="relative h-40 overflow-hidden">
           {group.cover_url ? (
             <img
