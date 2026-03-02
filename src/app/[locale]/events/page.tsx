@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getEvents } from '@/lib/actions/events';
-import { getInterests } from '@/lib/actions/profile';
+import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { getUser } from '@/lib/actions/auth';
 import { EventCard } from '@/components/events/event-card';
 import { EventsFilters } from '@/components/events/events-filters';
@@ -21,12 +21,19 @@ export default async function EventsPage({
   const filters = await searchParams;
   const t = await getTranslations('events');
   const user = await getUser();
-  const interests = await getInterests();
+  const [interests, interestCategories] = await Promise.all([
+    getInterests(),
+    getInterestCategories(),
+  ]);
+
+  const categoryIds = filters.category
+    ? filters.category.split(',').filter(Boolean)
+    : [];
 
   const events = await getEvents({
     country: filters.country,
     city: filters.city,
-    category: filters.category,
+    categories: categoryIds.length > 0 ? categoryIds : undefined,
     date_from: filters.date_from,
     date_to: filters.date_to,
     is_free: filters.is_free === 'true' ? true : filters.is_free === 'false' ? false : undefined,
@@ -48,7 +55,7 @@ export default async function EventsPage({
         )}
       </div>
 
-      <EventsFilters interests={interests} currentFilters={filters} />
+      <EventsFilters interests={interests} categories={interestCategories} currentFilters={filters} />
 
       {events.length === 0 ? (
         <div className="py-20 text-center">

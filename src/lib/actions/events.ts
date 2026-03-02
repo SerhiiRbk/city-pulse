@@ -136,6 +136,7 @@ export async function getEvents(filters: {
   country?: string;
   city?: string;
   category?: string;
+  categories?: string[];
   date_from?: string;
   date_to?: string;
   is_free?: boolean;
@@ -153,7 +154,11 @@ export async function getEvents(filters: {
 
   if (filters.country) query = query.eq('country', filters.country);
   if (filters.city) query = query.eq('city', filters.city);
-  if (filters.category) query = query.eq('category_id', filters.category);
+  if (filters.categories && filters.categories.length > 0) {
+    query = query.in('category_id', filters.categories);
+  } else if (filters.category) {
+    query = query.eq('category_id', filters.category);
+  }
   if (filters.date_from) query = query.gte('starts_at', filters.date_from);
   if (filters.date_to) query = query.lte('starts_at', filters.date_to);
   if (filters.is_free !== undefined) query = query.eq('is_free', filters.is_free);
