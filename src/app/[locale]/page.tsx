@@ -1,3 +1,4 @@
+import React from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
@@ -99,14 +100,14 @@ export default async function HomePage({
               {t('hero.subtitle')}
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button size="lg" asChild className="h-12 px-8 text-base shadow-lg">
+              <Button size="lg" variant="outline" asChild className="h-12 border-white/40 bg-white/10 px-8 text-base text-white shadow-lg backdrop-blur-sm hover:bg-white/20 hover:text-white">
                 <Link href="/events" className="flex items-center gap-2">
                   {t('hero.cta')}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
               {!user && (
-                <Button size="lg" variant="outline" asChild className="h-12 border-white/30 px-8 text-base text-white hover:bg-white/10 hover:text-white">
+                <Button size="lg" variant="outline" asChild className="h-12 border-white/40 bg-white/10 px-8 text-base text-white backdrop-blur-sm hover:bg-white/20 hover:text-white">
                   <Link href="/register">{tNav('register')}</Link>
                 </Button>
               )}
@@ -212,39 +213,32 @@ export default async function HomePage({
       )}
 
       {/* How It Works */}
-      <section className="border-t bg-gray-900 py-20">
+      <section className="bg-muted/50 border-t py-20">
         <div className="container mx-auto px-4">
           <div className="mb-14 text-center">
-            <h2 className="mb-3 text-3xl font-bold text-white md:text-4xl">How It Works</h2>
-            <p className="text-white/50">Four simple steps to get started</p>
+            <h2 className="mb-3 text-3xl font-bold md:text-4xl">How It Works</h2>
+            <p className="text-muted-foreground">Four simple steps to get started</p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
             {howItWorks.map(({ step, icon: Icon, title, desc }, i) => (
-              <div
-                key={step}
-                className="group relative rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10"
-              >
-                {/* Step number */}
-                <span className="text-primary mb-4 block text-sm font-bold tracking-widest">
-                  STEP {step}
-                </span>
-                {/* Icon */}
-                <div className="bg-primary/10 mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl">
-                  <Icon className="text-primary h-6 w-6" />
+              <React.Fragment key={step}>
+                <div className="bg-card group rounded-2xl border p-6 shadow-sm transition-all hover:shadow-lg">
+                  <span className="text-primary mb-4 block text-sm font-bold tracking-widest">
+                    STEP {step}
+                  </span>
+                  <div className="bg-primary/10 mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl">
+                    <Icon className="text-primary h-6 w-6" />
+                  </div>
+                  <h3 className="mb-2 text-lg font-semibold">{title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{desc}</p>
                 </div>
-                {/* Title */}
-                <h3 className="mb-2 text-lg font-semibold text-white">{title}</h3>
-                {/* Description */}
-                <p className="text-sm leading-relaxed text-white/60">{desc}</p>
-
-                {/* Connector arrow (not on last) */}
                 {i < howItWorks.length - 1 && (
-                  <div className="absolute -right-3 top-1/2 z-10 hidden -translate-y-1/2 lg:block">
-                    <ArrowRight className="h-5 w-5 text-white/20" />
+                  <div className="hidden items-center lg:flex">
+                    <ArrowRight className="text-muted-foreground/40 h-5 w-5" />
                   </div>
                 )}
-              </div>
+              </React.Fragment>
             ))}
           </div>
         </div>
