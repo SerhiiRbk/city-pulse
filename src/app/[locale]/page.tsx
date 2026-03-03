@@ -3,7 +3,10 @@ import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, MapPin, Users, CalendarDays, Heart, Globe, Shield } from 'lucide-react';
+import {
+  ArrowRight, MapPin, Users, CalendarDays, Heart, Globe, Shield,
+  CalendarPlus, UserPlus, Bell, UsersRound,
+} from 'lucide-react';
 import { getUser } from '@/lib/actions/auth';
 import { getTodayEvents, getTomorrowEvents, getWeekendEvents, getPopularEvents, getTopGroups } from '@/lib/actions/landing';
 import { EventCard } from '@/components/events/event-card';
@@ -41,33 +44,69 @@ export default async function HomePage({
 
   const orgJsonLd = generateOrganizationJsonLd();
 
+  const howItWorks = [
+    {
+      step: '01',
+      icon: CalendarPlus,
+      title: 'Create an event or group',
+      desc: 'Share your idea — add a meetup, workshop, or community group in a few clicks.',
+    },
+    {
+      step: '02',
+      icon: Globe,
+      title: 'Discover what\'s happening',
+      desc: 'Browse events and groups by city, interests, or date. Find your vibe.',
+    },
+    {
+      step: '03',
+      icon: Bell,
+      title: 'Join & subscribe',
+      desc: 'RSVP to events, follow groups, and get notified about updates.',
+    },
+    {
+      step: '04',
+      icon: UsersRound,
+      title: 'Connect & belong',
+      desc: 'Meet like-minded people, build friendships, and become part of the community.',
+    },
+  ];
+
   return (
     <div className="flex flex-col">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
       />
-      {/* Hero */}
-      <section className="from-primary/5 via-background to-background relative overflow-hidden bg-gradient-to-b">
-        <div className="container mx-auto px-4 py-20 md:py-32">
+
+      {/* Hero with city image */}
+      <section className="relative overflow-hidden bg-gray-900">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=1600&q=80')" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/70 via-gray-900/50 to-gray-900/90" />
+
+        <div className="relative z-10 container mx-auto px-4 pt-24 pb-20 md:pt-36 md:pb-28">
           <div className="mx-auto max-w-3xl text-center">
-            <Badge variant="secondary" className="mb-4">
-              <Globe className="mr-1 h-3 w-3" />
+            <Badge className="mb-5 border-white/20 bg-white/10 text-white backdrop-blur-sm">
+              <Globe className="mr-1.5 h-3 w-3" />
               Prague &middot; Berlin &middot; Barcelona &middot; Tel Aviv
             </Badge>
-            <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl">
+            <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-white md:text-6xl">
               {t('hero.title')}
             </h1>
-            <p className="text-muted-foreground mb-8 text-lg md:text-xl">{t('hero.subtitle')}</p>
+            <p className="mb-10 text-lg text-white/70 md:text-xl">
+              {t('hero.subtitle')}
+            </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button size="lg" asChild>
+              <Button size="lg" asChild className="h-12 px-8 text-base shadow-lg">
                 <Link href="/events" className="flex items-center gap-2">
                   {t('hero.cta')}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
               {!user && (
-                <Button variant="outline" size="lg" asChild>
+                <Button size="lg" variant="outline" asChild className="h-12 border-white/30 px-8 text-base text-white hover:bg-white/10 hover:text-white">
                   <Link href="/register">{tNav('register')}</Link>
                 </Button>
               )}
@@ -80,7 +119,7 @@ export default async function HomePage({
       <section className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {featureCards.map(({ icon: Icon, title, desc }) => (
-            <Card key={title}>
+            <Card key={title} className="transition-shadow hover:shadow-md">
               <CardHeader>
                 <Icon className="text-primary mb-2 h-8 w-8" />
                 <CardTitle>{title}</CardTitle>
@@ -124,7 +163,7 @@ export default async function HomePage({
         />
       )}
 
-      {/* Popular Events (fallback if no time-based events) */}
+      {/* Popular Events (fallback) */}
       {todayEvents.length === 0 && tomorrowEvents.length === 0 && weekendEvents.length === 0 && popularEvents.length > 0 && (
         <EventSection
           title={t('sections.topEvents')}
@@ -156,14 +195,12 @@ export default async function HomePage({
         </section>
       )}
 
-      {/* Empty state — show placeholders if no data at all */}
+      {/* Empty state */}
       {todayEvents.length === 0 && tomorrowEvents.length === 0 && weekendEvents.length === 0 && popularEvents.length === 0 && topGroups.length === 0 && (
         <section className="bg-muted/50 py-16">
           <div className="container mx-auto px-4 text-center">
             <h2 className="mb-4 text-2xl font-bold">{t('sections.topEvents')}</h2>
-            <p className="text-muted-foreground mb-6">
-              {t('hero.subtitle')}
-            </p>
+            <p className="text-muted-foreground mb-6">{t('hero.subtitle')}</p>
             <Button asChild>
               <Link href="/events" className="flex items-center gap-2">
                 {t('sections.viewAllEvents')}
@@ -174,23 +211,44 @@ export default async function HomePage({
         </section>
       )}
 
-      {/* CTA */}
-      {!user && (
-        <section className="bg-primary text-primary-foreground py-16">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="mb-4 text-3xl font-bold">{t('cta.title')}</h2>
-            <p className="mx-auto mb-8 max-w-xl text-lg opacity-90">
-              {t('cta.subtitle')}
-            </p>
-            <Button size="lg" variant="secondary" asChild>
-              <Link href="/register" className="flex items-center gap-2">
-                {t('cta.button')}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
+      {/* How It Works */}
+      <section className="border-t bg-gray-900 py-20">
+        <div className="container mx-auto px-4">
+          <div className="mb-14 text-center">
+            <h2 className="mb-3 text-3xl font-bold text-white md:text-4xl">How It Works</h2>
+            <p className="text-white/50">Four simple steps to get started</p>
           </div>
-        </section>
-      )}
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {howItWorks.map(({ step, icon: Icon, title, desc }, i) => (
+              <div
+                key={step}
+                className="group relative rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10"
+              >
+                {/* Step number */}
+                <span className="text-primary mb-4 block text-sm font-bold tracking-widest">
+                  STEP {step}
+                </span>
+                {/* Icon */}
+                <div className="bg-primary/10 mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl">
+                  <Icon className="text-primary h-6 w-6" />
+                </div>
+                {/* Title */}
+                <h3 className="mb-2 text-lg font-semibold text-white">{title}</h3>
+                {/* Description */}
+                <p className="text-sm leading-relaxed text-white/60">{desc}</p>
+
+                {/* Connector arrow (not on last) */}
+                {i < howItWorks.length - 1 && (
+                  <div className="absolute -right-3 top-1/2 z-10 hidden -translate-y-1/2 lg:block">
+                    <ArrowRight className="h-5 w-5 text-white/20" />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
