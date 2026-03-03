@@ -70,6 +70,19 @@
       "title": "Bereit, Ihre Community zu finden?",
       "subtitle": "Treten Sie City-Pulse bei und verbinden Sie sich mit Menschen, die Ihre Interessen teilen.",
       "button": "Loslegen"
+    },
+    "howItWorks": {
+      "title": "So funktioniert's",
+      "subtitle": "Vier einfache Schritte zum Start",
+      "step": "SCHRITT",
+      "step1Title": "Event oder Gruppe erstellen",
+      "step1Desc": "Teilen Sie Ihre Idee — fügen Sie ein Treffen, einen Workshop oder eine Gruppe in wenigen Klicks hinzu.",
+      "step2Title": "Entdecken, was passiert",
+      "step2Desc": "Durchsuchen Sie Events und Gruppen nach Stadt, Interessen oder Datum. Finden Sie Ihren Vibe.",
+      "step3Title": "Beitreten & abonnieren",
+      "step3Desc": "Melden Sie sich für Events an, folgen Sie Gruppen und erhalten Sie Benachrichtigungen über Updates.",
+      "step4Title": "Verbinden & dazugehören",
+      "step4Desc": "Lernen Sie Gleichgesinnte kennen, schließen Sie Freundschaften und werden Sie Teil der Community."
     }
   },
   "auth": {

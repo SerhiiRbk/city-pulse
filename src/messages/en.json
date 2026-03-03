@@ -70,6 +70,19 @@
       "title": "Ready to find your community?",
       "subtitle": "Join City-Pulse today and start connecting with people who share your interests.",
       "button": "Get Started"
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Four simple steps to get started",
+      "step": "STEP",
+      "step1Title": "Create an event or group",
+      "step1Desc": "Share your idea — add a meetup, workshop, or community group in a few clicks.",
+      "step2Title": "Discover what's happening",
+      "step2Desc": "Browse events and groups by city, interests, or date. Find your vibe.",
+      "step3Title": "Join & subscribe",
+      "step3Desc": "RSVP to events, follow groups, and get notified about updates.",
+      "step4Title": "Connect & belong",
+      "step4Desc": "Meet like-minded people, build friendships, and become part of the community."
     }
   },
   "auth": {

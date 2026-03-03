@@ -70,6 +70,19 @@
       "title": "Připraveni najít svou komunitu?",
       "subtitle": "Přidejte se k City-Pulse a spojte se s lidmi, kteří sdílí vaše zájmy.",
       "button": "Začít"
+    },
+    "howItWorks": {
+      "title": "Jak to funguje",
+      "subtitle": "Čtyři jednoduché kroky k začátku",
+      "step": "KROK",
+      "step1Title": "Vytvořte akci nebo skupinu",
+      "step1Desc": "Sdílejte svůj nápad — přidejte setkání, workshop nebo skupinu podle zájmů během pár kliknutí.",
+      "step2Title": "Zjistěte, co se děje",
+      "step2Desc": "Procházejte akce a skupiny podle města, zájmů nebo data. Najděte to své.",
+      "step3Title": "Připojte se a odebírejte",
+      "step3Desc": "Přihlaste se na akce, sledujte skupiny a dostávejte oznámení o novinkách.",
+      "step4Title": "Spojte se a patřte k nám",
+      "step4Desc": "Poznejte stejně smýšlející lidi, navažte přátelství a staňte se součástí komunity."
     }
   },
   "auth": {

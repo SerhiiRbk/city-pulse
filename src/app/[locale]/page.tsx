@@ -46,30 +46,10 @@ export default async function HomePage({
   const orgJsonLd = generateOrganizationJsonLd();
 
   const howItWorks = [
-    {
-      step: '01',
-      icon: CalendarPlus,
-      title: 'Create an event or group',
-      desc: 'Share your idea — add a meetup, workshop, or community group in a few clicks.',
-    },
-    {
-      step: '02',
-      icon: Globe,
-      title: 'Discover what\'s happening',
-      desc: 'Browse events and groups by city, interests, or date. Find your vibe.',
-    },
-    {
-      step: '03',
-      icon: Bell,
-      title: 'Join & subscribe',
-      desc: 'RSVP to events, follow groups, and get notified about updates.',
-    },
-    {
-      step: '04',
-      icon: UsersRound,
-      title: 'Connect & belong',
-      desc: 'Meet like-minded people, build friendships, and become part of the community.',
-    },
+    { step: '01', icon: CalendarPlus, title: t('howItWorks.step1Title'), desc: t('howItWorks.step1Desc') },
+    { step: '02', icon: Globe, title: t('howItWorks.step2Title'), desc: t('howItWorks.step2Desc') },
+    { step: '03', icon: Bell, title: t('howItWorks.step3Title'), desc: t('howItWorks.step3Desc') },
+    { step: '04', icon: UsersRound, title: t('howItWorks.step4Title'), desc: t('howItWorks.step4Desc') },
   ];
 
   return (
@@ -216,8 +196,8 @@ export default async function HomePage({
       <section className="bg-muted/50 border-t py-20">
         <div className="container mx-auto px-4">
           <div className="mb-14 text-center">
-            <h2 className="mb-3 text-3xl font-bold md:text-4xl">How It Works</h2>
-            <p className="text-muted-foreground">Four simple steps to get started</p>
+            <h2 className="mb-3 text-3xl font-bold md:text-4xl">{t('howItWorks.title')}</h2>
+            <p className="text-muted-foreground">{t('howItWorks.subtitle')}</p>
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
@@ -225,7 +205,7 @@ export default async function HomePage({
               <React.Fragment key={step}>
                 <div className="bg-card group rounded-2xl border p-6 shadow-sm transition-all hover:shadow-lg">
                   <span className="text-primary mb-4 block text-sm font-bold tracking-widest">
-                    STEP {step}
+                    {t('howItWorks.step')} {step}
                   </span>
                   <div className="bg-primary/10 mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl">
                     <Icon className="text-primary h-6 w-6" />
