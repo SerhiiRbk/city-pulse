@@ -193,6 +193,17 @@
       "privateHint": "Přístup pouze přes speciální odkaz",
       "photos": "Fotografie (max 5)",
       "submit": "Publikovat"
+    },
+    "edit": {
+      "title": "Upravit akci",
+      "save": "Uložit změny",
+      "moderators": "Moderátoři",
+      "addModerator": "Přidat moderátora",
+      "searchUsers": "Hledat uživatele podle jména...",
+      "removeModerator": "Odebrat moderátora",
+      "noModerators": "Zatím nebyli přidáni žádní moderátoři",
+      "moderatorAdded": "Moderátor přidán",
+      "moderatorRemoved": "Moderátor odebrán"
     }
   },
   "groups": {
@@ -219,7 +230,23 @@
       "eventsTitle": "Nadcházející akce",
       "noEvents": "Žádné nadcházející akce",
       "admin": "Admin",
-      "moderator": "Moderátor"
+      "moderator": "Moderátor",
+      "editGroup": "Upravit"
+    },
+    "editGroup": {
+      "title": "Upravit skupinu",
+      "name": "Název skupiny",
+      "description": "Popis",
+      "cover": "Titulní obrázek",
+      "submit": "Uložit změny",
+      "moderators": "Moderátoři",
+      "addModerator": "Přidat moderátora",
+      "searchUsers": "Hledat uživatele podle jména...",
+      "removeModerator": "Odebrat moderátora",
+      "noModerators": "Zatím nebyli přidáni žádní moderátoři",
+      "saved": "Skupina aktualizována!",
+      "moderatorAdded": "Moderátor přidán",
+      "moderatorRemoved": "Moderátor odebrán"
     }
   },
   "profile": {

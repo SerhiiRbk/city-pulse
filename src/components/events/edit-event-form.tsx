@@ -13,21 +13,36 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2 } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2, Shield, Search, UserPlus } from 'lucide-react';
 import { LocationPicker } from '@/components/maps/location-picker';
-import { updateEvent, uploadEventPhoto } from '@/lib/actions/events';
+import {
+  updateEvent,
+  uploadEventPhoto,
+  addEventModerator,
+  removeEventModerator,
+} from '@/lib/actions/events';
+import { searchUsers } from '@/lib/actions/groups';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { Event, Interest, InterestCategory } from '@/types/database';
+
+interface EventModerator {
+  user_id: string;
+  profiles: { id: string; display_name: string; avatar_url: string | null };
+}
 
 interface EditEventFormProps {
   event: Event;
   interests: Interest[];
   categories: InterestCategory[];
+  moderators?: EventModerator[];
 }
 
-export function EditEventForm({ event, interests, categories }: EditEventFormProps) {
+export function EditEventForm({ event, interests, categories, moderators: initialModerators = [] }: EditEventFormProps) {
   const t = useTranslations('events.create');
+  const tEdit = useTranslations('events.edit');
   const locale = useLocale();
   const router = useRouter();
 
@@ -60,6 +75,57 @@ export function EditEventForm({ event, interests, categories }: EditEventFormPro
   const [photos, setPhotos] = useState<string[]>(event.photos || []);
   const [coverIndex, setCoverIndex] = useState(0);
   const [uploading, setUploading] = useState(false);
+
+  const [moderatorsList, setModeratorsList] = useState<EventModerator[]>(initialModerators);
+  const [modSearchQuery, setModSearchQuery] = useState('');
+  const [modSearchResults, setModSearchResults] = useState<
+    { id: string; display_name: string; avatar_url: string | null }[]
+  >([]);
+  const [modSearching, setModSearching] = useState(false);
+
+  async function handleModSearch(query: string) {
+    setModSearchQuery(query);
+    if (query.length < 2) {
+      setModSearchResults([]);
+      return;
+    }
+    setModSearching(true);
+    try {
+      const results = await searchUsers(query);
+      const existingIds = new Set([
+        event.organizer_id,
+        ...moderatorsList.map((m) => m.user_id),
+      ]);
+      setModSearchResults(results.filter((u) => !existingIds.has(u.id)));
+    } finally {
+      setModSearching(false);
+    }
+  }
+
+  async function handleAddMod(user: { id: string; display_name: string; avatar_url: string | null }) {
+    const result = await addEventModerator(event.id, user.id);
+    if (result.error) {
+      toast.error(result.error);
+      return;
+    }
+    setModeratorsList((prev) => [
+      ...prev,
+      { user_id: user.id, profiles: { id: user.id, display_name: user.display_name, avatar_url: user.avatar_url } },
+    ]);
+    setModSearchQuery('');
+    setModSearchResults([]);
+    toast.success(tEdit('moderatorAdded'));
+  }
+
+  async function handleRemoveMod(userId: string) {
+    const result = await removeEventModerator(event.id, userId);
+    if (result.error) {
+      toast.error(result.error);
+      return;
+    }
+    setModeratorsList((prev) => prev.filter((m) => m.user_id !== userId));
+    toast.success(tEdit('moderatorRemoved'));
+  }
 
   function getInterestLabel(interest: Interest): string {
     return interest.translations[locale] || interest.translations['en'] || interest.slug;
@@ -454,10 +520,83 @@ export function EditEventForm({ event, interests, categories }: EditEventFormPro
         </CardContent>
       </Card>
 
+      {/* Moderators */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Shield className="h-5 w-5" />
+            {tEdit('moderators')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {moderatorsList.length === 0 ? (
+            <p className="text-muted-foreground text-sm">{tEdit('noModerators')}</p>
+          ) : (
+            <div className="space-y-2">
+              {moderatorsList.map((mod) => (
+                <div key={mod.user_id} className="flex items-center gap-3 rounded-lg border p-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={mod.profiles?.avatar_url || undefined} />
+                    <AvatarFallback>{mod.profiles?.display_name?.[0] || '?'}</AvatarFallback>
+                  </Avatar>
+                  <span className="flex-1 text-sm font-medium">{mod.profiles?.display_name}</span>
+                  <Badge variant="outline" className="text-xs">{tEdit('moderators')}</Badge>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="text-destructive hover:text-destructive h-8 w-8 p-0"
+                    onClick={() => handleRemoveMod(mod.user_id)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <Label>{tEdit('addModerator')}</Label>
+            <div className="relative">
+              <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+              <Input
+                placeholder={tEdit('searchUsers')}
+                value={modSearchQuery}
+                onChange={(e) => handleModSearch(e.target.value)}
+                className="pl-9"
+              />
+              {modSearching && (
+                <Loader2 className="text-muted-foreground absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 animate-spin" />
+              )}
+            </div>
+
+            {modSearchResults.length > 0 && (
+              <div className="max-h-48 space-y-1 overflow-y-auto rounded-lg border p-2">
+                {modSearchResults.map((user) => (
+                  <button
+                    key={user.id}
+                    type="button"
+                    onClick={() => handleAddMod(user)}
+                    className="hover:bg-accent flex w-full items-center gap-3 rounded-md px-3 py-2 text-left transition-colors"
+                  >
+                    <Avatar className="h-7 w-7">
+                      <AvatarImage src={user.avatar_url || undefined} />
+                      <AvatarFallback>{user.display_name?.[0] || '?'}</AvatarFallback>
+                    </Avatar>
+                    <span className="flex-1 text-sm">{user.display_name}</span>
+                    <UserPlus className="text-muted-foreground h-4 w-4" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="flex gap-4">
         <Button type="submit" size="lg" className="flex-1" disabled={isLoading}>
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Save Changes
+          {tEdit('save')}
         </Button>
         <Button type="button" variant="outline" size="lg" onClick={() => router.back()}>
           Cancel

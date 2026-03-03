@@ -193,6 +193,17 @@
       "privateHint": "Zugang nur über Speziallink",
       "photos": "Fotos (max. 5)",
       "submit": "Veröffentlichen"
+    },
+    "edit": {
+      "title": "Event bearbeiten",
+      "save": "Änderungen speichern",
+      "moderators": "Moderatoren",
+      "addModerator": "Moderator hinzufügen",
+      "searchUsers": "Benutzer nach Name suchen...",
+      "removeModerator": "Moderator entfernen",
+      "noModerators": "Noch keine Moderatoren hinzugefügt",
+      "moderatorAdded": "Moderator hinzugefügt",
+      "moderatorRemoved": "Moderator entfernt"
     }
   },
   "groups": {
@@ -219,7 +230,23 @@
       "eventsTitle": "Kommende Veranstaltungen",
       "noEvents": "Keine kommenden Veranstaltungen",
       "admin": "Admin",
-      "moderator": "Moderator"
+      "moderator": "Moderator",
+      "editGroup": "Bearbeiten"
+    },
+    "editGroup": {
+      "title": "Gruppe bearbeiten",
+      "name": "Gruppenname",
+      "description": "Beschreibung",
+      "cover": "Titelbild",
+      "submit": "Änderungen speichern",
+      "moderators": "Moderatoren",
+      "addModerator": "Moderator hinzufügen",
+      "searchUsers": "Benutzer nach Name suchen...",
+      "removeModerator": "Moderator entfernen",
+      "noModerators": "Noch keine Moderatoren hinzugefügt",
+      "saved": "Gruppe aktualisiert!",
+      "moderatorAdded": "Moderator hinzugefügt",
+      "moderatorRemoved": "Moderator entfernt"
     }
   },
   "profile": {

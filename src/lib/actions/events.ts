@@ -303,6 +303,52 @@ export async function getComments(eventId: string) {
   return data || [];
 }
 
+export async function getEventModerators(eventId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('event_moderators')
+    .select('user_id, created_at, profiles:user_id(id, display_name, avatar_url)')
+    .eq('event_id', eventId);
+  return data || [];
+}
+
+export async function addEventModerator(eventId: string, userId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const allowed = await canEditEvent(eventId);
+  if (!allowed) return { error: 'No permission' };
+
+  const { error } = await supabase
+    .from('event_moderators')
+    .insert({ event_id: eventId, user_id: userId });
+
+  if (error) {
+    if (error.code === '23505') return { error: 'Already a moderator' };
+    return { error: error.message };
+  }
+  return { success: true };
+}
+
+export async function removeEventModerator(eventId: string, userId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const allowed = await canEditEvent(eventId);
+  if (!allowed) return { error: 'No permission' };
+
+  const { error } = await supabase
+    .from('event_moderators')
+    .delete()
+    .eq('event_id', eventId)
+    .eq('user_id', userId);
+
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
 export async function uploadEventPhoto(formData: FormData, eventId: string) {
   const supabase = await createClient();
   const {

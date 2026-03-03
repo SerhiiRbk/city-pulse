@@ -193,6 +193,17 @@
       "privateHint": "Only accessible via special link",
       "photos": "Photos (up to 5)",
       "submit": "Publish event"
+    },
+    "edit": {
+      "title": "Edit event",
+      "save": "Save changes",
+      "moderators": "Moderators",
+      "addModerator": "Add moderator",
+      "searchUsers": "Search users by name...",
+      "removeModerator": "Remove moderator",
+      "noModerators": "No moderators added yet",
+      "moderatorAdded": "Moderator added",
+      "moderatorRemoved": "Moderator removed"
     }
   },
   "groups": {
@@ -219,7 +230,23 @@
       "eventsTitle": "Upcoming events",
       "noEvents": "No upcoming events",
       "admin": "Admin",
-      "moderator": "Moderator"
+      "moderator": "Moderator",
+      "editGroup": "Edit"
+    },
+    "editGroup": {
+      "title": "Edit group",
+      "name": "Group name",
+      "description": "Description",
+      "cover": "Cover image",
+      "submit": "Save changes",
+      "moderators": "Moderators",
+      "addModerator": "Add moderator",
+      "searchUsers": "Search users by name...",
+      "removeModerator": "Remove moderator",
+      "noModerators": "No moderators added yet",
+      "saved": "Group updated!",
+      "moderatorAdded": "Moderator added",
+      "moderatorRemoved": "Moderator removed"
     }
   },
   "profile": {

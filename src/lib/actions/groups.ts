@@ -2,6 +2,117 @@
 
 import { createClient } from '@/lib/supabase/server';
 
+export async function canEditGroup(groupId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return false;
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  if (profile?.role === 'admin' || profile?.role === 'moderator') return true;
+
+  const { data: member } = await supabase
+    .from('group_members')
+    .select('role')
+    .eq('group_id', groupId)
+    .eq('user_id', user.id)
+    .single();
+
+  return member?.role === 'admin' || member?.role === 'moderator';
+}
+
+export async function getGroupRaw(groupId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('groups')
+    .select('*')
+    .eq('id', groupId)
+    .single();
+  return data;
+}
+
+export async function updateGroup(
+  groupId: string,
+  data: { name?: string; description?: string; cover_url?: string | null }
+) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const allowed = await canEditGroup(groupId);
+  if (!allowed) return { error: 'No permission to edit this group' };
+
+  const { error } = await supabase.from('groups').update(data).eq('id', groupId);
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
+export async function addGroupModerator(groupId: string, userId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const allowed = await canEditGroup(groupId);
+  if (!allowed) return { error: 'No permission' };
+
+  const { data: existing } = await supabase
+    .from('group_members')
+    .select('role')
+    .eq('group_id', groupId)
+    .eq('user_id', userId)
+    .single();
+
+  if (existing) {
+    if (existing.role === 'admin') return { error: 'Cannot change admin role' };
+    const { error } = await supabase
+      .from('group_members')
+      .update({ role: 'moderator' })
+      .eq('group_id', groupId)
+      .eq('user_id', userId);
+    if (error) return { error: error.message };
+  } else {
+    const { error } = await supabase
+      .from('group_members')
+      .insert({ group_id: groupId, user_id: userId, role: 'moderator' });
+    if (error) return { error: error.message };
+  }
+
+  return { success: true };
+}
+
+export async function removeGroupModerator(groupId: string, userId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const allowed = await canEditGroup(groupId);
+  if (!allowed) return { error: 'No permission' };
+
+  const { error } = await supabase
+    .from('group_members')
+    .update({ role: 'member' })
+    .eq('group_id', groupId)
+    .eq('user_id', userId);
+
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
+export async function searchUsers(query: string) {
+  if (!query || query.length < 2) return [];
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('profiles')
+    .select('id, display_name, avatar_url')
+    .ilike('display_name', `%${query}%`)
+    .limit(10);
+  return data || [];
+}
+
 export async function createGroup(data: {
   name: string;
   description: string;

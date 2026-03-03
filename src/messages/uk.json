@@ -193,6 +193,17 @@
       "privateHint": "Доступ лише за спеціальним посиланням",
       "photos": "Фотографії (до 5)",
       "submit": "Опублікувати"
+    },
+    "edit": {
+      "title": "Редагувати подію",
+      "save": "Зберегти зміни",
+      "moderators": "Модератори",
+      "addModerator": "Додати модератора",
+      "searchUsers": "Пошук користувачів за іменем...",
+      "removeModerator": "Видалити модератора",
+      "noModerators": "Модераторів ще не додано",
+      "moderatorAdded": "Модератора додано",
+      "moderatorRemoved": "Модератора видалено"
     }
   },
   "groups": {
@@ -219,7 +230,23 @@
       "eventsTitle": "Найближчі заходи",
       "noEvents": "Немає найближчих заходів",
       "admin": "Адмін",
-      "moderator": "Модератор"
+      "moderator": "Модератор",
+      "editGroup": "Редагувати"
+    },
+    "editGroup": {
+      "title": "Редагувати групу",
+      "name": "Назва групи",
+      "description": "Опис",
+      "cover": "Обкладинка",
+      "submit": "Зберегти зміни",
+      "moderators": "Модератори",
+      "addModerator": "Додати модератора",
+      "searchUsers": "Пошук користувачів за іменем...",
+      "removeModerator": "Видалити модератора",
+      "noModerators": "Модераторів ще не додано",
+      "saved": "Групу оновлено!",
+      "moderatorAdded": "Модератора додано",
+      "moderatorRemoved": "Модератора видалено"
     }
   },
   "profile": {

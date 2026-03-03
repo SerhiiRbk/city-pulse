@@ -7,12 +7,14 @@ import {
   getGroupMembers,
   getGroupEvents,
   getUserGroupStatus,
+  canEditGroup,
 } from '@/lib/actions/groups';
 import { GroupActions } from '@/components/groups/group-actions';
 import { EventCard } from '@/components/events/event-card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Users, Calendar } from 'lucide-react';
+import { Users, Calendar, Pencil } from 'lucide-react';
 import type { Metadata } from 'next';
 
 interface Props {
@@ -47,7 +49,10 @@ export default async function GroupDetailPage({ params }: Props) {
 
   if (!group) notFound();
 
-  const status = user ? await getUserGroupStatus(id) : { isMember: false, isSubscribed: false, role: null };
+  const isAuthenticated = !!user;
+  const [status, canEdit] = isAuthenticated
+    ? await Promise.all([getUserGroupStatus(id), canEditGroup(id)])
+    : [{ isMember: false, isSubscribed: false, role: null }, false];
   const t = await getTranslations('groups');
   const tDetail = await getTranslations('groups.detail');
 
@@ -80,13 +85,23 @@ export default async function GroupDetailPage({ params }: Props) {
             </span>
           </div>
 
-          <GroupActions
-            groupId={id}
-            isMember={status.isMember}
-            isSubscribed={status.isSubscribed}
-            role={status.role}
-            isAuthenticated={!!user}
-          />
+          <div className="flex flex-wrap items-center gap-2">
+            <GroupActions
+              groupId={id}
+              isMember={status.isMember}
+              isSubscribed={status.isSubscribed}
+              role={status.role}
+              isAuthenticated={isAuthenticated}
+            />
+            {canEdit && (
+              <Button variant="outline" size="sm" asChild>
+                <Link href={`/groups/${id}/edit`}>
+                  <Pencil className="mr-2 h-4 w-4" />
+                  {tDetail('editGroup') || 'Edit'}
+                </Link>
+              </Button>
+            )}
+          </div>
 
           {group.description && (
             <div className="mt-6">
