@@ -192,6 +192,9 @@
       "isPrivate": "Soukromá akce",
       "privateHint": "Přístup pouze přes speciální odkaz",
       "photos": "Fotografie (max 5)",
+      "group": "Vytvořit jménem",
+      "personalEvent": "Osobní akce",
+      "groupEvent": "Skupina: {name}",
       "submit": "Publikovat"
     },
     "edit": {
@@ -235,7 +238,8 @@
       "noEvents": "Žádné nadcházející akce",
       "admin": "Admin",
       "moderator": "Moderátor",
-      "editGroup": "Upravit"
+      "editGroup": "Upravit",
+      "createEvent": "Vytvořit akci"
     },
     "editGroup": {
       "title": "Upravit skupinu",

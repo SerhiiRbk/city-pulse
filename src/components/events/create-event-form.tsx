@@ -13,24 +13,40 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2 } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2, UsersRound } from 'lucide-react';
 import { LocationPicker } from '@/components/maps/location-picker';
 import { createEvent, uploadEventPhoto } from '@/lib/actions/events';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { Interest, InterestCategory } from '@/types/database';
 
+interface ManageableGroup {
+  id: string;
+  name: string;
+  cover_url: string | null;
+}
+
 interface CreateEventFormProps {
   interests: Interest[];
   categories: InterestCategory[];
+  groups?: ManageableGroup[];
+  defaultGroupId?: string;
 }
 
-export function CreateEventForm({ interests, categories }: CreateEventFormProps) {
+export function CreateEventForm({ interests, categories, groups = [], defaultGroupId }: CreateEventFormProps) {
   const t = useTranslations('events.create');
   const locale = useLocale();
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedGroupId, setSelectedGroupId] = useState<string>(defaultGroupId || '__personal');
   const [isOnline, setIsOnline] = useState(false);
   const [isFree, setIsFree] = useState(true);
   const [isPrivate, setIsPrivate] = useState(false);
@@ -129,6 +145,7 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
       photos: photos.length > 0
         ? [photos[coverIndex], ...photos.filter((_, i) => i !== coverIndex)]
         : [],
+      group_id: selectedGroupId !== '__personal' ? selectedGroupId : null,
     };
 
     if (!data.title || !data.starts_at || !primaryCategory) {
@@ -151,6 +168,33 @@ export function CreateEventForm({ interests, categories }: CreateEventFormProps)
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Group selector */}
+      {groups.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <UsersRound className="h-5 w-5" />
+              {t('group')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Select value={selectedGroupId} onValueChange={setSelectedGroupId}>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__personal">{t('personalEvent')}</SelectItem>
+                {groups.map((g) => (
+                  <SelectItem key={g.id} value={g.id}>
+                    {g.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Basic info */}
       <Card>
         <CardHeader>

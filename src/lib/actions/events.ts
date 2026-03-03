@@ -21,6 +21,7 @@ export async function createEvent(data: {
   lng?: number;
   is_private: boolean;
   photos?: string[];
+  group_id?: string | null;
 }) {
   const supabase = await createClient();
   const {

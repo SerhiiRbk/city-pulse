@@ -192,6 +192,9 @@
       "isPrivate": "Private event",
       "privateHint": "Only accessible via special link",
       "photos": "Photos (up to 5)",
+      "group": "Create on behalf of",
+      "personalEvent": "Personal event",
+      "groupEvent": "Group: {name}",
       "submit": "Publish event"
     },
     "edit": {
@@ -235,7 +238,8 @@
       "noEvents": "No upcoming events",
       "admin": "Admin",
       "moderator": "Moderator",
-      "editGroup": "Edit"
+      "editGroup": "Edit",
+      "createEvent": "Create event"
     },
     "editGroup": {
       "title": "Edit group",

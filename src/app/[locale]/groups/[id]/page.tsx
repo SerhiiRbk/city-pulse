@@ -15,7 +15,7 @@ import { EventCard } from '@/components/events/event-card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Users, Calendar, Pencil, MapPin } from 'lucide-react';
+import { Users, Calendar, Pencil, MapPin, CalendarPlus } from 'lucide-react';
 import { COUNTRIES } from '@/lib/constants';
 import { countryCodeToFlag } from '@/lib/utils';
 import type { Metadata } from 'next';
@@ -123,12 +123,20 @@ export default async function GroupDetailPage({ params }: Props) {
               isAuthenticated={isAuthenticated}
             />
             {canEdit && (
-              <Button variant="outline" size="sm" asChild>
-                <Link href={`/groups/${id}/edit`}>
-                  <Pencil className="mr-2 h-4 w-4" />
-                  {tDetail('editGroup') || 'Edit'}
-                </Link>
-              </Button>
+              <>
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={`/events/create?group_id=${id}`}>
+                    <CalendarPlus className="mr-2 h-4 w-4" />
+                    {tDetail('createEvent')}
+                  </Link>
+                </Button>
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={`/groups/${id}/edit`}>
+                    <Pencil className="mr-2 h-4 w-4" />
+                    {tDetail('editGroup')}
+                  </Link>
+                </Button>
+              </>
             )}
           </div>
 

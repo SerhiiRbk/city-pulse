@@ -139,6 +139,22 @@ export async function getGroupInterestsFull(groupId: string) {
   return (data || []).map((r: any) => r.interests).filter(Boolean);
 }
 
+export async function getUserManageableGroups() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const { data } = await supabase
+    .from('group_members')
+    .select('group_id, role, groups(id, name, cover_url)')
+    .eq('user_id', user.id)
+    .in('role', ['admin', 'moderator']);
+
+  return (data || [])
+    .map((m: any) => m.groups)
+    .filter(Boolean);
+}
+
 export async function searchUsers(query: string) {
   if (!query || query.length < 2) return [];
   const supabase = await createClient();
