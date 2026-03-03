@@ -222,6 +222,10 @@
       "name": "Název skupiny",
       "description": "Popis",
       "cover": "Titulní obrázek",
+      "country": "Země",
+      "city": "Město",
+      "cityPlaceholder": "Zadejte název města",
+      "interests": "Zájmy",
       "submit": "Vytvořit skupinu"
     },
     "detail": {
@@ -238,6 +242,10 @@
       "name": "Název skupiny",
       "description": "Popis",
       "cover": "Titulní obrázek",
+      "country": "Země",
+      "city": "Město",
+      "cityPlaceholder": "Zadejte název města",
+      "interests": "Zájmy",
       "submit": "Uložit změny",
       "moderators": "Moderátoři",
       "addModerator": "Přidat moderátora",

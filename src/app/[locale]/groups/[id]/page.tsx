@@ -8,13 +8,16 @@ import {
   getGroupEvents,
   getUserGroupStatus,
   canEditGroup,
+  getGroupInterestsFull,
 } from '@/lib/actions/groups';
 import { GroupActions } from '@/components/groups/group-actions';
 import { EventCard } from '@/components/events/event-card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Users, Calendar, Pencil } from 'lucide-react';
+import { Users, Calendar, Pencil, MapPin } from 'lucide-react';
+import { COUNTRIES } from '@/lib/constants';
+import { countryCodeToFlag } from '@/lib/utils';
 import type { Metadata } from 'next';
 
 interface Props {
@@ -40,11 +43,12 @@ export default async function GroupDetailPage({ params }: Props) {
   const { locale, id } = await params;
   setRequestLocale(locale);
 
-  const [group, members, events, user] = await Promise.all([
+  const [group, members, events, user, groupInterests] = await Promise.all([
     getGroup(id),
     getGroupMembers(id),
     getGroupEvents(id),
     getUser(),
+    getGroupInterestsFull(id),
   ]);
 
   if (!group) notFound();
@@ -74,7 +78,7 @@ export default async function GroupDetailPage({ params }: Props) {
         <div className="lg:col-span-2">
           <h1 className="mb-2 text-3xl font-bold">{group.name}</h1>
 
-          <div className="text-muted-foreground mb-4 flex items-center gap-4 text-sm">
+          <div className="text-muted-foreground mb-4 flex flex-wrap items-center gap-4 text-sm">
             <span className="flex items-center gap-1">
               <Users className="h-4 w-4" />
               {t('members', { count: group.member_count })}
@@ -83,7 +87,32 @@ export default async function GroupDetailPage({ params }: Props) {
               <Calendar className="h-4 w-4" />
               {group.event_count} {t('events').toLowerCase()}
             </span>
+            {(group.country || group.city) && (
+              <span className="flex items-center gap-1">
+                <MapPin className="h-4 w-4" />
+                {group.country && (() => {
+                  const c = COUNTRIES.find((c) => c.code === group.country);
+                  return c ? `${countryCodeToFlag(c.code)} ${c[locale as keyof typeof c] || c.en}` : group.country;
+                })()}
+                {group.country && group.city && ', '}
+                {group.city}
+              </span>
+            )}
           </div>
+
+          {groupInterests.length > 0 && (
+            <div className="mb-4 flex flex-wrap gap-2">
+              {groupInterests.map((interest: any) => (
+                <span
+                  key={interest.id}
+                  className="bg-background inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm shadow-sm"
+                >
+                  {interest.icon && <span className="text-base leading-none">{interest.icon}</span>}
+                  {interest.translations?.[locale] || interest.translations?.en || interest.slug}
+                </span>
+              ))}
+            </div>
+          )}
 
           <div className="flex flex-wrap items-center gap-2">
             <GroupActions

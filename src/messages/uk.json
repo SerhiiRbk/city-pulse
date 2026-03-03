@@ -222,6 +222,10 @@
       "name": "Назва групи",
       "description": "Опис",
       "cover": "Обкладинка",
+      "country": "Країна",
+      "city": "Місто",
+      "cityPlaceholder": "Введіть назву міста",
+      "interests": "Інтереси",
       "submit": "Створити групу"
     },
     "detail": {
@@ -238,6 +242,10 @@
       "name": "Назва групи",
       "description": "Опис",
       "cover": "Обкладинка",
+      "country": "Країна",
+      "city": "Місто",
+      "cityPlaceholder": "Введіть назву міста",
+      "interests": "Інтереси",
       "submit": "Зберегти зміни",
       "moderators": "Модератори",
       "addModerator": "Додати модератора",

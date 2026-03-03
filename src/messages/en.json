@@ -222,6 +222,10 @@
       "name": "Group name",
       "description": "Description",
       "cover": "Cover image",
+      "country": "Country",
+      "city": "City",
+      "cityPlaceholder": "Enter city name",
+      "interests": "Interests",
       "submit": "Create group"
     },
     "detail": {
@@ -238,6 +242,10 @@
       "name": "Group name",
       "description": "Description",
       "cover": "Cover image",
+      "country": "Country",
+      "city": "City",
+      "cityPlaceholder": "Enter city name",
+      "interests": "Interests",
       "submit": "Save changes",
       "moderators": "Moderators",
       "addModerator": "Add moderator",

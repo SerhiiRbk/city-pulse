@@ -2,7 +2,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { redirect } from '@/i18n/navigation';
 import { getUser } from '@/lib/actions/auth';
-import { canEditGroup, getGroupRaw, getGroupMembers } from '@/lib/actions/groups';
+import { canEditGroup, getGroupRaw, getGroupMembers, getGroupInterests } from '@/lib/actions/groups';
+import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { EditGroupForm } from '@/components/groups/edit-group-form';
 
 interface Props {
@@ -19,9 +20,12 @@ export default async function EditGroupPage({ params }: Props) {
   const canEdit = await canEditGroup(id);
   if (!canEdit) redirect({ href: `/groups/${id}`, locale });
 
-  const [group, members] = await Promise.all([
+  const [group, members, interests, categories, groupInterestIds] = await Promise.all([
     getGroupRaw(id),
     getGroupMembers(id),
+    getInterests(),
+    getInterestCategories(),
+    getGroupInterests(id),
   ]);
 
   if (!group) notFound();
@@ -31,7 +35,13 @@ export default async function EditGroupPage({ params }: Props) {
   return (
     <div className="container mx-auto max-w-2xl px-4 py-8">
       <h1 className="mb-6 text-3xl font-bold">{t('title')}</h1>
-      <EditGroupForm group={group} members={members} />
+      <EditGroupForm
+        group={group}
+        members={members}
+        interests={interests}
+        categories={categories}
+        groupInterestIds={groupInterestIds}
+      />
     </div>
   );
 }

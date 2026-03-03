@@ -222,6 +222,10 @@
       "name": "Gruppenname",
       "description": "Beschreibung",
       "cover": "Titelbild",
+      "country": "Land",
+      "city": "Stadt",
+      "cityPlaceholder": "Stadtname eingeben",
+      "interests": "Interessen",
       "submit": "Gruppe erstellen"
     },
     "detail": {
@@ -238,6 +242,10 @@
       "name": "Gruppenname",
       "description": "Beschreibung",
       "cover": "Titelbild",
+      "country": "Land",
+      "city": "Stadt",
+      "cityPlaceholder": "Stadtname eingeben",
+      "interests": "Interessen",
       "submit": "Änderungen speichern",
       "moderators": "Moderatoren",
       "addModerator": "Moderator hinzufügen",

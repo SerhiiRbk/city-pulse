@@ -37,7 +37,14 @@ export async function getGroupRaw(groupId: string) {
 
 export async function updateGroup(
   groupId: string,
-  data: { name?: string; description?: string; cover_url?: string | null }
+  data: {
+    name?: string;
+    description?: string;
+    cover_url?: string | null;
+    country?: string | null;
+    city?: string | null;
+    interest_ids?: string[];
+  }
 ) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -46,8 +53,20 @@ export async function updateGroup(
   const allowed = await canEditGroup(groupId);
   if (!allowed) return { error: 'No permission to edit this group' };
 
-  const { error } = await supabase.from('groups').update(data).eq('id', groupId);
+  const { interest_ids, ...groupData } = data;
+
+  const { error } = await supabase.from('groups').update(groupData).eq('id', groupId);
   if (error) return { error: error.message };
+
+  if (interest_ids !== undefined) {
+    await supabase.from('group_interests').delete().eq('group_id', groupId);
+    if (interest_ids.length > 0) {
+      await supabase.from('group_interests').insert(
+        interest_ids.map((id) => ({ group_id: groupId, interest_id: id }))
+      );
+    }
+  }
+
   return { success: true };
 }
 
@@ -102,6 +121,24 @@ export async function removeGroupModerator(groupId: string, userId: string) {
   return { success: true };
 }
 
+export async function getGroupInterests(groupId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('group_interests')
+    .select('interest_id')
+    .eq('group_id', groupId);
+  return (data || []).map((r) => r.interest_id);
+}
+
+export async function getGroupInterestsFull(groupId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('group_interests')
+    .select('interest_id, interests(id, slug, icon, translations, category_id)')
+    .eq('group_id', groupId);
+  return (data || []).map((r: any) => r.interests).filter(Boolean);
+}
+
 export async function searchUsers(query: string) {
   if (!query || query.length < 2) return [];
   const supabase = await createClient();
@@ -117,14 +154,19 @@ export async function createGroup(data: {
   name: string;
   description: string;
   cover_url?: string;
+  country?: string | null;
+  city?: string | null;
+  interest_ids?: string[];
 }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
 
+  const { interest_ids, ...groupData } = data;
+
   const { data: group, error } = await supabase
     .from('groups')
-    .insert({ ...data, created_by: user.id })
+    .insert({ ...groupData, created_by: user.id })
     .select()
     .single();
 
@@ -135,6 +177,12 @@ export async function createGroup(data: {
     user_id: user.id,
     role: 'admin',
   });
+
+  if (interest_ids && interest_ids.length > 0) {
+    await supabase.from('group_interests').insert(
+      interest_ids.map((id) => ({ group_id: group.id, interest_id: id }))
+    );
+  }
 
   return { success: true, group };
 }

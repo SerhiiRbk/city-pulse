@@ -127,6 +127,8 @@ export interface Group {
   name: string;
   description: string;
   cover_url: string | null;
+  country: string | null;
+  city: string | null;
   created_by: string;
   created_at: string;
   updated_at: string;

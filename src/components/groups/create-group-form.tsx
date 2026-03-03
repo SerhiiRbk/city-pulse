@@ -1,22 +1,73 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Loader2, X, ChevronsUpDown, Check, MapPin } from 'lucide-react';
 import { createGroup, uploadGroupCover } from '@/lib/actions/groups';
 import { toast } from 'sonner';
+import { COUNTRIES } from '@/lib/constants';
+import { cn, countryCodeToFlag } from '@/lib/utils';
+import type { Interest, InterestCategory } from '@/types/database';
 
-export function CreateGroupForm() {
+interface CreateGroupFormProps {
+  interests: Interest[];
+  categories: InterestCategory[];
+}
+
+export function CreateGroupForm({ interests, categories }: CreateGroupFormProps) {
   const t = useTranslations('groups.createGroup');
+  const locale = useLocale();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [country, setCountry] = useState('');
+  const [city, setCity] = useState('');
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [interestsPopoverOpen, setInterestsPopoverOpen] = useState(false);
+
+  function getInterestLabel(interest: Interest): string {
+    return interest.translations[locale] || interest.translations['en'] || interest.slug;
+  }
+
+  function getCategoryLabel(cat: InterestCategory): string {
+    return cat.translations[locale] || cat.translations['en'] || cat.slug;
+  }
+
+  function toggleInterest(id: string) {
+    setSelectedInterests((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+    );
+  }
+
+  const uncategorizedCatId = categories.find((c) => c.slug === 'other')?.id;
+  const groupedInterests = categories
+    .map((cat) => ({
+      ...cat,
+      label: getCategoryLabel(cat),
+      items: interests.filter((i) => {
+        if (i.category_id) return i.category_id === cat.id;
+        return cat.id === uncategorizedCatId;
+      }),
+    }))
+    .filter((g) => g.items.length > 0);
 
   function handleCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -39,7 +90,13 @@ export function CreateGroupForm() {
       return;
     }
 
-    const result = await createGroup({ name, description });
+    const result = await createGroup({
+      name,
+      description,
+      country: country || null,
+      city: city || null,
+      interest_ids: selectedInterests,
+    });
 
     if (result.error) {
       toast.error(result.error);
@@ -107,6 +164,118 @@ export function CreateGroupForm() {
               </label>
             )}
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Location */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MapPin className="h-5 w-5" />
+            {t('country')} / {t('city')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>{t('country')}</Label>
+            <Select value={country} onValueChange={setCountry}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={t('country')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none">—</SelectItem>
+                {COUNTRIES.map((c) => (
+                  <SelectItem key={c.code} value={c.code}>
+                    {countryCodeToFlag(c.code)} {c[locale as keyof typeof c] || c.en}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label>{t('city')}</Label>
+            <Input
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder={t('cityPlaceholder')}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Interests */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('interests')}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex flex-wrap gap-2">
+            {selectedInterests.map((id) => {
+              const interest = interests.find((i) => i.id === id);
+              if (!interest) return null;
+              return (
+                <span
+                  key={id}
+                  className="bg-background inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium shadow-sm"
+                >
+                  {interest.icon && <span className="text-base leading-none">{interest.icon}</span>}
+                  {getInterestLabel(interest)}
+                  <button
+                    type="button"
+                    onClick={() => toggleInterest(id)}
+                    className="text-muted-foreground hover:text-foreground -mr-1 ml-0.5 rounded-full p-0.5 transition-colors"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </span>
+              );
+            })}
+          </div>
+          <Popover open={interestsPopoverOpen} onOpenChange={setInterestsPopoverOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" type="button" className="w-full justify-between">
+                {selectedInterests.length > 0
+                  ? `${selectedInterests.length} selected`
+                  : t('interests')}
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              className="max-h-80 w-[--radix-popover-trigger-width] overflow-y-auto p-2"
+              align="start"
+            >
+              {groupedInterests.map((group) => (
+                <div key={group.id} className="mb-2 last:mb-0">
+                  <p className="text-muted-foreground mb-1 px-2 text-xs font-semibold uppercase tracking-wider">
+                    {group.label}
+                  </p>
+                  {group.items.map((interest) => {
+                    const selected = selectedInterests.includes(interest.id);
+                    return (
+                      <button
+                        key={interest.id}
+                        type="button"
+                        className={cn(
+                          'hover:bg-accent flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm transition-colors',
+                          selected && 'bg-accent',
+                        )}
+                        onClick={() => toggleInterest(interest.id)}
+                      >
+                        <Check
+                          className={cn(
+                            'h-4 w-4 shrink-0',
+                            selected ? 'opacity-100' : 'opacity-0',
+                          )}
+                        />
+                        {interest.icon && <span className="text-base leading-none">{interest.icon}</span>}
+                        {getInterestLabel(interest)}
+                      </button>
+                    );
+                  })}
+                </div>
+              ))}
+            </PopoverContent>
+          </Popover>
         </CardContent>
       </Card>
 
