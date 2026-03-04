@@ -116,19 +116,19 @@ export function EventPhotoGallery({ photos, title }: EventPhotoGalleryProps) {
 
   return (
     <>
-      <div className="mb-6 space-y-3">
+      <div className="space-y-3">
         {/* Cover photo */}
         <button
           type="button"
-          className="group relative w-full cursor-pointer overflow-hidden rounded-xl"
+          className="group relative w-full cursor-pointer overflow-hidden rounded-3xl shadow-sm"
           onClick={() => setLightboxIndex(0)}
         >
           <img
             src={photos[0]}
             alt={title}
-            className="h-64 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02] sm:h-96"
+            className="h-64 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] sm:h-96 md:h-[450px]"
           />
-          <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/10" />
+          <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
         </button>
 
         {/* Secondary photos */}
@@ -138,14 +138,13 @@ export function EventPhotoGallery({ photos, title }: EventPhotoGalleryProps) {
               <button
                 key={i}
                 type="button"
-                className="bg-muted group cursor-pointer overflow-hidden rounded-lg border transition-shadow hover:shadow-md"
+                className="bg-muted group cursor-pointer overflow-hidden rounded-xl border-border/50 border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
                 onClick={() => setLightboxIndex(i + 1)}
               >
                 <img
                   src={photo}
                   alt=""
-                  className="block object-contain transition-transform duration-300 group-hover:scale-[1.03]"
-                  style={{ maxWidth: 200, maxHeight: 200 }}
+                  className="block h-24 w-32 object-cover transition-transform duration-500 group-hover:scale-[1.05] sm:h-32 sm:w-48"
                 />
               </button>
             ))}

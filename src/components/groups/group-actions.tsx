@@ -55,35 +55,36 @@ export function GroupActions({
   const isAdmin = role === 'admin';
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap items-center justify-center gap-2">
       {!isAdmin && (
         <Button
           variant={isMember ? 'secondary' : 'default'}
           onClick={handleToggleMembership}
           disabled={loading}
+          className="rounded-full shadow-sm"
         >
           {isMember ? (
             <>
-              <LogOut className="mr-2 h-4 w-4" />
+              <LogOut className="mr-1.5 h-4 w-4" />
               {t('leave')}
             </>
           ) : (
             <>
-              <LogIn className="mr-2 h-4 w-4" />
+              <LogIn className="mr-1.5 h-4 w-4" />
               {t('join')}
             </>
           )}
         </Button>
       )}
-      <Button variant="outline" onClick={handleToggleSubscription}>
+      <Button variant="outline" onClick={handleToggleSubscription} className="rounded-full shadow-sm">
         {isSubscribed ? (
           <>
-            <BellOff className="mr-2 h-4 w-4" />
+            <BellOff className="mr-1.5 h-4 w-4" />
             {t('unsubscribe')}
           </>
         ) : (
           <>
-            <Bell className="mr-2 h-4 w-4" />
+            <Bell className="mr-1.5 h-4 w-4" />
             {t('subscribe')}
           </>
         )}

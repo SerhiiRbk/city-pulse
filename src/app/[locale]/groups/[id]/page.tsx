@@ -13,6 +13,7 @@ import {
   getGroupInterestsFull,
 } from '@/lib/actions/groups';
 import { getGroupAlbums } from '@/lib/actions/albums';
+import { getUserEventStatuses } from '@/lib/actions/events';
 import { GroupActions } from '@/components/groups/group-actions';
 import { GroupTabs } from '@/components/groups/group-tabs';
 import { Button } from '@/components/ui/button';
@@ -59,9 +60,10 @@ export default async function GroupDetailPage({ params }: Props) {
   if (!group) notFound();
 
   const isAuthenticated = !!user;
-  const [status, canEdit] = isAuthenticated
-    ? await Promise.all([getUserGroupStatus(id), canEditGroup(id)])
-    : [{ isMember: false, isSubscribed: false, role: null }, false];
+  const allEventIds = [...upcomingEvents, ...pastEvents].map((e: any) => e.id);
+  const [status, canEdit, eventStatuses] = isAuthenticated
+    ? await Promise.all([getUserGroupStatus(id), canEditGroup(id), getUserEventStatuses(allEventIds)])
+    : [{ isMember: false, isSubscribed: false, role: null }, false, { goingSet: new Set<string>(), favoritedSet: new Set<string>() }];
   const t = await getTranslations('groups');
   const tDetail = await getTranslations('groups.detail');
 
@@ -76,10 +78,11 @@ export default async function GroupDetailPage({ params }: Props) {
             <Users className="text-primary/20 h-32 w-32" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
 
         {/* Title overlay on cover */}
-        <div className="absolute inset-x-0 bottom-0 px-4 pb-8">
+        <div className="absolute inset-x-0 bottom-0 px-4 pb-12">
           <div className="mx-auto max-w-4xl">
             <h1 className="mb-2 text-3xl font-bold tracking-tight text-white drop-shadow-lg sm:text-4xl">
               {group.name}
@@ -113,11 +116,10 @@ export default async function GroupDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Content */}
+      {/* Info card — overlaps cover */}
       <div className="mx-auto max-w-4xl px-4">
-        {/* Info card — overlaps cover */}
-        <div className="bg-background relative -mt-6 rounded-2xl border p-6 shadow-lg">
-          <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start">
+        <div className="bg-background relative -mt-8 rounded-3xl border border-border/50 p-6 shadow-xl sm:p-8">
+          <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
             {/* Creator + description */}
             <div className="min-w-0 flex-1 text-center sm:text-left">
               {group.creator_name && (
@@ -150,13 +152,13 @@ export default async function GroupDetailPage({ params }: Props) {
               />
               {canEdit && (
                 <>
-                  <Button variant="outline" size="sm" asChild>
+                  <Button variant="outline" size="sm" asChild className="rounded-full shadow-sm">
                     <Link href={`/events/create?group_id=${id}`}>
                       <CalendarPlus className="mr-1.5 h-4 w-4" />
                       {tDetail('createEvent')}
                     </Link>
                   </Button>
-                  <Button variant="outline" size="sm" asChild>
+                  <Button variant="outline" size="sm" asChild className="rounded-full shadow-sm">
                     <Link href={`/groups/${id}/edit`}>
                       <Pencil className="mr-1.5 h-4 w-4" />
                       {tDetail('editGroup')}
@@ -182,21 +184,23 @@ export default async function GroupDetailPage({ params }: Props) {
             </div>
           )}
         </div>
+      </div>
 
-        {/* Tabs */}
-        <div className="pb-12 pt-6">
-          <GroupTabs
-            groupId={id}
-            upcomingEvents={upcomingEvents}
-            pastEvents={pastEvents}
-            albums={albums}
-            comments={comments}
-            members={members as any}
-            canEdit={canEdit}
-            isAuthenticated={isAuthenticated}
-            currentUserId={user?.id}
-          />
-        </div>
+      {/* Tabs — full container width */}
+      <div className="container mx-auto px-4 pb-12 pt-6">
+        <GroupTabs
+          groupId={id}
+          upcomingEvents={upcomingEvents}
+          pastEvents={pastEvents}
+          albums={albums}
+          comments={comments}
+          members={members as any}
+          canEdit={canEdit}
+          isAuthenticated={isAuthenticated}
+          currentUserId={user?.id}
+          goingEventIds={Array.from(eventStatuses.goingSet)}
+          favoritedEventIds={Array.from(eventStatuses.favoritedSet)}
+        />
       </div>
     </div>
   );

@@ -31,6 +31,8 @@ interface GroupTabsProps {
   canEdit: boolean;
   isAuthenticated: boolean;
   currentUserId?: string;
+  goingEventIds?: string[];
+  favoritedEventIds?: string[];
 }
 
 export function GroupTabs({
@@ -43,8 +45,12 @@ export function GroupTabs({
   canEdit,
   isAuthenticated,
   currentUserId,
+  goingEventIds = [],
+  favoritedEventIds = [],
 }: GroupTabsProps) {
   const t = useTranslations('groups.detail');
+  const goingSet = new Set(goingEventIds);
+  const favSet = new Set(favoritedEventIds);
   const locale = useLocale();
   const router = useRouter();
   const [comments, setComments] = useState(initialComments);
@@ -132,28 +138,28 @@ export function GroupTabs({
 
   return (
     <Tabs defaultValue="upcoming">
-      <TabsList variant="line" className="w-full justify-start">
-        <TabsTrigger value="upcoming" className="gap-1.5">
+      <TabsList variant="line" className="w-full justify-start border-b border-border/50">
+        <TabsTrigger value="upcoming" className="gap-1.5 relative">
           <Calendar className="h-4 w-4" />
           <span className="hidden sm:inline">{t('eventsTitle')}</span>
           <CountBadge count={upcomingEvents.length} active />
         </TabsTrigger>
-        <TabsTrigger value="past" className="gap-1.5">
+        <TabsTrigger value="past" className="gap-1.5 relative">
           <History className="h-4 w-4" />
           <span className="hidden sm:inline">{t('pastEventsTitle')}</span>
           <CountBadge count={pastEvents.length} />
         </TabsTrigger>
-        <TabsTrigger value="photos" className="gap-1.5">
+        <TabsTrigger value="photos" className="gap-1.5 relative">
           <ImageIcon className="h-4 w-4" />
           <span className="hidden sm:inline">{t('photosTitle')}</span>
           <CountBadge count={albums.length} />
         </TabsTrigger>
-        <TabsTrigger value="members" className="gap-1.5">
+        <TabsTrigger value="members" className="gap-1.5 relative">
           <Users className="h-4 w-4" />
           <span className="hidden sm:inline">{t('membersList')}</span>
           <CountBadge count={members.length} />
         </TabsTrigger>
-        <TabsTrigger value="comments" className="gap-1.5">
+        <TabsTrigger value="comments" className="gap-1.5 relative">
           <MessageCircle className="h-4 w-4" />
           <span className="hidden sm:inline">{t('commentsTitle')}</span>
           <CountBadge count={comments.length} />
@@ -168,9 +174,9 @@ export function GroupTabs({
             <p className="text-muted-foreground text-sm">{t('noEvents')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {upcomingEvents.map((event) => (
-              <EventCard key={event.id} event={event} isAuthenticated={isAuthenticated} />
+              <EventCard key={event.id} event={event} isGoing={goingSet.has(event.id)} isFavorited={favSet.has(event.id)} isAuthenticated={isAuthenticated} />
             ))}
           </div>
         )}
@@ -184,9 +190,9 @@ export function GroupTabs({
             <p className="text-muted-foreground text-sm">{t('noPastEvents')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {pastEvents.map((event) => (
-              <EventCard key={event.id} event={event} isAuthenticated={isAuthenticated} />
+              <EventCard key={event.id} event={event} isGoing={goingSet.has(event.id)} isFavorited={favSet.has(event.id)} isAuthenticated={isAuthenticated} />
             ))}
           </div>
         )}
@@ -234,12 +240,12 @@ export function GroupTabs({
             <p className="text-muted-foreground text-sm">{t('noPhotos')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {albums.map((album) => (
               <Link
                 key={album.id}
                 href={`/groups/${groupId}/albums/${album.id}`}
-                className="group overflow-hidden rounded-xl border transition-all hover:shadow-lg"
+                className="group overflow-hidden rounded-2xl border border-border/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="bg-muted relative aspect-[4/3] overflow-hidden">
                   {album.cover_url ? (
@@ -275,12 +281,12 @@ export function GroupTabs({
             <p className="text-muted-foreground text-sm">{t('noMembers')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {members.map((m) => (
               <Link
                 key={m.user_id}
                 href={`/profile/${m.user_id}`}
-                className="hover:bg-muted/50 flex items-center gap-3 rounded-xl p-3 transition-colors"
+                className="hover:bg-muted/50 flex items-center gap-3 rounded-2xl p-3 transition-colors"
               >
                 <Avatar className="h-10 w-10 shrink-0 ring-2 ring-transparent transition-all group-hover:ring-primary/20">
                   <AvatarImage src={m.profiles?.avatar_url || undefined} />
@@ -330,9 +336,9 @@ export function GroupTabs({
         ) : (
           <div className="space-y-1">
             {comments.map((comment: any) => (
-              <div key={comment.id} className="hover:bg-muted/30 flex gap-3 rounded-xl p-4 transition-colors">
+              <div key={comment.id} className="hover:bg-muted/30 flex gap-4 rounded-2xl p-5 transition-colors">
                 <Link href={`/profile/${comment.profiles?.id || comment.user_id}`}>
-                  <Avatar className="h-9 w-9 shrink-0">
+                  <Avatar className="h-10 w-10 shrink-0">
                     <AvatarImage src={comment.profiles?.avatar_url || undefined} />
                     <AvatarFallback>{comment.profiles?.display_name?.[0] || '?'}</AvatarFallback>
                   </Avatar>

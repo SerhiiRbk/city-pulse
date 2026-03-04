@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { getEvents } from '@/lib/actions/events';
+import { getEvents, getUserEventStatuses } from '@/lib/actions/events';
 import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { getUser } from '@/lib/actions/auth';
 import { EventCard } from '@/components/events/event-card';
@@ -41,29 +41,34 @@ export default async function EventsPage({
     limit: 24,
   });
 
+  const { goingSet, favoritedSet } = user
+    ? await getUserEventStatuses(events.map((e) => e.id))
+    : { goingSet: new Set<string>(), favoritedSet: new Set<string>() };
+
   return (
     <div>
       {/* Hero banner */}
       <section className="relative overflow-hidden bg-gray-900">
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-40"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&q=80')" }}
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=2000&q=80')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 via-gray-900/40 to-gray-900/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/60 to-background" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
 
-        <div className="relative z-10 container mx-auto px-4 pt-16 pb-12">
-          <div className="mb-8 flex items-center justify-between">
+        <div className="relative z-10 container mx-auto px-4 pt-24 pb-16">
+          <div className="mb-10 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
             <div>
-              <h1 className="text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+              <h1 className="text-5xl font-extrabold tracking-tight text-white drop-shadow-lg md:text-6xl">
                 {t('title')}
               </h1>
-              <p className="mt-2 text-lg text-white/70">
+              <p className="mt-3 text-xl text-white/80 drop-shadow">
                 Discover events near you
               </p>
             </div>
             {user && (
-              <Button asChild size="lg" className="gap-2 shadow-lg">
-                <Link href="/events/create">
+              <Button asChild size="lg" className="rounded-full px-6 shadow-xl transition-transform hover:scale-105">
+                <Link href="/events/create" className="flex items-center gap-2">
                   <CalendarPlus className="h-5 w-5" />
                   Create event
                 </Link>
@@ -72,11 +77,13 @@ export default async function EventsPage({
           </div>
 
           {/* Filter bar */}
-          <EventsFilters
-            interests={interests}
-            categories={interestCategories}
-            currentFilters={filters}
-          />
+          <div className="rounded-2xl bg-white/10 p-2 backdrop-blur-md">
+            <EventsFilters
+              interests={interests}
+              categories={interestCategories}
+              currentFilters={filters}
+            />
+          </div>
         </div>
       </section>
 
@@ -91,11 +98,13 @@ export default async function EventsPage({
             <p className="text-muted-foreground text-sm">Try adjusting your filters</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {events.map((event) => (
               <EventCard
                 key={event.id}
                 event={event}
+                isGoing={goingSet.has(event.id)}
+                isFavorited={favoritedSet.has(event.id)}
                 isAuthenticated={!!user}
               />
             ))}

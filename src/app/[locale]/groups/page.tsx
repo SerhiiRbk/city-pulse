@@ -4,7 +4,7 @@ import { getUser } from '@/lib/actions/auth';
 import { GroupCard } from '@/components/groups/group-card';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
-import { Plus } from 'lucide-react';
+import { Plus, Users } from 'lucide-react';
 
 export default async function GroupsPage({
   params,
@@ -19,30 +19,54 @@ export default async function GroupsPage({
   const groups = await getGroups({ limit: 24 });
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">{t('title')}</h1>
-        {user && (
-          <Button asChild>
-            <Link href="/groups/create" className="flex items-center gap-2">
-              <Plus className="h-4 w-4" />
-              {t('create')}
-            </Link>
-          </Button>
+    <div>
+      {/* Hero banner */}
+      <section className="relative overflow-hidden bg-gray-900">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1511895426328-dc8714191300?w=2000&q=80')" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/60 to-background" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+
+        <div className="relative z-10 container mx-auto px-4 pt-24 pb-16">
+          <div className="mb-10 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
+            <div>
+              <h1 className="text-5xl font-extrabold tracking-tight text-white drop-shadow-lg md:text-6xl">
+                {t('title')}
+              </h1>
+              <p className="mt-3 text-xl text-white/80 drop-shadow">
+                Find your community
+              </p>
+            </div>
+            {user && (
+              <Button asChild size="lg" className="rounded-full px-6 shadow-xl transition-transform hover:scale-105">
+                <Link href="/groups/create" className="flex items-center gap-2">
+                  <Plus className="h-5 w-5" />
+                  {t('create')}
+                </Link>
+              </Button>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <div className="container mx-auto px-4 py-12">
+        {groups.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24">
+            <div className="bg-muted mb-4 flex h-20 w-20 items-center justify-center rounded-full">
+              <Users className="text-muted-foreground h-10 w-10" />
+            </div>
+            <p className="text-muted-foreground mb-1 text-lg font-medium">{t('noGroups')}</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {groups.map((group) => (
+              <GroupCard key={group.id} group={group} />
+            ))}
+          </div>
         )}
       </div>
-
-      {groups.length === 0 ? (
-        <div className="py-20 text-center">
-          <p className="text-muted-foreground text-lg">{t('noGroups')}</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {groups.map((group) => (
-            <GroupCard key={group.id} group={group} />
-          ))}
-        </div>
-      )}
     </div>
   );
 }

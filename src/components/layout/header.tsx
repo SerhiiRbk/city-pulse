@@ -30,10 +30,10 @@ export function Header({ user }: HeaderProps) {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2">
-            <div className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-lg font-bold">
+            <div className="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-xl font-black shadow-sm">
               CP
             </div>
-            <span className="hidden text-xl font-bold sm:inline-block">City-Pulse</span>
+            <span className="hidden text-xl font-extrabold tracking-tight sm:inline-block">City-Pulse</span>
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex">

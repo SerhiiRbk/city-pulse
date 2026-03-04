@@ -7,12 +7,17 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t">
-      <div className="container mx-auto px-4 py-8">
+    <footer className="bg-muted/30 border-t">
+      <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <h3 className="mb-3 text-lg font-bold">City-Pulse</h3>
-            <p className="text-muted-foreground text-sm">
+          <div className="lg:pr-8">
+            <div className="mb-4 flex items-center gap-2">
+              <div className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-lg font-black shadow-sm">
+                CP
+              </div>
+              <span className="text-xl font-extrabold tracking-tight">City-Pulse</span>
+            </div>
+            <p className="text-muted-foreground text-sm leading-relaxed">
               Social platform for offline communities of expats and locals.
             </p>
           </div>

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -13,14 +13,14 @@ import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from '@/lib/constants';
 import { getUserProfile } from '@/lib/actions/auth';
 import '../globals.css';
 
-const geistSans = Geist({
+const sansFont = Plus_Jakarta_Sans({
   variable: '--font-geist-sans',
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin', 'latin-ext', 'cyrillic-ext'],
 });
 
-const geistMono = Geist_Mono({
+const monoFont = JetBrains_Mono({
   variable: '--font-geist-mono',
-  subsets: ['latin'],
+  subsets: ['latin', 'cyrillic'],
 });
 
 export const metadata: Metadata = {
@@ -77,7 +77,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
+      <body className={`${sansFont.variable} ${monoFont.variable} font-sans antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider
             attribute="class"

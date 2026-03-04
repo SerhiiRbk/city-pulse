@@ -73,7 +73,7 @@ export default async function EventDetailPage({ params }: Props) {
   const jsonLd = generateEventJsonLd(event);
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8">
+    <div className="container mx-auto max-w-5xl px-4 py-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -83,9 +83,9 @@ export default async function EventDetailPage({ params }: Props) {
         <EventPhotoGallery photos={event.photos} title={event.title} />
       )}
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-3">
         {/* Main content */}
-        <div className="space-y-6 lg:col-span-2">
+        <div className="space-y-8 lg:col-span-2">
           <div>
             <div className="mb-2 flex flex-wrap gap-2">
               {categoryLabel && <Badge variant="outline">{categoryLabel}</Badge>}
@@ -117,8 +117,8 @@ export default async function EventDetailPage({ params }: Props) {
           </div>
 
           {canEdit && (
-            <div className="flex flex-wrap items-center gap-2">
-              <Button variant="outline" size="sm" asChild>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button variant="outline" size="sm" asChild className="rounded-full shadow-sm">
                 <Link href={`/events/${id}/edit`} className="flex items-center gap-2">
                   <Pencil className="h-4 w-4" />
                   Edit Event
@@ -186,9 +186,9 @@ export default async function EventDetailPage({ params }: Props) {
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-4">
-          <Card>
-            <CardContent className="space-y-4 pt-6">
+        <div className="space-y-6">
+          <Card className="rounded-2xl border-border/50 shadow-sm">
+            <CardContent className="space-y-6 pt-6">
               <EventActions
                 eventId={id}
                 initialGoing={going}
@@ -260,7 +260,7 @@ export default async function EventDetailPage({ params }: Props) {
 
           {/* Attendees */}
           {attendees.length > 0 && (
-            <Card>
+            <Card className="rounded-2xl border-border/50 shadow-sm">
               <CardContent className="pt-6">
                 <h3 className="mb-3 font-semibold">{t('attendees')}</h3>
                 <div className="flex flex-wrap gap-2">

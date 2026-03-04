@@ -55,23 +55,23 @@ export function EventActions({ eventId, initialGoing, initialFavorited, isAuthen
   }
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-3">
       {isAuthenticated && (
         <>
           <Button
             size="lg"
             variant={going ? 'secondary' : 'default'}
             onClick={handleToggleGoing}
-            className="flex-1"
+            className="flex-1 rounded-xl font-semibold shadow-sm"
           >
             {going ? t('going') : t('join')}
           </Button>
-          <Button size="lg" variant="outline" onClick={handleToggleFavorite}>
+          <Button size="lg" variant="outline" onClick={handleToggleFavorite} className="rounded-xl shadow-sm">
             <Heart className={`h-5 w-5 ${favorited ? 'fill-red-500 text-red-500' : ''}`} />
           </Button>
         </>
       )}
-      <Button size="lg" variant="outline" onClick={handleShare}>
+      <Button size="lg" variant="outline" onClick={handleShare} className="rounded-xl shadow-sm">
         <Share2 className="h-5 w-5" />
       </Button>
     </div>

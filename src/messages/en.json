@@ -146,7 +146,7 @@
       "free": "Free",
       "spotsLeft": "{count, plural, one {# spot left} other {# spots left}}",
       "noSpotsLeft": "No spots left",
-      "going": "Going",
+      "going": "You're going",
       "notGoing": "Cancel attendance",
       "join": "I'll go",
       "favorite": "Add to favorites",

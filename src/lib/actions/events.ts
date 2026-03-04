@@ -260,6 +260,36 @@ export async function getUserAttendance(eventId: string) {
   };
 }
 
+export async function getUserEventStatuses(eventIds: string[]): Promise<{
+  goingSet: Set<string>;
+  favoritedSet: Set<string>;
+}> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user || eventIds.length === 0) return { goingSet: new Set(), favoritedSet: new Set() };
+
+  const [{ data: attendances }, { data: favorites }] = await Promise.all([
+    supabase
+      .from('event_attendees')
+      .select('event_id')
+      .eq('user_id', user.id)
+      .eq('status', 'going')
+      .in('event_id', eventIds),
+    supabase
+      .from('event_favorites')
+      .select('event_id')
+      .eq('user_id', user.id)
+      .in('event_id', eventIds),
+  ]);
+
+  return {
+    goingSet: new Set((attendances || []).map((a) => a.event_id)),
+    favoritedSet: new Set((favorites || []).map((f) => f.event_id)),
+  };
+}
+
 export async function getEventAttendees(eventId: string) {
   const supabase = await createClient();
   const { data } = await supabase

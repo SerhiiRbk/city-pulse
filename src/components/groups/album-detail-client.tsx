@@ -171,17 +171,17 @@ export function AlbumDetailClient({ album, items: initialItems, groupId, canEdit
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Link href={`/groups/${groupId}`} className="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1 text-sm">
+    <div className="container mx-auto max-w-5xl px-4 py-8">
+      <Link href={`/groups/${groupId}`} className="text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-1.5 text-sm font-medium transition-colors">
         <ArrowLeft className="h-4 w-4" />
         {t('backToAlbums')}
       </Link>
 
-      <div className="mb-6 flex items-start justify-between gap-4">
+      <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
         {editing ? (
-          <div className="flex-1 space-y-2">
-            <Input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} maxLength={200} />
-            <Input value={editDesc} onChange={(e) => setEditDesc(e.target.value)} placeholder={t('albumDescription')} maxLength={1000} />
+          <div className="flex-1 space-y-3 rounded-2xl border border-border/50 bg-muted/30 p-5 w-full">
+            <Input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} maxLength={200} className="bg-background" />
+            <Input value={editDesc} onChange={(e) => setEditDesc(e.target.value)} placeholder={t('albumDescription')} maxLength={1000} className="bg-background" />
             <div className="flex gap-2">
               <Button size="sm" onClick={handleSaveAlbum} disabled={saving || !editTitle.trim()}>
                 {saving ? '...' : t('editAlbum')}
@@ -191,17 +191,17 @@ export function AlbumDetailClient({ album, items: initialItems, groupId, canEdit
           </div>
         ) : (
           <div>
-            <h1 className="text-2xl font-bold">{album.title}</h1>
-            {album.description && <p className="text-muted-foreground mt-1">{album.description}</p>}
+            <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">{album.title}</h1>
+            {album.description && <p className="text-muted-foreground mt-2 text-lg">{album.description}</p>}
           </div>
         )}
         {canEdit && !editing && (
           <div className="flex shrink-0 gap-2">
-            <Button size="sm" variant="outline" onClick={() => setEditing(true)}>
+            <Button size="sm" variant="outline" onClick={() => setEditing(true)} className="rounded-full">
               <Pencil className="mr-1.5 h-3.5 w-3.5" />
               {t('editAlbum')}
             </Button>
-            <Button size="sm" variant="destructive" onClick={handleDeleteAlbum}>
+            <Button size="sm" variant="destructive" onClick={handleDeleteAlbum} className="rounded-full">
               <Trash2 className="mr-1.5 h-3.5 w-3.5" />
               {t('deleteAlbum')}
             </Button>
@@ -211,7 +211,7 @@ export function AlbumDetailClient({ album, items: initialItems, groupId, canEdit
 
       {/* Add items controls */}
       {canEdit && (
-        <div className="mb-6 rounded-lg border p-4">
+        <div className="mb-8 rounded-2xl border border-border/50 bg-background/50 p-5 shadow-sm backdrop-blur-sm">
           <Tabs defaultValue="upload">
             <TabsList className="mb-3">
               <TabsTrigger value="upload" className="gap-1.5">
@@ -289,40 +289,43 @@ export function AlbumDetailClient({ album, items: initialItems, groupId, canEdit
 
       {/* Items grid */}
       {items.length === 0 ? (
-        <p className="text-muted-foreground py-12 text-center">{t('noPhotos')}</p>
+        <div className="flex flex-col items-center py-24">
+          <ImagePlus className="text-muted-foreground/30 mb-4 h-16 w-16" />
+          <p className="text-muted-foreground text-lg">{t('noPhotos')}</p>
+        </div>
       ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {items.map((item) => {
             if (item.type === 'youtube') {
               const ytId = extractYouTubeId(item.url);
               return (
-                <div key={item.id} className="group relative overflow-hidden rounded-lg border">
+                <div key={item.id} className="group relative overflow-hidden rounded-2xl border border-border/50 shadow-sm transition-all hover:shadow-md">
                   <div className="relative aspect-video">
                     <iframe
                       src={`https://www.youtube-nocookie.com/embed/${ytId}`}
                       title={item.caption || 'YouTube video'}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
-                      className="h-full w-full"
+                      className="h-full w-full border-0"
                     />
                   </div>
-                  <div className="flex items-center gap-2 p-2">
-                    {item.caption && <span className="min-w-0 flex-1 truncate text-xs">{item.caption}</span>}
+                  <div className="flex items-center gap-2 p-3 bg-background">
+                    {item.caption && <span className="min-w-0 flex-1 truncate text-xs font-medium">{item.caption}</span>}
                     <a
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-foreground ml-auto shrink-0"
+                      className="text-muted-foreground hover:text-foreground ml-auto shrink-0 transition-colors"
                       title={t('openOnYouTube')}
                     >
-                      <ExternalLink className="h-3.5 w-3.5" />
+                      <ExternalLink className="h-4 w-4" />
                     </a>
                     {canEdit && (
                       <button
                         onClick={() => handleRemoveItem(item.id)}
-                        className="text-muted-foreground hover:text-destructive shrink-0"
+                        className="text-muted-foreground hover:text-destructive shrink-0 transition-colors"
                       >
-                        <Trash2 className="h-3.5 w-3.5" />
+                        <Trash2 className="h-4 w-4" />
                       </button>
                     )}
                   </div>
@@ -334,21 +337,22 @@ export function AlbumDetailClient({ album, items: initialItems, groupId, canEdit
               <div key={item.id} className="group relative">
                 <button
                   onClick={() => openLightbox(item)}
-                  className="relative aspect-square w-full overflow-hidden rounded-lg"
+                  className="relative aspect-square w-full overflow-hidden rounded-2xl border border-border/50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
                 >
                   <img
                     src={item.url}
                     alt={item.caption || ''}
-                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
+                  <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
                 </button>
                 {(item.caption || canEdit) && (
-                  <div className="mt-1 flex items-center gap-1">
-                    {item.caption && <span className="min-w-0 flex-1 truncate text-xs">{item.caption}</span>}
+                  <div className="mt-2 flex items-center gap-2 px-1">
+                    {item.caption && <span className="min-w-0 flex-1 truncate text-xs font-medium">{item.caption}</span>}
                     {canEdit && (
                       <button
                         onClick={() => handleRemoveItem(item.id)}
-                        className="text-muted-foreground hover:text-destructive ml-auto shrink-0"
+                        className="text-muted-foreground hover:text-destructive ml-auto shrink-0 transition-colors"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>

@@ -62,14 +62,15 @@ export function EventManagement({ eventId, status }: EventManagementProps) {
   }
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       {status === 'draft' && (
         <Button
           size="sm"
           onClick={() => handleAction('publish')}
           disabled={!!loading}
+          className="rounded-full shadow-sm"
         >
-          {loading === 'publish' ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Send className="mr-1 h-4 w-4" />}
+          {loading === 'publish' ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : <Send className="mr-1.5 h-4 w-4" />}
           Publish
         </Button>
       )}
@@ -80,8 +81,9 @@ export function EventManagement({ eventId, status }: EventManagementProps) {
           variant="secondary"
           onClick={() => handleAction('complete')}
           disabled={!!loading}
+          className="rounded-full shadow-sm"
         >
-          {loading === 'complete' ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <CheckCircle className="mr-1 h-4 w-4" />}
+          {loading === 'complete' ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : <CheckCircle className="mr-1.5 h-4 w-4" />}
           Mark completed
         </Button>
       )}
@@ -89,8 +91,8 @@ export function EventManagement({ eventId, status }: EventManagementProps) {
       {status === 'published' && (
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button size="sm" variant="destructive" disabled={!!loading}>
-              <Ban className="mr-1 h-4 w-4" />
+            <Button size="sm" variant="destructive" disabled={!!loading} className="rounded-full shadow-sm">
+              <Ban className="mr-1.5 h-4 w-4" />
               Cancel event
             </Button>
           </AlertDialogTrigger>
@@ -117,8 +119,9 @@ export function EventManagement({ eventId, status }: EventManagementProps) {
           variant="outline"
           onClick={() => handleAction('duplicate')}
           disabled={!!loading}
+          className="rounded-full shadow-sm"
         >
-          {loading === 'duplicate' ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Copy className="mr-1 h-4 w-4" />}
+          {loading === 'duplicate' ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : <Copy className="mr-1.5 h-4 w-4" />}
           Duplicate
         </Button>
       )}

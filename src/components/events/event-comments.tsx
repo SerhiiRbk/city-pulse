@@ -51,24 +51,24 @@ export function EventComments({ eventId, initialComments, isAuthenticated }: Eve
         <p className="text-muted-foreground text-sm">No comments yet.</p>
       )}
 
-      <div className="space-y-3">
+      <div className="space-y-1">
         {comments.map((comment) => {
           const name = comment.profiles?.display_name || 'User';
           const initials = name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
           return (
-            <div key={comment.id} className="flex gap-3">
-              <Avatar className="h-8 w-8">
+            <div key={comment.id} className="hover:bg-muted/30 flex gap-4 rounded-2xl p-4 transition-colors">
+              <Avatar className="h-10 w-10 shrink-0">
                 <AvatarImage src={comment.profiles?.avatar_url || undefined} />
                 <AvatarFallback className="text-xs">{initials}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">{name}</span>
+                  <span className="text-sm font-semibold">{name}</span>
                   <span className="text-muted-foreground text-xs">
                     {new Date(comment.created_at).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="mt-1 text-sm">{comment.content}</p>
+                <p className="text-muted-foreground mt-1 text-sm leading-relaxed">{comment.content}</p>
               </div>
             </div>
           );
@@ -76,15 +76,17 @@ export function EventComments({ eventId, initialComments, isAuthenticated }: Eve
       </div>
 
       {isAuthenticated && (
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        <form onSubmit={handleSubmit} className="bg-muted/30 mt-6 flex gap-3 rounded-2xl p-4">
           <Input
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder={t('addComment')}
             maxLength={500}
+            className="bg-background border-0 shadow-sm"
           />
-          <Button type="submit" size="icon" disabled={isLoading || !text.trim()}>
-            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+          <Button type="submit" disabled={isLoading || !text.trim()} className="shrink-0 rounded-xl px-6">
+            {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
+            Send
           </Button>
         </form>
       )}
