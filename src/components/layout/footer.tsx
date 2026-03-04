@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Separator } from '@/components/ui/separator';
+import { Logo } from '@/components/ui/logo';
 
 export function Footer() {
   const t = useTranslations('footer');
@@ -11,11 +12,8 @@ export function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:pr-8">
-            <div className="mb-4 flex items-center gap-2">
-              <div className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-lg font-black shadow-sm">
-                CP
-              </div>
-              <span className="text-xl font-extrabold tracking-tight">City-Pulse</span>
+            <div className="mb-4">
+              <Logo size="md" />
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Social platform for offline communities of expats and locals.

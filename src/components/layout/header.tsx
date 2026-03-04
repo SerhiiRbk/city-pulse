@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LanguageSwitcher } from './language-switcher';
 import { ThemeToggle } from './theme-toggle';
+import { Logo } from '@/components/ui/logo';
 import { MobileNav } from './mobile-nav';
 import { NotificationBell } from '@/components/notifications/notification-bell';
 import { CalendarDays, Users, MapPin, MessageCircle, Plus, LogOut, User, Settings, Landmark, ShieldCheck } from 'lucide-react';
@@ -29,11 +30,9 @@ export function Header({ user }: HeaderProps) {
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-xl font-black shadow-sm">
-              CP
-            </div>
-            <span className="hidden text-xl font-extrabold tracking-tight sm:inline-block">City-Pulse</span>
+          <Link href="/" className="flex items-center">
+            <Logo size="md" showText className="hidden sm:inline-flex" />
+            <Logo size="md" showText={false} className="sm:hidden" />
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex">
