@@ -98,7 +98,7 @@ export default async function EventsPage({
             <p className="text-muted-foreground text-sm">Try adjusting your filters</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {events.map((event) => (
               <EventCard
                 key={event.id}

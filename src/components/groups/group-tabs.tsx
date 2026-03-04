@@ -174,7 +174,7 @@ export function GroupTabs({
             <p className="text-muted-foreground text-sm">{t('noEvents')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {upcomingEvents.map((event) => (
               <EventCard key={event.id} event={event} isGoing={goingSet.has(event.id)} isFavorited={favSet.has(event.id)} isAuthenticated={isAuthenticated} />
             ))}
@@ -190,7 +190,7 @@ export function GroupTabs({
             <p className="text-muted-foreground text-sm">{t('noPastEvents')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {pastEvents.map((event) => (
               <EventCard key={event.id} event={event} isGoing={goingSet.has(event.id)} isFavorited={favSet.has(event.id)} isAuthenticated={isAuthenticated} />
             ))}

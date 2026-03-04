@@ -61,7 +61,7 @@ export default async function CityEventsPage({
             <p className="text-muted-foreground mb-1 text-lg font-medium">No city events yet</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {events.map((event) => (
               <div key={event.id} className="relative">
                 <Badge className="absolute top-2 right-2 z-10 bg-amber-500 text-white shadow-md">

@@ -69,32 +69,31 @@ export default async function HomePage({
       <section className="relative overflow-hidden bg-gray-900">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=2000&q=80')" }}
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=1600&q=80')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/60 to-background" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/70 via-gray-900/50 to-gray-900/90" />
 
-        <div className="relative z-10 container mx-auto px-4 pt-32 pb-24 md:pt-48 md:pb-36">
-          <div className="mx-auto max-w-4xl text-center">
-            <Badge className="mb-6 border-white/20 bg-white/10 px-4 py-1.5 text-sm text-white backdrop-blur-md">
-              <Globe className="mr-2 h-4 w-4" />
+        <div className="relative z-10 container mx-auto px-4 pt-24 pb-20 md:pt-36 md:pb-28">
+          <div className="mx-auto max-w-3xl text-center">
+            <Badge className="mb-5 border-white/20 bg-white/10 text-white backdrop-blur-sm">
+              <Globe className="mr-1.5 h-3 w-3" />
               Prague &middot; Berlin &middot; Barcelona &middot; Tel Aviv
             </Badge>
-            <h1 className="mb-6 text-5xl font-extrabold tracking-tight text-white drop-shadow-lg md:text-7xl lg:text-8xl">
+            <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-white md:text-6xl">
               {t('hero.title')}
             </h1>
-            <p className="mx-auto mb-10 max-w-2xl text-lg text-white/80 drop-shadow md:text-2xl">
+            <p className="mb-10 text-lg text-white/70 md:text-xl">
               {t('hero.subtitle')}
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button size="lg" asChild className="h-14 rounded-full px-8 text-base shadow-xl transition-transform hover:scale-105">
+              <Button size="lg" variant="outline" asChild className="h-12 border-white/40 bg-white/10 px-8 text-base text-white shadow-lg backdrop-blur-sm hover:bg-white/20 hover:text-white">
                 <Link href="/events" className="flex items-center gap-2">
                   {t('hero.cta')}
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
               {!user && (
-                <Button size="lg" variant="outline" asChild className="h-14 rounded-full border-white/40 bg-white/10 px-8 text-base text-white shadow-lg backdrop-blur-md transition-transform hover:scale-105 hover:bg-white/20 hover:text-white">
+                <Button size="lg" variant="outline" asChild className="h-12 border-white/40 bg-white/10 px-8 text-base text-white backdrop-blur-sm hover:bg-white/20 hover:text-white">
                   <Link href="/register">{tNav('register')}</Link>
                 </Button>
               )}
@@ -197,7 +196,7 @@ export default async function HomePage({
                 </Link>
               </Button>
             </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {topGroups.map((group) => (
                 <GroupCard key={group.id} group={group} />
               ))}
@@ -287,7 +286,7 @@ function EventSection({
             </Link>
           </Button>
         </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
             <EventCard
               key={event.id}
