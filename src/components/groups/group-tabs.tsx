@@ -8,7 +8,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
 import { Calendar, History, Image as ImageIcon, MessageCircle, Send, Trash2, Users, Plus, FolderOpen } from 'lucide-react';
 import { addGroupComment, deleteGroupComment } from '@/lib/actions/groups';
 import { createAlbum } from '@/lib/actions/albums';
@@ -120,60 +119,54 @@ export function GroupTabs({
     });
   }
 
+  function CountBadge({ count, active }: { count: number; active?: boolean }) {
+    if (count === 0) return null;
+    return (
+      <span className={`ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold tabular-nums ${
+        active ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'
+      }`}>
+        {count}
+      </span>
+    );
+  }
+
   return (
-    <Tabs defaultValue="upcoming" className="mt-8">
+    <Tabs defaultValue="upcoming">
       <TabsList variant="line" className="w-full justify-start">
-        <TabsTrigger value="upcoming" className="gap-2">
+        <TabsTrigger value="upcoming" className="gap-1.5">
           <Calendar className="h-4 w-4" />
-          {t('eventsTitle')}
-          {upcomingEvents.length > 0 && (
-            <span className="bg-primary/10 text-primary ml-1 rounded-full px-2 py-0.5 text-xs font-medium">
-              {upcomingEvents.length}
-            </span>
-          )}
+          <span className="hidden sm:inline">{t('eventsTitle')}</span>
+          <CountBadge count={upcomingEvents.length} active />
         </TabsTrigger>
-        <TabsTrigger value="past" className="gap-2">
+        <TabsTrigger value="past" className="gap-1.5">
           <History className="h-4 w-4" />
-          {t('pastEventsTitle')}
-          {pastEvents.length > 0 && (
-            <span className="bg-muted text-muted-foreground ml-1 rounded-full px-2 py-0.5 text-xs font-medium">
-              {pastEvents.length}
-            </span>
-          )}
+          <span className="hidden sm:inline">{t('pastEventsTitle')}</span>
+          <CountBadge count={pastEvents.length} />
         </TabsTrigger>
-        <TabsTrigger value="photos" className="gap-2">
+        <TabsTrigger value="photos" className="gap-1.5">
           <ImageIcon className="h-4 w-4" />
-          {t('photosTitle')}
-          {albums.length > 0 && (
-            <span className="bg-muted text-muted-foreground ml-1 rounded-full px-2 py-0.5 text-xs font-medium">
-              {albums.length}
-            </span>
-          )}
+          <span className="hidden sm:inline">{t('photosTitle')}</span>
+          <CountBadge count={albums.length} />
         </TabsTrigger>
-        <TabsTrigger value="members" className="gap-2">
+        <TabsTrigger value="members" className="gap-1.5">
           <Users className="h-4 w-4" />
-          {t('membersList')}
-          {members.length > 0 && (
-            <span className="bg-muted text-muted-foreground ml-1 rounded-full px-2 py-0.5 text-xs font-medium">
-              {members.length}
-            </span>
-          )}
+          <span className="hidden sm:inline">{t('membersList')}</span>
+          <CountBadge count={members.length} />
         </TabsTrigger>
-        <TabsTrigger value="comments" className="gap-2">
+        <TabsTrigger value="comments" className="gap-1.5">
           <MessageCircle className="h-4 w-4" />
-          {t('commentsTitle')}
-          {comments.length > 0 && (
-            <span className="bg-muted text-muted-foreground ml-1 rounded-full px-2 py-0.5 text-xs font-medium">
-              {comments.length}
-            </span>
-          )}
+          <span className="hidden sm:inline">{t('commentsTitle')}</span>
+          <CountBadge count={comments.length} />
         </TabsTrigger>
       </TabsList>
 
       {/* Upcoming Events */}
-      <TabsContent value="upcoming" className="pt-4">
+      <TabsContent value="upcoming" className="pt-6">
         {upcomingEvents.length === 0 ? (
-          <p className="text-muted-foreground py-8 text-center">{t('noEvents')}</p>
+          <div className="flex flex-col items-center py-16">
+            <Calendar className="text-muted-foreground/30 mb-3 h-12 w-12" />
+            <p className="text-muted-foreground text-sm">{t('noEvents')}</p>
+          </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {upcomingEvents.map((event) => (
@@ -184,9 +177,12 @@ export function GroupTabs({
       </TabsContent>
 
       {/* Past Events */}
-      <TabsContent value="past" className="pt-4">
+      <TabsContent value="past" className="pt-6">
         {pastEvents.length === 0 ? (
-          <p className="text-muted-foreground py-8 text-center">{t('noPastEvents')}</p>
+          <div className="flex flex-col items-center py-16">
+            <History className="text-muted-foreground/30 mb-3 h-12 w-12" />
+            <p className="text-muted-foreground text-sm">{t('noPastEvents')}</p>
+          </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {pastEvents.map((event) => (
@@ -197,11 +193,11 @@ export function GroupTabs({
       </TabsContent>
 
       {/* Photo Albums */}
-      <TabsContent value="photos" className="pt-4">
+      <TabsContent value="photos" className="pt-6">
         {canEdit && (
-          <div className="mb-4">
+          <div className="mb-5">
             {showNewAlbum ? (
-              <div className="space-y-3 rounded-lg border p-4">
+              <div className="bg-muted/50 space-y-3 rounded-xl p-5">
                 <Input
                   value={newAlbumTitle}
                   onChange={(e) => setNewAlbumTitle(e.target.value)}
@@ -225,7 +221,7 @@ export function GroupTabs({
               </div>
             ) : (
               <Button size="sm" variant="outline" onClick={() => setShowNewAlbum(true)}>
-                <Plus className="mr-2 h-4 w-4" />
+                <Plus className="mr-1.5 h-4 w-4" />
                 {t('createAlbum')}
               </Button>
             )}
@@ -233,27 +229,31 @@ export function GroupTabs({
         )}
 
         {albums.length === 0 && !showNewAlbum ? (
-          <p className="text-muted-foreground py-8 text-center">{t('noPhotos')}</p>
+          <div className="flex flex-col items-center py-16">
+            <ImageIcon className="text-muted-foreground/30 mb-3 h-12 w-12" />
+            <p className="text-muted-foreground text-sm">{t('noPhotos')}</p>
+          </div>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             {albums.map((album) => (
               <Link
                 key={album.id}
                 href={`/groups/${groupId}/albums/${album.id}`}
-                className="group overflow-hidden rounded-lg border transition-shadow hover:shadow-md"
+                className="group overflow-hidden rounded-xl border transition-all hover:shadow-lg"
               >
                 <div className="bg-muted relative aspect-[4/3] overflow-hidden">
                   {album.cover_url ? (
                     <img
                       src={album.cover_url}
                       alt={album.title}
-                      className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center">
-                      <FolderOpen className="text-muted-foreground/40 h-12 w-12" />
+                      <FolderOpen className="text-muted-foreground/30 h-12 w-12" />
                     </div>
                   )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                 </div>
                 <div className="p-3">
                   <h3 className="truncate text-sm font-medium">{album.title}</h3>
@@ -268,30 +268,30 @@ export function GroupTabs({
       </TabsContent>
 
       {/* Members */}
-      <TabsContent value="members" className="pt-4">
+      <TabsContent value="members" className="pt-6">
         {members.length === 0 ? (
-          <p className="text-muted-foreground py-8 text-center">{t('noMembers')}</p>
+          <div className="flex flex-col items-center py-16">
+            <Users className="text-muted-foreground/30 mb-3 h-12 w-12" />
+            <p className="text-muted-foreground text-sm">{t('noMembers')}</p>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {members.map((m) => (
               <Link
                 key={m.user_id}
                 href={`/profile/${m.user_id}`}
-                className="hover:bg-accent flex items-center gap-3 rounded-lg border p-3 transition-colors"
+                className="hover:bg-muted/50 flex items-center gap-3 rounded-xl p-3 transition-colors"
               >
-                <Avatar className="h-10 w-10 shrink-0">
+                <Avatar className="h-10 w-10 shrink-0 ring-2 ring-transparent transition-all group-hover:ring-primary/20">
                   <AvatarImage src={m.profiles?.avatar_url || undefined} />
                   <AvatarFallback>{m.profiles?.display_name?.[0] || '?'}</AvatarFallback>
                 </Avatar>
-                <span className="min-w-0 flex-1 truncate text-sm font-medium">
-                  {m.profiles?.display_name}
-                </span>
-                {m.role === 'admin' && (
-                  <Badge variant="secondary" className="shrink-0 text-xs">{t('admin')}</Badge>
-                )}
-                {m.role === 'moderator' && (
-                  <Badge variant="outline" className="shrink-0 text-xs">{t('moderator')}</Badge>
-                )}
+                <div className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-medium">{m.profiles?.display_name}</span>
+                  {(m.role === 'admin' || m.role === 'moderator') && (
+                    <span className="text-muted-foreground text-xs capitalize">{t(m.role as 'admin' | 'moderator')}</span>
+                  )}
+                </div>
               </Link>
             ))}
           </div>
@@ -299,33 +299,38 @@ export function GroupTabs({
       </TabsContent>
 
       {/* Comments */}
-      <TabsContent value="comments" className="pt-4">
+      <TabsContent value="comments" className="pt-6">
         {isAuthenticated && (
-          <div className="mb-6 flex gap-3">
+          <div className="bg-muted/30 mb-6 rounded-xl p-4">
             <Textarea
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
               placeholder={t('writeComment')}
-              className="min-h-[80px] resize-none"
+              className="bg-background mb-3 min-h-[80px] resize-none rounded-lg border-0 shadow-sm"
               maxLength={1000}
             />
-            <Button
-              size="icon"
-              onClick={handleSendComment}
-              disabled={sending || !commentText.trim()}
-              className="mt-auto shrink-0"
-            >
-              <Send className="h-4 w-4" />
-            </Button>
+            <div className="flex justify-end">
+              <Button
+                size="sm"
+                onClick={handleSendComment}
+                disabled={sending || !commentText.trim()}
+              >
+                <Send className="mr-1.5 h-3.5 w-3.5" />
+                {t('send')}
+              </Button>
+            </div>
           </div>
         )}
 
         {comments.length === 0 ? (
-          <p className="text-muted-foreground py-8 text-center">{t('noComments')}</p>
+          <div className="flex flex-col items-center py-16">
+            <MessageCircle className="text-muted-foreground/30 mb-3 h-12 w-12" />
+            <p className="text-muted-foreground text-sm">{t('noComments')}</p>
+          </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-1">
             {comments.map((comment: any) => (
-              <div key={comment.id} className="flex gap-3 rounded-lg border p-4">
+              <div key={comment.id} className="hover:bg-muted/30 flex gap-3 rounded-xl p-4 transition-colors">
                 <Link href={`/profile/${comment.profiles?.id || comment.user_id}`}>
                   <Avatar className="h-9 w-9 shrink-0">
                     <AvatarImage src={comment.profiles?.avatar_url || undefined} />
@@ -336,7 +341,7 @@ export function GroupTabs({
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/profile/${comment.profiles?.id || comment.user_id}`}
-                      className="text-sm font-medium hover:underline"
+                      className="text-sm font-semibold hover:underline"
                     >
                       {comment.profiles?.display_name || 'User'}
                     </Link>
@@ -346,14 +351,14 @@ export function GroupTabs({
                     {currentUserId === comment.user_id && (
                       <button
                         onClick={() => handleDeleteComment(comment.id)}
-                        className="text-muted-foreground hover:text-destructive ml-auto text-xs"
+                        className="text-muted-foreground hover:text-destructive ml-auto opacity-0 transition-opacity group-hover:opacity-100"
                         title={t('deleteComment')}
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
                     )}
                   </div>
-                  <p className="mt-1 whitespace-pre-wrap text-sm">{comment.content}</p>
+                  <p className="text-muted-foreground mt-1 whitespace-pre-wrap text-sm leading-relaxed">{comment.content}</p>
                 </div>
               </div>
             ))}
