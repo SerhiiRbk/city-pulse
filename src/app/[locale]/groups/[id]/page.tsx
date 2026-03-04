@@ -6,12 +6,15 @@ import {
   getGroup,
   getGroupMembers,
   getGroupEvents,
+  getPastGroupEvents,
+  getGroupComments,
   getUserGroupStatus,
   canEditGroup,
   getGroupInterestsFull,
 } from '@/lib/actions/groups';
+import { getGroupAlbums } from '@/lib/actions/albums';
 import { GroupActions } from '@/components/groups/group-actions';
-import { EventCard } from '@/components/events/event-card';
+import { GroupTabs } from '@/components/groups/group-tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -43,10 +46,13 @@ export default async function GroupDetailPage({ params }: Props) {
   const { locale, id } = await params;
   setRequestLocale(locale);
 
-  const [group, members, events, user, groupInterests] = await Promise.all([
+  const [group, members, upcomingEvents, pastEvents, albums, comments, user, groupInterests] = await Promise.all([
     getGroup(id),
     getGroupMembers(id),
     getGroupEvents(id),
+    getPastGroupEvents(id),
+    getGroupAlbums(id),
+    getGroupComments(id),
     getUser(),
     getGroupInterestsFull(id),
   ]);
@@ -146,19 +152,17 @@ export default async function GroupDetailPage({ params }: Props) {
             </div>
           )}
 
-          {/* Events */}
-          <div className="mt-8">
-            <h2 className="mb-4 text-xl font-semibold">{tDetail('eventsTitle')}</h2>
-            {events.length === 0 ? (
-              <p className="text-muted-foreground">{tDetail('noEvents')}</p>
-            ) : (
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                {events.map((event) => (
-                  <EventCard key={event.id} event={event} isAuthenticated={!!user} />
-                ))}
-              </div>
-            )}
-          </div>
+          <GroupTabs
+            groupId={id}
+            upcomingEvents={upcomingEvents}
+            pastEvents={pastEvents}
+            albums={albums}
+            comments={comments}
+            members={members as any}
+            canEdit={canEdit}
+            isAuthenticated={isAuthenticated}
+            currentUserId={user?.id}
+          />
         </div>
 
         {/* Sidebar */}

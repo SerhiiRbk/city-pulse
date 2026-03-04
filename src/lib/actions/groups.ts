@@ -244,8 +244,82 @@ export async function getGroupEvents(groupId: string) {
     .select('*')
     .eq('group_id', groupId)
     .eq('status', 'published')
+    .gte('starts_at', new Date().toISOString())
     .order('starts_at', { ascending: true });
   return data || [];
+}
+
+export async function getPastGroupEvents(groupId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('events_with_counts')
+    .select('*')
+    .eq('group_id', groupId)
+    .eq('status', 'published')
+    .lt('starts_at', new Date().toISOString())
+    .order('starts_at', { ascending: false });
+  return data || [];
+}
+
+export async function getGroupPhotos(groupId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('events')
+    .select('id, title, photos')
+    .eq('group_id', groupId)
+    .eq('status', 'published')
+    .not('photos', 'is', null)
+    .order('starts_at', { ascending: false });
+
+  const photos: { url: string; eventId: string; eventTitle: string }[] = [];
+  for (const event of data || []) {
+    if (event.photos && Array.isArray(event.photos)) {
+      for (const url of event.photos) {
+        photos.push({ url, eventId: event.id, eventTitle: event.title });
+      }
+    }
+  }
+  return photos;
+}
+
+export async function getGroupComments(groupId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('group_comments')
+    .select('*, profiles(id, display_name, avatar_url)')
+    .eq('group_id', groupId)
+    .is('parent_id', null)
+    .order('created_at', { ascending: false });
+  return data || [];
+}
+
+export async function addGroupComment(groupId: string, content: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const { data, error } = await supabase
+    .from('group_comments')
+    .insert({ group_id: groupId, user_id: user.id, content })
+    .select('*, profiles(id, display_name, avatar_url)')
+    .single();
+
+  if (error) return { error: error.message };
+  return { comment: data };
+}
+
+export async function deleteGroupComment(commentId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const { error } = await supabase
+    .from('group_comments')
+    .delete()
+    .eq('id', commentId);
+
+  if (error) return { error: error.message };
+  return { success: true };
 }
 
 export async function toggleMembership(groupId: string) {
