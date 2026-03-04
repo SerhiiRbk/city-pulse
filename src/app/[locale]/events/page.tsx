@@ -51,10 +51,9 @@ export default async function EventsPage({
       <section className="relative overflow-hidden bg-gray-900">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=2000&q=80')" }}
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=1600&q=80')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/60 to-background" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/70 via-gray-900/50 to-gray-900/90" />
 
         <div className="relative z-10 container mx-auto px-4 pt-24 pb-16">
           <div className="mb-10 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">

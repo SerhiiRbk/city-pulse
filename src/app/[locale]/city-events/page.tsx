@@ -31,10 +31,9 @@ export default async function CityEventsPage({
       <section className="relative overflow-hidden bg-gray-900">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1449844908441-8829872d2607?w=2000&q=80')" }}
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1600&q=80')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/60 to-background" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/70 via-gray-900/50 to-gray-900/90" />
 
         <div className="relative z-10 container mx-auto px-4 pt-24 pb-16">
           <div className="mb-10">
