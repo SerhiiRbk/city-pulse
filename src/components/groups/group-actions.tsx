@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Bell, BellOff, LogIn, LogOut } from 'lucide-react';
-import { toggleMembership, toggleSubscription } from '@/lib/actions/groups';
+import { toggleMembership } from '@/lib/actions/groups';
+import { useGroupSubscription } from '@/hooks/use-group-subscription';
 import { toast } from 'sonner';
 
 interface GroupActionsProps {
@@ -24,8 +25,8 @@ export function GroupActions({
 }: GroupActionsProps) {
   const t = useTranslations('groups');
   const [isMember, setIsMember] = useState(initMember);
-  const [isSubscribed, setIsSubscribed] = useState(initSub);
   const [loading, setLoading] = useState(false);
+  const { subscribed, toggle: toggleSub } = useGroupSubscription(groupId, initSub, isAuthenticated);
 
   async function handleToggleMembership() {
     if (!isAuthenticated) return;
@@ -37,17 +38,6 @@ export function GroupActions({
       setIsMember(result.joined ?? false);
     }
     setLoading(false);
-  }
-
-  async function handleToggleSubscription() {
-    if (!isAuthenticated) return;
-    const prev = isSubscribed;
-    setIsSubscribed(!prev);
-    const result = await toggleSubscription(groupId);
-    if (result.error) {
-      setIsSubscribed(prev);
-      toast.error(result.error);
-    }
   }
 
   if (!isAuthenticated) return null;
@@ -76,8 +66,8 @@ export function GroupActions({
           )}
         </Button>
       )}
-      <Button variant="outline" onClick={handleToggleSubscription} className="rounded-full shadow-sm">
-        {isSubscribed ? (
+      <Button variant="outline" onClick={toggleSub} className="rounded-full shadow-sm">
+        {subscribed ? (
           <>
             <BellOff className="mr-1.5 h-4 w-4" />
             {t('unsubscribe')}

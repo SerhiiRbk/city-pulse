@@ -271,6 +271,8 @@
       "admin": "Admin",
       "moderator": "Moderátor",
       "editGroup": "Upravit",
+      "description": "O skupině",
+      "interests": "Zájmy",
       "createEvent": "Vytvořit akci"
     },
     "editGroup": {

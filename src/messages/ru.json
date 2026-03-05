@@ -271,6 +271,8 @@
       "admin": "Админ",
       "moderator": "Модератор",
       "editGroup": "Редактировать",
+      "description": "О группе",
+      "interests": "Интересы",
       "createEvent": "Создать событие"
     },
     "editGroup": {
