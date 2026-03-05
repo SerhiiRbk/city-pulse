@@ -314,7 +314,18 @@
     "socialLinks": "Social links",
     "privateProfile": "Private profile",
     "hideAge": "Hide age",
-    "hideEvents": "Hide events list"
+    "hideEvents": "Hide events list",
+    "tabs": {
+      "about": "About",
+      "favorites": "Favorites",
+      "going": "Upcoming",
+      "past": "Visited",
+      "created": "My events",
+      "subscribed": "Subscriptions",
+      "managed": "My groups",
+      "noEvents": "No events yet",
+      "noGroups": "No groups yet"
+    }
   },
   "calendar": {
     "title": "Calendar",

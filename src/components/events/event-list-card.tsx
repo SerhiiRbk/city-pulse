@@ -148,7 +148,7 @@ export function EventListCard({ event, isGoing: initialGoing, isFavorited: initi
               </p>
 
               {/* Title */}
-              <h3 className="group-hover:text-primary mb-2 line-clamp-2 text-lg font-bold transition-colors">
+              <h3 className="mb-2 line-clamp-2 text-lg font-bold">
                 {event.title}
               </h3>
 

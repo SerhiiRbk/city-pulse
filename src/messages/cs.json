@@ -314,7 +314,18 @@
     "socialLinks": "Sociální sítě",
     "privateProfile": "Soukromý profil",
     "hideAge": "Skrýt věk",
-    "hideEvents": "Skrýt akce"
+    "hideEvents": "Skrýt akce",
+    "tabs": {
+      "about": "O mně",
+      "favorites": "Oblíbené",
+      "going": "Nadcházející",
+      "past": "Navštívené",
+      "created": "Moje události",
+      "subscribed": "Odběry",
+      "managed": "Moje skupiny",
+      "noEvents": "Zatím žádné události",
+      "noGroups": "Zatím žádné skupiny"
+    }
   },
   "calendar": {
     "title": "Kalendář",

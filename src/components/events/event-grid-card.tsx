@@ -84,7 +84,7 @@ export function EventGridCard({ event, isFavorited: initialFav, isAuthenticated 
         {/* Content */}
         <div className="p-5">
           {/* Title */}
-          <h3 className="group-hover:text-primary mb-3 line-clamp-2 text-lg font-bold leading-snug transition-colors">
+          <h3 className="mb-3 line-clamp-2 text-lg font-bold leading-snug">
             {event.title}
           </h3>
 

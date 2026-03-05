@@ -314,7 +314,18 @@
     "socialLinks": "Soziale Netzwerke",
     "privateProfile": "Privates Profil",
     "hideAge": "Alter verbergen",
-    "hideEvents": "Veranstaltungen verbergen"
+    "hideEvents": "Veranstaltungen verbergen",
+    "tabs": {
+      "about": "Über mich",
+      "favorites": "Favoriten",
+      "going": "Bevorstehende",
+      "past": "Besucht",
+      "created": "Meine Events",
+      "subscribed": "Abonnements",
+      "managed": "Meine Gruppen",
+      "noEvents": "Noch keine Events",
+      "noGroups": "Noch keine Gruppen"
+    }
   },
   "calendar": {
     "title": "Kalender",

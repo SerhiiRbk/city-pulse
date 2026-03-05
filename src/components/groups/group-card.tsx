@@ -39,7 +39,7 @@ export function GroupCard({ group }: GroupCardProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </div>
         <div className="p-5">
-          <h3 className="mb-2 line-clamp-1 text-xl font-extrabold tracking-tight group-hover:text-primary transition-colors">{group.name}</h3>
+          <h3 className="mb-2 line-clamp-1 text-xl font-extrabold tracking-tight">{group.name}</h3>
           <p className="text-muted-foreground mb-4 line-clamp-2 text-sm leading-relaxed">{group.description}</p>
           <div className="text-muted-foreground flex items-center gap-5 text-sm font-medium">
             <div className="flex items-center gap-1.5">

@@ -150,7 +150,7 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
           </div>
 
           {/* Title */}
-          <h3 className="mb-2 line-clamp-2 text-lg font-extrabold leading-snug tracking-tight group-hover:text-primary transition-colors">{event.title}</h3>
+          <h3 className="mb-2 line-clamp-2 text-lg font-extrabold leading-snug tracking-tight">{event.title}</h3>
 
           {/* Date + Location in one row */}
           <div className="text-muted-foreground mb-4 flex items-center gap-4 text-sm font-medium">

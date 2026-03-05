@@ -314,7 +314,18 @@
     "socialLinks": "Социальные сети",
     "privateProfile": "Закрытый профиль",
     "hideAge": "Скрыть возраст",
-    "hideEvents": "Скрыть мероприятия"
+    "hideEvents": "Скрыть мероприятия",
+    "tabs": {
+      "about": "О себе",
+      "favorites": "Избранное",
+      "going": "Предстоящие",
+      "past": "Посещённые",
+      "created": "Мои события",
+      "subscribed": "Подписки",
+      "managed": "Мои группы",
+      "noEvents": "Пока нет событий",
+      "noGroups": "Пока нет групп"
+    }
   },
   "calendar": {
     "title": "Календарь",

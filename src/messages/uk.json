@@ -314,7 +314,18 @@
     "socialLinks": "Соціальні мережі",
     "privateProfile": "Закритий профіль",
     "hideAge": "Приховати вік",
-    "hideEvents": "Приховати заходи"
+    "hideEvents": "Приховати заходи",
+    "tabs": {
+      "about": "Про себе",
+      "favorites": "Обране",
+      "going": "Найближчі",
+      "past": "Відвідані",
+      "created": "Мої події",
+      "subscribed": "Підписки",
+      "managed": "Мої групи",
+      "noEvents": "Поки немає подій",
+      "noGroups": "Поки немає груп"
+    }
   },
   "calendar": {
     "title": "Календар",
