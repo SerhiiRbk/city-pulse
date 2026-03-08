@@ -482,7 +482,9 @@
       "subscribed": "Subscriptions",
       "managed": "My groups",
       "noEvents": "No events yet",
-      "noGroups": "No groups yet"
+      "noEventsDescription": "Nothing here yet, but the next plan could become the start of a whole routine.",
+      "noGroups": "No groups yet",
+      "noGroupsDescription": "Groups turn occasional plans into familiar faces and recurring connections."
     },
     "breadcrumbs": "Community",
     "yearsOld": "{age} y.o.",

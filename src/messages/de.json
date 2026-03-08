@@ -482,7 +482,9 @@
       "subscribed": "Abonnements",
       "managed": "Meine Gruppen",
       "noEvents": "Noch keine Events",
-      "noGroups": "Noch keine Gruppen"
+      "noEventsDescription": "Hier ist noch nichts, aber der nächste Plan kann der Anfang einer neuen Routine werden.",
+      "noGroups": "Noch keine Gruppen",
+      "noGroupsDescription": "Gruppen machen aus gelegentlichen Plänen vertraute Gesichter und wiederkehrende Verbindungen."
     },
     "breadcrumbs": "Community",
     "yearsOld": "{age} Jahre",

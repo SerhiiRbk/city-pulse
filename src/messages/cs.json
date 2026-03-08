@@ -482,7 +482,9 @@
       "subscribed": "Odběry",
       "managed": "Moje skupiny",
       "noEvents": "Zatím žádné události",
-      "noGroups": "Zatím žádné skupiny"
+      "noEventsDescription": "Zatím je tu prázdno, ale další plán se může stát začátkem nové rutiny setkávání.",
+      "noGroups": "Zatím žádné skupiny",
+      "noGroupsDescription": "Skupiny proměňují občasné plány ve známé tváře a pravidelná spojení."
     },
     "breadcrumbs": "Komunita",
     "yearsOld": "{age} let",

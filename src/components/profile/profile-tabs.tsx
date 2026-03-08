@@ -62,7 +62,7 @@ export function ProfileTabs({
     if (events.length === 0) {
       return (
         <div className="rounded-[2rem] border border-border/50 bg-card p-6 shadow-sm">
-          <EmptyState icon="events" title={t('noEvents')} description="Nothing here yet, but the next plan could become the start of a whole routine." className="py-10" />
+          <EmptyState icon="events" title={t('noEvents')} description={t('noEventsDescription')} className="py-10" />
         </div>
       );
     }
@@ -85,7 +85,7 @@ export function ProfileTabs({
     if (groups.length === 0) {
       return (
         <div className="rounded-[2rem] border border-border/50 bg-card p-6 shadow-sm">
-          <EmptyState icon="groups" title={t('noGroups')} description="Groups turn occasional plans into familiar faces and recurring connections." className="py-10" />
+          <EmptyState icon="groups" title={t('noGroups')} description={t('noGroupsDescription')} className="py-10" />
         </div>
       );
     }
@@ -111,9 +111,9 @@ export function ProfileTabs({
     <Tabs defaultValue="about">
       <TabsList variant="line" className="h-auto w-full flex-nowrap justify-start gap-1 overflow-x-auto rounded-2xl border border-border/50 bg-card p-1 scrollbar-none">
         {tabs.map(({ id, icon: Icon, label, count }) => (
-          <TabsTrigger key={id} value={id} className="relative gap-1.5 rounded-xl px-4 py-2.5">
+          <TabsTrigger key={id} value={id} className="relative h-11 shrink-0 gap-1.5 rounded-xl px-3 py-2.5 sm:px-4">
             <Icon className="h-4 w-4" />
-            <span className="hidden sm:inline">{label}</span>
+            <span className="whitespace-nowrap text-xs sm:text-sm">{label}</span>
             <CountBadge count={count} />
           </TabsTrigger>
         ))}

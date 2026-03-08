@@ -140,29 +140,29 @@ export function GroupTabs({
   return (
     <Tabs defaultValue="upcoming">
       <TabsList variant="line" className="h-auto w-full flex-nowrap justify-start gap-1 overflow-x-auto rounded-2xl border border-border/50 bg-card p-1 shadow-sm scrollbar-none">
-        <TabsTrigger value="upcoming" className="gap-1.5 relative">
+        <TabsTrigger value="upcoming" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
           <Calendar className="h-4 w-4" />
-          <span className="hidden sm:inline">{t('eventsTitle')}</span>
+          <span className="whitespace-nowrap text-xs sm:text-sm">{t('eventsTitle')}</span>
           <CountBadge count={upcomingEvents.length} active />
         </TabsTrigger>
-        <TabsTrigger value="past" className="gap-1.5 relative">
+        <TabsTrigger value="past" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
           <History className="h-4 w-4" />
-          <span className="hidden sm:inline">{t('pastEventsTitle')}</span>
+          <span className="whitespace-nowrap text-xs sm:text-sm">{t('pastEventsTitle')}</span>
           <CountBadge count={pastEvents.length} />
         </TabsTrigger>
-        <TabsTrigger value="photos" className="gap-1.5 relative">
+        <TabsTrigger value="photos" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
           <ImageIcon className="h-4 w-4" />
-          <span className="hidden sm:inline">{t('photosTitle')}</span>
+          <span className="whitespace-nowrap text-xs sm:text-sm">{t('photosTitle')}</span>
           <CountBadge count={albums.length} />
         </TabsTrigger>
-        <TabsTrigger value="members" className="gap-1.5 relative">
+        <TabsTrigger value="members" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
           <Users className="h-4 w-4" />
-          <span className="hidden sm:inline">{t('membersList')}</span>
+          <span className="whitespace-nowrap text-xs sm:text-sm">{t('membersList')}</span>
           <CountBadge count={members.length} />
         </TabsTrigger>
-        <TabsTrigger value="comments" className="gap-1.5 relative">
+        <TabsTrigger value="comments" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
           <MessageCircle className="h-4 w-4" />
-          <span className="hidden sm:inline">{t('commentsTitle')}</span>
+          <span className="whitespace-nowrap text-xs sm:text-sm">{t('commentsTitle')}</span>
           <CountBadge count={comments.length} />
         </TabsTrigger>
       </TabsList>
@@ -215,17 +215,17 @@ export function GroupTabs({
                   placeholder={t('albumDescription')}
                   maxLength={1000}
                 />
-                <div className="flex gap-2">
-                  <Button size="sm" onClick={handleCreateAlbum} disabled={creatingAlbum || !newAlbumTitle.trim()}>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Button size="sm" className="w-full sm:w-auto" onClick={handleCreateAlbum} disabled={creatingAlbum || !newAlbumTitle.trim()}>
                     {t('createAlbum')}
                   </Button>
-                  <Button size="sm" variant="ghost" onClick={() => setShowNewAlbum(false)}>
+                  <Button size="sm" variant="ghost" className="w-full sm:w-auto" onClick={() => setShowNewAlbum(false)}>
                     ✕
                   </Button>
                 </div>
               </div>
             ) : (
-              <Button size="sm" variant="outline" onClick={() => setShowNewAlbum(true)}>
+              <Button size="sm" variant="outline" className="w-full sm:w-auto" onClick={() => setShowNewAlbum(true)}>
                 <Plus className="mr-1.5 h-4 w-4" />
                 {t('createAlbum')}
               </Button>
@@ -283,7 +283,7 @@ export function GroupTabs({
               <Link
                 key={m.user_id}
                 href={`/profile/${m.user_id}`}
-                className="hover:bg-muted/50 flex items-center gap-3 rounded-2xl p-3 transition-colors"
+                className="group hover:bg-muted/50 flex items-center gap-3 rounded-2xl p-3 transition-colors"
               >
                 <Avatar className="h-10 w-10 shrink-0 ring-2 ring-transparent transition-all group-hover:ring-primary/20">
                   <AvatarImage src={m.profiles?.avatar_url || undefined} />
@@ -332,7 +332,7 @@ export function GroupTabs({
         ) : (
           <div className="space-y-1">
             {comments.map((comment: any) => (
-              <div key={comment.id} className="hover:bg-muted/30 flex gap-4 rounded-2xl p-5 transition-colors">
+              <div key={comment.id} className="group hover:bg-muted/30 flex gap-4 rounded-2xl p-5 transition-colors">
                 <Link href={`/profile/${comment.profiles?.id || comment.user_id}`}>
                   <Avatar className="h-10 w-10 shrink-0">
                     <AvatarImage src={comment.profiles?.avatar_url || undefined} />
@@ -353,7 +353,7 @@ export function GroupTabs({
                     {currentUserId === comment.user_id && (
                       <button
                         onClick={() => handleDeleteComment(comment.id)}
-                        className="text-muted-foreground hover:text-destructive ml-auto opacity-0 transition-opacity group-hover:opacity-100"
+                        className="text-muted-foreground hover:text-destructive ml-auto rounded-full p-1 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
                         title={t('deleteComment')}
                       >
                         <Trash2 className="h-3.5 w-3.5" />

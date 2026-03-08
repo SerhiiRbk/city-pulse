@@ -132,7 +132,7 @@ export default async function ProfilePage({ params }: Props) {
       {/* Hero card */}
       <div className="overflow-hidden rounded-3xl border border-border/40 bg-card shadow-sm">
         {/* Top section: photo gallery / avatar + identity */}
-        <div className="flex flex-col items-center gap-6 p-6 sm:flex-row sm:items-start sm:gap-8 sm:p-8">
+        <div className="flex flex-col items-center gap-6 p-6 md:flex-row md:items-start md:gap-8 md:p-8">
           {/* Photo area */}
           <div className="shrink-0">
             {userPhotos.length > 0 ? (
@@ -145,7 +145,7 @@ export default async function ProfilePage({ params }: Props) {
               />
             ) : (
               <div className="group relative">
-                <div className="h-40 w-40 overflow-hidden rounded-2xl border-4 border-background shadow-xl ring-1 ring-border/30 sm:h-48 sm:w-48">
+                <div className="h-40 w-40 overflow-hidden rounded-2xl border-4 border-background shadow-xl ring-1 ring-border/30 md:h-48 md:w-48">
                   {profile.avatar_url ? (
                     <img
                       src={profile.avatar_url}
@@ -168,12 +168,12 @@ export default async function ProfilePage({ params }: Props) {
           </div>
 
           {/* Identity + meta */}
-          <div className="flex min-w-0 flex-1 flex-col items-center gap-2.5 sm:items-start sm:gap-3">
+          <div className="flex min-w-0 flex-1 flex-col items-center gap-2.5 md:items-start md:gap-3">
             <div>
-              <h1 className="text-center text-xl font-bold tracking-tight sm:text-left sm:text-3xl">
+              <h1 className="text-center text-xl font-bold tracking-tight md:text-left md:text-3xl">
                 {profile.display_name}
               </h1>
-              <div className="mt-1.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-muted-foreground sm:justify-start">
+              <div className="mt-1.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-muted-foreground md:justify-start">
                 {!profile.hide_age && profile.age && (
                   <span>{t('yearsOld', { age: profile.age })}</span>
                 )}
@@ -188,18 +188,18 @@ export default async function ProfilePage({ params }: Props) {
 
             {/* Bio inline */}
             {profile.bio && (
-              <p className="max-w-lg text-center text-sm leading-relaxed text-muted-foreground sm:text-left">
+              <p className="max-w-lg text-center text-sm leading-relaxed text-muted-foreground md:text-left">
                 {profile.bio}
               </p>
             )}
 
-            <div className="rounded-2xl border border-border/50 bg-muted/30 px-3.5 py-2.5 text-sm text-muted-foreground sm:max-w-xl sm:px-4 sm:py-3">
+            <div className="rounded-2xl border border-border/50 bg-muted/30 px-3.5 py-2.5 text-sm text-muted-foreground md:max-w-xl md:px-4 md:py-3">
               <p className="font-semibold text-foreground">{t('connectionStyle')}</p>
               <p className="mt-1">{socialCue}</p>
             </div>
 
             {/* Actions */}
-            <div className="mt-1 flex flex-wrap justify-center gap-2 sm:justify-start">
+            <div className="mt-1 flex flex-wrap justify-center gap-2 md:justify-start">
               {isOwnProfile && (
                 <Button variant="outline" size="sm" asChild className="rounded-full shadow-sm">
                   <Link href="/profile/edit" className="flex items-center gap-2">
@@ -220,7 +220,7 @@ export default async function ProfilePage({ params }: Props) {
         </div>
 
         {/* Stats strip */}
-        <div className="grid grid-cols-2 divide-x-0 border-t border-border/40 bg-muted/20 sm:grid-cols-4 sm:divide-x sm:divide-border/40">
+        <div className="grid grid-cols-2 divide-x-0 border-t border-border/40 bg-muted/20 md:grid-cols-4 md:divide-x md:divide-border/40">
           {[
             { value: stats.events_created, label: t('eventsCreated'), icon: Calendar },
             { value: stats.events_attended, label: t('eventsAttended'), icon: Users },
@@ -243,7 +243,7 @@ export default async function ProfilePage({ params }: Props) {
       </div>
 
       {/* Detail sections */}
-      <div className="mt-5 grid gap-4 sm:mt-6 sm:gap-6 sm:grid-cols-2">
+      <div className="mt-5 grid gap-4 md:mt-6 md:gap-6 md:grid-cols-2">
         {/* Languages */}
         {profile.languages.length > 0 && (
           <div className="rounded-2xl border border-border/40 bg-card p-4 shadow-sm sm:p-5">
