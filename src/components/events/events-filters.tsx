@@ -16,6 +16,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { Search, X, ChevronsUpDown, Check, CalendarDays } from 'lucide-react';
 import { useState } from 'react';
 import { cn, countryCodeToFlag } from '@/lib/utils';
@@ -182,6 +188,14 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
     : currentFilters.when && whenLabels[currentFilters.when as keyof typeof whenLabels]
       ? whenLabels[currentFilters.when as keyof typeof whenLabels]
       : null;
+  const whenRangeHint = currentFilters.when === 'range' && whenLabel ? whenLabel : null;
+  const interestsHint = selectedCategories.length > 0
+    ? selectedCategories
+        .map((id) => interests.find((interest) => interest.id === id))
+        .filter(Boolean)
+        .map((interest) => getInterestLabel(interest as Interest))
+        .join(', ')
+    : null;
 
   return (
     <div className="space-y-3 sm:space-y-4">
@@ -214,7 +228,7 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
         </div>
       </div>
 
-      <div className="grid gap-3 xl:grid-cols-[170px_190px_minmax(0,1.1fr)_190px_170px_auto]">
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,0.95fr)_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,0.95fr)_auto]">
         {/* Country */}
         <div>
           <Select
@@ -253,25 +267,35 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
           />
         </div>
 
-        <div className="hidden xl:block">
-          <div className="rounded-[1.1rem] border border-border/70 bg-muted/45 px-4 py-3 text-sm text-foreground shadow-sm">
-            {t('helper')}
-          </div>
-        </div>
-
         {/* Interests */}
         <div>
           <Popover open={interestsOpen} onOpenChange={setInterestsOpen}>
-            <PopoverTrigger asChild>
-              <Button variant="outline" type="button" className={cn(controlTrigger, 'justify-between font-normal')}>
-                {selectedCategories.length > 0 ? (
-                  <span className="truncate">{t('selectedCount', { count: selectedCategories.length })}</span>
-                ) : (
-                  <span className="text-muted-foreground">{t('interests')}</span>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      type="button"
+                      title={interestsHint || undefined}
+                      className={cn(controlTrigger, 'justify-between font-normal')}
+                    >
+                      {selectedCategories.length > 0 ? (
+                        <span className="truncate">{t('selectedCount', { count: selectedCategories.length })}</span>
+                      ) : (
+                        <span className="text-muted-foreground">{t('interests')}</span>
+                      )}
+                      <ChevronsUpDown className="ml-1 h-4 w-4 shrink-0 opacity-60" />
+                    </Button>
+                  </PopoverTrigger>
+                </TooltipTrigger>
+                {interestsHint && (
+                  <TooltipContent side="top" sideOffset={8} className="max-w-sm">
+                    {interestsHint}
+                  </TooltipContent>
                 )}
-                <ChevronsUpDown className="ml-1 h-4 w-4 shrink-0 opacity-60" />
-              </Button>
-            </PopoverTrigger>
+              </Tooltip>
+            </TooltipProvider>
             <PopoverContent className="max-h-72 w-[--radix-popover-trigger-width] overflow-y-auto p-2" align="start">
               {groupedInterests.map((group) => (
                 <div key={group.id} className="mb-2 last:mb-0">
@@ -305,19 +329,35 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
         {/* When — Popover with presets + date range */}
         <div>
           <Popover open={whenOpen} onOpenChange={setWhenOpen}>
-            <PopoverTrigger asChild>
-              <Button variant="outline" type="button" className={cn(controlTrigger, 'justify-between font-normal')}>
-                <span className="flex items-center gap-2 truncate">
-                  <CalendarDays className="h-4 w-4 shrink-0 opacity-60" />
-                  {whenLabel ? (
-                    <span className="truncate text-foreground">{whenLabel}</span>
-                  ) : (
-                    <span className="text-muted-foreground">{t('when')}</span>
-                  )}
-                </span>
-                <ChevronsUpDown className="ml-1 h-4 w-4 shrink-0 opacity-60" />
-              </Button>
-            </PopoverTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      type="button"
+                      title={whenRangeHint || undefined}
+                      className={cn(controlTrigger, 'justify-between font-normal')}
+                    >
+                      <span className="flex items-center gap-2 truncate">
+                        <CalendarDays className="h-4 w-4 shrink-0 opacity-60" />
+                        {whenLabel ? (
+                          <span className="truncate text-foreground">{whenLabel}</span>
+                        ) : (
+                          <span className="text-muted-foreground">{t('when')}</span>
+                        )}
+                      </span>
+                      <ChevronsUpDown className="ml-1 h-4 w-4 shrink-0 opacity-60" />
+                    </Button>
+                  </PopoverTrigger>
+                </TooltipTrigger>
+                {whenRangeHint && (
+                  <TooltipContent side="top" sideOffset={8}>
+                    {whenRangeHint}
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
             <PopoverContent className="w-72 p-0" align="start">
               {/* Presets */}
               <div className="border-b p-1">
@@ -407,7 +447,7 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
         </div>
 
         {/* Search button */}
-        <Button className="h-10 sm:h-11 rounded-xl px-6 font-semibold shadow-md" onClick={handleSearch}>
+        <Button className="h-10 w-full rounded-xl px-6 font-semibold shadow-md sm:h-11 xl:w-auto" onClick={handleSearch}>
           <Search className="mr-2 h-4 w-4" />
           {t('searchCta')}
         </Button>

@@ -328,6 +328,16 @@
     "cueActive": "Aktivní tento měsíc",
     "cueWelcoming": "Přátelská komunita",
     "cueGrowing": "Rostoucí komunita",
+    "filters": {
+      "country": "Země",
+      "city": "Město",
+      "interests": "Zájmy",
+      "allCountries": "Všechny země",
+      "helper": "Filtrujte komunity podle lokality a společných zájmů, abyste rychleji našli skupiny, kam se budete rádi vracet.",
+      "selectedCount": "{count, plural, one {# vybráno} few {# vybráno} other {# vybráno}}",
+      "searchCta": "Hledat",
+      "clear": "Vymazat"
+    },
     "createGroup": {
       "title": "Vytvořit skupinu",
       "name": "Název skupiny",

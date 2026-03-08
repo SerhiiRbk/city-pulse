@@ -1,7 +1,9 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getGroups } from '@/lib/actions/groups';
+import { getInterestCategories, getInterests } from '@/lib/actions/profile';
 import { getUser } from '@/lib/actions/auth';
 import { GroupCard } from '@/components/groups/group-card';
+import { GroupsFilters } from '@/components/groups/groups-filters';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
@@ -9,16 +11,34 @@ import { Plus, Sparkles, UsersRound, CalendarDays } from 'lucide-react';
 
 export default async function GroupsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const filters = await searchParams;
   const t = await getTranslations('groups');
   const tPage = await getTranslations('groups.page');
   const user = await getUser();
-  const groups = await getGroups({ limit: 24 });
+  const [interests, interestCategories] = await Promise.all([
+    getInterests(),
+    getInterestCategories(),
+  ]);
+
+  const interestIds = filters.interest
+    ? filters.interest.split(',').filter(Boolean)
+    : [];
+
+  const groups = await getGroups({
+    country: filters.country,
+    city_id: filters.city_id,
+    city: filters.city,
+    interests: interestIds.length > 0 ? interestIds : undefined,
+    limit: 24,
+  });
 
   return (
     <div>
@@ -90,6 +110,14 @@ export default async function GroupsPage({
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="mx-auto mt-7 max-w-4xl rounded-[1.9rem] border border-border/70 bg-background/92 p-3 shadow-2xl backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 sm:mt-8 sm:p-4">
+            <GroupsFilters
+              interests={interests}
+              categories={interestCategories}
+              currentFilters={filters}
+            />
           </div>
         </div>
       </section>

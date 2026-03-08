@@ -120,7 +120,7 @@ export default async function EventsPage({
             </div>
           </div>
 
-          <div className="mt-7 rounded-[1.9rem] border border-border/70 bg-background/92 p-3 sm:mt-8 sm:p-4 shadow-2xl backdrop-blur-xl supports-[backdrop-filter]:bg-background/80">
+          <div className="mx-auto mt-7 max-w-5xl rounded-[1.9rem] border border-border/70 bg-background/92 p-3 shadow-2xl backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 sm:mt-8 sm:p-4">
             <EventsFilters
               interests={interests}
               categories={interestCategories}

@@ -328,6 +328,16 @@
     "cueActive": "Diesen Monat aktiv",
     "cueWelcoming": "Einladende Community",
     "cueGrowing": "Wachsende Community",
+    "filters": {
+      "country": "Land",
+      "city": "Stadt",
+      "interests": "Interessen",
+      "allCountries": "Alle Länder",
+      "helper": "Filtere Communities nach Ort und gemeinsamen Interessen, um schneller Gruppen zu finden, zu denen man gerne zurückkehrt.",
+      "selectedCount": "{count, plural, one {# ausgewählt} other {# ausgewählt}}",
+      "searchCta": "Suchen",
+      "clear": "Zurücksetzen"
+    },
     "createGroup": {
       "title": "Gruppe erstellen",
       "name": "Gruppenname",

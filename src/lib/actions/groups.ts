@@ -249,16 +249,47 @@ export async function isSlugAvailable(slug: string, country: string | null, excl
   return !data;
 }
 
-export async function getGroups(filters: { limit?: number; offset?: number } = {}) {
+export async function getGroups(
+  filters: {
+    country?: string;
+    city?: string;
+    city_id?: string;
+    interests?: string[];
+    limit?: number;
+    offset?: number;
+  } = {},
+) {
   const supabase = await createClient();
   const limit = filters.limit || 12;
   const offset = filters.offset || 0;
 
-  const { data } = await supabase
+  let query = supabase
     .from('groups_with_counts')
     .select('*')
-    .order('member_count', { ascending: false })
-    .range(offset, offset + limit - 1);
+    .order('member_count', { ascending: false });
+
+  if (filters.country) {
+    query = query.eq('country', filters.country);
+  }
+
+  if (filters.city_id) {
+    query = query.eq('city_id', filters.city_id);
+  } else if (filters.city) {
+    query = query.ilike('city', `%${filters.city}%`);
+  }
+
+  if (filters.interests && filters.interests.length > 0) {
+    const { data: matches } = await supabase
+      .from('group_interests')
+      .select('group_id')
+      .in('interest_id', filters.interests);
+
+    const groupIds = [...new Set((matches || []).map((row) => row.group_id))];
+    if (groupIds.length === 0) return [];
+    query = query.in('id', groupIds);
+  }
+
+  const { data } = await query.range(offset, offset + limit - 1);
 
   return data || [];
 }
