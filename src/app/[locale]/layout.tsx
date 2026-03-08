@@ -14,12 +14,12 @@ import { getUserProfile } from '@/lib/actions/auth';
 import '../globals.css';
 
 const sansFont = Plus_Jakarta_Sans({
-  variable: '--font-geist-sans',
+  variable: '--font-sans',
   subsets: ['latin', 'latin-ext', 'cyrillic-ext'],
 });
 
 const monoFont = JetBrains_Mono({
-  variable: '--font-geist-mono',
+  variable: '--font-mono',
   subsets: ['latin', 'cyrillic'],
 });
 

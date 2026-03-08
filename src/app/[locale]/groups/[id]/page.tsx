@@ -21,7 +21,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Users, Calendar, Pencil, MapPin, CalendarPlus, Link2 } from 'lucide-react';
 import { GroupHeroActions } from '@/components/groups/group-hero-actions';
 import { COUNTRIES } from '@/lib/constants';
-import { countryCodeToFlag } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { SITE_URL } from '@/lib/constants';
 
@@ -111,8 +110,8 @@ export default async function GroupDetailPage({ params }: Props) {
                 <MapPin className="text-primary h-4 w-4 shrink-0" />
                 <span className="text-sm">
                   {group.country && (() => {
-                    const c = COUNTRIES.find((c) => c.code === group.country);
-                    return c ? `${countryCodeToFlag(c.code)} ${c[locale as keyof typeof c] || c.en}` : group.country;
+                    const c = COUNTRIES.find((co) => co.code === group.country);
+                    return c ? ((c as Record<string, string>)[locale] || c.en) : group.country;
                   })()}
                   {group.country && group.city && ', '}
                   {group.city}
@@ -133,8 +132,8 @@ export default async function GroupDetailPage({ params }: Props) {
             {/* Description */}
             {group.description && (
               <div className="px-5 py-4">
-                <p className="text-muted-foreground text-[11px] font-medium uppercase tracking-wider">{tDetail('description')}</p>
-                <p className="text-foreground mt-1.5 whitespace-pre-wrap text-[13px] leading-relaxed">
+                <p className="text-muted-foreground text-xs font-medium uppercase tracking-wider">{tDetail('description')}</p>
+                <p className="text-foreground mt-1.5 whitespace-pre-wrap text-sm leading-relaxed">
                   {group.description}
                 </p>
               </div>
@@ -143,7 +142,7 @@ export default async function GroupDetailPage({ params }: Props) {
             {/* Interests */}
             {groupInterests.length > 0 && (
               <div className="px-5 py-4">
-                <p className="text-muted-foreground mb-2.5 text-[11px] font-medium uppercase tracking-wider">{tDetail('interests')}</p>
+                <p className="text-muted-foreground mb-2.5 text-xs font-medium uppercase tracking-wider">{tDetail('interests')}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {groupInterests.map((interest: any) => (
                     <span
@@ -191,7 +190,7 @@ export default async function GroupDetailPage({ params }: Props) {
                   <AvatarFallback className="text-xs font-semibold">{group.creator_name[0]}</AvatarFallback>
                 </Avatar>
                 <div className="min-w-0">
-                  <p className="text-muted-foreground text-[11px] uppercase tracking-wider">{tDetail('creator')}</p>
+                  <p className="text-muted-foreground text-xs uppercase tracking-wider">{tDetail('creator')}</p>
                   <p className="text-foreground truncate text-sm font-semibold">{group.creator_name}</p>
                 </div>
               </Link>
@@ -202,12 +201,12 @@ export default async function GroupDetailPage({ params }: Props) {
               <div className="flex flex-col items-center bg-card py-3.5">
                 <Users className="text-primary mb-1 h-4 w-4" />
                 <span className="text-foreground text-sm font-bold">{group.member_count}</span>
-                <span className="text-muted-foreground text-[11px]">{tDetail('membersList')}</span>
+                <span className="text-muted-foreground text-xs">{tDetail('membersList')}</span>
               </div>
               <div className="flex flex-col items-center bg-card py-3.5">
                 <Calendar className="text-primary mb-1 h-4 w-4" />
                 <span className="text-foreground text-sm font-bold">{group.event_count}</span>
-                <span className="text-muted-foreground text-[11px]">{t('events')}</span>
+                <span className="text-muted-foreground text-xs">{t('events')}</span>
               </div>
             </div>
 

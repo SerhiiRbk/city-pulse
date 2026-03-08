@@ -101,7 +101,7 @@ export function EventListCard({ event, isGoing: initialGoing, isFavorited: initi
             {/* Price badge */}
             <div className="absolute bottom-3 right-3">
               {event.is_free ? (
-                <span className="rounded-lg bg-green-500 px-3 py-1.5 text-sm font-bold text-white shadow-lg">
+                <span className="rounded-lg bg-success px-3 py-1.5 text-sm font-bold text-success-foreground shadow-lg">
                   {t('free')}
                 </span>
               ) : (

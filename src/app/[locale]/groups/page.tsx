@@ -2,9 +2,10 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getGroups } from '@/lib/actions/groups';
 import { getUser } from '@/lib/actions/auth';
 import { GroupCard } from '@/components/groups/group-card';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
-import { Plus, Users } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 export default async function GroupsPage({
   params,
@@ -52,12 +53,20 @@ export default async function GroupsPage({
 
       <div className="container mx-auto px-4 py-12">
         {groups.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24">
-            <div className="bg-muted mb-4 flex h-20 w-20 items-center justify-center rounded-full">
-              <Users className="text-muted-foreground h-10 w-10" />
-            </div>
-            <p className="text-muted-foreground mb-1 text-lg font-medium">{t('noGroups')}</p>
-          </div>
+          <EmptyState
+            icon="groups"
+            title={t('noGroups')}
+            description="Be the first to create a community"
+          >
+            {user && (
+              <Button asChild>
+                <Link href="/groups/create" className="flex items-center gap-2">
+                  <Plus className="h-4 w-4" />
+                  {t('create')}
+                </Link>
+              </Button>
+            )}
+          </EmptyState>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {groups.map((group) => (

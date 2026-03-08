@@ -542,7 +542,7 @@ export function EditEventForm({ event, interests, categories, moderators: initia
                   <img src={url} alt="" className="h-full w-full object-cover" />
                   {isCover && (
                     <div className="absolute top-2 left-2">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-green-500 px-2 py-0.5 text-[10px] font-semibold text-white shadow">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-success px-2 py-0.5 text-[10px] font-semibold text-success-foreground shadow">
                         <Star className="h-3 w-3" fill="white" /> Cover
                       </span>
                     </div>

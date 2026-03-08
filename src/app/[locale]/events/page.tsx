@@ -4,6 +4,7 @@ import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { getUser } from '@/lib/actions/auth';
 import { EventCard } from '@/components/events/event-card';
 import { EventsFilters } from '@/components/events/events-filters';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { CalendarPlus } from 'lucide-react';
@@ -90,13 +91,20 @@ export default async function EventsPage({
       {/* Events grid */}
       <section className="container mx-auto px-4 py-12">
         {events.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24">
-            <div className="bg-muted mb-4 flex h-20 w-20 items-center justify-center rounded-full">
-              <CalendarPlus className="text-muted-foreground h-10 w-10" />
-            </div>
-            <p className="text-muted-foreground mb-1 text-lg font-medium">{t('noEvents')}</p>
-            <p className="text-muted-foreground text-sm">Try adjusting your filters</p>
-          </div>
+          <EmptyState
+            icon="events"
+            title={t('noEvents')}
+            description="Try adjusting your filters or check back later"
+          >
+            {user && (
+              <Button asChild>
+                <Link href="/events/create" className="flex items-center gap-2">
+                  <CalendarPlus className="h-4 w-4" />
+                  Create event
+                </Link>
+              </Button>
+            )}
+          </EmptyState>
         ) : (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {events.map((event) => (

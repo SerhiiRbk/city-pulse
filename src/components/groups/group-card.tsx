@@ -2,8 +2,9 @@
 
 import { Link } from '@/i18n/navigation';
 import { Card, CardContent } from '@/components/ui/card';
-import { Users, Calendar } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { Badge } from '@/components/ui/badge';
+import { Users, Calendar, MapPin } from 'lucide-react';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface GroupCardProps {
   group: {
@@ -15,11 +16,17 @@ interface GroupCardProps {
     event_count: number;
     creator_name: string | null;
     creator_avatar: string | null;
+    city: string | null;
+    country: string | null;
+    city_name?: string | null;
+    city_translations?: Record<string, string> | null;
   };
 }
 
 export function GroupCard({ group }: GroupCardProps) {
   const t = useTranslations('groups');
+  const locale = useLocale();
+  const cityLabel = group.city_translations?.[locale] || group.city_name || group.city || '';
 
   return (
     <Link href={`/groups/${group.id}`}>
@@ -37,10 +44,22 @@ export function GroupCard({ group }: GroupCardProps) {
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <div className="absolute bottom-3 left-3">
+            <Badge variant="secondary" className="bg-white/90 backdrop-blur-md">
+              <Users className="mr-1 h-3 w-3" />
+              {group.member_count}
+            </Badge>
+          </div>
         </div>
         <div className="p-5">
-          <h3 className="mb-2 line-clamp-1 text-xl font-extrabold tracking-tight">{group.name}</h3>
+          <h3 className="mb-2 line-clamp-1 text-xl font-bold tracking-tight">{group.name}</h3>
           <p className="text-muted-foreground mb-4 line-clamp-2 text-sm leading-relaxed">{group.description}</p>
+          {(cityLabel || group.country) && (
+            <div className="text-muted-foreground mb-3 flex items-center gap-1.5 text-sm">
+              <MapPin className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">{[cityLabel, group.country].filter(Boolean).join(', ')}</span>
+            </div>
+          )}
           <div className="text-muted-foreground flex items-center gap-5 text-sm font-medium">
             <div className="flex items-center gap-1.5">
               <Users className="h-4 w-4" />

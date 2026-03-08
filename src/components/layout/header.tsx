@@ -86,13 +86,12 @@ export function Header({ user }: HeaderProps) {
             </>
           )}
 
-          <LanguageSwitcher />
-          <ThemeToggle />
-
           {user ? (
             <UserMenu user={user} />
           ) : (
             <div className="hidden items-center gap-2 md:flex">
+              <LanguageSwitcher />
+              <ThemeToggle />
               <Button variant="ghost" size="sm" asChild>
                 <Link href="/login">{t('login')}</Link>
               </Button>
@@ -155,6 +154,10 @@ function UserMenu({ user }: { user: Profile }) {
             </Link>
           </DropdownMenuItem>
         )}
+        <div className="flex items-center gap-2 px-2 py-1.5">
+          <LanguageSwitcher />
+          <ThemeToggle />
+        </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <form action="/api/auth/signout" method="POST">

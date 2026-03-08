@@ -18,6 +18,8 @@ interface EventCardProps {
     photos: string[];
     starts_at: string;
     city: string | null;
+    city_name?: string | null;
+    city_translations?: Record<string, string> | null;
     country: string | null;
     is_online: boolean;
     is_free: boolean;
@@ -37,6 +39,7 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
   const t = useTranslations('events.card');
   const tDetail = useTranslations('events.detail');
   const locale = useLocale();
+  const cityLabel = event.city_translations?.[locale] || event.city_name || event.city || '';
   const [going, setGoing] = useState(initialGoing || false);
   const [favorited, setFavorited] = useState(initialFav || false);
   const [goingCount, setGoingCount] = useState(event.going_count);
@@ -58,6 +61,20 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
     } else {
       toast.success(result.going ? tDetail('registeredForEvent') : tDetail('cancelledAttendance'));
     }
+  }
+
+  function getRelativeTime(dateStr: string): string | null {
+    const now = new Date();
+    const date = new Date(dateStr);
+    const diffMs = date.getTime() - now.getTime();
+    if (diffMs < 0) return null;
+    const diffH = Math.floor(diffMs / (1000 * 60 * 60));
+    if (diffH < 1) return 'Starting soon';
+    if (diffH < 24) return `In ${diffH}h`;
+    const diffD = Math.floor(diffH / 24);
+    if (diffD === 1) return 'Tomorrow';
+    if (diffD < 7) return `In ${diffD} days`;
+    return null;
   }
 
   async function handleToggleFavorite(e: React.MouseEvent) {
@@ -94,7 +111,7 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
           {/* Badges on image */}
           <div className="absolute top-3 left-3 flex gap-1.5">
             {event.is_free ? (
-              <Badge className="bg-green-500/90 text-white backdrop-blur-md hover:bg-green-500">{t('free')}</Badge>
+              <Badge className="bg-success/90 text-success-foreground backdrop-blur-md hover:bg-success">{t('free')}</Badge>
             ) : (
               <Badge variant="secondary" className="bg-white/90 backdrop-blur-md">
                 {event.price} {event.currency}
@@ -106,6 +123,14 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
                 Online
               </Badge>
             )}
+            {(() => {
+              const rel = getRelativeTime(event.starts_at);
+              return rel ? (
+                <Badge variant="secondary" className="bg-white/90 backdrop-blur-md text-xs font-medium">
+                  {rel}
+                </Badge>
+              ) : null;
+            })()}
           </div>
           {/* Favorite + share overlay */}
           {isAuthenticated && (
@@ -150,7 +175,7 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
           </div>
 
           {/* Title */}
-          <h3 className="mb-2 line-clamp-2 text-lg font-extrabold leading-snug tracking-tight">{event.title}</h3>
+          <h3 className="mb-2 line-clamp-2 text-lg font-bold leading-snug tracking-tight">{event.title}</h3>
 
           {/* Date + Location in one row */}
           <div className="text-muted-foreground mb-4 flex items-center gap-4 text-sm font-medium">
@@ -167,7 +192,7 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
               ) : (
                 <>
                   <MapPin className="h-4 w-4 shrink-0" />
-                  <span className="truncate">{event.city || event.country}</span>
+                  <span className="truncate">{cityLabel || event.country}</span>
                 </>
               )}
             </span>
@@ -179,7 +204,7 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
               <Button
                 size="sm"
                 variant={going ? 'secondary' : 'default'}
-                className="w-full rounded-xl font-semibold sm:w-auto"
+                className="w-full rounded-xl font-semibold"
                 onClick={handleToggleGoing}
               >
                 {going ? t('going') : t('join')}

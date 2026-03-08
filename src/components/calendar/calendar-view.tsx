@@ -167,7 +167,7 @@ export function CalendarView({ events, year, month, onNavigate }: CalendarViewPr
                       <MapPin className="h-3 w-3" /> {event.city}
                     </span>
                   ) : null}
-                  {event.is_free && <Badge className="bg-green-500 text-xs text-white">Free</Badge>}
+                  {event.is_free && <Badge className="bg-success text-xs text-success-foreground">Free</Badge>}
                 </div>
               </Link>
             ))

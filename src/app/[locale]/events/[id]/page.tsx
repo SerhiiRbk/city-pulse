@@ -15,6 +15,7 @@ import { formatDate, formatDuration } from '@/lib/utils';
 import { SITE_NAME, COUNTRIES } from '@/lib/constants';
 import { EventMap } from '@/components/maps/event-map';
 import { ReportDialog } from '@/components/reports/report-dialog';
+import { ShareButton } from '@/components/ui/share-button';
 import { EventManagement } from '@/components/events/event-management';
 import { EventReviewForm } from '@/components/events/event-review-form';
 import { EventPhotoGallery } from '@/components/events/event-photo-gallery';
@@ -107,7 +108,7 @@ export default async function EventDetailPage({ params }: Props) {
                   {t('online')}
                 </Badge>
               )}
-              {event.is_free && <Badge className="bg-green-500 text-white">Free</Badge>}
+              {event.is_free && <Badge className="bg-success text-success-foreground">Free</Badge>}
             </div>
             <h1 className="text-3xl font-bold">{event.title}</h1>
 
@@ -121,20 +122,6 @@ export default async function EventDetailPage({ params }: Props) {
               <Badge variant="outline" className="mt-2">Draft</Badge>
             )}
           </div>
-
-          {canEdit && (
-            <div className="flex flex-wrap items-center gap-3">
-              <Button variant="outline" size="sm" asChild className="rounded-full shadow-sm">
-                <Link href={`/events/${id}/edit`} className="flex items-center gap-2">
-                  <Pencil className="h-4 w-4" />
-                  Edit Event
-                </Link>
-              </Button>
-              {isOrganizer && (
-                <EventManagement eventId={id} status={event.status} />
-              )}
-            </div>
-          )}
 
           {/* Organizer */}
           <div className="flex items-center gap-3">
@@ -159,6 +146,20 @@ export default async function EventDetailPage({ params }: Props) {
               {event.description}
             </div>
           </div>
+
+          {canEdit && (
+            <div className="flex flex-wrap items-center gap-3">
+              <Button variant="outline" size="sm" asChild className="rounded-full shadow-sm">
+                <Link href={`/events/${id}/edit`} className="flex items-center gap-2">
+                  <Pencil className="h-4 w-4" />
+                  Edit Event
+                </Link>
+              </Button>
+              {isOrganizer && (
+                <EventManagement eventId={id} status={event.status} />
+              )}
+            </div>
+          )}
 
           <Separator />
 
@@ -206,7 +207,7 @@ export default async function EventDetailPage({ params }: Props) {
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-6">
+        <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
           <Card className="rounded-2xl border-border/50 shadow-sm">
             <CardContent className="space-y-6 pt-6">
               <EventActions
@@ -215,6 +216,7 @@ export default async function EventDetailPage({ params }: Props) {
                 initialFavorited={favorited}
                 isAuthenticated={isAuthenticated}
               />
+              <ShareButton title={event.title} className="w-full rounded-xl" />
 
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
@@ -296,14 +298,31 @@ export default async function EventDetailPage({ params }: Props) {
                     );
                   })}
                   {attendees.length > 12 && (
-                    <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full text-xs">
-                      +{attendees.length - 12}
-                    </div>
+                    <p className="mt-2 w-full text-xs text-muted-foreground">
+                      +{attendees.length - 12} more attendees
+                    </p>
                   )}
                 </div>
               </CardContent>
             </Card>
           )}
+        </div>
+      </div>
+
+      {/* Mobile sticky action bar */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 p-3 backdrop-blur-md lg:hidden">
+        <div className="container mx-auto flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold">{event.title}</p>
+            <p className="text-xs text-muted-foreground">{formatDate(event.starts_at, locale)}</p>
+          </div>
+          <EventActions
+            eventId={id}
+            initialGoing={going}
+            initialFavorited={favorited}
+            isAuthenticated={isAuthenticated}
+            compact
+          />
         </div>
       </div>
     </div>

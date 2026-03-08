@@ -51,7 +51,7 @@ export function ProfilePhotoGallery({
         </button>
 
         {isAvailable && (
-          <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-emerald-500 px-3 py-0.5 text-xs font-semibold text-white shadow-md">
+          <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-success px-3 py-0.5 text-xs font-semibold text-success-foreground shadow-md">
             {availableLabel}
           </span>
         )}
