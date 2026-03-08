@@ -82,7 +82,7 @@ export default async function GroupDetailPage({ params }: Props) {
 
   return (
     <div className="min-h-screen">
-      <div className="relative h-64 sm:h-80 md:h-96">
+      <div className="relative h-56 sm:h-72 md:h-96">
         {group.cover_url ? (
           <img src={group.cover_url} alt={group.name} className="h-full w-full object-cover" />
         ) : (
@@ -93,7 +93,7 @@ export default async function GroupDetailPage({ params }: Props) {
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/70 via-gray-900/50 to-gray-900/90" />
 
         {/* Subscribe + Share — top right */}
-        <div className="absolute top-4 right-4 z-10">
+        <div className="absolute top-3 right-3 z-10 sm:top-4 sm:right-4">
           <GroupHeroActions
             groupId={id}
             initialSubscribed={status.isSubscribed}
@@ -101,28 +101,28 @@ export default async function GroupDetailPage({ params }: Props) {
           />
         </div>
 
-        <div className="absolute inset-x-0 bottom-0 z-10 px-4 pb-8">
+        <div className="absolute inset-x-0 bottom-0 z-10 px-4 pb-6 sm:pb-8">
           <div className="container mx-auto">
             <div className="max-w-3xl">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/90 backdrop-blur-sm">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs text-white/90 backdrop-blur-sm sm:mb-4 sm:text-sm">
                 <Users className="h-4 w-4" />
                 {tDetail('communityVibe')}
               </div>
-              <h1 className="text-3xl font-bold tracking-tight text-white drop-shadow-lg sm:text-4xl md:text-5xl">
+              <h1 className="text-2xl font-bold tracking-tight text-white drop-shadow-lg sm:text-4xl md:text-5xl">
                 {group.name}
               </h1>
-              <p className="mt-3 max-w-2xl text-sm text-white/80 sm:text-base">
+              <p className="mt-2.5 max-w-2xl text-sm text-white/80 sm:mt-3 sm:text-base">
                 {communityCue}
               </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/90 backdrop-blur-sm">
+              <div className="mt-3 flex flex-wrap gap-2 sm:mt-4">
+                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs text-white/90 backdrop-blur-sm sm:text-sm">
                   {t('members', { count: group.member_count })}
                 </span>
-                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/90 backdrop-blur-sm">
+                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs text-white/90 backdrop-blur-sm sm:text-sm">
                   {tDetail('eventsCount', { count: group.event_count })}
                 </span>
                 {locationLabel && (
-                  <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/90 backdrop-blur-sm">
+                  <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs text-white/90 backdrop-blur-sm sm:text-sm">
                     {locationLabel}
                   </span>
                 )}
@@ -132,7 +132,7 @@ export default async function GroupDetailPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="container mx-auto grid grid-cols-1 gap-6 px-4 py-8 lg:grid-cols-[260px_1fr_260px]">
+      <div className="container mx-auto grid grid-cols-1 gap-6 px-4 py-6 sm:py-8 lg:grid-cols-[260px_1fr_260px]">
         <div className="order-0 col-span-full flex items-center gap-2 text-sm text-muted-foreground">
           <Link href="/groups" className="transition-colors hover:text-foreground">{tDetail('breadcrumbs')}</Link>
           <span>/</span>

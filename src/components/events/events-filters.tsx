@@ -168,7 +168,7 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
     }))
     .filter((g) => g.items.length > 0);
 
-  const controlTrigger = 'h-11 w-full rounded-xl border-border/70 bg-background/92 text-foreground shadow-sm hover:bg-muted/70 hover:text-foreground [&>svg]:text-muted-foreground';
+  const controlTrigger = 'h-10 sm:h-11 w-full rounded-xl border-border/70 bg-background/92 text-foreground shadow-sm hover:bg-muted/70 hover:text-foreground [&>svg]:text-muted-foreground';
   const whenLabels = {
     today: t('today'),
     tomorrow: t('tomorrow'),
@@ -184,8 +184,9 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
       : null;
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
+    <div className="space-y-3 sm:space-y-4">
+      <div className="-mx-1 overflow-x-auto px-1 pb-1">
+        <div className="flex min-w-max gap-2">
         {[
           { key: 'today', label: t('today') },
           { key: 'tomorrow', label: t('tomorrow') },
@@ -200,7 +201,7 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
               type="button"
               onClick={() => selectWhenPreset(preset.key)}
               className={cn(
-                'rounded-full border px-3 py-1.5 text-sm font-medium shadow-sm transition-colors',
+                'shrink-0 rounded-full border px-3 py-1.5 text-[13px] font-medium shadow-sm transition-colors sm:text-sm',
                 active
                   ? 'border-primary/30 bg-primary text-primary-foreground'
                   : 'border-border/70 bg-background/90 text-foreground hover:bg-muted/70',
@@ -210,6 +211,7 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
             </button>
           );
         })}
+        </div>
       </div>
 
       <div className="grid gap-3 xl:grid-cols-[170px_190px_minmax(0,1.1fr)_190px_170px_auto]">
@@ -251,7 +253,7 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
           />
         </div>
 
-        <div>
+        <div className="hidden xl:block">
           <div className="rounded-[1.1rem] border border-border/70 bg-muted/45 px-4 py-3 text-sm text-foreground shadow-sm">
             {t('helper')}
           </div>
@@ -405,7 +407,7 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
         </div>
 
         {/* Search button */}
-        <Button className="h-11 rounded-xl px-6 font-semibold shadow-md" onClick={handleSearch}>
+        <Button className="h-10 sm:h-11 rounded-xl px-6 font-semibold shadow-md" onClick={handleSearch}>
           <Search className="mr-2 h-4 w-4" />
           {t('searchCta')}
         </Button>

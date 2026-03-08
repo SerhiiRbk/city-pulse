@@ -30,32 +30,32 @@ export default async function GroupsPage({
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.14),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(245,158,11,0.16),transparent_30%)]" />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/60 to-slate-950/92" />
 
-        <div className="relative z-10 container mx-auto px-4 pt-20 pb-16">
+        <div className="relative z-10 container mx-auto px-4 pt-14 pb-10 sm:pt-16 sm:pb-12 md:pt-20 md:pb-16">
           <div className="grid items-end gap-10 lg:grid-cols-[1.15fr_0.85fr]">
             <div>
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/90 backdrop-blur-sm">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs text-white/90 backdrop-blur-sm sm:mb-4 sm:text-sm">
                 <Sparkles className="h-4 w-4" />
                 {tPage('heroBadge')}
               </div>
-              <h1 className="text-5xl font-bold tracking-tight text-white drop-shadow-lg md:text-6xl">
+              <h1 className="text-4xl font-bold tracking-tight text-white drop-shadow-lg sm:text-5xl md:text-6xl">
                 {t('title')}
               </h1>
-              <p className="mt-3 max-w-2xl text-xl text-white/80 drop-shadow">
+              <p className="mt-3 max-w-2xl text-base text-white/80 drop-shadow sm:text-lg md:text-xl">
                 {tPage('subtitle')}
               </p>
-              <div className="mt-6 flex flex-wrap gap-2">
+              <div className="mt-5 flex flex-wrap gap-2">
                 {[
                   tPage('trust1'),
                   tPage('trust2'),
                   tPage('trust3'),
                 ].map((item) => (
-                  <span key={item} className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/85 backdrop-blur-sm">
+                  <span key={item} className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs text-white/85 backdrop-blur-sm sm:text-sm">
                     {item}
                   </span>
                 ))}
               </div>
               {user && (
-                <div className="mt-8">
+                <div className="mt-6">
                   <Button asChild size="lg" className="rounded-full px-6 shadow-xl">
                     <Link href="/groups/create" className="flex items-center gap-2">
                       <Plus className="h-5 w-5" />
@@ -66,7 +66,7 @@ export default async function GroupsPage({
               )}
             </div>
 
-            <div className="rounded-[2rem] border border-white/15 bg-white/10 p-4 shadow-2xl backdrop-blur-md">
+            <div className="hidden rounded-[2rem] border border-white/15 bg-white/10 p-4 shadow-2xl backdrop-blur-md lg:block">
               <div className="rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5 text-white">
                 <p className="text-xs uppercase tracking-[0.18em] text-white/55">{tPage('sideLabel')}</p>
                 <div className="mt-4 space-y-3">
@@ -94,7 +94,7 @@ export default async function GroupsPage({
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-10 sm:py-12">
         <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">{tPage('sectionLabel')}</p>

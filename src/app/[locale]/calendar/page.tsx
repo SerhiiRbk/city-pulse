@@ -24,8 +24,8 @@ export default async function CalendarPage({
   ]);
 
   return (
-    <div className="container mx-auto max-w-5xl px-4 py-8">
-      <div className="mb-8 rounded-[2rem] border border-border/50 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 p-6 shadow-sm">
+    <div className="container mx-auto max-w-5xl px-4 py-6 sm:py-8">
+      <div className="mb-6 rounded-[2rem] border border-border/50 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 p-5 shadow-sm sm:mb-8 sm:p-6">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{t('title')}</p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">{t('title')}</h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">

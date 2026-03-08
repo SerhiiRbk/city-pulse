@@ -132,7 +132,7 @@ export default async function ProfilePage({ params }: Props) {
       {/* Hero card */}
       <div className="overflow-hidden rounded-3xl border border-border/40 bg-card shadow-sm">
         {/* Top section: photo gallery / avatar + identity */}
-        <div className="flex flex-col items-center gap-8 p-8 sm:flex-row sm:items-start">
+        <div className="flex flex-col items-center gap-6 p-6 sm:flex-row sm:items-start sm:gap-8 sm:p-8">
           {/* Photo area */}
           <div className="shrink-0">
             {userPhotos.length > 0 ? (
@@ -168,9 +168,9 @@ export default async function ProfilePage({ params }: Props) {
           </div>
 
           {/* Identity + meta */}
-          <div className="flex min-w-0 flex-1 flex-col items-center gap-3 sm:items-start">
+          <div className="flex min-w-0 flex-1 flex-col items-center gap-2.5 sm:items-start sm:gap-3">
             <div>
-              <h1 className="text-center text-2xl font-bold tracking-tight sm:text-left sm:text-3xl">
+              <h1 className="text-center text-xl font-bold tracking-tight sm:text-left sm:text-3xl">
                 {profile.display_name}
               </h1>
               <div className="mt-1.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-muted-foreground sm:justify-start">
@@ -193,7 +193,7 @@ export default async function ProfilePage({ params }: Props) {
               </p>
             )}
 
-            <div className="rounded-2xl border border-border/50 bg-muted/30 px-4 py-3 text-sm text-muted-foreground sm:max-w-xl">
+            <div className="rounded-2xl border border-border/50 bg-muted/30 px-3.5 py-2.5 text-sm text-muted-foreground sm:max-w-xl sm:px-4 sm:py-3">
               <p className="font-semibold text-foreground">{t('connectionStyle')}</p>
               <p className="mt-1">{socialCue}</p>
             </div>
@@ -243,10 +243,10 @@ export default async function ProfilePage({ params }: Props) {
       </div>
 
       {/* Detail sections */}
-      <div className="mt-6 grid gap-6 sm:grid-cols-2">
+      <div className="mt-5 grid gap-4 sm:mt-6 sm:gap-6 sm:grid-cols-2">
         {/* Languages */}
         {profile.languages.length > 0 && (
-          <div className="rounded-2xl border border-border/40 bg-card p-5 shadow-sm">
+          <div className="rounded-2xl border border-border/40 bg-card p-4 shadow-sm sm:p-5">
             <h3 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               <Globe className="h-4 w-4" />
               {t('languages')}
@@ -263,7 +263,7 @@ export default async function ProfilePage({ params }: Props) {
 
         {/* Interests */}
         {profileInterests.length > 0 && (
-          <div className="rounded-2xl border border-border/40 bg-card p-5 shadow-sm">
+          <div className="rounded-2xl border border-border/40 bg-card p-4 shadow-sm sm:p-5">
             <h3 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               <Sparkles className="h-4 w-4" />
               {t('interests')}
@@ -281,7 +281,7 @@ export default async function ProfilePage({ params }: Props) {
 
         {/* Social links */}
         {socialEntries.length > 0 && (
-          <div className="rounded-2xl border border-border/40 bg-card p-5 shadow-sm">
+          <div className="rounded-2xl border border-border/40 bg-card p-4 shadow-sm sm:p-5">
             <h3 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               <MessageCircle className="h-4 w-4" />
               {t('socialLinks')}
@@ -315,7 +315,7 @@ export default async function ProfilePage({ params }: Props) {
 
         {/* Badges */}
         {badges.length > 0 && (
-          <div className="rounded-2xl border border-border/40 bg-card p-5 shadow-sm">
+          <div className="rounded-2xl border border-border/40 bg-card p-4 shadow-sm sm:p-5">
             <h3 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               <Star className="h-4 w-4" />
               {t('badgesTitle')}
@@ -335,12 +335,12 @@ export default async function ProfilePage({ params }: Props) {
   );
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-6 sm:py-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="mb-5 flex items-center gap-2 text-sm text-muted-foreground">
+      <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground sm:mb-5">
         <Link href="/groups" className="transition-colors hover:text-foreground">{t('breadcrumbs')}</Link>
         <span>/</span>
         <span className="truncate">{profile.display_name}</span>

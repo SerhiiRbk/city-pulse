@@ -87,12 +87,12 @@ export default async function EventDetailPage({ params }: Props) {
   const jsonLd = generateEventJsonLd(event);
 
   return (
-    <div className="container mx-auto max-w-5xl px-4 py-8 pb-28 lg:pb-8">
+    <div className="container mx-auto max-w-5xl px-4 py-6 pb-28 sm:py-8 lg:pb-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="mb-5 flex items-center gap-2 text-sm text-muted-foreground">
+      <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground sm:mb-5">
         <Link href="/events" className="transition-colors hover:text-foreground">{t('breadcrumbs')}</Link>
         <span>/</span>
         <span className="truncate">{event.title}</span>
@@ -102,10 +102,10 @@ export default async function EventDetailPage({ params }: Props) {
         <EventPhotoGallery photos={event.photos} title={event.title} />
       )}
 
-      <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-8 lg:mt-8 lg:gap-10 lg:grid-cols-3">
         {/* Main content */}
-        <div className="space-y-8 lg:col-span-2">
-          <div className="rounded-[2rem] border border-border/50 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 p-6 shadow-sm">
+        <div className="space-y-6 sm:space-y-8 lg:col-span-2">
+          <div className="rounded-[2rem] border border-border/50 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 p-5 shadow-sm sm:p-6">
             <div className="mb-2 flex flex-wrap gap-2">
               {categoryLabel && <Badge variant="outline">{categoryLabel}</Badge>}
               {event.is_private && (
@@ -123,7 +123,7 @@ export default async function EventDetailPage({ params }: Props) {
               {event.is_free && <Badge className="bg-success text-success-foreground">{t('free')}</Badge>}
               <Badge className="bg-primary/10 text-primary hover:bg-primary/10">{comfortCue}</Badge>
             </div>
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{event.title}</h1>
+            <h1 className="text-2xl font-bold tracking-tight sm:text-4xl">{event.title}</h1>
 
             {event.status === 'cancelled' && (
               <Badge variant="destructive" className="mt-3">{t('cancelled')}</Badge>
@@ -229,9 +229,9 @@ export default async function EventDetailPage({ params }: Props) {
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
+        <div className="space-y-4 sm:space-y-6 lg:sticky lg:top-24 lg:self-start">
           <Card className="rounded-2xl border-border/50 shadow-sm">
-            <CardContent className="space-y-6 pt-6">
+            <CardContent className="space-y-5 pt-5 sm:space-y-6 sm:pt-6">
               <EventActions
                 eventId={id}
                 initialGoing={going}
