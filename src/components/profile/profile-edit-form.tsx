@@ -24,12 +24,13 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Loader2, Camera, X, ChevronsUpDown, Check, Search, Trash2, Star, Plus, ImagePlus } from 'lucide-react';
+import { CityPicker } from '@/components/ui/city-picker';
 import { updateProfile, updateAvatar } from '@/lib/actions/profile';
 import { uploadUserPhoto, deleteUserPhoto, setPhotoAsAvatar, type UserPhoto } from '@/lib/actions/user-photos';
 import { toast } from 'sonner';
 import { COUNTRIES, LANGUAGES } from '@/lib/constants';
 import { cn, countryCodeToFlag } from '@/lib/utils';
-import type { Profile, Interest, InterestCategory } from '@/types/database';
+import type { Profile, Interest, InterestCategory, City } from '@/types/database';
 
 const SOCIAL_NETWORKS = [
   { key: 'facebook',  icon: <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>, placeholder: 'https://facebook.com/yourprofile' },
@@ -45,9 +46,10 @@ interface ProfileEditFormProps {
   interests: Interest[];
   categories: InterestCategory[];
   initialPhotos: UserPhoto[];
+  initialCity?: City | null;
 }
 
-export function ProfileEditForm({ profile, interests, categories, initialPhotos }: ProfileEditFormProps) {
+export function ProfileEditForm({ profile, interests, categories, initialPhotos, initialCity }: ProfileEditFormProps) {
   const t = useTranslations('profile');
   const locale = useLocale();
   const router = useRouter();
@@ -61,6 +63,7 @@ export function ProfileEditForm({ profile, interests, categories, initialPhotos 
   const [selectedInterests, setSelectedInterests] = useState<string[]>(profile.interests);
   const [languages, setLanguages] = useState<string[]>(profile.languages);
   const [selectedCountry, setSelectedCountry] = useState(profile.country || '');
+  const [selectedCity, setSelectedCity] = useState<City | null>(initialCity || null);
   const [langPopoverOpen, setLangPopoverOpen] = useState(false);
   const [interestsPopoverOpen, setInterestsPopoverOpen] = useState(false);
 
@@ -188,7 +191,8 @@ export function ProfileEditForm({ profile, interests, categories, initialPhotos 
       display_name: formData.get('display_name') as string,
       age: formData.get('age') ? Number(formData.get('age')) : null,
       hide_age: formData.get('hide_age') === 'on',
-      city: (formData.get('city') as string) || null,
+      city: selectedCity?.name || null,
+      city_id: selectedCity?.id || null,
       country: selectedCountry || null,
       bio: (formData.get('bio') as string) || null,
       is_available: formData.get('is_available') === 'on',
@@ -371,17 +375,13 @@ export function ProfileEditForm({ profile, interests, categories, initialPhotos 
             </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="city">{t('city')}</Label>
-            <div className="relative">
-              <Input
-                id="city"
-                name="city"
-                defaultValue={profile.city || ''}
-                placeholder={t('cityPlaceholder')}
-                className="pr-10"
-              />
-              <Search className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2" />
-            </div>
+            <Label>{t('city')}</Label>
+            <CityPicker
+              value={selectedCity}
+              onChange={setSelectedCity}
+              countryFilter={selectedCountry || undefined}
+              placeholder={t('cityPlaceholder')}
+            />
             <p className="text-muted-foreground text-xs">{t('cityHint')}</p>
           </div>
         </CardContent>

@@ -44,6 +44,7 @@ export async function updateGroup(
     cover_url?: string | null;
     country?: string | null;
     city?: string | null;
+    city_id?: string | null;
     interest_ids?: string[];
   }
 ) {
@@ -147,7 +148,7 @@ export async function getUserManageableGroups() {
 
   const { data } = await supabase
     .from('group_members')
-    .select('group_id, role, groups(id, name, cover_url)')
+    .select('group_id, role, groups(id, name, cover_url, country, city, city_id)')
     .eq('user_id', user.id)
     .in('role', ['admin', 'moderator']);
 
@@ -174,6 +175,7 @@ export async function createGroup(data: {
   cover_url?: string;
   country?: string | null;
   city?: string | null;
+  city_id?: string | null;
   interest_ids?: string[];
 }) {
   const supabase = await createClient();

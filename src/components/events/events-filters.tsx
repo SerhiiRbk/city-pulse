@@ -20,13 +20,15 @@ import { Search, X, ChevronsUpDown, Check, CalendarDays } from 'lucide-react';
 import { useState } from 'react';
 import { cn, countryCodeToFlag } from '@/lib/utils';
 import { COUNTRIES } from '@/lib/constants';
-import type { Interest, InterestCategory } from '@/types/database';
+import { CityPicker } from '@/components/ui/city-picker';
+import type { Interest, InterestCategory, City } from '@/types/database';
 
 interface EventsFiltersProps {
   interests: Interest[];
   categories: InterestCategory[];
   currentFilters: {
     city?: string;
+    city_id?: string;
     country?: string;
     category?: string;
     date_from?: string;
@@ -82,7 +84,7 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
   const [interestsOpen, setInterestsOpen] = useState(false);
   const [whenOpen, setWhenOpen] = useState(false);
   const [nameValue, setNameValue] = useState('');
-  const [cityValue, setCityValue] = useState(currentFilters.city || '');
+  const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [rangeFrom, setRangeFrom] = useState(currentFilters.when === 'range' ? (currentFilters.date_from || '') : '');
   const [rangeTo, setRangeTo] = useState(currentFilters.when === 'range' ? (currentFilters.date_to || '') : '');
 
@@ -147,7 +149,10 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
   }
 
   function handleSearch() {
-    applyFilters({ city: cityValue || undefined });
+    applyFilters({
+      city_id: selectedCity?.id || undefined,
+      city: selectedCity?.name || undefined,
+    });
   }
 
   const hasFilters = Object.values(currentFilters).some(Boolean);
@@ -197,13 +202,20 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
         </div>
 
         {/* City */}
-        <div className="w-[130px]">
-          <Input
-            className={glassInput}
+        <div className="w-[180px]">
+          <CityPicker
+            value={selectedCity}
+            onChange={(city) => {
+              setSelectedCity(city);
+              if (city) {
+                applyFilters({ city_id: city.id, city: city.name });
+              } else {
+                applyFilters({ city_id: undefined, city: undefined });
+              }
+            }}
+            countryFilter={currentFilters.country || undefined}
             placeholder="City"
-            value={cityValue}
-            onChange={(e) => setCityValue(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
+            compact
           />
         </div>
 

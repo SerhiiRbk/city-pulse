@@ -22,6 +22,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Search, Shield, X, UserPlus, ChevronsUpDown, Check, MapPin, Link2 } from 'lucide-react';
+import { CityPicker } from '@/components/ui/city-picker';
 import {
   updateGroup,
   uploadGroupCover,
@@ -33,7 +34,7 @@ import {
 import { toast } from 'sonner';
 import { COUNTRIES } from '@/lib/constants';
 import { cn, countryCodeToFlag, toSlug, isValidSlug } from '@/lib/utils';
-import type { Group, Interest, InterestCategory } from '@/types/database';
+import type { Group, Interest, InterestCategory, City } from '@/types/database';
 
 interface Member {
   user_id: string;
@@ -47,6 +48,7 @@ interface EditGroupFormProps {
   interests: Interest[];
   categories: InterestCategory[];
   groupInterestIds: string[];
+  initialCity?: City | null;
 }
 
 export function EditGroupForm({
@@ -55,6 +57,7 @@ export function EditGroupForm({
   interests,
   categories,
   groupInterestIds,
+  initialCity,
 }: EditGroupFormProps) {
   const t = useTranslations('groups.editGroup');
   const locale = useLocale();
@@ -66,7 +69,7 @@ export function EditGroupForm({
   const [coverPreview, setCoverPreview] = useState<string | null>(group.cover_url);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [country, setCountry] = useState(group.country || '');
-  const [city, setCity] = useState(group.city || '');
+  const [selectedCity, setSelectedCity] = useState<City | null>(initialCity || null);
   const [selectedInterests, setSelectedInterests] = useState<string[]>(groupInterestIds);
   const [interestsPopoverOpen, setInterestsPopoverOpen] = useState(false);
 
@@ -152,7 +155,8 @@ export function EditGroupForm({
         slug: normalizedSlug,
         description,
         country: effectiveCountry,
-        city: city || null,
+        city: selectedCity?.name || null,
+        city_id: selectedCity?.id || null,
         interest_ids: selectedInterests,
       });
 
@@ -340,9 +344,10 @@ export function EditGroupForm({
           </div>
           <div className="space-y-2">
             <Label>{t('city')}</Label>
-            <Input
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
+            <CityPicker
+              value={selectedCity}
+              onChange={setSelectedCity}
+              countryFilter={country && country !== '__none' ? country : undefined}
               placeholder={t('cityPlaceholder')}
             />
           </div>

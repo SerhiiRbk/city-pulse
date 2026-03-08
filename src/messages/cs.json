@@ -187,6 +187,8 @@
       "price": "Cena",
       "maxAttendees": "Max. účastníků",
       "location": "Místo konání",
+      "country": "Země",
+      "city": "Město",
       "address": "Adresa",
       "clickMap": "Klikněte na mapu pro výběr místa",
       "isPrivate": "Soukromá akce",
@@ -321,6 +323,7 @@
       "hint": "Nahrajte až 5 fotografií (JPG, PNG, WebP, max. 5 MB). Kliknutím na fotku ji nastavíte jako avatar.",
       "maxReached": "Maximálně 5 fotografií",
       "uploaded": "Foto nahráno",
+      "delete": "Smazat foto",
       "deleted": "Foto smazáno",
       "setAsAvatar": "Nastavit jako avatar",
       "avatarSet": "Avatar aktualizován"

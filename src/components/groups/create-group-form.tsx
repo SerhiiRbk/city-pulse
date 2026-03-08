@@ -20,11 +20,12 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Loader2, X, ChevronsUpDown, Check, MapPin, Link2 } from 'lucide-react';
+import { CityPicker } from '@/components/ui/city-picker';
 import { createGroup, uploadGroupCover, isSlugAvailable } from '@/lib/actions/groups';
 import { toast } from 'sonner';
 import { COUNTRIES } from '@/lib/constants';
 import { cn, countryCodeToFlag, toSlug, isValidSlug } from '@/lib/utils';
-import type { Interest, InterestCategory } from '@/types/database';
+import type { Interest, InterestCategory, City } from '@/types/database';
 
 interface CreateGroupFormProps {
   interests: Interest[];
@@ -39,7 +40,7 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [country, setCountry] = useState('');
-  const [city, setCity] = useState('');
+  const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [slug, setSlug] = useState('');
   const [slugTouched, setSlugTouched] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
@@ -113,7 +114,8 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
       slug: normalizedSlug,
       description,
       country: country || null,
-      city: city || null,
+      city: selectedCity?.name || null,
+      city_id: selectedCity?.id || null,
       interest_ids: selectedInterests,
     });
 
@@ -250,9 +252,10 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
           </div>
           <div className="space-y-2">
             <Label>{t('city')}</Label>
-            <Input
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
+            <CityPicker
+              value={selectedCity}
+              onChange={setSelectedCity}
+              countryFilter={country && country !== '__none' ? country : undefined}
               placeholder={t('cityPlaceholder')}
             />
           </div>

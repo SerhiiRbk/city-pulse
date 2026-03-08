@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { MapPin, Search, Loader2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
@@ -15,6 +14,9 @@ interface LocationPickerProps {
   lat?: number;
   lng?: number;
   address?: string;
+  centerLat?: number;
+  centerLng?: number;
+  centerZoom?: number;
   onLocationChange: (data: { lat: number; lng: number; address: string; city?: string; country?: string }) => void;
 }
 
@@ -30,13 +32,31 @@ interface NominatimResult {
   };
 }
 
-export function LocationPicker({ lat, lng, address, onLocationChange }: LocationPickerProps) {
+export function LocationPicker({ lat, lng, address, centerLat, centerLng, centerZoom, onLocationChange }: LocationPickerProps) {
   const [query, setQuery] = useState(address || '');
   const [suggestions, setSuggestions] = useState<NominatimResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [position, setPosition] = useState<{ lat: number; lng: number } | null>(
     lat && lng ? { lat, lng } : null,
   );
+  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number; zoom: number } | null>(null);
+  const prevAddressRef = useRef(address);
+
+  useEffect(() => {
+    if (address !== prevAddressRef.current) {
+      setQuery(address || '');
+      prevAddressRef.current = address;
+    }
+    if (!lat || !lng) {
+      setPosition(null);
+    }
+  }, [address, lat, lng]);
+
+  useEffect(() => {
+    if (centerLat && centerLng) {
+      setMapCenter({ lat: centerLat, lng: centerLng, zoom: centerZoom || 11 });
+    }
+  }, [centerLat, centerLng, centerZoom]);
 
   const searchAddress = useCallback(async (q: string) => {
     if (q.length < 3) {
@@ -124,9 +144,9 @@ export function LocationPicker({ lat, lng, address, onLocationChange }: Location
       </div>
 
       <MapComponent
-        lat={position?.lat || 50.0755}
-        lng={position?.lng || 14.4378}
-        zoom={position ? 15 : 5}
+        lat={position?.lat || mapCenter?.lat || 50.0755}
+        lng={position?.lng || mapCenter?.lng || 14.4378}
+        zoom={position ? 15 : mapCenter?.zoom || 5}
         marker={position}
         onClick={handleMapClick}
       />

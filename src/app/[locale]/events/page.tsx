@@ -32,6 +32,7 @@ export default async function EventsPage({
 
   const events = await getEvents({
     country: filters.country,
+    city_id: filters.city_id,
     city: filters.city,
     categories: categoryIds.length > 0 ? categoryIds : undefined,
     date_from: filters.date_from,

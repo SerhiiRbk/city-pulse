@@ -12,7 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { Link } from '@/i18n/navigation';
 import { MapPin, Calendar, Clock, Users, Globe, Star, Lock, Pencil } from 'lucide-react';
 import { formatDate, formatDuration } from '@/lib/utils';
-import { SITE_NAME } from '@/lib/constants';
+import { SITE_NAME, COUNTRIES } from '@/lib/constants';
 import { EventMap } from '@/components/maps/event-map';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { EventManagement } from '@/components/events/event-management';
@@ -69,6 +69,12 @@ export default async function EventDetailPage({ params }: Props) {
     .join('')
     .toUpperCase()
     .slice(0, 2);
+
+  const cityDisplay = event.city_translations?.[locale] || event.city_name || event.city || '';
+  const countryObj = event.country ? COUNTRIES.find((c) => c.code === event.country) : null;
+  const countryDisplay = countryObj
+    ? (countryObj as Record<string, string>)[locale] || countryObj.en
+    : event.country || '';
 
   const jsonLd = generateEventJsonLd(event);
 
@@ -157,11 +163,25 @@ export default async function EventDetailPage({ params }: Props) {
           <Separator />
 
           {/* Map */}
-          {!event.is_online && event.lat && event.lng && (
+          {!event.is_online && (event.lat && event.lng || cityDisplay) && (
             <div>
               <h2 className="mb-2 font-semibold">{t('location')}</h2>
-              <p className="text-muted-foreground mb-3 text-sm">{event.address}</p>
-              <EventMap lat={event.lat} lng={event.lng} />
+              {(cityDisplay || countryDisplay) && (
+                <div className="mb-2 flex items-center gap-2 text-sm">
+                  <MapPin className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <span>
+                    {cityDisplay}
+                    {cityDisplay && countryDisplay ? ', ' : ''}
+                    {countryDisplay}
+                  </span>
+                </div>
+              )}
+              {event.address && (
+                <p className="text-muted-foreground mb-3 text-sm">{event.address}</p>
+              )}
+              {event.lat && event.lng && (
+                <EventMap lat={event.lat} lng={event.lng} />
+              )}
             </div>
           )}
 
@@ -208,12 +228,13 @@ export default async function EventDetailPage({ params }: Props) {
                   </div>
                 </div>
 
-                {!event.is_online && event.city && (
+                {!event.is_online && (cityDisplay || countryDisplay) && (
                   <div className="flex items-center gap-3">
                     <MapPin className="text-muted-foreground h-5 w-5 shrink-0" />
                     <p className="text-sm">
-                      {event.city}
-                      {event.country ? `, ${event.country}` : ''}
+                      {cityDisplay}
+                      {cityDisplay && countryDisplay ? ', ' : ''}
+                      {countryDisplay}
                     </p>
                   </div>
                 )}

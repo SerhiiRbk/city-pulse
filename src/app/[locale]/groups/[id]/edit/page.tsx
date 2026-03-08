@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { redirect } from '@/i18n/navigation';
 import { getUser } from '@/lib/actions/auth';
 import { canEditGroup, getGroupRaw, getGroupMembers, getGroupInterests } from '@/lib/actions/groups';
+import { getCityById } from '@/lib/actions/cities';
 import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { EditGroupForm } from '@/components/groups/edit-group-form';
 
@@ -30,6 +31,7 @@ export default async function EditGroupPage({ params }: Props) {
 
   if (!group) notFound();
 
+  const initialCity = group.city_id ? await getCityById(group.city_id) : null;
   const t = await getTranslations('groups.editGroup');
 
   return (
@@ -41,6 +43,7 @@ export default async function EditGroupPage({ params }: Props) {
         interests={interests}
         categories={categories}
         groupInterestIds={groupInterestIds}
+        initialCity={initialCity}
       />
     </div>
   );

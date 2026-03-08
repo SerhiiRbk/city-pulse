@@ -17,6 +17,7 @@ export async function updateProfile(
       | 'age'
       | 'hide_age'
       | 'city'
+      | 'city_id'
       | 'country'
       | 'languages'
       | 'interests'

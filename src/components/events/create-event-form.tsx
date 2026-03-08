@@ -20,17 +20,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2, UsersRound } from 'lucide-react';
+import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2, UsersRound, MapPin } from 'lucide-react';
 import { LocationPicker } from '@/components/maps/location-picker';
+import { CityPicker } from '@/components/ui/city-picker';
 import { createEvent, uploadEventPhoto } from '@/lib/actions/events';
+import { resolveCity } from '@/lib/actions/cities';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
-import type { Interest, InterestCategory } from '@/types/database';
+import { cn, countryCodeToFlag } from '@/lib/utils';
+import { COUNTRIES } from '@/lib/constants';
+import type { Interest, InterestCategory, City } from '@/types/database';
 
 interface ManageableGroup {
   id: string;
   name: string;
   cover_url: string | null;
+  country: string | null;
+  city: string | null;
+  city_id: string | null;
+}
+
+interface LocationDefaults {
+  country: string | null;
+  city: City | null;
 }
 
 interface CreateEventFormProps {
@@ -38,12 +49,28 @@ interface CreateEventFormProps {
   categories: InterestCategory[];
   groups?: ManageableGroup[];
   defaultGroupId?: string;
+  profileDefaults?: LocationDefaults;
 }
 
-export function CreateEventForm({ interests, categories, groups = [], defaultGroupId }: CreateEventFormProps) {
+export function CreateEventForm({ interests, categories, groups = [], defaultGroupId, profileDefaults }: CreateEventFormProps) {
   const t = useTranslations('events.create');
   const locale = useLocale();
   const router = useRouter();
+
+  function getInitialDefaults(groupId?: string): LocationDefaults {
+    if (groupId && groupId !== '__personal') {
+      const group = groups.find((g) => g.id === groupId);
+      if (group?.country || group?.city_id) {
+        return {
+          country: group.country || null,
+          city: group.city_id ? { id: group.city_id, name: group.city || '', country: group.country || '', lat: 0, lng: 0, translations: {} } : null,
+        };
+      }
+    }
+    return profileDefaults || { country: null, city: null };
+  }
+
+  const initialDefaults = getInitialDefaults(defaultGroupId);
 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedGroupId, setSelectedGroupId] = useState<string>(defaultGroupId || '__personal');
@@ -53,6 +80,8 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [interestsPopoverOpen, setInterestsPopoverOpen] = useState(false);
+  const [eventCountry, setEventCountry] = useState(initialDefaults.country || '');
+  const [eventCity, setEventCity] = useState<City | null>(initialDefaults.city);
   const [location, setLocation] = useState<{
     lat?: number;
     lng?: number;
@@ -63,6 +92,22 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
   const [photos, setPhotos] = useState<string[]>([]);
   const [coverIndex, setCoverIndex] = useState(0);
   const [uploading, setUploading] = useState(false);
+
+  function handleGroupChange(groupId: string) {
+    setSelectedGroupId(groupId);
+    const defaults = getInitialDefaults(groupId);
+    setEventCountry(defaults.country || '');
+    handleCityChange(defaults.city);
+  }
+
+  function handleCityChange(city: City | null) {
+    setEventCity(city);
+    if (!city) {
+      setLocation({});
+    } else {
+      setLocation((prev) => ({ ...prev, lat: undefined, lng: undefined, address: undefined }));
+    }
+  }
 
   function getInterestLabel(interest: Interest): string {
     return interest.translations[locale] || interest.translations['en'] || interest.slug;
@@ -125,6 +170,14 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
 
     const primaryCategory = selectedInterests[0] || selectedCategory;
 
+    let cityId: string | null = eventCity?.id || null;
+    if (!cityId && location.city && location.country && location.lat && location.lng) {
+      cityId = await resolveCity(location.city, location.country, location.lat, location.lng);
+    }
+
+    const finalCountry = (eventCountry && eventCountry !== '__none' ? eventCountry : undefined) || undefined;
+    const finalCityName = eventCity?.name || location.city || undefined;
+
     const data = {
       title: form.get('title') as string,
       description: form.get('description') as string,
@@ -137,8 +190,9 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
       currency: isFree ? undefined : (form.get('currency') as string) || 'EUR',
       max_attendees: form.get('max_attendees') ? Number(form.get('max_attendees')) : undefined,
       is_private: isPrivate,
-      country: location.country,
-      city: location.city,
+      country: finalCountry,
+      city: finalCityName,
+      city_id: cityId,
       address: location.address,
       lat: location.lat,
       lng: location.lng,
@@ -178,7 +232,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Select value={selectedGroupId} onValueChange={setSelectedGroupId}>
+            <Select value={selectedGroupId} onValueChange={handleGroupChange}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
@@ -342,20 +396,57 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
         </CardContent>
       </Card>
 
-      {/* Location */}
+      {/* Country & City */}
       {!isOnline && (
         <Card>
           <CardHeader>
-            <CardTitle>{t('location')}</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <MapPin className="h-5 w-5" />
+              {t('location')}
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground mb-3 text-sm">{t('clickMap')}</p>
-            <LocationPicker
-              lat={location.lat}
-              lng={location.lng}
-              address={location.address}
-              onLocationChange={setLocation}
-            />
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label>{t('country')}</Label>
+                <Select value={eventCountry} onValueChange={setEventCountry}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder={t('country')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none">—</SelectItem>
+                    {COUNTRIES.map((c) => (
+                      <SelectItem key={c.code} value={c.code}>
+                        {countryCodeToFlag(c.code)} {(c as Record<string, string>)[locale] || c.en}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>{t('city')}</Label>
+                <CityPicker
+                  value={eventCity}
+                  onChange={handleCityChange}
+                  countryFilter={eventCountry && eventCountry !== '__none' ? eventCountry : undefined}
+                  placeholder={t('city')}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>{t('address')}</Label>
+              <p className="text-muted-foreground mb-1 text-xs">{t('clickMap')}</p>
+              <LocationPicker
+                lat={location.lat}
+                lng={location.lng}
+                address={location.address}
+                centerLat={eventCity?.lat}
+                centerLng={eventCity?.lng}
+                centerZoom={12}
+                onLocationChange={setLocation}
+              />
+            </div>
           </CardContent>
         </Card>
       )}

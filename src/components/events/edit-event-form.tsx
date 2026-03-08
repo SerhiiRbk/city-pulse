@@ -9,24 +9,34 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2, Shield, Search, UserPlus } from 'lucide-react';
+import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2, Shield, Search, UserPlus, MapPin } from 'lucide-react';
 import { LocationPicker } from '@/components/maps/location-picker';
+import { CityPicker } from '@/components/ui/city-picker';
 import {
   updateEvent,
   uploadEventPhoto,
   addEventModerator,
   removeEventModerator,
 } from '@/lib/actions/events';
+import { resolveCity } from '@/lib/actions/cities';
 import { searchUsers } from '@/lib/actions/groups';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
-import type { Event, Interest, InterestCategory } from '@/types/database';
+import { cn, countryCodeToFlag } from '@/lib/utils';
+import { COUNTRIES } from '@/lib/constants';
+import type { Event, Interest, InterestCategory, City } from '@/types/database';
 
 interface EventModerator {
   user_id: string;
@@ -38,9 +48,10 @@ interface EditEventFormProps {
   interests: Interest[];
   categories: InterestCategory[];
   moderators?: EventModerator[];
+  initialCity?: City | null;
 }
 
-export function EditEventForm({ event, interests, categories, moderators: initialModerators = [] }: EditEventFormProps) {
+export function EditEventForm({ event, interests, categories, moderators: initialModerators = [], initialCity }: EditEventFormProps) {
   const t = useTranslations('events.create');
   const tEdit = useTranslations('events.edit');
   const locale = useLocale();
@@ -59,6 +70,8 @@ export function EditEventForm({ event, interests, categories, moderators: initia
     event.category_id ? [event.category_id] : [],
   );
   const [interestsPopoverOpen, setInterestsPopoverOpen] = useState(false);
+  const [eventCountry, setEventCountry] = useState(event.country || '');
+  const [eventCity, setEventCity] = useState<City | null>(initialCity || null);
   const [location, setLocation] = useState<{
     lat: number;
     lng: number;
@@ -75,6 +88,15 @@ export function EditEventForm({ event, interests, categories, moderators: initia
   const [photos, setPhotos] = useState<string[]>(event.photos || []);
   const [coverIndex, setCoverIndex] = useState(0);
   const [uploading, setUploading] = useState(false);
+
+  function handleCityChange(city: City | null) {
+    setEventCity(city);
+    if (!city) {
+      setLocation({ lat: 0, lng: 0, address: '', city: undefined, country: undefined });
+    } else {
+      setLocation((prev) => ({ ...prev, lat: 0, lng: 0, address: '' }));
+    }
+  }
 
   const [moderatorsList, setModeratorsList] = useState<EventModerator[]>(initialModerators);
   const [modSearchQuery, setModSearchQuery] = useState('');
@@ -189,6 +211,14 @@ export function EditEventForm({ event, interests, categories, moderators: initia
     const form = new FormData(e.currentTarget);
     const primaryCategory = selectedInterests[0] || selectedCategory;
 
+    let cityId: string | null = eventCity?.id || null;
+    if (!cityId && location.city && location.country && location.lat && location.lng) {
+      cityId = await resolveCity(location.city, location.country, location.lat, location.lng);
+    }
+
+    const finalCountry = (eventCountry && eventCountry !== '__none' ? eventCountry : null) || null;
+    const finalCityName = eventCity?.name || location.city || null;
+
     const data = {
       title: form.get('title') as string,
       description: form.get('description') as string,
@@ -201,8 +231,9 @@ export function EditEventForm({ event, interests, categories, moderators: initia
       currency: isFree ? 'EUR' : (form.get('currency') as string) || 'EUR',
       max_attendees: form.get('max_attendees') ? Number(form.get('max_attendees')) : null,
       is_private: isPrivate,
-      country: location.country || null,
-      city: location.city || null,
+      country: finalCountry,
+      city: finalCityName,
+      city_id: cityId,
       address: location.address || null,
       lat: location.lat ?? null,
       lng: location.lng ?? null,
@@ -410,20 +441,57 @@ export function EditEventForm({ event, interests, categories, moderators: initia
         </CardContent>
       </Card>
 
-      {/* Location */}
+      {/* Country & City + Location */}
       {!isOnline && (
         <Card>
           <CardHeader>
-            <CardTitle>{t('location')}</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <MapPin className="h-5 w-5" />
+              {t('location')}
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground mb-3 text-sm">{t('clickMap')}</p>
-            <LocationPicker
-              lat={location.lat}
-              lng={location.lng}
-              address={location.address}
-              onLocationChange={setLocation}
-            />
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label>{t('country')}</Label>
+                <Select value={eventCountry} onValueChange={setEventCountry}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder={t('country')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none">—</SelectItem>
+                    {COUNTRIES.map((c) => (
+                      <SelectItem key={c.code} value={c.code}>
+                        {countryCodeToFlag(c.code)} {(c as Record<string, string>)[locale] || c.en}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>{t('city')}</Label>
+                <CityPicker
+                  value={eventCity}
+                  onChange={handleCityChange}
+                  countryFilter={eventCountry && eventCountry !== '__none' ? eventCountry : undefined}
+                  placeholder={t('city')}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>{t('address')}</Label>
+              <p className="text-muted-foreground mb-1 text-xs">{t('clickMap')}</p>
+              <LocationPicker
+                lat={location.lat}
+                lng={location.lng}
+                address={location.address}
+                centerLat={eventCity?.lat}
+                centerLng={eventCity?.lng}
+                centerZoom={12}
+                onLocationChange={setLocation}
+              />
+            </div>
           </CardContent>
         </Card>
       )}

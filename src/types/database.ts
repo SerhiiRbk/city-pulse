@@ -23,6 +23,7 @@ export interface Profile {
   age: number | null;
   hide_age: boolean;
   city: string | null;
+  city_id: string | null;
   country: string | null;
   languages: string[];
   interests: string[];
@@ -78,6 +79,7 @@ export interface Event {
   max_attendees: number | null;
   country: string | null;
   city: string | null;
+  city_id: string | null;
   address: string | null;
   lat: number | null;
   lng: number | null;
@@ -130,6 +132,7 @@ export interface Group {
   cover_url: string | null;
   country: string | null;
   city: string | null;
+  city_id: string | null;
   created_by: string;
   created_at: string;
   updated_at: string;

@@ -16,6 +16,7 @@ export async function createEvent(data: {
   max_attendees?: number;
   country?: string;
   city?: string;
+  city_id?: string | null;
   address?: string;
   lat?: number;
   lng?: number;
@@ -93,6 +94,7 @@ export async function updateEvent(
     max_attendees: number | null;
     country: string | null;
     city: string | null;
+    city_id: string | null;
     address: string | null;
     lat: number | null;
     lng: number | null;
@@ -136,6 +138,7 @@ export async function getEvent(eventId: string) {
 export async function getEvents(filters: {
   country?: string;
   city?: string;
+  city_id?: string;
   category?: string;
   categories?: string[];
   date_from?: string;
@@ -154,7 +157,8 @@ export async function getEvents(filters: {
     .order('starts_at', { ascending: true });
 
   if (filters.country) query = query.eq('country', filters.country);
-  if (filters.city) query = query.eq('city', filters.city);
+  if (filters.city_id) query = query.eq('city_id', filters.city_id);
+  else if (filters.city) query = query.eq('city', filters.city);
   if (filters.categories && filters.categories.length > 0) {
     query = query.in('category_id', filters.categories);
   } else if (filters.category) {

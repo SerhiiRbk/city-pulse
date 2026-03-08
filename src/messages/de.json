@@ -187,6 +187,8 @@
       "price": "Preis",
       "maxAttendees": "Max. Teilnehmer",
       "location": "Veranstaltungsort",
+      "country": "Land",
+      "city": "Stadt",
       "address": "Adresse",
       "clickMap": "Klicken Sie auf die Karte, um den Ort auszuwählen",
       "isPrivate": "Private Veranstaltung",
@@ -321,6 +323,7 @@
       "hint": "Laden Sie bis zu 5 Fotos hoch (JPG, PNG, WebP, max. 5 MB). Klicken Sie auf ein Foto, um es als Avatar festzulegen.",
       "maxReached": "Maximal 5 Fotos erlaubt",
       "uploaded": "Foto hochgeladen",
+      "delete": "Foto löschen",
       "deleted": "Foto gelöscht",
       "setAsAvatar": "Als Avatar festlegen",
       "avatarSet": "Avatar aktualisiert"
