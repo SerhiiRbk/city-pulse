@@ -29,6 +29,8 @@ import {
   getProfileManagedGroups,
 } from '@/lib/actions/profile-data';
 import { getUserEventStatuses } from '@/lib/actions/events';
+import { getUserPhotos } from '@/lib/actions/user-photos';
+import { ProfilePhotoGallery } from '@/components/profile/profile-photo-gallery';
 import { generateProfileJsonLd } from '@/lib/json-ld';
 import { countryCodeToFlag } from '@/lib/utils';
 import { COUNTRIES, SITE_NAME } from '@/lib/constants';
@@ -82,10 +84,11 @@ export default async function ProfilePage({ params }: Props) {
   const currentUser = await getUser();
   const isOwnProfile = currentUser?.id === profile.id;
 
-  const [stats, badges, following] = await Promise.all([
+  const [stats, badges, following, userPhotos] = await Promise.all([
     getProfileStats(id),
     getUserBadges(id),
     currentUser && !isOwnProfile ? isFollowing(id) : Promise.resolve(false),
+    getUserPhotos(id),
   ]);
 
   const [
@@ -139,27 +142,39 @@ export default async function ProfilePage({ params }: Props) {
     <div className="mx-auto max-w-3xl">
       {/* Hero card */}
       <div className="overflow-hidden rounded-3xl border border-border/40 bg-card shadow-sm">
-        {/* Top section: photo + identity */}
+        {/* Top section: photo gallery / avatar + identity */}
         <div className="flex flex-col items-center gap-8 p-8 sm:flex-row sm:items-start">
-          {/* Large photo */}
-          <div className="group relative shrink-0">
-            <div className="h-40 w-40 overflow-hidden rounded-2xl border-4 border-background shadow-xl ring-1 ring-border/30 sm:h-48 sm:w-48">
-              {profile.avatar_url ? (
-                <img
-                  src={profile.avatar_url}
-                  alt={profile.display_name}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
-                  <span className="text-5xl font-bold text-primary/60">{initials}</span>
+          {/* Photo area */}
+          <div className="shrink-0">
+            {userPhotos.length > 0 ? (
+              <ProfilePhotoGallery
+                photos={userPhotos}
+                avatarUrl={profile.avatar_url}
+                displayName={profile.display_name}
+                isAvailable={profile.is_available}
+                availableLabel={t('available')}
+              />
+            ) : (
+              <div className="group relative">
+                <div className="h-40 w-40 overflow-hidden rounded-2xl border-4 border-background shadow-xl ring-1 ring-border/30 sm:h-48 sm:w-48">
+                  {profile.avatar_url ? (
+                    <img
+                      src={profile.avatar_url}
+                      alt={profile.display_name}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
+                      <span className="text-5xl font-bold text-primary/60">{initials}</span>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-            {profile.is_available && (
-              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-emerald-500 px-3 py-0.5 text-xs font-semibold text-white shadow-md">
-                {t('available')}
-              </span>
+                {profile.is_available && (
+                  <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-emerald-500 px-3 py-0.5 text-xs font-semibold text-white shadow-md">
+                    {t('available')}
+                  </span>
+                )}
+              </div>
             )}
           </div>
 

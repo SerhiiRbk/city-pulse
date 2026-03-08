@@ -315,6 +315,16 @@
     "privateProfile": "Private profile",
     "hideAge": "Hide age",
     "hideEvents": "Hide events list",
+    "photos": {
+      "title": "Photos",
+      "add": "Add photo",
+      "hint": "Upload up to 5 photos (JPG, PNG, WebP, max 5 MB each). Click a photo to set it as your avatar.",
+      "maxReached": "Maximum 5 photos allowed",
+      "uploaded": "Photo uploaded",
+      "deleted": "Photo deleted",
+      "setAsAvatar": "Set as avatar",
+      "avatarSet": "Avatar updated"
+    },
     "tabs": {
       "about": "About",
       "favorites": "Favorites",

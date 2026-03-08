@@ -315,6 +315,16 @@
     "privateProfile": "Soukromý profil",
     "hideAge": "Skrýt věk",
     "hideEvents": "Skrýt akce",
+    "photos": {
+      "title": "Fotografie",
+      "add": "Přidat foto",
+      "hint": "Nahrajte až 5 fotografií (JPG, PNG, WebP, max. 5 MB). Kliknutím na fotku ji nastavíte jako avatar.",
+      "maxReached": "Maximálně 5 fotografií",
+      "uploaded": "Foto nahráno",
+      "deleted": "Foto smazáno",
+      "setAsAvatar": "Nastavit jako avatar",
+      "avatarSet": "Avatar aktualizován"
+    },
     "tabs": {
       "about": "O mně",
       "favorites": "Oblíbené",

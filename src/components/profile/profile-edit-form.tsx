@@ -23,8 +23,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Loader2, Camera, X, ChevronsUpDown, Check, Search } from 'lucide-react';
+import { Loader2, Camera, X, ChevronsUpDown, Check, Search, Trash2, Star, Plus, ImagePlus } from 'lucide-react';
 import { updateProfile, updateAvatar } from '@/lib/actions/profile';
+import { uploadUserPhoto, deleteUserPhoto, setPhotoAsAvatar, type UserPhoto } from '@/lib/actions/user-photos';
 import { toast } from 'sonner';
 import { COUNTRIES, LANGUAGES } from '@/lib/constants';
 import { cn, countryCodeToFlag } from '@/lib/utils';
@@ -43,16 +44,20 @@ interface ProfileEditFormProps {
   profile: Profile;
   interests: Interest[];
   categories: InterestCategory[];
+  initialPhotos: UserPhoto[];
 }
 
-export function ProfileEditForm({ profile, interests, categories }: ProfileEditFormProps) {
+export function ProfileEditForm({ profile, interests, categories, initialPhotos }: ProfileEditFormProps) {
   const t = useTranslations('profile');
   const locale = useLocale();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url || '');
+  const [photos, setPhotos] = useState<UserPhoto[]>(initialPhotos);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState<string[]>(profile.interests);
   const [languages, setLanguages] = useState<string[]>(profile.languages);
   const [selectedCountry, setSelectedCountry] = useState(profile.country || '');
@@ -125,6 +130,54 @@ export function ProfileEditForm({ profile, interests, categories }: ProfileEditF
     }
   }
 
+  async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setUploadingPhoto(true);
+    for (const file of Array.from(files)) {
+      if (photos.length >= 5) {
+        toast.error(t('photos.maxReached'));
+        break;
+      }
+      const fd = new FormData();
+      fd.append('photo', file);
+      const result = await uploadUserPhoto(fd);
+      if (result.error) {
+        toast.error(result.error);
+      } else if (result.photo) {
+        setPhotos((prev) => [...prev, result.photo!]);
+        if (!avatarUrl) {
+          const avatarResult = await setPhotoAsAvatar(result.photo.id);
+          if (avatarResult.success && avatarResult.url) setAvatarUrl(avatarResult.url);
+        }
+        toast.success(t('photos.uploaded'));
+      }
+    }
+    setUploadingPhoto(false);
+    if (photoInputRef.current) photoInputRef.current.value = '';
+  }
+
+  async function handleDeletePhoto(photo: UserPhoto) {
+    const result = await deleteUserPhoto(photo.id);
+    if (result.error) {
+      toast.error(result.error);
+    } else {
+      setPhotos((prev) => prev.filter((p) => p.id !== photo.id));
+      if (avatarUrl === photo.url) setAvatarUrl('');
+      toast.success(t('photos.deleted'));
+    }
+  }
+
+  async function handleSetAvatar(photo: UserPhoto) {
+    const result = await setPhotoAsAvatar(photo.id);
+    if (result.error) {
+      toast.error(result.error);
+    } else if (result.url) {
+      setAvatarUrl(result.url);
+      toast.success(t('photos.avatarSet'));
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
@@ -167,33 +220,83 @@ export function ProfileEditForm({ profile, interests, categories }: ProfileEditF
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Avatar */}
+      {/* Photos */}
       <Card>
         <CardHeader>
-          <CardTitle>Avatar</CardTitle>
+          <CardTitle className="flex items-center justify-between">
+            <span>{t('photos.title')}</span>
+            <span className="text-muted-foreground text-sm font-normal">{photos.length}/5</span>
+          </CardTitle>
         </CardHeader>
-        <CardContent className="flex items-center gap-4">
-          <div className="relative">
-            <Avatar className="h-20 w-20">
-              <AvatarImage src={avatarUrl || undefined} alt={profile.display_name} />
-              <AvatarFallback className="text-xl">{initials}</AvatarFallback>
-            </Avatar>
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="bg-primary text-primary-foreground absolute -right-1 -bottom-1 flex h-8 w-8 items-center justify-center rounded-full"
-            >
-              <Camera className="h-4 w-4" />
-            </button>
+        <CardContent>
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
+            {photos.map((photo) => {
+              const isAvatar = avatarUrl === photo.url;
+              return (
+                <div
+                  key={photo.id}
+                  className={cn(
+                    'group relative aspect-square overflow-hidden rounded-xl border-2 transition-all',
+                    isAvatar ? 'border-primary ring-2 ring-primary/20' : 'border-border/50 hover:border-border',
+                  )}
+                >
+                  <img src={photo.url} alt="" className="h-full w-full object-cover" />
+                  {isAvatar && (
+                    <span className="absolute top-1.5 left-1.5 flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground shadow">
+                      <Star className="h-3 w-3" />
+                      Avatar
+                    </span>
+                  )}
+                  <div className="absolute inset-x-0 bottom-0 flex justify-center gap-1 bg-gradient-to-t from-black/60 to-transparent p-1.5 opacity-0 transition-opacity group-hover:opacity-100">
+                    {!isAvatar && (
+                      <button
+                        type="button"
+                        onClick={() => handleSetAvatar(photo)}
+                        className="rounded-full bg-white/90 p-1.5 text-xs text-foreground shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground"
+                        title={t('photos.setAsAvatar')}
+                      >
+                        <Star className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => handleDeletePhoto(photo)}
+                      className="rounded-full bg-white/90 p-1.5 text-xs text-destructive shadow-sm transition-colors hover:bg-destructive hover:text-destructive-foreground"
+                      title={t('photos.delete')}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+            {photos.length < 5 && (
+              <button
+                type="button"
+                onClick={() => photoInputRef.current?.click()}
+                disabled={uploadingPhoto}
+                className="flex aspect-square flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-border/60 text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary disabled:opacity-50"
+              >
+                {uploadingPhoto ? (
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                ) : (
+                  <ImagePlus className="h-6 w-6" />
+                )}
+                <span className="text-[11px] font-medium">{t('photos.add')}</span>
+              </button>
+            )}
           </div>
           <input
-            ref={fileInputRef}
+            ref={photoInputRef}
             type="file"
             accept="image/jpeg,image/png,image/webp"
-            onChange={handleAvatarChange}
+            multiple
+            onChange={handlePhotoUpload}
             className="hidden"
           />
-          <p className="text-muted-foreground text-sm">JPG, PNG or WebP. Max 5MB.</p>
+          <p className="text-muted-foreground mt-3 text-xs">
+            {t('photos.hint')}
+          </p>
         </CardContent>
       </Card>
 
