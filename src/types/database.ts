@@ -125,6 +125,7 @@ export interface EventReview {
 export interface Group {
   id: string;
   name: string;
+  slug: string | null;
   description: string;
   cover_url: string | null;
   country: string | null;

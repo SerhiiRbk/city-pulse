@@ -21,17 +21,18 @@ import {
 } from '@/components/ui/popover';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Search, Shield, X, UserPlus, ChevronsUpDown, Check, MapPin } from 'lucide-react';
+import { Loader2, Search, Shield, X, UserPlus, ChevronsUpDown, Check, MapPin, Link2 } from 'lucide-react';
 import {
   updateGroup,
   uploadGroupCover,
   addGroupModerator,
   removeGroupModerator,
   searchUsers,
+  isSlugAvailable,
 } from '@/lib/actions/groups';
 import { toast } from 'sonner';
 import { COUNTRIES } from '@/lib/constants';
-import { cn, countryCodeToFlag } from '@/lib/utils';
+import { cn, countryCodeToFlag, toSlug, isValidSlug } from '@/lib/utils';
 import type { Group, Interest, InterestCategory } from '@/types/database';
 
 interface Member {
@@ -60,6 +61,7 @@ export function EditGroupForm({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState(group.name);
+  const [slug, setSlug] = useState(group.slug || '');
   const [description, setDescription] = useState(group.description || '');
   const [coverPreview, setCoverPreview] = useState<string | null>(group.cover_url);
   const [coverFile, setCoverFile] = useState<File | null>(null);
@@ -120,6 +122,24 @@ export function EditGroupForm({
       return;
     }
 
+    const normalizedSlug = slug ? slug.toLowerCase() : null;
+    if (normalizedSlug && !isValidSlug(normalizedSlug)) {
+      toast.error('Invalid slug format');
+      setIsLoading(false);
+      return;
+    }
+
+    const effectiveCountry = country && country !== '__none' ? country : null;
+
+    if (normalizedSlug) {
+      const available = await isSlugAvailable(normalizedSlug, effectiveCountry, group.id);
+      if (!available) {
+        toast.error('This slug is already taken. Choose a different one.');
+        setIsLoading(false);
+        return;
+      }
+    }
+
     try {
       if (coverFile) {
         const formData = new FormData();
@@ -129,8 +149,9 @@ export function EditGroupForm({
 
       const result = await updateGroup(group.id, {
         name,
+        slug: normalizedSlug,
         description,
-        country: country && country !== '__none' ? country : null,
+        country: effectiveCountry,
         city: city || null,
         interest_ids: selectedInterests,
       });
@@ -219,6 +240,35 @@ export function EditGroupForm({
               required
               maxLength={120}
             />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="slug" className="flex items-center gap-1.5">
+              <Link2 className="h-3.5 w-3.5" />
+              URL slug
+            </Label>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-xs text-muted-foreground">
+                /groups/{country && country !== '__none' ? country.toLowerCase() : 'global'}/
+              </span>
+              <Input
+                id="slug"
+                value={slug}
+                onChange={(e) => setSlug(toSlug(e.target.value))}
+                placeholder="my-awesome-group"
+                maxLength={80}
+                className="font-mono text-sm"
+              />
+            </div>
+            {slug && !isValidSlug(slug) && (
+              <p className="text-xs text-destructive">
+                Slug must be 2-80 characters, lowercase letters, numbers, and hyphens only.
+              </p>
+            )}
+            {slug && isValidSlug(slug) && (
+              <p className="text-xs text-muted-foreground">
+                Direct link: /groups/{country && country !== '__none' ? country.toLowerCase() : 'global'}/{slug}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">{t('description')}</Label>

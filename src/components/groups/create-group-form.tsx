@@ -19,11 +19,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Loader2, X, ChevronsUpDown, Check, MapPin } from 'lucide-react';
-import { createGroup, uploadGroupCover } from '@/lib/actions/groups';
+import { Loader2, X, ChevronsUpDown, Check, MapPin, Link2 } from 'lucide-react';
+import { createGroup, uploadGroupCover, isSlugAvailable } from '@/lib/actions/groups';
 import { toast } from 'sonner';
 import { COUNTRIES } from '@/lib/constants';
-import { cn, countryCodeToFlag } from '@/lib/utils';
+import { cn, countryCodeToFlag, toSlug, isValidSlug } from '@/lib/utils';
 import type { Interest, InterestCategory } from '@/types/database';
 
 interface CreateGroupFormProps {
@@ -40,6 +40,8 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
+  const [slug, setSlug] = useState('');
+  const [slugTouched, setSlugTouched] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [interestsPopoverOpen, setInterestsPopoverOpen] = useState(false);
 
@@ -90,8 +92,25 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
       return;
     }
 
+    const normalizedSlug = slug ? slug.toLowerCase() : null;
+    if (normalizedSlug && !isValidSlug(normalizedSlug)) {
+      toast.error('Invalid slug format');
+      setIsLoading(false);
+      return;
+    }
+
+    if (normalizedSlug) {
+      const available = await isSlugAvailable(normalizedSlug, country || null);
+      if (!available) {
+        toast.error('This slug is already taken. Choose a different one.');
+        setIsLoading(false);
+        return;
+      }
+    }
+
     const result = await createGroup({
       name,
+      slug: normalizedSlug,
       description,
       country: country || null,
       city: city || null,
@@ -123,7 +142,44 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">{t('name')}</Label>
-            <Input id="name" name="name" required maxLength={120} />
+            <Input
+              id="name"
+              name="name"
+              required
+              maxLength={120}
+              onChange={(e) => {
+                if (!slugTouched) {
+                  setSlug(toSlug(e.target.value));
+                }
+              }}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="slug" className="flex items-center gap-1.5">
+              <Link2 className="h-3.5 w-3.5" />
+              URL slug
+            </Label>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 text-xs text-muted-foreground">
+                /groups/{country ? country.toLowerCase() : 'global'}/
+              </span>
+              <Input
+                id="slug"
+                value={slug}
+                onChange={(e) => {
+                  setSlugTouched(true);
+                  setSlug(toSlug(e.target.value));
+                }}
+                placeholder="my-awesome-group"
+                maxLength={80}
+                className="font-mono text-sm"
+              />
+            </div>
+            {slug && !isValidSlug(slug) && (
+              <p className="text-xs text-destructive">
+                Slug must be 2-80 characters, lowercase letters, numbers, and hyphens only.
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">{t('description')}</Label>

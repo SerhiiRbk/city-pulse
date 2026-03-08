@@ -18,11 +18,12 @@ import { GroupActions } from '@/components/groups/group-actions';
 import { GroupTabs } from '@/components/groups/group-tabs';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Users, Calendar, Pencil, MapPin, CalendarPlus } from 'lucide-react';
+import { Users, Calendar, Pencil, MapPin, CalendarPlus, Link2 } from 'lucide-react';
 import { GroupHeroActions } from '@/components/groups/group-hero-actions';
 import { COUNTRIES } from '@/lib/constants';
 import { countryCodeToFlag } from '@/lib/utils';
 import type { Metadata } from 'next';
+import { SITE_URL } from '@/lib/constants';
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
@@ -115,6 +116,16 @@ export default async function GroupDetailPage({ params }: Props) {
                   })()}
                   {group.country && group.city && ', '}
                   {group.city}
+                </span>
+              </div>
+            )}
+
+            {/* Slug link */}
+            {group.slug && (
+              <div className="flex items-center gap-2.5 px-5 py-3">
+                <Link2 className="h-4 w-4 shrink-0 text-muted-foreground" />
+                <span className="truncate font-mono text-xs text-muted-foreground">
+                  /groups/{group.country ? group.country.toLowerCase() : 'global'}/{group.slug}
                 </span>
               </div>
             )}

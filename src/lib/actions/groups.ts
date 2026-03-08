@@ -39,6 +39,7 @@ export async function updateGroup(
   groupId: string,
   data: {
     name?: string;
+    slug?: string | null;
     description?: string;
     cover_url?: string | null;
     country?: string | null;
@@ -168,6 +169,7 @@ export async function searchUsers(query: string) {
 
 export async function createGroup(data: {
   name: string;
+  slug?: string | null;
   description: string;
   cover_url?: string;
   country?: string | null;
@@ -211,6 +213,38 @@ export async function getGroup(groupId: string) {
     .eq('id', groupId)
     .single();
   return data;
+}
+
+export async function getGroupByCountrySlug(country: string, slug: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('groups_with_counts')
+    .select('*')
+    .eq('country', country.toUpperCase())
+    .eq('slug', slug.toLowerCase())
+    .single();
+  return data;
+}
+
+export async function isSlugAvailable(slug: string, country: string | null, excludeGroupId?: string) {
+  const supabase = await createClient();
+  let query = supabase
+    .from('groups')
+    .select('id')
+    .eq('slug', slug.toLowerCase());
+
+  if (country) {
+    query = query.eq('country', country);
+  } else {
+    query = query.is('country', null);
+  }
+
+  if (excludeGroupId) {
+    query = query.neq('id', excludeGroupId);
+  }
+
+  const { data } = await query.maybeSingle();
+  return !data;
 }
 
 export async function getGroups(filters: { limit?: number; offset?: number } = {}) {
