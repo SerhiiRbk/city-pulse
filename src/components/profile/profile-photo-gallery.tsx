@@ -33,28 +33,29 @@ export function ProfilePhotoGallery({
     <>
       <div className="relative">
         {/* Main photo */}
-        <button
-          type="button"
-          onClick={() => setLightboxIndex(activeIndex)}
-          className="group relative block h-40 w-40 overflow-hidden rounded-2xl border-4 border-background shadow-xl ring-1 ring-border/30 sm:h-48 sm:w-48"
-        >
-          <img
-            src={mainPhoto.url}
-            alt={displayName}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-          {avatarUrl === mainPhoto.url && (
-            <span className="absolute top-2 left-2 flex items-center gap-0.5 rounded-full bg-primary/90 px-1.5 py-0.5 text-[9px] font-bold text-primary-foreground backdrop-blur-sm">
-              <Star className="h-2.5 w-2.5" />
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setLightboxIndex(activeIndex)}
+            className="group relative block h-40 w-40 overflow-hidden rounded-2xl border-4 border-background shadow-xl ring-1 ring-border/30 sm:h-48 sm:w-48"
+          >
+            <img
+              src={mainPhoto.url}
+              alt={displayName}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            {avatarUrl === mainPhoto.url && (
+              <span className="absolute top-2 left-2 flex items-center gap-0.5 rounded-full bg-primary/90 px-1.5 py-0.5 text-[9px] font-bold text-primary-foreground backdrop-blur-sm">
+                <Star className="h-2.5 w-2.5" />
+              </span>
+            )}
+          </button>
+          {isAvailable && (
+            <span className="pointer-events-none absolute bottom-1 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-success px-2.5 py-0.5 text-[10px] font-semibold text-success-foreground shadow-md">
+              {availableLabel}
             </span>
           )}
-        </button>
-
-        {isAvailable && (
-          <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-success px-3 py-0.5 text-xs font-semibold text-success-foreground shadow-md">
-            {availableLabel}
-          </span>
-        )}
+        </div>
 
         {/* Thumbnail strip */}
         {photos.length > 1 && (

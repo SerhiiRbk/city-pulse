@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { getProfile } from '@/lib/actions/profile';
+import { getProfile, getInterests } from '@/lib/actions/profile';
 import { getUser } from '@/lib/actions/auth';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -65,12 +65,18 @@ export default async function ProfilePage({ params }: Props) {
   const currentUser = await getUser();
   const isOwnProfile = currentUser?.id === profile.id;
 
-  const [stats, badges, following, userPhotos] = await Promise.all([
+  const [stats, badges, following, userPhotos, allInterests] = await Promise.all([
     getProfileStats(id),
     getUserBadges(id),
     currentUser && !isOwnProfile ? isFollowing(id) : Promise.resolve(false),
     getUserPhotos(id),
+    getInterests(),
   ]);
+
+  const interestBySlug = new Map(allInterests.map((i: any) => [i.slug, i]));
+  const profileInterests = profile.interests
+    .map((slug: string) => interestBySlug.get(slug))
+    .filter(Boolean) as { id: string; slug: string; icon: string | null; translations: Record<string, string> }[];
 
   const [
     favoriteEvents,
@@ -150,7 +156,7 @@ export default async function ProfilePage({ params }: Props) {
                   )}
                 </div>
                 {profile.is_available && (
-                  <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-success px-3 py-0.5 text-xs font-semibold text-success-foreground shadow-md">
+                  <span className="pointer-events-none absolute bottom-1 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-success px-2.5 py-0.5 text-[10px] font-semibold text-success-foreground shadow-md">
                     {t('available')}
                   </span>
                 )}
@@ -248,16 +254,17 @@ export default async function ProfilePage({ params }: Props) {
         )}
 
         {/* Interests */}
-        {profile.interests.length > 0 && (
+        {profileInterests.length > 0 && (
           <div className="rounded-2xl border border-border/40 bg-card p-5 shadow-sm">
             <h3 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               <Sparkles className="h-4 w-4" />
               {t('interests')}
             </h3>
             <div className="flex flex-wrap gap-1.5">
-              {profile.interests.map((interest) => (
-                <span key={interest} className="rounded-full bg-primary/5 px-3 py-1 text-sm font-medium text-primary">
-                  {interest}
+              {profileInterests.map((interest) => (
+                <span key={interest.id} className="inline-flex items-center gap-1 rounded-full bg-primary/5 px-3 py-1 text-sm font-medium text-primary">
+                  {interest.icon && <span className="text-xs leading-none">{interest.icon}</span>}
+                  {interest.translations[locale] || interest.translations.en || interest.slug}
                 </span>
               ))}
             </div>
