@@ -27,7 +27,7 @@ export function Header({ user }: HeaderProps) {
   const t = useTranslations('nav');
 
   return (
-    <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center">
@@ -36,25 +36,25 @@ export function Header({ user }: HeaderProps) {
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex">
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" size="sm" asChild className="rounded-full">
               <Link href="/events" className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
                 {t('events')}
               </Link>
             </Button>
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" size="sm" asChild className="rounded-full">
               <Link href="/groups" className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
                 {t('groups')}
               </Link>
             </Button>
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" size="sm" asChild className="rounded-full">
               <Link href="/city-events" className="flex items-center gap-2">
                 <Landmark className="h-4 w-4" />
                 {t('cityEvents')}
               </Link>
             </Button>
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" size="sm" asChild className="rounded-full">
               <Link href="/calendar" className="flex items-center gap-2">
                 <CalendarDays className="h-4 w-4" />
                 {t('calendar')}
@@ -65,7 +65,7 @@ export function Header({ user }: HeaderProps) {
 
         <div className="flex items-center gap-2">
           {user && (
-            <Button variant="default" size="sm" className="hidden sm:flex" asChild>
+            <Button variant="default" size="sm" className="hidden rounded-full sm:flex" asChild>
               <Link href="/events/create" className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
                 {t('createEvent')}
@@ -86,17 +86,16 @@ export function Header({ user }: HeaderProps) {
             </>
           )}
 
-          <LanguageSwitcher />
-          <ThemeToggle />
-
           {user ? (
             <UserMenu user={user} />
           ) : (
             <div className="hidden items-center gap-2 md:flex">
-              <Button variant="ghost" size="sm" asChild>
+              <LanguageSwitcher />
+              <ThemeToggle />
+              <Button variant="ghost" size="sm" asChild className="rounded-full">
                 <Link href="/login">{t('login')}</Link>
               </Button>
-              <Button size="sm" asChild>
+              <Button size="sm" asChild className="rounded-full">
                 <Link href="/register">{t('register')}</Link>
               </Button>
             </div>
@@ -151,10 +150,15 @@ function UserMenu({ user }: { user: Profile }) {
           <DropdownMenuItem asChild>
             <Link href="/admin" className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4" />
-              Admin
+              {t('admin')}
             </Link>
           </DropdownMenuItem>
         )}
+        <DropdownMenuSeparator />
+        <div className="flex items-center justify-between gap-2 px-2 py-2">
+          <LanguageSwitcher />
+          <ThemeToggle />
+        </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <form action="/api/auth/signout" method="POST">

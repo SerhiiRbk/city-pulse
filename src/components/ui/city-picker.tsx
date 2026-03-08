@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Input } from '@/components/ui/input';
 import { MapPin, Loader2 } from 'lucide-react';
 import { searchCities, upsertCityFromNominatim } from '@/lib/actions/cities';
@@ -34,11 +34,12 @@ export function CityPicker({
   value,
   onChange,
   countryFilter,
-  placeholder = 'Search city...',
+  placeholder,
   className,
   compact = false,
 }: CityPickerProps) {
   const locale = useLocale();
+  const t = useTranslations('common');
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<City[]>([]);
   const [nominatimResults, setNominatimResults] = useState<NominatimResult[]>([]);
@@ -213,7 +214,7 @@ export function CityPicker({
               setIsOpen(true);
             }}
             onFocus={() => setIsOpen(true)}
-            placeholder={placeholder}
+            placeholder={placeholder || t('searchCity')}
             className={`pl-9 ${compact ? 'h-9' : ''}`}
           />
           {isSearching && (
@@ -275,7 +276,7 @@ export function CityPicker({
 
       {isOpen && query.length >= 2 && !isSearching && !hasResults && (
         <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover p-3 text-center text-sm text-muted-foreground shadow-lg">
-          No cities found
+          {t('noCitiesFound')}
         </div>
       )}
     </div>

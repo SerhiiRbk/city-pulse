@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CalendarView } from './calendar-view';
 import { getCalendarEvents, getMyCalendarEvents } from '@/lib/actions/calendar';
@@ -63,10 +62,15 @@ export function CalendarPageClient({
     <div>
       {isAuthenticated ? (
         <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="mb-6">
-            <TabsTrigger value="all">{t('allEvents')}</TabsTrigger>
-            <TabsTrigger value="my">{t('myEvents')}</TabsTrigger>
-          </TabsList>
+          <div className="mb-6 rounded-[1.5rem] border border-border/50 bg-card p-2 shadow-sm">
+            <div className="mb-3 px-3 pt-2 text-sm text-muted-foreground">
+              {tab === 'all' ? t('allEventsHint') : t('myEventsHint')}
+            </div>
+            <TabsList className="h-auto w-full justify-start rounded-2xl bg-muted/40 p-1">
+              <TabsTrigger value="all" className="rounded-xl px-4 py-2.5">{t('allEvents')}</TabsTrigger>
+              <TabsTrigger value="my" className="rounded-xl px-4 py-2.5">{t('myEvents')}</TabsTrigger>
+            </TabsList>
+          </div>
           <TabsContent value="all">
             <CalendarView
               events={allEvents}

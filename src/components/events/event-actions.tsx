@@ -18,6 +18,7 @@ interface EventActionsProps {
 export function EventActions({ eventId, initialGoing, initialFavorited, isAuthenticated, compact }: EventActionsProps) {
   const t = useTranslations('events.card');
   const tDetail = useTranslations('events.detail');
+  const tCommon = useTranslations('common');
   const [going, setGoing] = useState(initialGoing);
   const [favorited, setFavorited] = useState(initialFavorited);
 
@@ -51,7 +52,7 @@ export function EventActions({ eventId, initialGoing, initialFavorited, isAuthen
       await navigator.share({ url });
     } else {
       await navigator.clipboard.writeText(url);
-      toast.success('Link copied!');
+      toast.success(tCommon('linkCopied'));
     }
   }
 

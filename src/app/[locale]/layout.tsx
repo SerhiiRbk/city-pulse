@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
+import { IBM_Plex_Sans, JetBrains_Mono } from 'next/font/google';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -13,8 +13,9 @@ import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from '@/lib/constants';
 import { getUserProfile } from '@/lib/actions/auth';
 import '../globals.css';
 
-const sansFont = Plus_Jakarta_Sans({
+const sansFont = IBM_Plex_Sans({
   variable: '--font-sans',
+  weight: ['400', '500', '600', '700'],
   subsets: ['latin', 'latin-ext', 'cyrillic-ext'],
 });
 

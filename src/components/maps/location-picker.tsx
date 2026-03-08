@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { Input } from '@/components/ui/input';
 import { MapPin, Search, Loader2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 const MapComponent = dynamic(() => import('./map-view').then((m) => m.MapView), {
   ssr: false,
-  loading: () => <div className="bg-muted flex h-[300px] items-center justify-center rounded-lg">Loading map...</div>,
+  loading: () => <div className="bg-muted flex h-[300px] items-center justify-center rounded-lg">...</div>,
 });
 
 interface LocationPickerProps {
@@ -33,6 +34,7 @@ interface NominatimResult {
 }
 
 export function LocationPicker({ lat, lng, address, centerLat, centerLng, centerZoom, onLocationChange }: LocationPickerProps) {
+  const t = useTranslations('common');
   const [query, setQuery] = useState(address || '');
   const [suggestions, setSuggestions] = useState<NominatimResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -121,7 +123,7 @@ export function LocationPicker({ lat, lng, address, centerLat, centerLng, center
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search address..."
+            placeholder={t('searchAddress')}
             className="pl-9"
           />
           {isSearching && <Loader2 className="absolute top-3 right-3 h-4 w-4 animate-spin" />}

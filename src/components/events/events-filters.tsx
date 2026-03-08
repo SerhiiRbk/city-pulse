@@ -57,6 +57,13 @@ function getDateRange(when: string): { from: string; to?: string } {
       sun.setDate(sun.getDate() + 2);
       return { from: fmt(fri), to: fmt(sun) };
     }
+    case 'next_weekend': {
+      const fri = new Date(now);
+      fri.setDate(fri.getDate() + ((5 - fri.getDay() + 7) % 7) + 7);
+      const sun = new Date(fri);
+      sun.setDate(sun.getDate() + 2);
+      return { from: fmt(fri), to: fmt(sun) };
+    }
     case 'next_week': {
       const mon = new Date(now);
       mon.setDate(mon.getDate() + ((1 - mon.getDay() + 7) % 7 || 7));
@@ -69,13 +76,6 @@ function getDateRange(when: string): { from: string; to?: string } {
   }
 }
 
-const WHEN_LABELS: Record<string, string> = {
-  today: 'Today',
-  tomorrow: 'Tomorrow',
-  weekend: 'This weekend',
-  next_week: 'Next week',
-};
-
 export function EventsFilters({ interests, categories, currentFilters }: EventsFiltersProps) {
   const t = useTranslations('events.filters');
   const locale = useLocale();
@@ -83,7 +83,6 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
   const pathname = usePathname();
   const [interestsOpen, setInterestsOpen] = useState(false);
   const [whenOpen, setWhenOpen] = useState(false);
-  const [nameValue, setNameValue] = useState('');
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [rangeFrom, setRangeFrom] = useState(currentFilters.when === 'range' ? (currentFilters.date_from || '') : '');
   const [rangeTo, setRangeTo] = useState(currentFilters.when === 'range' ? (currentFilters.date_to || '') : '');
@@ -169,29 +168,62 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
     }))
     .filter((g) => g.items.length > 0);
 
-  const glassInput = 'h-11 border-white/20 bg-white/10 text-white placeholder:text-white/60 backdrop-blur-sm focus-visible:ring-white/30';
-  const glassTrigger = 'h-11 w-full border-white/20 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 hover:text-white [&>svg]:text-white/60';
+  const controlTrigger = 'h-11 w-full rounded-xl border-border/70 bg-background/92 text-foreground shadow-sm hover:bg-muted/70 hover:text-foreground [&>svg]:text-muted-foreground';
+  const whenLabels = {
+    today: t('today'),
+    tomorrow: t('tomorrow'),
+    weekend: t('weekendLong'),
+    next_weekend: t('nextWeekend'),
+    next_week: t('nextWeek'),
+  } as const;
 
   const whenLabel = currentFilters.when === 'range' && (currentFilters.date_from || currentFilters.date_to)
     ? `${currentFilters.date_from || '...'} — ${currentFilters.date_to || '...'}`
-    : currentFilters.when && WHEN_LABELS[currentFilters.when]
-      ? WHEN_LABELS[currentFilters.when]
+    : currentFilters.when && whenLabels[currentFilters.when as keyof typeof whenLabels]
+      ? whenLabels[currentFilters.when as keyof typeof whenLabels]
       : null;
 
   return (
-    <div className="space-y-3">
-      <div className="mx-auto flex flex-wrap items-end justify-center gap-2">
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-2">
+        {[
+          { key: 'today', label: t('today') },
+          { key: 'tomorrow', label: t('tomorrow') },
+          { key: 'weekend', label: t('weekendLong') },
+          { key: 'next_weekend', label: t('nextWeekend') },
+          { key: 'next_week', label: t('nextWeek') },
+        ].map((preset) => {
+          const active = currentFilters.when === preset.key;
+          return (
+            <button
+              key={preset.key}
+              type="button"
+              onClick={() => selectWhenPreset(preset.key)}
+              className={cn(
+                'rounded-full border px-3 py-1.5 text-sm font-medium shadow-sm transition-colors',
+                active
+                  ? 'border-primary/30 bg-primary text-primary-foreground'
+                  : 'border-border/70 bg-background/90 text-foreground hover:bg-muted/70',
+              )}
+            >
+              {preset.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="grid gap-3 xl:grid-cols-[170px_190px_minmax(0,1.1fr)_190px_170px_auto]">
         {/* Country */}
-        <div className="w-[170px]">
+        <div>
           <Select
             value={currentFilters.country || ''}
             onValueChange={(val) => applyFilter('country', val === '_all' ? undefined : val)}
           >
-            <SelectTrigger className={glassTrigger}>
-              <SelectValue placeholder="Country" />
+            <SelectTrigger className={controlTrigger}>
+              <SelectValue placeholder={t('country')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="_all">All countries</SelectItem>
+              <SelectItem value="_all">{t('allCountries')}</SelectItem>
               {COUNTRIES.map((c) => (
                 <SelectItem key={c.code} value={c.code}>
                   {countryCodeToFlag(c.code)} {(c as Record<string, string>)[locale] || c.en}
@@ -202,7 +234,7 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
         </div>
 
         {/* City */}
-        <div className="w-[180px]">
+        <div>
           <CityPicker
             value={selectedCity}
             onChange={(city) => {
@@ -214,31 +246,26 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
               }
             }}
             countryFilter={currentFilters.country || undefined}
-            placeholder="City"
+            placeholder={t('city')}
             compact
           />
         </div>
 
-        {/* Event name */}
-        <div className="w-[150px]">
-          <Input
-            className={glassInput}
-            placeholder="Event name..."
-            value={nameValue}
-            onChange={(e) => setNameValue(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
-          />
+        <div>
+          <div className="rounded-[1.1rem] border border-border/70 bg-muted/45 px-4 py-3 text-sm text-foreground shadow-sm">
+            {t('helper')}
+          </div>
         </div>
 
         {/* Interests */}
-        <div className="w-[160px]">
+        <div>
           <Popover open={interestsOpen} onOpenChange={setInterestsOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" type="button" className={cn(glassTrigger, 'justify-between font-normal')}>
+              <Button variant="outline" type="button" className={cn(controlTrigger, 'justify-between font-normal')}>
                 {selectedCategories.length > 0 ? (
-                  <span className="truncate">{selectedCategories.length} selected</span>
+                  <span className="truncate">{t('selectedCount', { count: selectedCategories.length })}</span>
                 ) : (
-                  <span className="text-white/60">Interests</span>
+                  <span className="text-muted-foreground">{t('interests')}</span>
                 )}
                 <ChevronsUpDown className="ml-1 h-4 w-4 shrink-0 opacity-60" />
               </Button>
@@ -274,16 +301,16 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
         </div>
 
         {/* When — Popover with presets + date range */}
-        <div className="w-[190px]">
+        <div>
           <Popover open={whenOpen} onOpenChange={setWhenOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" type="button" className={cn(glassTrigger, 'justify-between font-normal')}>
+              <Button variant="outline" type="button" className={cn(controlTrigger, 'justify-between font-normal')}>
                 <span className="flex items-center gap-2 truncate">
                   <CalendarDays className="h-4 w-4 shrink-0 opacity-60" />
                   {whenLabel ? (
-                    <span className="truncate text-white">{whenLabel}</span>
+                    <span className="truncate text-foreground">{whenLabel}</span>
                   ) : (
-                    <span className="text-white/60">When</span>
+                    <span className="text-muted-foreground">{t('when')}</span>
                   )}
                 </span>
                 <ChevronsUpDown className="ml-1 h-4 w-4 shrink-0 opacity-60" />
@@ -292,11 +319,11 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
             <PopoverContent className="w-72 p-0" align="start">
               {/* Presets */}
               <div className="border-b p-1">
-                {(['any', 'today', 'tomorrow', 'weekend', 'next_week'] as const).map((preset) => {
+                {(['any', 'today', 'tomorrow', 'weekend', 'next_weekend', 'next_week'] as const).map((preset) => {
                   const active = preset === 'any'
                     ? !currentFilters.when
                     : currentFilters.when === preset;
-                  const label = preset === 'any' ? 'Any time' : WHEN_LABELS[preset];
+                  const label = preset === 'any' ? t('anyTime') : whenLabels[preset];
                   return (
                     <button
                       key={preset}
@@ -315,10 +342,10 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
               </div>
               {/* Date range */}
               <div className="space-y-3 p-3">
-                <p className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">Date range</p>
+                <p className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">{t('dateRange')}</p>
                 <div className="space-y-2">
                   <div className="space-y-1">
-                    <label className="text-muted-foreground text-[11px]">From</label>
+                    <label className="text-muted-foreground text-[11px]">{t('from')}</label>
                     <Input
                       type="date"
                       className="h-11"
@@ -327,7 +354,7 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-muted-foreground text-[11px]">To</label>
+                    <label className="text-muted-foreground text-[11px]">{t('to')}</label>
                     <Input
                       type="date"
                       className="h-11"
@@ -341,7 +368,7 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
                   disabled={!rangeFrom && !rangeTo}
                   onClick={applyDateRange}
                 >
-                  Apply range
+                  {t('applyRange')}
                 </Button>
               </div>
             </PopoverContent>
@@ -349,7 +376,7 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
         </div>
 
         {/* Status */}
-        <div className="w-[130px]">
+        <div>
           <Select
             value={
               currentFilters.is_free === 'true' ? 'free'
@@ -365,11 +392,11 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
               applyFilters(updates);
             }}
           >
-            <SelectTrigger className={glassTrigger}>
-              <SelectValue placeholder="Status" />
+            <SelectTrigger className={controlTrigger}>
+              <SelectValue placeholder={t('status')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="_all">All</SelectItem>
+              <SelectItem value="_all">{t('all')}</SelectItem>
               <SelectItem value="free">{t('free')}</SelectItem>
               <SelectItem value="online">{t('online')}</SelectItem>
               <SelectItem value="offline">{t('offline')}</SelectItem>
@@ -378,22 +405,22 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
         </div>
 
         {/* Search button */}
-        <Button className="h-11 px-6 font-semibold shadow-md" onClick={handleSearch}>
+        <Button className="h-11 rounded-xl px-6 font-semibold shadow-md" onClick={handleSearch}>
           <Search className="mr-2 h-4 w-4" />
-          SEARCH
+          {t('searchCta')}
         </Button>
       </div>
 
       {/* Selected chips + clear */}
       {hasFilters && (
-        <div className="flex flex-wrap items-center justify-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {selectedCategories.map((id) => {
             const interest = interests.find((i) => i.id === id);
             if (!interest) return null;
             return (
               <span
                 key={id}
-                className="inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm"
+                className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-muted px-3 py-1 text-xs font-medium text-foreground"
               >
                 {interest.icon && <span>{interest.icon}</span>}
                 {getInterestLabel(interest)}
@@ -405,10 +432,10 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
           })}
           <button
             onClick={clearFilters}
-            className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-xs text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+            className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-background px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             <X className="h-3 w-3" />
-            Clear
+            {t('clear')}
           </button>
         </div>
       )}

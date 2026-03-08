@@ -51,6 +51,7 @@ interface ProfileEditFormProps {
 
 export function ProfileEditForm({ profile, interests, categories, initialPhotos, initialCity }: ProfileEditFormProps) {
   const t = useTranslations('profile');
+  const tCommon = useTranslations('common');
   const locale = useLocale();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -129,7 +130,7 @@ export function ProfileEditForm({ profile, interests, categories, initialPhotos,
       toast.error(result.error);
     } else if (result.url) {
       setAvatarUrl(result.url);
-      toast.success('Avatar updated');
+      toast.success(t('photos.avatarSet'));
     }
   }
 
@@ -215,7 +216,7 @@ export function ProfileEditForm({ profile, interests, categories, initialPhotos,
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success('Profile updated');
+      toast.success(t('saved'));
       router.push(`/profile/${profile.id}`);
     }
 
@@ -307,7 +308,7 @@ export function ProfileEditForm({ profile, interests, categories, initialPhotos,
       {/* Basic Info */}
       <Card>
         <CardHeader>
-          <CardTitle>Basic Information</CardTitle>
+          <CardTitle>{t('basicInformation')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -353,14 +354,14 @@ export function ProfileEditForm({ profile, interests, categories, initialPhotos,
       {/* Location */}
       <Card>
         <CardHeader>
-          <CardTitle>Location</CardTitle>
+          <CardTitle>{t('locationSection')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label>{t('country')}</Label>
             <Select value={selectedCountry} onValueChange={setSelectedCountry}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="-- Select country --" />
+                <SelectValue placeholder={t('selectCountry')} />
               </SelectTrigger>
               <SelectContent>
                 {COUNTRIES.map((c) => (
@@ -414,13 +415,13 @@ export function ProfileEditForm({ profile, interests, categories, initialPhotos,
               );
             })}
             {languages.length === 0 && (
-              <span className="text-muted-foreground text-sm">No languages selected</span>
+              <span className="text-muted-foreground text-sm">{t('noLanguagesSelected')}</span>
             )}
           </div>
           <Popover open={langPopoverOpen} onOpenChange={setLangPopoverOpen}>
             <PopoverTrigger asChild>
               <Button variant="outline" type="button" className="w-full justify-between">
-                Add language...
+                {t('addLanguage')}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -475,15 +476,15 @@ export function ProfileEditForm({ profile, interests, categories, initialPhotos,
               );
             })}
             {selectedInterests.length === 0 && (
-              <span className="text-muted-foreground text-sm">No interests selected</span>
+              <span className="text-muted-foreground text-sm">{t('noInterestsSelected')}</span>
             )}
           </div>
           <Popover open={interestsPopoverOpen} onOpenChange={setInterestsPopoverOpen}>
             <PopoverTrigger asChild>
               <Button variant="outline" type="button" className="w-full justify-between">
                 {selectedInterests.length > 0
-                  ? `${selectedInterests.length} selected`
-                  : 'Select interests...'}
+                  ? t('selectedCount', { count: selectedInterests.length })
+                  : t('selectInterests')}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -548,7 +549,7 @@ export function ProfileEditForm({ profile, interests, categories, initialPhotos,
       {/* Privacy */}
       <Card>
         <CardHeader>
-          <CardTitle>Privacy</CardTitle>
+          <CardTitle>{t('privacySection')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
@@ -572,10 +573,10 @@ export function ProfileEditForm({ profile, interests, categories, initialPhotos,
       <div className="flex gap-4">
         <Button type="submit" disabled={isLoading} className="flex-1">
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Save Profile
+          {tCommon('save')}
         </Button>
         <Button type="button" variant="outline" onClick={() => router.back()}>
-          Cancel
+          {tCommon('cancel')}
         </Button>
       </div>
     </form>

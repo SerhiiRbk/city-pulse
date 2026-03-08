@@ -10,6 +10,7 @@ import { formatDate } from '@/lib/utils';
 import { toggleAttendance, toggleFavorite } from '@/lib/actions/events';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { COUNTRIES } from '@/lib/constants';
 
 interface EventCardProps {
   event: {
@@ -40,12 +41,19 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
   const tDetail = useTranslations('events.detail');
   const locale = useLocale();
   const cityLabel = event.city_translations?.[locale] || event.city_name || event.city || '';
+  const countryDisplay = event.country
+    ? (() => {
+      const country = COUNTRIES.find((c) => c.code === event.country);
+      return country ? ((country as Record<string, string>)[locale] || country.en) : event.country;
+    })()
+    : '';
   const [going, setGoing] = useState(initialGoing || false);
   const [favorited, setFavorited] = useState(initialFav || false);
   const [goingCount, setGoingCount] = useState(event.going_count);
 
   const spotsLeft = event.max_attendees ? event.max_attendees - goingCount : null;
   const categoryLabel = event.category_translations?.[locale] || event.category_translations?.['en'] || event.category_slug || '';
+  const socialCue = goingCount >= 12 ? t('cuePopular') : goingCount >= 4 ? t('cueEasy') : tDetail('firstCue');
 
   async function handleToggleGoing(e: React.MouseEvent) {
     e.preventDefault();
@@ -69,11 +77,11 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
     const diffMs = date.getTime() - now.getTime();
     if (diffMs < 0) return null;
     const diffH = Math.floor(diffMs / (1000 * 60 * 60));
-    if (diffH < 1) return 'Starting soon';
-    if (diffH < 24) return `In ${diffH}h`;
+    if (diffH < 1) return t('startingSoon');
+    if (diffH < 24) return t('inHours', { count: diffH });
     const diffD = Math.floor(diffH / 24);
-    if (diffD === 1) return 'Tomorrow';
-    if (diffD < 7) return `In ${diffD} days`;
+    if (diffD === 1) return t('tomorrow');
+    if (diffD < 7) return t('inDays', { count: diffD });
     return null;
   }
 
@@ -107,7 +115,7 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
               <Calendar className="text-muted-foreground/30 h-16 w-16" />
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
           {/* Badges on image */}
           <div className="absolute top-3 left-3 flex gap-1.5">
             {event.is_free ? (
@@ -120,7 +128,7 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
             {event.is_online && (
               <Badge variant="secondary" className="bg-white/90 backdrop-blur-md">
                 <Globe className="mr-1 h-3 w-3" />
-                Online
+                {t('online')}
               </Badge>
             )}
             {(() => {
@@ -145,12 +153,17 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
               </button>
             </div>
           )}
+          <div className="absolute right-3 bottom-3 left-3">
+            <div className="inline-flex max-w-full items-center rounded-full bg-black/35 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
+              {socialCue}
+            </div>
+          </div>
         </div>
 
         {/* Content — compact */}
         <div className="p-5">
           {/* Category + attendees row */}
-          <div className="mb-2.5 flex items-center justify-between">
+          <div className="mb-2.5 flex items-center justify-between gap-3">
             {categoryLabel ? (
               <Badge variant="outline" className="border-primary/20 text-primary bg-primary/5 text-xs font-medium">
                 {categoryLabel}
@@ -178,25 +191,28 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
           <h3 className="mb-2 line-clamp-2 text-lg font-bold leading-snug tracking-tight">{event.title}</h3>
 
           {/* Date + Location in one row */}
-          <div className="text-muted-foreground mb-4 flex items-center gap-4 text-sm font-medium">
+          <div className="text-muted-foreground mb-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium">
             <span className="flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />
               {formatDate(event.starts_at, locale)}
             </span>
-            <span className="flex items-center gap-1.5 truncate">
+            <span className="flex min-w-0 items-center gap-1.5 truncate">
               {event.is_online ? (
                 <>
                   <Globe className="h-4 w-4 shrink-0" />
-                  Online
+                  {t('online')}
                 </>
               ) : (
                 <>
                   <MapPin className="h-4 w-4 shrink-0" />
-                  <span className="truncate">{cityLabel || event.country}</span>
+                  <span className="truncate">{cityLabel || countryDisplay}</span>
                 </>
               )}
             </span>
           </div>
+          <p className="mb-4 text-sm text-muted-foreground">
+            {goingCount > 0 ? t('alreadyIn', { count: goingCount }) : t('firstToJoin')}
+          </p>
 
           {/* Join button */}
           {isAuthenticated && (

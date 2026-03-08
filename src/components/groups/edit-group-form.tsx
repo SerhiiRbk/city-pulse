@@ -229,8 +229,15 @@ export function EditGroupForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="rounded-[2rem] border border-border/50 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 p-6 shadow-sm">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Shape the community</p>
+        <h2 className="mt-2 text-2xl font-bold tracking-tight">Clarify the group so the right people recognise themselves in it</h2>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          A strong group page explains the vibe, the place, and what kind of people should feel welcome to join.
+        </p>
+      </div>
       {/* Basic info */}
-      <Card>
+      <Card className="rounded-3xl border-border/50 shadow-sm">
         <CardHeader>
           <CardTitle>{t('title')}</CardTitle>
         </CardHeader>
@@ -318,7 +325,7 @@ export function EditGroupForm({
       </Card>
 
       {/* Location */}
-      <Card>
+      <Card className="rounded-3xl border-border/50 shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <MapPin className="h-5 w-5" />
@@ -355,7 +362,7 @@ export function EditGroupForm({
       </Card>
 
       {/* Interests */}
-      <Card>
+      <Card className="rounded-3xl border-border/50 shadow-sm">
         <CardHeader>
           <CardTitle>{t('interests')}</CardTitle>
         </CardHeader>
@@ -431,7 +438,7 @@ export function EditGroupForm({
       </Card>
 
       {/* Moderators */}
-      <Card>
+      <Card className="rounded-3xl border-border/50 shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
@@ -512,10 +519,12 @@ export function EditGroupForm({
         </CardContent>
       </Card>
 
-      <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
-        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        {t('submit')}
-      </Button>
+      <div className="sticky bottom-3 z-20 rounded-[1.5rem] border border-border/50 bg-background/95 p-3 shadow-xl backdrop-blur-md">
+        <Button type="submit" size="lg" className="w-full rounded-2xl" disabled={isLoading}>
+          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {t('submit')}
+        </Button>
+      </div>
     </form>
   );
 }

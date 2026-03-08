@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { EventCard } from '@/components/events/event-card';
 import { GroupCard } from '@/components/groups/group-card';
+import { EmptyState } from '@/components/ui/empty-state';
 import { User, Heart, CalendarCheck, History, Pencil, Users, Bell, Calendar } from 'lucide-react';
 
 interface ProfileTabsProps {
@@ -60,9 +61,8 @@ export function ProfileTabs({
   function EventGrid({ events }: { events: any[] }) {
     if (events.length === 0) {
       return (
-        <div className="flex flex-col items-center py-16">
-          <Calendar className="text-muted-foreground/30 mb-3 h-12 w-12" />
-          <p className="text-muted-foreground text-sm">{t('noEvents')}</p>
+        <div className="rounded-[2rem] border border-border/50 bg-card p-6 shadow-sm">
+          <EmptyState icon="events" title={t('noEvents')} description="Nothing here yet, but the next plan could become the start of a whole routine." className="py-10" />
         </div>
       );
     }
@@ -84,9 +84,8 @@ export function ProfileTabs({
   function GroupGrid({ groups }: { groups: any[] }) {
     if (groups.length === 0) {
       return (
-        <div className="flex flex-col items-center py-16">
-          <Users className="text-muted-foreground/30 mb-3 h-12 w-12" />
-          <p className="text-muted-foreground text-sm">{t('noGroups')}</p>
+        <div className="rounded-[2rem] border border-border/50 bg-card p-6 shadow-sm">
+          <EmptyState icon="groups" title={t('noGroups')} description="Groups turn occasional plans into familiar faces and recurring connections." className="py-10" />
         </div>
       );
     }
@@ -110,9 +109,9 @@ export function ProfileTabs({
 
   return (
     <Tabs defaultValue="about">
-      <TabsList variant="line" className="h-auto w-full flex-wrap justify-start border-b border-border/50">
+      <TabsList variant="line" className="h-auto w-full flex-nowrap justify-start gap-1 overflow-x-auto rounded-2xl border border-border/50 bg-card p-1 scrollbar-none">
         {tabs.map(({ id, icon: Icon, label, count }) => (
-          <TabsTrigger key={id} value={id} className="relative gap-1.5">
+          <TabsTrigger key={id} value={id} className="relative gap-1.5 rounded-xl px-4 py-2.5">
             <Icon className="h-4 w-4" />
             <span className="hidden sm:inline">{label}</span>
             <CountBadge count={count} />

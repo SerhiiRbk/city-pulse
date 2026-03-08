@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { UserPlus, UserMinus, Loader2 } from 'lucide-react';
 import { toggleFollow } from '@/lib/actions/social';
@@ -11,6 +12,7 @@ interface FollowButtonProps {
 }
 
 export function FollowButton({ targetUserId, isFollowing: initial }: FollowButtonProps) {
+  const t = useTranslations('common');
   const [following, setFollowing] = useState(initial);
   const [loading, setLoading] = useState(false);
 
@@ -37,7 +39,7 @@ export function FollowButton({ targetUserId, isFollowing: initial }: FollowButto
       ) : (
         <UserPlus className="mr-1 h-4 w-4" />
       )}
-      {following ? 'Following' : 'Follow'}
+      {following ? t('following') : t('follow')}
     </Button>
   );
 }

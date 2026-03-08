@@ -51,7 +51,7 @@ export function ProfilePhotoGallery({
             )}
           </button>
           {isAvailable && (
-            <span className="pointer-events-none absolute bottom-1 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-success px-2.5 py-0.5 text-[10px] font-semibold text-success-foreground shadow-md">
+            <span className="pointer-events-none absolute bottom-1 left-1/2 z-10 max-w-[calc(100%-12px)] -translate-x-1/2 truncate rounded-full bg-success px-2 py-0.5 text-[9px] font-semibold text-success-foreground shadow-md">
               {availableLabel}
             </span>
           )}

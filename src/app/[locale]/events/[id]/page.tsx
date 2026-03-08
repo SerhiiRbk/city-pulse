@@ -76,15 +76,27 @@ export default async function EventDetailPage({ params }: Props) {
   const countryDisplay = countryObj
     ? (countryObj as Record<string, string>)[locale] || countryObj.en
     : event.country || '';
+  const locationLabel = [cityDisplay, countryDisplay].filter(Boolean).join(', ');
+  const comfortCue = event.going_count >= 12
+    ? t('popularCue')
+    : event.going_count >= 4
+      ? t('soloCue')
+      : t('firstCue');
+  const easyJoinCopy = `${comfortCue}. ${event.is_online ? t('easyJoinOnline') : t('easyJoinOffline')}`;
 
   const jsonLd = generateEventJsonLd(event);
 
   return (
-    <div className="container mx-auto max-w-5xl px-4 py-8">
+    <div className="container mx-auto max-w-5xl px-4 py-8 pb-28 lg:pb-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <div className="mb-5 flex items-center gap-2 text-sm text-muted-foreground">
+        <Link href="/events" className="transition-colors hover:text-foreground">{t('breadcrumbs')}</Link>
+        <span>/</span>
+        <span className="truncate">{event.title}</span>
+      </div>
       {/* Photos */}
       {event.photos && event.photos.length > 0 && (
         <EventPhotoGallery photos={event.photos} title={event.title} />
@@ -93,7 +105,7 @@ export default async function EventDetailPage({ params }: Props) {
       <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-3">
         {/* Main content */}
         <div className="space-y-8 lg:col-span-2">
-          <div>
+          <div className="rounded-[2rem] border border-border/50 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 p-6 shadow-sm">
             <div className="mb-2 flex flex-wrap gap-2">
               {categoryLabel && <Badge variant="outline">{categoryLabel}</Badge>}
               {event.is_private && (
@@ -108,18 +120,19 @@ export default async function EventDetailPage({ params }: Props) {
                   {t('online')}
                 </Badge>
               )}
-              {event.is_free && <Badge className="bg-success text-success-foreground">Free</Badge>}
+              {event.is_free && <Badge className="bg-success text-success-foreground">{t('free')}</Badge>}
+              <Badge className="bg-primary/10 text-primary hover:bg-primary/10">{comfortCue}</Badge>
             </div>
-            <h1 className="text-3xl font-bold">{event.title}</h1>
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{event.title}</h1>
 
             {event.status === 'cancelled' && (
-              <Badge variant="destructive" className="mt-2">Cancelled</Badge>
+              <Badge variant="destructive" className="mt-3">{t('cancelled')}</Badge>
             )}
             {event.status === 'completed' && (
-              <Badge variant="secondary" className="mt-2">Completed</Badge>
+              <Badge variant="secondary" className="mt-3">{t('completed')}</Badge>
             )}
             {event.status === 'draft' && (
-              <Badge variant="outline" className="mt-2">Draft</Badge>
+              <Badge variant="outline" className="mt-3">{t('draft')}</Badge>
             )}
           </div>
 
@@ -134,6 +147,19 @@ export default async function EventDetailPage({ params }: Props) {
               <Link href={`/profile/${event.organizer_id}`} className="font-medium hover:underline">
                 {event.organizer_name}
               </Link>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-border/50 bg-muted/30 p-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm font-semibold">{t('easyJoinTitle')}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{easyJoinCopy}</p>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Users className="h-4 w-4" />
+                <span>{t('goingCount', { count: event.going_count || 0 })}</span>
+              </div>
             </div>
           </div>
 
@@ -152,7 +178,7 @@ export default async function EventDetailPage({ params }: Props) {
               <Button variant="outline" size="sm" asChild className="rounded-full shadow-sm">
                 <Link href={`/events/${id}/edit`} className="flex items-center gap-2">
                   <Pencil className="h-4 w-4" />
-                  Edit Event
+                    {t('editEvent')}
                 </Link>
               </Button>
               {isOrganizer && (
@@ -167,14 +193,10 @@ export default async function EventDetailPage({ params }: Props) {
           {!event.is_online && (event.lat && event.lng || cityDisplay) && (
             <div>
               <h2 className="mb-2 font-semibold">{t('location')}</h2>
-              {(cityDisplay || countryDisplay) && (
+              {locationLabel && (
                 <div className="mb-2 flex items-center gap-2 text-sm">
                   <MapPin className="h-4 w-4 shrink-0 text-muted-foreground" />
-                  <span>
-                    {cityDisplay}
-                    {cityDisplay && countryDisplay ? ', ' : ''}
-                    {countryDisplay}
-                  </span>
+                  <span>{locationLabel}</span>
                 </div>
               )}
               {event.address && (
@@ -230,14 +252,10 @@ export default async function EventDetailPage({ params }: Props) {
                   </div>
                 </div>
 
-                {!event.is_online && (cityDisplay || countryDisplay) && (
+                {!event.is_online && locationLabel && (
                   <div className="flex items-center gap-3">
                     <MapPin className="text-muted-foreground h-5 w-5 shrink-0" />
-                    <p className="text-sm">
-                      {cityDisplay}
-                      {cityDisplay && countryDisplay ? ', ' : ''}
-                      {countryDisplay}
-                    </p>
+                    <p className="text-sm">{locationLabel}</p>
                   </div>
                 )}
 
@@ -251,10 +269,10 @@ export default async function EventDetailPage({ params }: Props) {
                 <div className="flex items-center gap-3">
                   <Users className="text-muted-foreground h-5 w-5 shrink-0" />
                   <div>
-                    <p className="text-sm">{event.going_count || 0} going</p>
+                    <p className="text-sm">{t('goingCount', { count: event.going_count || 0 })}</p>
                     {spotsLeft !== null && (
                       <p className="text-muted-foreground text-xs">
-                        {spotsLeft > 0 ? `${spotsLeft} spots left` : 'No spots left'}
+                        {spotsLeft > 0 ? t('spotsLeft', { count: spotsLeft }) : t('noSpotsLeft')}
                       </p>
                     )}
                   </div>
@@ -273,7 +291,7 @@ export default async function EventDetailPage({ params }: Props) {
                   <div className="flex items-center gap-3">
                     <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                     <p className="text-sm">
-                      {event.avg_rating} ({event.review_count} reviews)
+                      {t('reviewsCount', { rating: event.avg_rating, count: event.review_count })}
                     </p>
                   </div>
                 )}
@@ -299,7 +317,7 @@ export default async function EventDetailPage({ params }: Props) {
                   })}
                   {attendees.length > 12 && (
                     <p className="mt-2 w-full text-xs text-muted-foreground">
-                      +{attendees.length - 12} more attendees
+                      {t('moreAttendees', { count: attendees.length - 12 })}
                     </p>
                   )}
                 </div>
@@ -310,7 +328,7 @@ export default async function EventDetailPage({ params }: Props) {
       </div>
 
       {/* Mobile sticky action bar */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 p-3 backdrop-blur-md lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 p-3 shadow-2xl backdrop-blur-md lg:hidden">
         <div className="container mx-auto flex items-center gap-3">
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold">{event.title}</p>

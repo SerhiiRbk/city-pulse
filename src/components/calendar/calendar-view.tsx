@@ -74,20 +74,23 @@ export function CalendarView({ events, year, month, onNavigate }: CalendarViewPr
   }
 
   return (
-    <div>
-      {/* Navigation */}
-      <div className="mb-6 flex items-center justify-between">
-        <Button variant="ghost" size="icon" onClick={handlePrev}>
+    <div className="space-y-6">
+      <div className="rounded-[1.75rem] border border-border/50 bg-card p-4 shadow-sm">
+        <div className="flex items-center justify-between">
+        <Button variant="ghost" size="icon" className="rounded-xl" onClick={handlePrev}>
           <ChevronLeft className="h-5 w-5" />
         </Button>
-        <h2 className="text-xl font-semibold capitalize">{monthName}</h2>
-        <Button variant="ghost" size="icon" onClick={handleNext}>
+        <div className="text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{t('monthOverview')}</p>
+          <h2 className="text-xl font-semibold capitalize sm:text-2xl">{monthName}</h2>
+        </div>
+        <Button variant="ghost" size="icon" className="rounded-xl" onClick={handleNext}>
           <ChevronRight className="h-5 w-5" />
         </Button>
+        </div>
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-2 rounded-[1.75rem] border border-border/50 bg-card p-3 shadow-sm">
         {weekDays.map((d) => (
           <div key={d} className="text-muted-foreground pb-2 text-center text-xs font-medium uppercase">
             {d}
@@ -109,10 +112,10 @@ export function CalendarView({ events, year, month, onNavigate }: CalendarViewPr
               key={day}
               onClick={() => setSelectedDay(day === selectedDay ? null : day)}
               className={cn(
-                'relative flex min-h-[60px] flex-col items-center rounded-lg border p-1 text-sm transition-colors sm:min-h-[80px]',
+                'relative flex min-h-[72px] flex-col items-center rounded-2xl border p-2 text-sm transition-colors sm:min-h-[96px]',
                 isToday && 'border-primary bg-primary/5',
                 isSelected && 'ring-primary ring-2',
-                dayEvents ? 'cursor-pointer hover:bg-accent' : 'cursor-default',
+                dayEvents ? 'cursor-pointer hover:bg-accent/60' : 'cursor-default',
               )}
             >
               <span className={cn('font-medium', isToday && 'text-primary')}>{day}</span>
@@ -134,7 +137,7 @@ export function CalendarView({ events, year, month, onNavigate }: CalendarViewPr
 
       {/* Selected day events */}
       {selectedDay && (
-        <div className="mt-6 space-y-3">
+        <div className="rounded-[1.75rem] border border-border/50 bg-card p-5 shadow-sm">
           <h3 className="text-lg font-semibold">
             {new Date(year, month - 1, selectedDay).toLocaleDateString(locale, {
               weekday: 'long',
@@ -143,13 +146,14 @@ export function CalendarView({ events, year, month, onNavigate }: CalendarViewPr
             })}
           </h3>
           {selectedEvents.length === 0 ? (
-            <p className="text-muted-foreground text-sm">No events</p>
+            <p className="mt-3 text-sm text-muted-foreground">{t('noEventsDay')}</p>
           ) : (
-            selectedEvents.map((event) => (
+            <div className="mt-4 space-y-3">
+            {selectedEvents.map((event) => (
               <Link
                 key={event.id}
                 href={`/events/${event.id}`}
-                className="hover:bg-accent flex items-center gap-3 rounded-lg border p-3 transition-colors"
+                className="hover:bg-accent/50 flex items-center gap-3 rounded-2xl border p-4 transition-colors"
               >
                 <div className="flex-1">
                   <p className="font-medium">{event.title}</p>
@@ -160,17 +164,18 @@ export function CalendarView({ events, year, month, onNavigate }: CalendarViewPr
                 <div className="flex items-center gap-2">
                   {event.is_online ? (
                     <Badge variant="secondary" className="text-xs">
-                      <Globe className="mr-1 h-3 w-3" /> Online
+                      <Globe className="mr-1 h-3 w-3" /> {t('online')}
                     </Badge>
                   ) : event.city ? (
                     <span className="text-muted-foreground flex items-center gap-1 text-xs">
                       <MapPin className="h-3 w-3" /> {event.city}
                     </span>
                   ) : null}
-                  {event.is_free && <Badge className="bg-success text-xs text-success-foreground">Free</Badge>}
+                  {event.is_free && <Badge className="bg-success text-xs text-success-foreground">{t('free')}</Badge>}
                 </div>
               </Link>
-            ))
+            ))}
+            </div>
           )}
         </div>
       )}

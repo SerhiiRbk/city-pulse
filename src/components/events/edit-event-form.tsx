@@ -257,8 +257,15 @@ export function EditEventForm({ event, interests, categories, moderators: initia
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="rounded-[2rem] border border-border/50 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 p-6 shadow-sm">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Refine the experience</p>
+        <h2 className="mt-2 text-2xl font-bold tracking-tight">Update the event so people know exactly what to expect</h2>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          Strong event pages reduce hesitation. Keep the title, vibe, location, and attendee expectations clear and friendly.
+        </p>
+      </div>
       {/* Basic info */}
-      <Card>
+      <Card className="rounded-3xl border-border/50 shadow-sm">
         <CardHeader>
           <CardTitle>{t('title')}</CardTitle>
         </CardHeader>
@@ -360,7 +367,7 @@ export function EditEventForm({ event, interests, categories, moderators: initia
       </Card>
 
       {/* Date & Time */}
-      <Card>
+      <Card className="rounded-3xl border-border/50 shadow-sm">
         <CardContent className="space-y-4 pt-6">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="space-y-2">
@@ -387,7 +394,7 @@ export function EditEventForm({ event, interests, categories, moderators: initia
       </Card>
 
       {/* Type & Price */}
-      <Card>
+      <Card className="rounded-3xl border-border/50 shadow-sm">
         <CardContent className="space-y-4 pt-6">
           <div className="flex items-center justify-between">
             <Label htmlFor="is_online">{t('isOnline')}</Label>
@@ -443,7 +450,7 @@ export function EditEventForm({ event, interests, categories, moderators: initia
 
       {/* Country & City + Location */}
       {!isOnline && (
-        <Card>
+        <Card className="rounded-3xl border-border/50 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MapPin className="h-5 w-5" />
@@ -497,7 +504,7 @@ export function EditEventForm({ event, interests, categories, moderators: initia
       )}
 
       {/* Photos */}
-      <Card>
+      <Card className="rounded-3xl border-border/50 shadow-sm">
         <CardHeader>
           <CardTitle>{t('photos')}</CardTitle>
         </CardHeader>
@@ -589,7 +596,7 @@ export function EditEventForm({ event, interests, categories, moderators: initia
       </Card>
 
       {/* Moderators */}
-      <Card>
+      <Card className="rounded-3xl border-border/50 shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
@@ -661,12 +668,12 @@ export function EditEventForm({ event, interests, categories, moderators: initia
         </CardContent>
       </Card>
 
-      <div className="flex gap-4">
-        <Button type="submit" size="lg" className="flex-1" disabled={isLoading}>
+      <div className="sticky bottom-3 z-20 flex gap-4 rounded-[1.5rem] border border-border/50 bg-background/95 p-3 shadow-xl backdrop-blur-md">
+        <Button type="submit" size="lg" className="flex-1 rounded-2xl" disabled={isLoading}>
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {tEdit('save')}
         </Button>
-        <Button type="button" variant="outline" size="lg" onClick={() => router.back()}>
+        <Button type="button" variant="outline" size="lg" className="rounded-2xl" onClick={() => router.back()}>
           Cancel
         </Button>
       </div>

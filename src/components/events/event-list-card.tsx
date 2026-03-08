@@ -9,6 +9,7 @@ import { formatDate, formatDuration } from '@/lib/utils';
 import { toggleAttendance, toggleFavorite } from '@/lib/actions/events';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { COUNTRIES } from '@/lib/constants';
 
 interface EventListCardProps {
   event: {
@@ -44,9 +45,15 @@ export function EventListCard({ event, isGoing: initialGoing, isFavorited: initi
   const [goingCount, setGoingCount] = useState(event.going_count);
 
   const categoryLabel = event.category_translations?.[locale] || event.category_translations?.['en'] || event.category_slug || '';
+  const countryDisplay = event.country
+    ? (() => {
+      const country = COUNTRIES.find((c) => c.code === event.country);
+      return country ? ((country as Record<string, string>)[locale] || country.en) : event.country;
+    })()
+    : '';
 
   const isUpcoming = new Date(event.starts_at) > new Date();
-  const statusLabel = isUpcoming ? 'Upcoming' : 'Showing';
+  const statusLabel = isUpcoming ? t('upcoming') : t('showing');
   const statusColor = isUpcoming
     ? 'bg-blue-50 text-blue-700 border-blue-200'
     : 'bg-green-50 text-green-700 border-green-200';
@@ -136,7 +143,7 @@ export function EventListCard({ event, isGoing: initialGoing, isFavorited: initi
                 {event.is_online && (
                   <Badge variant="secondary" className="rounded-md text-xs">
                     <Globe className="mr-1 h-3 w-3" />
-                    Online
+                    {t('online')}
                   </Badge>
                 )}
               </div>
@@ -169,7 +176,7 @@ export function EventListCard({ event, isGoing: initialGoing, isFavorited: initi
                 {!event.is_online && (event.city || event.country) && (
                   <span className="text-muted-foreground flex items-center gap-1 text-sm">
                     <MapPin className="h-3.5 w-3.5" />
-                    {event.city}{event.country ? `, ${event.country}` : ''}
+                    {[event.city, countryDisplay].filter(Boolean).join(', ')}
                   </span>
                 )}
                 <span className="text-muted-foreground flex items-center gap-1 text-sm">

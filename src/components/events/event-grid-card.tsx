@@ -8,6 +8,7 @@ import { formatDate } from '@/lib/utils';
 import { toggleFavorite } from '@/lib/actions/events';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { COUNTRIES } from '@/lib/constants';
 
 interface EventGridCardProps {
   event: {
@@ -38,6 +39,12 @@ export function EventGridCard({ event, isFavorited: initialFav, isAuthenticated 
   const [favorited, setFavorited] = useState(initialFav || false);
 
   const categoryLabel = event.category_translations?.[locale] || event.category_translations?.['en'] || event.category_slug || '';
+  const countryDisplay = event.country
+    ? (() => {
+      const country = COUNTRIES.find((c) => c.code === event.country);
+      return country ? ((country as Record<string, string>)[locale] || country.en) : event.country;
+    })()
+    : '';
   const isUpcoming = new Date(event.starts_at) > new Date();
 
   async function handleToggleFavorite(e: React.MouseEvent) {
@@ -114,20 +121,20 @@ export function EventGridCard({ event, isFavorited: initialFav, isAuthenticated 
               {/* Status */}
               <span className={`inline-flex items-center gap-1 text-xs font-semibold ${isUpcoming ? 'text-blue-600' : 'text-green-600'}`}>
                 <span className={`h-1.5 w-1.5 rounded-full ${isUpcoming ? 'bg-blue-500' : 'bg-green-500'}`} />
-                {isUpcoming ? 'Upcoming' : 'Showing'}
+                {isUpcoming ? tCard('upcoming') : tCard('showing')}
               </span>
 
               {/* Location */}
               {!event.is_online && (event.city || event.country) && (
                 <span className="text-muted-foreground flex items-center gap-1 text-xs">
                   <MapPin className="h-3 w-3" />
-                  {event.city || event.country}
+                  {event.city || countryDisplay}
                 </span>
               )}
               {event.is_online && (
                 <span className="text-muted-foreground flex items-center gap-1 text-xs">
                   <Globe className="h-3 w-3" />
-                  Online
+                  {tCard('online')}
                 </span>
               )}
             </div>

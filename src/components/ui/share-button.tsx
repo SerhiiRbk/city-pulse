@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Share2, Check, Link2 } from 'lucide-react';
 import {
@@ -20,6 +21,7 @@ interface ShareButtonProps {
 
 export function ShareButton({ url, title, variant = 'outline', size = 'sm', className }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
+  const t = useTranslations('common');
 
   const shareUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
   const shareTitle = title || '';
@@ -48,7 +50,7 @@ export function ShareButton({ url, title, variant = 'outline', size = 'sm', clas
     return (
       <Button variant={variant} size={size} className={className} onClick={handleNativeShare}>
         <Share2 className="mr-1.5 h-4 w-4" />
-        Share
+          {t('share')}
       </Button>
     );
   }
@@ -58,13 +60,13 @@ export function ShareButton({ url, title, variant = 'outline', size = 'sm', clas
       <DropdownMenuTrigger asChild>
         <Button variant={variant} size={size} className={className}>
           {copied ? <Check className="mr-1.5 h-4 w-4" /> : <Share2 className="mr-1.5 h-4 w-4" />}
-          {copied ? 'Copied!' : 'Share'}
+          {copied ? t('copied') : t('share')}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={handleCopyLink}>
           <Link2 className="mr-2 h-4 w-4" />
-          Copy link
+          {t('copyLink')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

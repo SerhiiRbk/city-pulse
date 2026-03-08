@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Users, Calendar, MapPin } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
+import { COUNTRIES } from '@/lib/constants';
 
 interface GroupCardProps {
   group: {
@@ -25,8 +26,16 @@ interface GroupCardProps {
 
 export function GroupCard({ group }: GroupCardProps) {
   const t = useTranslations('groups');
+  const tDetail = useTranslations('groups.detail');
   const locale = useLocale();
   const cityLabel = group.city_translations?.[locale] || group.city_name || group.city || '';
+  const countryDisplay = group.country
+    ? (() => {
+      const country = COUNTRIES.find((c) => c.code === group.country);
+      return country ? ((country as Record<string, string>)[locale] || country.en) : group.country;
+    })()
+    : '';
+  const activityCue = group.event_count > 3 ? t('cueActive') : group.member_count > 20 ? t('cueWelcoming') : t('cueGrowing');
 
   return (
     <Link href={`/groups/${group.id}`}>
@@ -43,11 +52,16 @@ export function GroupCard({ group }: GroupCardProps) {
               <Users className="text-primary/40 h-16 w-16" />
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
           <div className="absolute bottom-3 left-3">
             <Badge variant="secondary" className="bg-white/90 backdrop-blur-md">
               <Users className="mr-1 h-3 w-3" />
               {group.member_count}
+            </Badge>
+          </div>
+          <div className="absolute right-3 bottom-3">
+            <Badge className="bg-black/35 text-white backdrop-blur-md hover:bg-black/35">
+              {activityCue}
             </Badge>
           </div>
         </div>
@@ -57,7 +71,7 @@ export function GroupCard({ group }: GroupCardProps) {
           {(cityLabel || group.country) && (
             <div className="text-muted-foreground mb-3 flex items-center gap-1.5 text-sm">
               <MapPin className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">{[cityLabel, group.country].filter(Boolean).join(', ')}</span>
+              <span className="truncate">{[cityLabel, countryDisplay].filter(Boolean).join(', ')}</span>
             </div>
           )}
           <div className="text-muted-foreground flex items-center gap-5 text-sm font-medium">
@@ -67,7 +81,7 @@ export function GroupCard({ group }: GroupCardProps) {
             </div>
             <div className="flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />
-              <span>{group.event_count}</span>
+              <span>{tDetail('eventsCount', { count: group.event_count })}</span>
             </div>
           </div>
         </div>

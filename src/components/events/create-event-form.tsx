@@ -222,9 +222,16 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="rounded-[2rem] border border-border/50 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 p-6 shadow-sm">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Create a welcoming plan</p>
+        <h2 className="mt-2 text-2xl font-bold tracking-tight">Design an event people will feel comfortable joining</h2>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          The best events make expectations clear: what it is, who it is for, and how easy it feels to show up for the first time.
+        </p>
+      </div>
       {/* Group selector */}
       {groups.length > 0 && (
-        <Card>
+        <Card className="rounded-3xl border-border/50 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <UsersRound className="h-5 w-5" />
@@ -250,7 +257,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
       )}
 
       {/* Basic info */}
-      <Card>
+      <Card className="rounded-3xl border-border/50 shadow-sm">
         <CardHeader>
           <CardTitle>{t('title')}</CardTitle>
         </CardHeader>
@@ -340,7 +347,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
       </Card>
 
       {/* Date & Time */}
-      <Card>
+      <Card className="rounded-3xl border-border/50 shadow-sm">
         <CardContent className="space-y-4 pt-6">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="space-y-2">
@@ -360,7 +367,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
       </Card>
 
       {/* Type & Price */}
-      <Card>
+      <Card className="rounded-3xl border-border/50 shadow-sm">
         <CardContent className="space-y-4 pt-6">
           <div className="flex items-center justify-between">
             <Label htmlFor="is_online">{t('isOnline')}</Label>
@@ -398,7 +405,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
 
       {/* Country & City */}
       {!isOnline && (
-        <Card>
+        <Card className="rounded-3xl border-border/50 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MapPin className="h-5 w-5" />
@@ -452,7 +459,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
       )}
 
       {/* Photos */}
-      <Card>
+      <Card className="rounded-3xl border-border/50 shadow-sm">
         <CardHeader>
           <CardTitle>{t('photos')}</CardTitle>
         </CardHeader>
@@ -549,10 +556,12 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
         </CardContent>
       </Card>
 
-      <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
-        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        {t('submit')}
-      </Button>
+      <div className="sticky bottom-3 z-20 rounded-[1.5rem] border border-border/50 bg-background/95 p-3 shadow-xl backdrop-blur-md">
+        <Button type="submit" size="lg" className="w-full rounded-2xl" disabled={isLoading}>
+          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {t('submit')}
+        </Button>
+      </div>
     </form>
   );
 }

@@ -123,6 +123,9 @@ export default async function ProfilePage({ params }: Props) {
   const socialEntries = Object.entries(profile.social_links || {}).filter(
     ([, v]) => Boolean(v),
   ) as [keyof SocialLinks, string][];
+  const socialCue = profile.is_available
+    ? t('connectionOpen')
+    : t('connectionReserved');
 
   const aboutContent = (
     <div className="mx-auto max-w-3xl">
@@ -156,7 +159,7 @@ export default async function ProfilePage({ params }: Props) {
                   )}
                 </div>
                 {profile.is_available && (
-                  <span className="pointer-events-none absolute bottom-1 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-success px-2.5 py-0.5 text-[10px] font-semibold text-success-foreground shadow-md">
+                  <span className="pointer-events-none absolute bottom-1 left-1/2 z-10 max-w-[calc(100%-12px)] -translate-x-1/2 truncate rounded-full bg-success px-2 py-0.5 text-[9px] font-semibold text-success-foreground shadow-md">
                     {t('available')}
                   </span>
                 )}
@@ -172,7 +175,7 @@ export default async function ProfilePage({ params }: Props) {
               </h1>
               <div className="mt-1.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-muted-foreground sm:justify-start">
                 {!profile.hide_age && profile.age && (
-                  <span>{profile.age} y.o.</span>
+                  <span>{t('yearsOld', { age: profile.age })}</span>
                 )}
                 {(profile.city || countryLabel) && (
                   <span className="flex items-center gap-1">
@@ -189,6 +192,11 @@ export default async function ProfilePage({ params }: Props) {
                 {profile.bio}
               </p>
             )}
+
+            <div className="rounded-2xl border border-border/50 bg-muted/30 px-4 py-3 text-sm text-muted-foreground sm:max-w-xl">
+              <p className="font-semibold text-foreground">{t('connectionStyle')}</p>
+              <p className="mt-1">{socialCue}</p>
+            </div>
 
             {/* Actions */}
             <div className="mt-1 flex flex-wrap justify-center gap-2 sm:justify-start">
@@ -217,7 +225,7 @@ export default async function ProfilePage({ params }: Props) {
             { value: stats.events_created, label: t('eventsCreated'), icon: Calendar },
             { value: stats.events_attended, label: t('eventsAttended'), icon: Users },
             { value: stats.avg_organizer_rating > 0 ? stats.avg_organizer_rating : '-', label: t('rating'), icon: Star, isStar: true },
-            { value: stats.follower_count, label: 'Followers', icon: Sparkles },
+            { value: stats.follower_count, label: t('followers'), icon: Sparkles },
           ].map(({ value, label, icon: Icon, isStar }) => (
             <div key={label} className="flex flex-col items-center gap-0.5 py-4">
               <div className="flex items-center gap-1">
@@ -310,7 +318,7 @@ export default async function ProfilePage({ params }: Props) {
           <div className="rounded-2xl border border-border/40 bg-card p-5 shadow-sm">
             <h3 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               <Star className="h-4 w-4" />
-              Badges
+              {t('badgesTitle')}
             </h3>
             <div className="flex flex-wrap gap-2">
               {badges.map((ub: { badge_id: string; badges: { icon: string; translations: Record<string, string> } }) => (
@@ -332,6 +340,11 @@ export default async function ProfilePage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <div className="mb-5 flex items-center gap-2 text-sm text-muted-foreground">
+        <Link href="/groups" className="transition-colors hover:text-foreground">{t('breadcrumbs')}</Link>
+        <span>/</span>
+        <span className="truncate">{profile.display_name}</span>
+      </div>
       <ProfileTabs
         isOwnProfile={isOwnProfile}
         isAuthenticated={!!currentUser}

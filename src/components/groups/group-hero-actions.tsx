@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { Bell, BellOff, Share2 } from 'lucide-react';
 import { useGroupSubscription } from '@/hooks/use-group-subscription';
 import { toast } from 'sonner';
@@ -11,6 +12,8 @@ interface GroupHeroActionsProps {
 }
 
 export function GroupHeroActions({ groupId, initialSubscribed, isAuthenticated }: GroupHeroActionsProps) {
+  const t = useTranslations('groups');
+  const tCommon = useTranslations('common');
   const { subscribed, toggle } = useGroupSubscription(groupId, initialSubscribed, isAuthenticated);
 
   async function handleShare() {
@@ -19,7 +22,7 @@ export function GroupHeroActions({ groupId, initialSubscribed, isAuthenticated }
       await navigator.share({ url });
     } else {
       await navigator.clipboard.writeText(url);
-      toast.success('Link copied!');
+      toast.success(tCommon('linkCopied'));
     }
   }
 
@@ -29,7 +32,7 @@ export function GroupHeroActions({ groupId, initialSubscribed, isAuthenticated }
         <button
           onClick={toggle}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-md transition-all hover:bg-white/25 hover:scale-110"
-          title={subscribed ? 'Unsubscribe' : 'Subscribe'}
+          title={subscribed ? t('unsubscribe') : t('subscribe')}
         >
           {subscribed ? <BellOff className="h-5 w-5" /> : <Bell className="h-5 w-5" />}
         </button>
@@ -37,7 +40,7 @@ export function GroupHeroActions({ groupId, initialSubscribed, isAuthenticated }
       <button
         onClick={handleShare}
         className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-md transition-all hover:bg-white/25 hover:scale-110"
-        title="Share"
+        title={tCommon('share')}
       >
         <Share2 className="h-5 w-5" />
       </button>

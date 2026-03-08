@@ -7,7 +7,7 @@ import { EventsFilters } from '@/components/events/events-filters';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
-import { CalendarPlus } from 'lucide-react';
+import { CalendarPlus, Sparkles, UsersRound, Languages } from 'lucide-react';
 
 export default async function EventsPage({
   params,
@@ -21,6 +21,7 @@ export default async function EventsPage({
 
   const filters = await searchParams;
   const t = await getTranslations('events');
+  const tPage = await getTranslations('events.page');
   const user = await getUser();
   const [interests, interestCategories] = await Promise.all([
     getInterests(),
@@ -49,36 +50,77 @@ export default async function EventsPage({
 
   return (
     <div>
-      {/* Hero banner */}
-      <section className="relative overflow-hidden bg-gray-900">
+      <section className="relative overflow-hidden bg-slate-950">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=1600&q=80')" }}
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1800&q=80')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/70 via-gray-900/50 to-gray-900/90" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.14),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.18),transparent_30%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/60 to-slate-950/92" />
 
-        <div className="relative z-10 container mx-auto px-4 pt-24 pb-16">
-          <div className="mb-10 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
+        <div className="relative z-10 container mx-auto px-4 pt-20 pb-14 md:pt-24 md:pb-18">
+          <div className="grid items-end gap-10 lg:grid-cols-[1.15fr_0.85fr]">
             <div>
-              <h1 className="text-5xl font-extrabold tracking-tight text-white drop-shadow-lg md:text-6xl">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/90 backdrop-blur-sm">
+                <Sparkles className="h-4 w-4" />
+                {tPage('heroBadge')}
+              </div>
+              <h1 className="text-5xl font-bold tracking-tight text-white drop-shadow-lg md:text-6xl">
                 {t('title')}
               </h1>
-              <p className="mt-3 text-xl text-white/80 drop-shadow">
-                Discover events near you
+              <p className="mt-3 max-w-2xl text-xl text-white/80 drop-shadow">
+                {tPage('subtitle')}
               </p>
+              <div className="mt-6 flex flex-wrap gap-2">
+                {[
+                  tPage('trust1'),
+                  tPage('trust2'),
+                  tPage('trust3'),
+                ].map((item) => (
+                  <span key={item} className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/85 backdrop-blur-sm">
+                    {item}
+                  </span>
+                ))}
+              </div>
+              <div className="mt-8 flex flex-wrap gap-3">
+                {user && (
+                  <Button asChild size="lg" className="rounded-full px-6 shadow-xl">
+                    <Link href="/events/create" className="flex items-center gap-2">
+                      <CalendarPlus className="h-5 w-5" />
+                      {tPage('createCta')}
+                    </Link>
+                  </Button>
+                )}
+              </div>
             </div>
-            {user && (
-              <Button asChild size="lg" className="rounded-full px-6 shadow-xl transition-transform hover:scale-105">
-                <Link href="/events/create" className="flex items-center gap-2">
-                  <CalendarPlus className="h-5 w-5" />
-                  Create event
-                </Link>
-              </Button>
-            )}
+
+            <div className="rounded-[2rem] border border-white/15 bg-white/10 p-4 shadow-2xl backdrop-blur-md">
+              <div className="rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5 text-white">
+                <p className="text-xs uppercase tracking-[0.18em] text-white/55">{tPage('sideLabel')}</p>
+                <div className="mt-4 space-y-3">
+                  {[
+                    { icon: UsersRound, title: tPage('sideItem1Title'), body: tPage('sideItem1Body') },
+                    { icon: Languages, title: tPage('sideItem2Title'), body: tPage('sideItem2Body') },
+                    { icon: Sparkles, title: tPage('sideItem3Title'), body: tPage('sideItem3Body') },
+                  ].map(({ icon: Icon, title, body }) => (
+                    <div key={title} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                      <div className="flex items-start gap-3">
+                        <span className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10">
+                          <Icon className="h-4 w-4" />
+                        </span>
+                        <div>
+                          <p className="font-semibold">{title}</p>
+                          <p className="mt-1 text-sm text-white/65">{body}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Filter bar */}
-          <div className="rounded-2xl bg-white/10 p-2 backdrop-blur-md">
+          <div className="mt-10 rounded-[1.9rem] border border-border/70 bg-background/92 p-4 shadow-2xl backdrop-blur-xl supports-[backdrop-filter]:bg-background/80">
             <EventsFilters
               interests={interests}
               categories={interestCategories}
@@ -88,19 +130,29 @@ export default async function EventsPage({
         </div>
       </section>
 
-      {/* Events grid */}
       <section className="container mx-auto px-4 py-12">
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">{tPage('sectionLabel')}</p>
+            <h2 className="mt-1 text-3xl font-bold tracking-tight">
+              {events.length > 0 ? tPage('resultsTitle', { count: events.length }) : tPage('noResultsTitle')}
+            </h2>
+          </div>
+          <p className="max-w-xl text-sm text-muted-foreground">
+            {tPage('sectionBody')}
+          </p>
+        </div>
         {events.length === 0 ? (
           <EmptyState
             icon="events"
             title={t('noEvents')}
-            description="Try adjusting your filters or check back later"
+            description={tPage('emptyDescription')}
           >
             {user && (
               <Button asChild>
                 <Link href="/events/create" className="flex items-center gap-2">
                   <CalendarPlus className="h-4 w-4" />
-                  Create event
+                  {tPage('createCta')}
                 </Link>
               </Button>
             )}

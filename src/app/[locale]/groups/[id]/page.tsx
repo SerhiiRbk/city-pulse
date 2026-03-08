@@ -67,10 +67,21 @@ export default async function GroupDetailPage({ params }: Props) {
     : [{ isMember: false, isSubscribed: false, role: null }, false, { goingSet: new Set<string>(), favoritedSet: new Set<string>() }];
   const t = await getTranslations('groups');
   const tDetail = await getTranslations('groups.detail');
+  const communityCue = group.member_count > 50
+    ? tDetail('communityCueEstablished')
+    : group.event_count > 2
+      ? tDetail('communityCueActive')
+      : tDetail('communityCueStarter');
+  const countryDisplay = group.country
+    ? (() => {
+      const c = COUNTRIES.find((co) => co.code === group.country);
+      return c ? ((c as Record<string, string>)[locale] || c.en) : group.country;
+    })()
+    : null;
+  const locationLabel = [group.city, countryDisplay].filter(Boolean).join(', ');
 
   return (
     <div className="min-h-screen">
-      {/* Hero cover with overlay */}
       <div className="relative h-64 sm:h-80 md:h-96">
         {group.cover_url ? (
           <img src={group.cover_url} alt={group.name} className="h-full w-full object-cover" />
@@ -90,42 +101,67 @@ export default async function GroupDetailPage({ params }: Props) {
           />
         </div>
 
-        {/* Title overlay — centered */}
-        <div className="absolute inset-0 flex items-center justify-center px-4">
-          <h1 className="text-center text-3xl font-bold tracking-tight text-white drop-shadow-lg sm:text-4xl md:text-5xl">
-            {group.name}
-          </h1>
+        <div className="absolute inset-x-0 bottom-0 z-10 px-4 pb-8">
+          <div className="container mx-auto">
+            <div className="max-w-3xl">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/90 backdrop-blur-sm">
+                <Users className="h-4 w-4" />
+                {tDetail('communityVibe')}
+              </div>
+              <h1 className="text-3xl font-bold tracking-tight text-white drop-shadow-lg sm:text-4xl md:text-5xl">
+                {group.name}
+              </h1>
+              <p className="mt-3 max-w-2xl text-sm text-white/80 sm:text-base">
+                {communityCue}
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/90 backdrop-blur-sm">
+                  {t('members', { count: group.member_count })}
+                </span>
+                <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/90 backdrop-blur-sm">
+                  {tDetail('eventsCount', { count: group.event_count })}
+                </span>
+                {locationLabel && (
+                  <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/90 backdrop-blur-sm">
+                    {locationLabel}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Main content: left sidebar + tabs + right sidebar */}
       <div className="container mx-auto grid grid-cols-1 gap-6 px-4 py-8 lg:grid-cols-[260px_1fr_260px]">
+        <div className="order-0 col-span-full flex items-center gap-2 text-sm text-muted-foreground">
+          <Link href="/groups" className="transition-colors hover:text-foreground">{tDetail('breadcrumbs')}</Link>
+          <span>/</span>
+          <span className="truncate">{group.name}</span>
+        </div>
 
         {/* LEFT sidebar — About */}
         <aside className="order-2 lg:order-1 lg:sticky lg:top-24 lg:self-start">
-          <div className="divide-y divide-border/50 overflow-hidden rounded-2xl border border-border/50 bg-card shadow-sm">
-            {/* Location */}
-            {(group.country || group.city) && (
+          <div className="divide-y divide-border/50 overflow-hidden rounded-3xl border border-border/50 bg-card shadow-sm">
+            <div className="bg-primary/5 px-5 py-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{tDetail('communityVibe')}</p>
+              <p className="mt-2 text-sm text-foreground">{communityCue}</p>
+            </div>
+            {locationLabel && (
               <div className="flex items-center gap-2.5 px-5 py-4">
                 <MapPin className="text-primary h-4 w-4 shrink-0" />
-                <span className="text-sm">
-                  {group.country && (() => {
-                    const c = COUNTRIES.find((co) => co.code === group.country);
-                    return c ? ((c as Record<string, string>)[locale] || c.en) : group.country;
-                  })()}
-                  {group.country && group.city && ', '}
-                  {group.city}
-                </span>
+                <span className="text-sm">{locationLabel}</span>
               </div>
             )}
 
-            {/* Slug link */}
             {group.slug && (
               <div className="flex items-center gap-2.5 px-5 py-3">
                 <Link2 className="h-4 w-4 shrink-0 text-muted-foreground" />
-                <span className="truncate font-mono text-xs text-muted-foreground">
-                  /groups/{group.country ? group.country.toLowerCase() : 'global'}/{group.slug}
-                </span>
+                <div className="min-w-0">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{tDetail('directLink')}</p>
+                  <p className="truncate font-mono text-xs text-muted-foreground">
+                    /groups/{group.country ? group.country.toLowerCase() : 'global'}/{group.slug}
+                  </p>
+                </div>
               </div>
             )}
 
@@ -178,7 +214,7 @@ export default async function GroupDetailPage({ params }: Props) {
 
         {/* RIGHT sidebar — Creator, Stats, Actions */}
         <aside className="order-1 lg:order-3 lg:sticky lg:top-24 lg:self-start">
-          <div className="divide-y divide-border/50 overflow-hidden rounded-2xl border border-border/50 bg-card shadow-sm">
+          <div className="divide-y divide-border/50 overflow-hidden rounded-3xl border border-border/50 bg-card shadow-sm">
             {/* Creator */}
             {group.creator_name && (
               <Link
@@ -206,7 +242,7 @@ export default async function GroupDetailPage({ params }: Props) {
               <div className="flex flex-col items-center bg-card py-3.5">
                 <Calendar className="text-primary mb-1 h-4 w-4" />
                 <span className="text-foreground text-sm font-bold">{group.event_count}</span>
-                <span className="text-muted-foreground text-xs">{t('events')}</span>
+                <span className="text-muted-foreground text-xs">{tDetail('eventsLabel')}</span>
               </div>
             </div>
 

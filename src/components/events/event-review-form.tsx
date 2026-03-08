@@ -29,7 +29,7 @@ export function EventReviewForm({ eventId }: EventReviewFormProps) {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success('Review submitted!');
+      toast.success(t('reviewSubmitted'));
       setSubmitted(true);
     }
     setLoading(false);
@@ -39,7 +39,7 @@ export function EventReviewForm({ eventId }: EventReviewFormProps) {
     return (
       <Card>
         <CardContent className="py-6 text-center">
-          <p className="text-muted-foreground">Thanks for your review!</p>
+          <p className="text-muted-foreground">{t('thanksReview')}</p>
         </CardContent>
       </Card>
     );
@@ -76,7 +76,7 @@ export function EventReviewForm({ eventId }: EventReviewFormProps) {
           onChange={(e) => setComment(e.target.value)}
           rows={3}
           maxLength={500}
-          placeholder="Share your experience (optional)"
+          placeholder={t('reviewPlaceholder')}
           className="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         />
         <Button onClick={handleSubmit} disabled={rating === 0 || loading}>

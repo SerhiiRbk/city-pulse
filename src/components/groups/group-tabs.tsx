@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { EventCard } from '@/components/events/event-card';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -74,7 +75,7 @@ export function GroupTabs({
         setCommentText('');
       }
     } catch {
-      toast.error('Failed to send comment');
+      toast.error(t('commentSendError'));
     } finally {
       setSending(false);
     }
@@ -89,7 +90,7 @@ export function GroupTabs({
         setComments((prev: any[]) => prev.filter((c: any) => c.id !== commentId));
       }
     } catch {
-      toast.error('Failed to delete comment');
+      toast.error(t('commentDeleteError'));
     }
   }
 
@@ -109,7 +110,7 @@ export function GroupTabs({
         router.push(`/groups/${groupId}/albums/${result.album.id}`);
       }
     } catch {
-      toast.error('Failed to create album');
+      toast.error(t('albumCreateError'));
     } finally {
       setCreatingAlbum(false);
     }
@@ -138,7 +139,7 @@ export function GroupTabs({
 
   return (
     <Tabs defaultValue="upcoming">
-      <TabsList variant="line" className="w-full justify-start border-b border-border/50">
+      <TabsList variant="line" className="h-auto w-full flex-nowrap justify-start gap-1 overflow-x-auto rounded-2xl border border-border/50 bg-card p-1 shadow-sm scrollbar-none">
         <TabsTrigger value="upcoming" className="gap-1.5 relative">
           <Calendar className="h-4 w-4" />
           <span className="hidden sm:inline">{t('eventsTitle')}</span>
@@ -169,9 +170,8 @@ export function GroupTabs({
       {/* Upcoming Events */}
       <TabsContent value="upcoming" className="pt-6">
         {upcomingEvents.length === 0 ? (
-          <div className="flex flex-col items-center py-16">
-            <Calendar className="text-muted-foreground/30 mb-3 h-12 w-12" />
-            <p className="text-muted-foreground text-sm">{t('noEvents')}</p>
+          <div className="rounded-[2rem] border border-border/50 bg-card p-6 shadow-sm">
+            <EmptyState icon="events" title={t('noEvents')} className="py-10" />
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -185,9 +185,8 @@ export function GroupTabs({
       {/* Past Events */}
       <TabsContent value="past" className="pt-6">
         {pastEvents.length === 0 ? (
-          <div className="flex flex-col items-center py-16">
-            <History className="text-muted-foreground/30 mb-3 h-12 w-12" />
-            <p className="text-muted-foreground text-sm">{t('noPastEvents')}</p>
+          <div className="rounded-[2rem] border border-border/50 bg-card p-6 shadow-sm">
+            <EmptyState icon="calendar" title={t('noPastEvents')} className="py-10" />
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -235,9 +234,8 @@ export function GroupTabs({
         )}
 
         {albums.length === 0 && !showNewAlbum ? (
-          <div className="flex flex-col items-center py-16">
-            <ImageIcon className="text-muted-foreground/30 mb-3 h-12 w-12" />
-            <p className="text-muted-foreground text-sm">{t('noPhotos')}</p>
+          <div className="rounded-[2rem] border border-border/50 bg-card p-6 shadow-sm">
+            <EmptyState icon="photos" title={t('noPhotos')} className="py-10" />
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
@@ -276,9 +274,8 @@ export function GroupTabs({
       {/* Members */}
       <TabsContent value="members" className="pt-6">
         {members.length === 0 ? (
-          <div className="flex flex-col items-center py-16">
-            <Users className="text-muted-foreground/30 mb-3 h-12 w-12" />
-            <p className="text-muted-foreground text-sm">{t('noMembers')}</p>
+          <div className="rounded-[2rem] border border-border/50 bg-card p-6 shadow-sm">
+            <EmptyState icon="groups" title={t('noMembers')} className="py-10" />
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -329,9 +326,8 @@ export function GroupTabs({
         )}
 
         {comments.length === 0 ? (
-          <div className="flex flex-col items-center py-16">
-            <MessageCircle className="text-muted-foreground/30 mb-3 h-12 w-12" />
-            <p className="text-muted-foreground text-sm">{t('noComments')}</p>
+          <div className="rounded-[2rem] border border-border/50 bg-card p-6 shadow-sm">
+            <EmptyState icon="messages" title={t('noComments')} className="py-10" />
           </div>
         ) : (
           <div className="space-y-1">

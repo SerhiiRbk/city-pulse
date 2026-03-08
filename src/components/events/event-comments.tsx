@@ -24,6 +24,7 @@ interface EventCommentsProps {
 
 export function EventComments({ eventId, initialComments, isAuthenticated }: EventCommentsProps) {
   const t = useTranslations('events.detail');
+  const tCommon = useTranslations('common');
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [text, setText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -48,12 +49,12 @@ export function EventComments({ eventId, initialComments, isAuthenticated }: Eve
       <h3 className="text-lg font-semibold">{t('comments')}</h3>
 
       {comments.length === 0 && (
-        <p className="text-muted-foreground text-sm">No comments yet.</p>
+        <p className="text-muted-foreground text-sm">{t('noComments')}</p>
       )}
 
       <div className="space-y-1">
         {comments.map((comment) => {
-          const name = comment.profiles?.display_name || 'User';
+          const name = comment.profiles?.display_name || tCommon('user');
           const initials = name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
           return (
             <div key={comment.id} className="hover:bg-muted/30 flex gap-4 rounded-2xl p-4 transition-colors">
@@ -86,7 +87,7 @@ export function EventComments({ eventId, initialComments, isAuthenticated }: Eve
           />
           <Button type="submit" disabled={isLoading || !text.trim()} className="shrink-0 rounded-xl px-6">
             {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
-            Send
+            {tCommon('send')}
           </Button>
         </form>
       )}
