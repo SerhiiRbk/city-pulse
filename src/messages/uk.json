@@ -462,7 +462,17 @@
       "postUpdateError": "Не вдалося оновити пост",
       "postDeleteError": "Не вдалося видалити пост",
       "deletePost": "Видалити пост",
-      "linkedEvent": "Пов'язана подія"
+      "linkedEvent": "Пов'язана подія",
+      "openPost": "Відкрити пост",
+      "postBodyTitle": "Повний текст",
+      "viewLinkedEvent": "Відкрити подію",
+      "backToGroup": "Назад до групи",
+      "editInGroupFeed": "Редагувати у стрічці групи",
+      "postCommentsTitle": "Коментарі",
+      "postNoComments": "Коментарів поки немає.",
+      "postAddComment": "Додати коментар",
+      "deletePostComment": "Видалити коментар",
+      "postCommentDeleted": "Коментар видалено"
     },
     "editGroup": {
       "title": "Редагувати групу",

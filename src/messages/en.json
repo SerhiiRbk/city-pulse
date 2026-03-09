@@ -462,7 +462,17 @@
       "postUpdateError": "Failed to update post",
       "postDeleteError": "Failed to delete post",
       "deletePost": "Delete post",
-      "linkedEvent": "Linked event"
+      "linkedEvent": "Linked event",
+      "openPost": "Open post",
+      "postBodyTitle": "Full post",
+      "viewLinkedEvent": "Open event",
+      "backToGroup": "Back to group",
+      "editInGroupFeed": "Edit in group feed",
+      "postCommentsTitle": "Comments",
+      "postNoComments": "No comments yet.",
+      "postAddComment": "Add a comment",
+      "deletePostComment": "Delete comment",
+      "postCommentDeleted": "Comment deleted"
     },
     "editGroup": {
       "title": "Edit group",

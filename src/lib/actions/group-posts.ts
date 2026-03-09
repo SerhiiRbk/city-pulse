@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { canEditGroup } from '@/lib/actions/groups';
 import { nanoid } from 'nanoid';
-import type { GroupPost, GroupPostMedia, GroupPostType } from '@/types/database';
+import type { GroupPost, GroupPostComment, GroupPostMedia, GroupPostType } from '@/types/database';
 
 const MAX_POST_IMAGES = 6;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
@@ -33,6 +33,10 @@ export interface GroupGalleryImageOption {
   caption: string | null;
   album_id: string;
   album_title: string;
+}
+
+export interface GroupPostCommentWithProfile extends GroupPostComment {
+  profiles: GroupPostAuthor | null;
 }
 
 function normalizeSingleRelation<T>(value: T | T[] | null | undefined): T | null {
@@ -98,6 +102,44 @@ export async function getGroupPostByEventId(eventId: string): Promise<GroupPostW
       media?: GroupPostMedia[] | null;
     })
     : null;
+}
+
+export async function getGroupPost(postId: string): Promise<GroupPostWithRelations | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('group_posts')
+    .select(`
+      *,
+      profiles:author_id(id, display_name, avatar_url),
+      events:event_id(id, title, starts_at),
+      media:group_post_media(*)
+    `)
+    .eq('id', postId)
+    .maybeSingle();
+
+  return data
+    ? normalizeGroupPost(data as GroupPost & {
+      profiles?: GroupPostAuthor[] | GroupPostAuthor | null;
+      events?: GroupPostEvent[] | GroupPostEvent | null;
+      media?: GroupPostMedia[] | null;
+    })
+    : null;
+}
+
+export async function getGroupPostComments(postId: string): Promise<GroupPostCommentWithProfile[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('group_post_comments')
+    .select('*, profiles:user_id(id, display_name, avatar_url)')
+    .eq('post_id', postId)
+    .order('created_at', { ascending: true });
+
+  return ((data || []) as Array<GroupPostComment & {
+    profiles?: GroupPostAuthor[] | GroupPostAuthor | null;
+  }>).map((comment) => ({
+    ...comment,
+    profiles: normalizeSingleRelation(comment.profiles),
+  }));
 }
 
 export async function createGroupPost(data: {
@@ -218,6 +260,68 @@ export async function updateGroupPost(postId: string, data: { title: string; con
       media?: GroupPostMedia[] | null;
     }),
   };
+}
+
+export async function addGroupPostComment(postId: string, content: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const text = content.trim();
+  if (!text) return { error: 'Comment is required' };
+
+  const { data: post } = await supabase
+    .from('group_posts')
+    .select('id')
+    .eq('id', postId)
+    .single();
+
+  if (!post) return { error: 'Post not found' };
+
+  const { data: comment, error } = await supabase
+    .from('group_post_comments')
+    .insert({
+      post_id: postId,
+      user_id: user.id,
+      content: text,
+    })
+    .select('*, profiles:user_id(id, display_name, avatar_url)')
+    .single();
+
+  if (error) return { error: error.message };
+  return {
+    success: true,
+    comment: {
+      ...(comment as GroupPostComment),
+      profiles: normalizeSingleRelation((comment as { profiles?: GroupPostAuthor[] | GroupPostAuthor | null }).profiles),
+    } satisfies GroupPostCommentWithProfile,
+  };
+}
+
+export async function deleteGroupPostComment(commentId: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const { data: comment } = await supabase
+    .from('group_post_comments')
+    .select('id')
+    .eq('id', commentId)
+    .single();
+
+  if (!comment) return { error: 'Comment not found' };
+
+  const { error } = await supabase
+    .from('group_post_comments')
+    .delete()
+    .eq('id', commentId);
+
+  if (error) return { error: error.message };
+  return { success: true };
 }
 
 async function getPostForEdit(postId: string) {

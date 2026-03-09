@@ -93,3 +93,34 @@ export function generateProfileJsonLd(profile: {
       : {}),
   };
 }
+
+export function generateArticleJsonLd(article: {
+  id: string;
+  title: string;
+  content: string;
+  published_at: string;
+  updated_at?: string;
+  image?: string | null;
+  author_name?: string | null;
+  localePath: string;
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.content?.slice(0, 200),
+    image: article.image || undefined,
+    datePublished: article.published_at,
+    dateModified: article.updated_at || article.published_at,
+    author: {
+      '@type': 'Person',
+      name: article.author_name || 'Unknown',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+    mainEntityOfPage: `${SITE_URL}${article.localePath}`,
+  };
+}

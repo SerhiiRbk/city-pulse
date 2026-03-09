@@ -163,6 +163,14 @@ export interface GroupPostMedia {
   created_at: string;
 }
 
+export interface GroupPostComment {
+  id: string;
+  post_id: string;
+  user_id: string;
+  content: string;
+  created_at: string;
+}
+
 export interface GroupMember {
   group_id: string;
   user_id: string;

@@ -462,7 +462,17 @@
       "postUpdateError": "Příspěvek se nepodařilo aktualizovat",
       "postDeleteError": "Příspěvek se nepodařilo smazat",
       "deletePost": "Smazat příspěvek",
-      "linkedEvent": "Propojená akce"
+      "linkedEvent": "Propojená akce",
+      "openPost": "Otevřít příspěvek",
+      "postBodyTitle": "Celý příspěvek",
+      "viewLinkedEvent": "Otevřít akci",
+      "backToGroup": "Zpět do skupiny",
+      "editInGroupFeed": "Upravit ve feedu skupiny",
+      "postCommentsTitle": "Komentáře",
+      "postNoComments": "Zatím žádné komentáře.",
+      "postAddComment": "Přidat komentář",
+      "deletePostComment": "Smazat komentář",
+      "postCommentDeleted": "Komentář smazán"
     },
     "editGroup": {
       "title": "Upravit skupinu",

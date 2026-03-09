@@ -888,6 +888,14 @@ export function GroupPostsTab({
                 ) : (
                   <div className="px-5 py-5">
                     <h3 className="text-lg font-semibold text-foreground">{post.title}</h3>
+                    <div className="mt-2">
+                      <Link
+                        href={`/groups/${groupId}/posts/${post.id}`}
+                        className="text-sm font-medium text-primary hover:underline"
+                      >
+                        {t('openPost')}
+                      </Link>
+                    </div>
                     <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-muted-foreground">
                       {post.content}
                     </p>

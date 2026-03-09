@@ -462,7 +462,17 @@
       "postUpdateError": "Не удалось обновить пост",
       "postDeleteError": "Не удалось удалить пост",
       "deletePost": "Удалить пост",
-      "linkedEvent": "Связанное событие"
+      "linkedEvent": "Связанное событие",
+      "openPost": "Открыть пост",
+      "postBodyTitle": "Полный текст",
+      "viewLinkedEvent": "Открыть событие",
+      "backToGroup": "Назад в группу",
+      "editInGroupFeed": "Редактировать в ленте группы",
+      "postCommentsTitle": "Комментарии",
+      "postNoComments": "Комментариев пока нет.",
+      "postAddComment": "Добавить комментарий",
+      "deletePostComment": "Удалить комментарий",
+      "postCommentDeleted": "Комментарий удалён"
     },
     "editGroup": {
       "title": "Редактировать группу",

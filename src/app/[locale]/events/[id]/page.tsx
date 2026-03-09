@@ -188,7 +188,7 @@ export default async function EventDetailPage({ params }: Props) {
                         {t('recapPublishedHint')}
                       </p>
                       <div className="mt-3">
-                        <Link href={`/groups/${event.group_id}?tab=posts`} className="text-sm font-medium hover:underline">
+                        <Link href={`/groups/${event.group_id}/posts/${recap.id}`} className="text-sm font-medium hover:underline">
                           {recap.title}
                         </Link>
                       </div>
@@ -204,7 +204,7 @@ export default async function EventDetailPage({ params }: Props) {
                   <Link
                     href={
                       recap
-                        ? `/groups/${event.group_id}?tab=posts`
+                        ? `/groups/${event.group_id}/posts/${recap.id}`
                         : `/groups/${event.group_id}?tab=posts&compose=recap&event=${id}`
                     }
                   >

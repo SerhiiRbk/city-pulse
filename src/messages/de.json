@@ -462,7 +462,17 @@
       "postUpdateError": "Beitrag konnte nicht aktualisiert werden",
       "postDeleteError": "Beitrag konnte nicht gelöscht werden",
       "deletePost": "Beitrag löschen",
-      "linkedEvent": "Verknüpftes Event"
+      "linkedEvent": "Verknüpftes Event",
+      "openPost": "Beitrag öffnen",
+      "postBodyTitle": "Vollständiger Beitrag",
+      "viewLinkedEvent": "Event öffnen",
+      "backToGroup": "Zurück zur Gruppe",
+      "editInGroupFeed": "Im Gruppenfeed bearbeiten",
+      "postCommentsTitle": "Kommentare",
+      "postNoComments": "Noch keine Kommentare.",
+      "postAddComment": "Kommentar hinzufügen",
+      "deletePostComment": "Kommentar löschen",
+      "postCommentDeleted": "Kommentar gelöscht"
     },
     "editGroup": {
       "title": "Gruppe bearbeiten",
