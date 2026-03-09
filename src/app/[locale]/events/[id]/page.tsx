@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { getEvent, getUserAttendance, getEventAttendees, getComments, canEditEvent } from '@/lib/actions/events';
+import { getGroupPostByEventId } from '@/lib/actions/group-posts';
 import { Button } from '@/components/ui/button';
 import { getUser } from '@/lib/actions/auth';
 import { EventActions } from '@/components/events/event-actions';
@@ -25,6 +26,8 @@ import type { Metadata } from 'next';
 type Props = {
   params: Promise<{ locale: string; id: string }>;
 };
+
+type EventAttendee = Awaited<ReturnType<typeof getEventAttendees>>[number];
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
@@ -61,6 +64,7 @@ export default async function EventDetailPage({ params }: Props) {
     : { going: false, favorited: false };
   const attendees = await getEventAttendees(id);
   const comments = await getComments(id);
+  const recap = event.group_id ? await getGroupPostByEventId(id) : null;
 
   const spotsLeft = event.max_attendees ? event.max_attendees - (event.going_count || 0) : null;
   const categoryLabel = event.category_translations?.[locale] || event.category_translations?.['en'] || '';
@@ -172,6 +176,44 @@ export default async function EventDetailPage({ params }: Props) {
               {event.description}
             </div>
           </div>
+
+          {event.group_id && event.status === 'completed' && (
+            <div className="rounded-[2rem] border border-border/50 bg-card shadow-sm">
+              <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+                <div className="min-w-0">
+                  <h2 className="text-base font-semibold">{t('recapTitle')}</h2>
+                  {recap ? (
+                    <>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {t('recapPublishedHint')}
+                      </p>
+                      <div className="mt-3">
+                        <Link href={`/groups/${event.group_id}?tab=posts`} className="text-sm font-medium hover:underline">
+                          {recap.title}
+                        </Link>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {canEdit ? t('recapCreateHint') : t('recapPendingHint')}
+                    </p>
+                  )}
+                </div>
+
+                <Button variant={recap ? 'outline' : 'default'} asChild className="rounded-xl">
+                  <Link
+                    href={
+                      recap
+                        ? `/groups/${event.group_id}?tab=posts`
+                        : `/groups/${event.group_id}?tab=posts&compose=recap&event=${id}`
+                    }
+                  >
+                    {recap ? t('viewRecap') : t('writeRecap')}
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          )}
 
           {canEdit && (
             <div className="flex flex-wrap items-center gap-3">
@@ -305,12 +347,13 @@ export default async function EventDetailPage({ params }: Props) {
               <CardContent className="pt-6">
                 <h3 className="mb-3 font-semibold">{t('attendees')}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {attendees.slice(0, 12).map((a: any) => {
-                    const name = a.profiles?.display_name || 'User';
+                  {attendees.slice(0, 12).map((a: EventAttendee) => {
+                    const profile = Array.isArray(a.profiles) ? a.profiles[0] : a.profiles;
+                    const name = profile?.display_name || 'User';
                     const initials = name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
                     return (
                       <Avatar key={a.user_id} className="h-8 w-8" title={name}>
-                        <AvatarImage src={a.profiles?.avatar_url || undefined} />
+                        <AvatarImage src={profile?.avatar_url || undefined} />
                         <AvatarFallback className="text-xs">{initials}</AvatarFallback>
                       </Avatar>
                     );

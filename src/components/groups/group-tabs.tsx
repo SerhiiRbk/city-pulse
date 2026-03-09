@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { type ComponentProps, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { EventCard } from '@/components/events/event-card';
@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Calendar, History, Image as ImageIcon, MessageCircle, Send, Trash2, Users, Plus, FolderOpen } from 'lucide-react';
 import { addGroupComment, deleteGroupComment } from '@/lib/actions/groups';
 import { createAlbum } from '@/lib/actions/albums';
+import { GroupPostsTab } from '@/components/groups/group-posts-tab';
 import { toast } from 'sonner';
 import { Link, useRouter } from '@/i18n/navigation';
 import type { Album } from '@/lib/actions/albums';
@@ -22,24 +23,44 @@ interface Member {
   profiles: { id: string; display_name: string; avatar_url: string | null };
 }
 
+type GroupEventCardData = ComponentProps<typeof EventCard>['event'];
+
+interface GroupComment {
+  id: string;
+  user_id: string;
+  content: string;
+  created_at: string;
+  profiles?: {
+    id?: string;
+    display_name?: string;
+    avatar_url?: string | null;
+  } | null;
+}
+
 interface GroupTabsProps {
   groupId: string;
-  upcomingEvents: any[];
-  pastEvents: any[];
+  upcomingEvents: GroupEventCardData[];
+  pastEvents: GroupEventCardData[];
+  posts: ComponentProps<typeof GroupPostsTab>['initialPosts'];
+  groupGalleryImages: ComponentProps<typeof GroupPostsTab>['groupGalleryImages'];
   albums: Album[];
-  comments: any[];
+  comments: GroupComment[];
   members: Member[];
   canEdit: boolean;
   isAuthenticated: boolean;
   currentUserId?: string;
   goingEventIds?: string[];
   favoritedEventIds?: string[];
+  initialTab?: string;
+  initialRecapEventId?: string;
 }
 
 export function GroupTabs({
   groupId,
   upcomingEvents,
   pastEvents,
+  posts,
+  groupGalleryImages,
   albums: initialAlbums,
   comments: initialComments,
   members,
@@ -48,13 +69,15 @@ export function GroupTabs({
   currentUserId,
   goingEventIds = [],
   favoritedEventIds = [],
+  initialTab = 'upcoming',
+  initialRecapEventId,
 }: GroupTabsProps) {
   const t = useTranslations('groups.detail');
   const goingSet = new Set(goingEventIds);
   const favSet = new Set(favoritedEventIds);
   const locale = useLocale();
   const router = useRouter();
-  const [comments, setComments] = useState(initialComments);
+  const [comments, setComments] = useState<GroupComment[]>(initialComments);
   const [albums, setAlbums] = useState(initialAlbums);
   const [commentText, setCommentText] = useState('');
   const [sending, setSending] = useState(false);
@@ -71,7 +94,7 @@ export function GroupTabs({
       if (result.error) {
         toast.error(result.error);
       } else if (result.comment) {
-        setComments((prev: any[]) => [result.comment, ...prev]);
+        setComments((prev) => [result.comment as GroupComment, ...prev]);
         setCommentText('');
       }
     } catch {
@@ -87,7 +110,7 @@ export function GroupTabs({
       if (result.error) {
         toast.error(result.error);
       } else {
-        setComments((prev: any[]) => prev.filter((c: any) => c.id !== commentId));
+        setComments((prev) => prev.filter((comment) => comment.id !== commentId));
       }
     } catch {
       toast.error(t('commentDeleteError'));
@@ -138,7 +161,7 @@ export function GroupTabs({
   }
 
   return (
-    <Tabs defaultValue="upcoming">
+    <Tabs defaultValue={initialTab}>
       <TabsList variant="line" className="h-auto w-full flex-nowrap justify-start gap-1 overflow-x-auto rounded-2xl border border-border/50 bg-card p-1 shadow-sm scrollbar-none">
         <TabsTrigger value="upcoming" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
           <Calendar className="h-4 w-4" />
@@ -154,6 +177,11 @@ export function GroupTabs({
           <ImageIcon className="h-4 w-4" />
           <span className="whitespace-nowrap text-xs sm:text-sm">{t('photosTitle')}</span>
           <CountBadge count={albums.length} />
+        </TabsTrigger>
+        <TabsTrigger value="posts" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
+          <MessageCircle className="h-4 w-4" />
+          <span className="whitespace-nowrap text-xs sm:text-sm">{t('postsTitle')}</span>
+          <CountBadge count={posts.length} />
         </TabsTrigger>
         <TabsTrigger value="members" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
           <Users className="h-4 w-4" />
@@ -271,6 +299,17 @@ export function GroupTabs({
         )}
       </TabsContent>
 
+      <TabsContent value="posts">
+        <GroupPostsTab
+          groupId={groupId}
+          initialPosts={posts}
+          groupGalleryImages={groupGalleryImages}
+          canEdit={canEdit}
+          pastEvents={pastEvents}
+          initialRecapEventId={initialRecapEventId}
+        />
+      </TabsContent>
+
       {/* Members */}
       <TabsContent value="members" className="pt-6">
         {members.length === 0 ? (
@@ -331,7 +370,7 @@ export function GroupTabs({
           </div>
         ) : (
           <div className="space-y-1">
-            {comments.map((comment: any) => (
+            {comments.map((comment) => (
               <div key={comment.id} className="group hover:bg-muted/30 flex gap-4 rounded-2xl p-5 transition-colors">
                 <Link href={`/profile/${comment.profiles?.id || comment.user_id}`}>
                   <Avatar className="h-10 w-10 shrink-0">

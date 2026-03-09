@@ -2,6 +2,25 @@
 
 import { createClient } from '@/lib/supabase/server';
 
+interface ManageableGroupRow {
+  groups: {
+    id: string;
+    name: string;
+    cover_url: string | null;
+    country: string | null;
+    city: string | null;
+    city_id: string | null;
+  } | null;
+}
+
+interface GroupInterestItem {
+  id: string;
+  slug: string;
+  icon: string | null;
+  translations: Record<string, string> | null;
+  category_id: string;
+}
+
 export async function canEditGroup(groupId: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -138,7 +157,12 @@ export async function getGroupInterestsFull(groupId: string) {
     .from('group_interests')
     .select('interest_id, interests(id, slug, icon, translations, category_id)')
     .eq('group_id', groupId);
-  return (data || []).map((r: any) => r.interests).filter(Boolean);
+  const interests = (data || [])
+    .map((row) => {
+      const interest = Array.isArray(row.interests) ? row.interests[0] : row.interests;
+      return interest ?? null;
+    });
+  return interests.filter(Boolean) as GroupInterestItem[];
 }
 
 export async function getUserManageableGroups() {
@@ -152,9 +176,12 @@ export async function getUserManageableGroups() {
     .eq('user_id', user.id)
     .in('role', ['admin', 'moderator']);
 
-  return (data || [])
-    .map((m: any) => m.groups)
-    .filter(Boolean);
+  const groups = (data || []).map((member) => {
+    const group = Array.isArray(member.groups) ? member.groups[0] : member.groups;
+    return group ?? null;
+  });
+
+  return groups.filter(Boolean) as NonNullable<ManageableGroupRow['groups']>[];
 }
 
 export async function searchUsers(query: string) {
@@ -322,7 +349,7 @@ export async function getPastGroupEvents(groupId: string) {
     .from('events_with_counts')
     .select('*')
     .eq('group_id', groupId)
-    .eq('status', 'published')
+    .in('status', ['published', 'completed'])
     .lt('starts_at', new Date().toISOString())
     .order('starts_at', { ascending: false });
   return data || [];

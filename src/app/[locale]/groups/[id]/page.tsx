@@ -12,6 +12,7 @@ import {
   canEditGroup,
   getGroupInterestsFull,
 } from '@/lib/actions/groups';
+import { getGroupGalleryImages, getGroupPosts } from '@/lib/actions/group-posts';
 import { getGroupAlbums } from '@/lib/actions/albums';
 import { getUserEventStatuses } from '@/lib/actions/events';
 import { GroupActions } from '@/components/groups/group-actions';
@@ -22,11 +23,14 @@ import { Users, Calendar, Pencil, MapPin, CalendarPlus, Link2 } from 'lucide-rea
 import { GroupHeroActions } from '@/components/groups/group-hero-actions';
 import { COUNTRIES } from '@/lib/constants';
 import type { Metadata } from 'next';
-import { SITE_URL } from '@/lib/constants';
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
+  searchParams?: Promise<{ tab?: string; compose?: string; event?: string }>;
 }
+
+type GroupEvent = Awaited<ReturnType<typeof getGroupEvents>>[number];
+type GroupInterest = Awaited<ReturnType<typeof getGroupInterestsFull>>[number];
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
@@ -43,15 +47,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function GroupDetailPage({ params }: Props) {
+export default async function GroupDetailPage({ params, searchParams }: Props) {
   const { locale, id } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
   setRequestLocale(locale);
 
-  const [group, members, upcomingEvents, pastEvents, albums, comments, user, groupInterests] = await Promise.all([
+  const [group, members, upcomingEvents, pastEvents, posts, albums, comments, user, groupInterests] = await Promise.all([
     getGroup(id),
     getGroupMembers(id),
     getGroupEvents(id),
     getPastGroupEvents(id),
+    getGroupPosts(id),
     getGroupAlbums(id),
     getGroupComments(id),
     getUser(),
@@ -61,10 +67,11 @@ export default async function GroupDetailPage({ params }: Props) {
   if (!group) notFound();
 
   const isAuthenticated = !!user;
-  const allEventIds = [...upcomingEvents, ...pastEvents].map((e: any) => e.id);
+  const allEventIds = [...upcomingEvents, ...pastEvents].map((event: GroupEvent) => event.id);
   const [status, canEdit, eventStatuses] = isAuthenticated
     ? await Promise.all([getUserGroupStatus(id), canEditGroup(id), getUserEventStatuses(allEventIds)])
     : [{ isMember: false, isSubscribed: false, role: null }, false, { goingSet: new Set<string>(), favoritedSet: new Set<string>() }];
+  const groupGalleryImages = canEdit ? await getGroupGalleryImages(id) : [];
   const t = await getTranslations('groups');
   const tDetail = await getTranslations('groups.detail');
   const communityCue = group.member_count > 50
@@ -79,6 +86,9 @@ export default async function GroupDetailPage({ params }: Props) {
     })()
     : null;
   const locationLabel = [group.city, countryDisplay].filter(Boolean).join(', ');
+  const allowedTabs = new Set(['upcoming', 'past', 'photos', 'posts', 'members', 'comments']);
+  const initialTab = allowedTabs.has(resolvedSearchParams?.tab || '') ? resolvedSearchParams?.tab : 'upcoming';
+  const initialRecapEventId = resolvedSearchParams?.compose === 'recap' ? resolvedSearchParams?.event : undefined;
 
   return (
     <div className="min-h-screen">
@@ -180,7 +190,7 @@ export default async function GroupDetailPage({ params }: Props) {
               <div className="px-5 py-4">
                 <p className="text-muted-foreground mb-2.5 text-xs font-medium uppercase tracking-wider">{tDetail('interests')}</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {groupInterests.map((interest: any) => (
+                  {groupInterests.map((interest: GroupInterest) => (
                     <span
                       key={interest.id}
                       className="bg-primary/5 text-primary inline-flex items-center gap-1 rounded-full border border-primary/10 px-2.5 py-1 text-[11px] font-medium"
@@ -201,14 +211,18 @@ export default async function GroupDetailPage({ params }: Props) {
             groupId={id}
             upcomingEvents={upcomingEvents}
             pastEvents={pastEvents}
+            posts={posts}
+            groupGalleryImages={groupGalleryImages}
             albums={albums}
             comments={comments}
-            members={members as any}
+            members={members}
             canEdit={canEdit}
             isAuthenticated={isAuthenticated}
             currentUserId={user?.id}
             goingEventIds={Array.from(eventStatuses.goingSet)}
             favoritedEventIds={Array.from(eventStatuses.favoritedSet)}
+            initialTab={initialTab}
+            initialRecapEventId={initialRecapEventId}
           />
         </div>
 

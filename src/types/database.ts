@@ -138,6 +138,31 @@ export interface Group {
   updated_at: string;
 }
 
+export type GroupPostType = 'update' | 'announcement' | 'event_recap';
+
+export interface GroupPost {
+  id: string;
+  group_id: string;
+  author_id: string;
+  event_id: string | null;
+  type: GroupPostType;
+  title: string;
+  content: string;
+  published_at: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GroupPostMedia {
+  id: string;
+  post_id: string;
+  type: 'image';
+  url: string;
+  caption: string | null;
+  sort_order: number;
+  created_at: string;
+}
+
 export interface GroupMember {
   group_id: string;
   user_id: string;
