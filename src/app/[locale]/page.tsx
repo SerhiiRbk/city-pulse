@@ -14,6 +14,24 @@ import { getUserEventStatuses } from '@/lib/actions/events';
 import { EventCard } from '@/components/events/event-card';
 import { GroupCard } from '@/components/groups/group-card';
 import { generateOrganizationJsonLd } from '@/lib/json-ld';
+import { buildPageMetadata } from '@/lib/seo';
+import type { Metadata } from 'next';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: 'en' | 'ru' | 'uk' | 'cs' | 'de' }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'landing' });
+
+  return buildPageMetadata({
+    locale,
+    path: '',
+    title: t('hero.title'),
+    description: t('hero.subtitle'),
+  });
+}
 
 export default async function HomePage({
   params,
@@ -59,10 +77,10 @@ export default async function HomePage({
   ];
 
   const quickFormats = [
-    { icon: Coffee, label: t('marketing.quickFormat1') },
-    { icon: Languages, label: t('marketing.quickFormat2') },
-    { icon: UsersRound, label: t('marketing.quickFormat3') },
-    { icon: MapPin, label: t('marketing.quickFormat4') },
+    { icon: Coffee, label: t('marketing.quickFormat1'), body: t('marketing.quickFormat1Body') },
+    { icon: Languages, label: t('marketing.quickFormat2'), body: t('marketing.quickFormat2Body') },
+    { icon: UsersRound, label: t('marketing.quickFormat3'), body: t('marketing.quickFormat3Body') },
+    { icon: MapPin, label: t('marketing.quickFormat4'), body: t('marketing.quickFormat4Body') },
   ];
 
   const trustPoints = [
@@ -133,7 +151,7 @@ export default async function HomePage({
                   <p className="text-xs uppercase tracking-[0.2em] text-white/55">{t('marketing.tonightLabel')}</p>
                   <h2 className="mt-3 text-2xl font-bold">{t('marketing.quickTitle')}</h2>
                   <div className="mt-5 space-y-3">
-                    {quickFormats.map(({ icon: Icon, label }) => (
+                    {quickFormats.map(({ icon: Icon, label, body }) => (
                       <div
                         key={label}
                         className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
@@ -143,7 +161,7 @@ export default async function HomePage({
                         </span>
                         <div className="min-w-0">
                           <p className="font-medium text-white">{label}</p>
-                          <p className="text-sm text-white/60">{t('marketing.quickBody')}</p>
+                          <p className="text-sm text-white/60">{body}</p>
                         </div>
                       </div>
                     ))}

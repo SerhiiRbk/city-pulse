@@ -22,6 +22,8 @@ import { EventReviewForm } from '@/components/events/event-review-form';
 import { EventPhotoGallery } from '@/components/events/event-photo-gallery';
 import { generateEventJsonLd } from '@/lib/json-ld';
 import type { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/seo';
+import type { Locale } from '@/i18n/config';
 
 type Props = {
   params: Promise<{ locale: string; id: string }>;
@@ -30,20 +32,18 @@ type Props = {
 type EventAttendee = Awaited<ReturnType<typeof getEventAttendees>>[number];
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
+  const { locale, id } = await params;
   const event = await getEvent(id);
   if (!event) return { title: 'Not Found' };
 
-  return {
+  return buildPageMetadata({
+    locale: locale as Locale,
+    path: `/events/${event.id}`,
     title: `${event.title} | ${SITE_NAME}`,
-    description: event.description?.slice(0, 160),
-    openGraph: {
-      title: event.title,
-      description: event.description?.slice(0, 160),
-      type: 'article',
-      images: event.photos?.[0] ? [event.photos[0]] : [],
-    },
-  };
+    description: event.description?.slice(0, 160) || event.title,
+    image: event.photos?.[0] || null,
+    type: 'article',
+  });
 }
 
 export default async function EventDetailPage({ params }: Props) {
@@ -188,7 +188,7 @@ export default async function EventDetailPage({ params }: Props) {
                         {t('recapPublishedHint')}
                       </p>
                       <div className="mt-3">
-                        <Link href={`/groups/${event.group_id}/posts/${recap.id}`} className="text-sm font-medium hover:underline">
+                        <Link href={`/groups/${event.group_id}/posts/${recap.slug || recap.id}`} className="text-sm font-medium hover:underline">
                           {recap.title}
                         </Link>
                       </div>
@@ -204,7 +204,7 @@ export default async function EventDetailPage({ params }: Props) {
                   <Link
                     href={
                       recap
-                        ? `/groups/${event.group_id}/posts/${recap.id}`
+                        ? `/groups/${event.group_id}/posts/${recap.slug || recap.id}`
                         : `/groups/${event.group_id}?tab=posts&compose=recap&event=${id}`
                     }
                   >

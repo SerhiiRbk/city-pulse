@@ -23,6 +23,8 @@ import { Users, Calendar, Pencil, MapPin, CalendarPlus, Link2 } from 'lucide-rea
 import { GroupHeroActions } from '@/components/groups/group-hero-actions';
 import { COUNTRIES } from '@/lib/constants';
 import type { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/seo';
+import type { Locale } from '@/i18n/config';
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
@@ -33,18 +35,17 @@ type GroupEvent = Awaited<ReturnType<typeof getGroupEvents>>[number];
 type GroupInterest = Awaited<ReturnType<typeof getGroupInterestsFull>>[number];
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
+  const { locale, id } = await params;
   const group = await getGroup(id);
   if (!group) return {};
-  return {
+
+  return buildPageMetadata({
+    locale: locale as Locale,
+    path: `/groups/${group.id}`,
     title: `${group.name} — City-Pulse`,
-    description: group.description?.slice(0, 160),
-    openGraph: {
-      title: group.name,
-      description: group.description?.slice(0, 160),
-      images: group.cover_url ? [{ url: group.cover_url }] : undefined,
-    },
-  };
+    description: group.description?.slice(0, 160) || group.name,
+    image: group.cover_url,
+  });
 }
 
 export default async function GroupDetailPage({ params, searchParams }: Props) {

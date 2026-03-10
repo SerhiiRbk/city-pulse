@@ -25,7 +25,7 @@ export default async function VerifyEmailPage({
           <Button variant="ghost" asChild className="mt-4">
             <Link href="/login" className="flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
-              Back to login
+              {t('backToLogin')}
             </Link>
           </Button>
         </CardContent>

@@ -8,6 +8,27 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { CalendarPlus, Sparkles, UsersRound, Languages } from 'lucide-react';
+import { buildPageMetadata } from '@/lib/seo';
+import type { Metadata } from 'next';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: 'en' | 'ru' | 'uk' | 'cs' | 'de' }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const [t, tPage] = await Promise.all([
+    getTranslations({ locale, namespace: 'events' }),
+    getTranslations({ locale, namespace: 'events.page' }),
+  ]);
+
+  return buildPageMetadata({
+    locale,
+    path: '/events',
+    title: t('title'),
+    description: tPage('subtitle'),
+  });
+}
 
 export default async function EventsPage({
   params,

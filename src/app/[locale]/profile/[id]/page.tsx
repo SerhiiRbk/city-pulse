@@ -36,19 +36,26 @@ import { COUNTRIES, SITE_NAME } from '@/lib/constants';
 import type { Metadata } from 'next';
 import { SocialIcon } from '@/components/ui/social-icons';
 import type { SocialLinks } from '@/types/database';
+import { buildPageMetadata } from '@/lib/seo';
+import type { Locale } from '@/i18n/config';
 
 type Props = {
   params: Promise<{ locale: string; id: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
+  const { locale, id } = await params;
   const profile = await getProfile(id);
   if (!profile) return { title: 'Not Found' };
-  return {
+
+  return buildPageMetadata({
+    locale: locale as Locale,
+    path: `/profile/${profile.id}`,
     title: `${profile.display_name} | ${SITE_NAME}`,
     description: profile.bio || `${profile.display_name}'s profile on ${SITE_NAME}`,
-  };
+    image: profile.avatar_url,
+    type: 'profile',
+  });
 }
 
 export default async function ProfilePage({ params }: Props) {

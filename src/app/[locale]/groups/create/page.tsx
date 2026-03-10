@@ -1,8 +1,12 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { getUser } from '@/lib/actions/auth';
 import { redirect } from '@/i18n/navigation';
 import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { CreateGroupForm } from '@/components/groups/create-group-form';
+import { buildNoIndexMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildNoIndexMetadata('Create group');
 
 export default async function CreateGroupPage({
   params,

@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { getSystemEvents } from '@/lib/actions/system-events';
 import { getUserEventStatuses } from '@/lib/actions/events';
 import { getUser } from '@/lib/actions/auth';
@@ -6,6 +7,23 @@ import { EventCard } from '@/components/events/event-card';
 import { Badge } from '@/components/ui/badge';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Landmark, Sparkles } from 'lucide-react';
+import { buildPageMetadata } from '@/lib/seo';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: 'en' | 'ru' | 'uk' | 'cs' | 'de' }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'cityEvents' });
+
+  return buildPageMetadata({
+    locale,
+    path: '/city-events',
+    title: t('title'),
+    description: t('subtitle'),
+  });
+}
 
 export default async function CityEventsPage({
   params,

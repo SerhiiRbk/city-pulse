@@ -59,6 +59,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
+  const { data: posts } = await supabase
+    .from('group_posts')
+    .select('id, group_id, slug, updated_at')
+    .order('updated_at', { ascending: false })
+    .limit(1000);
+
+  if (posts) {
+    for (const post of posts) {
+      const postPath = post.slug || post.id;
+      for (const locale of locales) {
+        entries.push({
+          url: `${SITE_URL}/${locale}/groups/${post.group_id}/posts/${postPath}`,
+          lastModified: new Date(post.updated_at),
+          changeFrequency: 'monthly',
+          priority: 0.6,
+        });
+      }
+    }
+  }
+
   const { data: profiles } = await supabase
     .from('profiles')
     .select('id, updated_at')

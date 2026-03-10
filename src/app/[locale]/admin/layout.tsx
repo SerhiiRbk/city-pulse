@@ -1,4 +1,5 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { redirect } from '@/i18n/navigation';
 import { getUser } from '@/lib/actions/auth';
 import { createClient } from '@/lib/supabase/server';
@@ -13,6 +14,9 @@ import {
   Landmark,
   BarChart3,
 } from 'lucide-react';
+import { buildNoIndexMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildNoIndexMetadata('Admin');
 
 export default async function AdminLayout({
   children,

@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getUser } from '@/lib/actions/auth';
 import { getEventRaw, canEditEvent, getEventModerators } from '@/lib/actions/events';
@@ -6,6 +7,9 @@ import { getCityById } from '@/lib/actions/cities';
 import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { EditEventForm } from '@/components/events/edit-event-form';
 import type { Event } from '@/types/database';
+import { buildNoIndexMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildNoIndexMetadata('Edit event');
 
 export default async function EditEventPage({
   params,

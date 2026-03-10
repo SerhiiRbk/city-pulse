@@ -65,6 +65,7 @@ interface GroupGalleryImageOption {
 interface GroupPostItem {
   id: string;
   author_id: string;
+  slug?: string | null;
   event_id: string | null;
   type: GroupPostType;
   title: string;
@@ -630,6 +631,10 @@ export function GroupPostsTab({
     [pastEvents, posts],
   );
 
+  function getPostHref(post: GroupPostItem) {
+    return `/groups/${groupId}/posts/${post.slug || post.id}`;
+  }
+
   async function processPendingMedia(postId: string, pendingMedia: PendingMedia[]) {
     const addedMedia: GroupPostMedia[] = [];
     let errors = 0;
@@ -890,7 +895,7 @@ export function GroupPostsTab({
                     <h3 className="text-lg font-semibold text-foreground">{post.title}</h3>
                     <div className="mt-2">
                       <Link
-                        href={`/groups/${groupId}/posts/${post.id}`}
+                        href={getPostHref(post)}
                         className="text-sm font-medium text-primary hover:underline"
                       >
                         {t('openPost')}

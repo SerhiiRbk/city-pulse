@@ -99,15 +99,18 @@
     "marketing": {
       "heroBadge": "Find your people for walks, board games, language clubs, and more",
       "quickFormat1": "Coffee meetups",
+      "quickFormat1Body": "Casual conversations in a small-group setting",
       "quickFormat2": "Language clubs",
+      "quickFormat2Body": "Practice together without awkwardness or pressure",
       "quickFormat3": "Board games",
+      "quickFormat3Body": "Shared games make introductions feel easier",
       "quickFormat4": "Walks & excursions",
+      "quickFormat4Body": "Explore the city while meeting new people",
       "trustPoint1": "Small-group friendly",
       "trustPoint2": "Perfect for newcomers",
       "trustPoint3": "Multi-language communities",
       "tonightLabel": "Tonight in your city",
-      "quickTitle": "Find a social plan that already feels easy to join",
-      "quickBody": "Friendly hosts, real people, local communities",
+      "quickTitle": "Find a kind of meetup that already feels easy to join",
       "quickMeta": "Join conversations before you show up",
       "statsEvents": "Events created",
       "statsGroups": "Active groups",
@@ -157,7 +160,8 @@
     },
     "verifyEmail": {
       "title": "Check your email",
-      "subtitle": "We've sent a verification link to your email"
+      "subtitle": "We've sent a verification link to your email",
+      "backToLogin": "Back to login"
     }
   },
   "events": {

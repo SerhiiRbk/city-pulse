@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { canEditGroup } from '@/lib/actions/groups';
 import { nanoid } from 'nanoid';
 import type { GroupPost, GroupPostComment, GroupPostMedia, GroupPostType } from '@/types/database';
+import { isValidSlug, toSlug } from '@/lib/utils';
 
 const MAX_POST_IMAGES = 6;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
@@ -46,6 +47,30 @@ function normalizeSingleRelation<T>(value: T | T[] | null | undefined): T | null
 
 function normalizeManyRelation<T>(value: T[] | null | undefined): T[] {
   return Array.isArray(value) ? value : [];
+}
+
+async function generateUniquePostSlug(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  groupId: string,
+  title: string,
+) {
+  const baseSlug = toSlug(title) || 'post';
+  let candidate = baseSlug;
+  let attempt = 1;
+
+  while (true) {
+    const { data } = await supabase
+      .from('group_posts')
+      .select('id')
+      .eq('group_id', groupId)
+      .eq('slug', candidate)
+      .maybeSingle();
+
+    if (!data) return candidate;
+
+    attempt += 1;
+    candidate = `${baseSlug}-${attempt}`;
+  }
 }
 
 function normalizeGroupPost(post: GroupPost & {
@@ -126,6 +151,51 @@ export async function getGroupPost(postId: string): Promise<GroupPostWithRelatio
     : null;
 }
 
+export async function getGroupPostInGroup(groupId: string, slugOrId: string): Promise<GroupPostWithRelations | null> {
+  const supabase = await createClient();
+  const baseSelect = `
+    *,
+    profiles:author_id(id, display_name, avatar_url),
+    events:event_id(id, title, starts_at),
+    media:group_post_media(*)
+  `;
+
+  const normalized = slugOrId.toLowerCase();
+  const shouldTrySlug = isValidSlug(normalized);
+
+  if (shouldTrySlug) {
+    const { data } = await supabase
+      .from('group_posts')
+      .select(baseSelect)
+      .eq('group_id', groupId)
+      .eq('slug', normalized)
+      .maybeSingle();
+
+    if (data) {
+      return normalizeGroupPost(data as GroupPost & {
+        profiles?: GroupPostAuthor[] | GroupPostAuthor | null;
+        events?: GroupPostEvent[] | GroupPostEvent | null;
+        media?: GroupPostMedia[] | null;
+      });
+    }
+  }
+
+  const { data } = await supabase
+    .from('group_posts')
+    .select(baseSelect)
+    .eq('group_id', groupId)
+    .eq('id', slugOrId)
+    .maybeSingle();
+
+  return data
+    ? normalizeGroupPost(data as GroupPost & {
+      profiles?: GroupPostAuthor[] | GroupPostAuthor | null;
+      events?: GroupPostEvent[] | GroupPostEvent | null;
+      media?: GroupPostMedia[] | null;
+    })
+    : null;
+}
+
 export async function getGroupPostComments(postId: string): Promise<GroupPostCommentWithProfile[]> {
   const supabase = await createClient();
   const { data } = await supabase
@@ -195,6 +265,7 @@ export async function createGroupPost(data: {
     .from('group_posts')
     .insert({
       group_id: data.groupId,
+      slug: await generateUniquePostSlug(supabase, data.groupId, title),
       author_id: user.id,
       event_id: eventId,
       type: data.type,

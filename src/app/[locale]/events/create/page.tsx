@@ -1,10 +1,14 @@
 import { setRequestLocale } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getUserProfile } from '@/lib/actions/auth';
 import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { getCityById } from '@/lib/actions/cities';
 import { getUserManageableGroups } from '@/lib/actions/groups';
 import { CreateEventForm } from '@/components/events/create-event-form';
+import { buildNoIndexMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildNoIndexMetadata('Create event');
 
 export default async function CreateEventPage({
   params,

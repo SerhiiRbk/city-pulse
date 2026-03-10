@@ -1,7 +1,25 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { getUser } from '@/lib/actions/auth';
 import { getCalendarEvents, getMyCalendarEvents } from '@/lib/actions/calendar';
 import { CalendarPageClient } from '@/components/calendar/calendar-page-client';
+import { buildPageMetadata } from '@/lib/seo';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: 'en' | 'ru' | 'uk' | 'cs' | 'de' }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'calendar' });
+
+  return buildPageMetadata({
+    locale,
+    path: '/calendar',
+    title: t('title'),
+    description: t('subtitle'),
+  });
+}
 
 export default async function CalendarPage({
   params,

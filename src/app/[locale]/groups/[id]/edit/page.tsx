@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { redirect } from '@/i18n/navigation';
 import { getUser } from '@/lib/actions/auth';
@@ -6,6 +7,9 @@ import { canEditGroup, getGroupRaw, getGroupMembers, getGroupInterests } from '@
 import { getCityById } from '@/lib/actions/cities';
 import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { EditGroupForm } from '@/components/groups/edit-group-form';
+import { buildNoIndexMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildNoIndexMetadata('Edit group');
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;

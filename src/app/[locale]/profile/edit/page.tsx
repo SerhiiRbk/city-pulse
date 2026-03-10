@@ -1,10 +1,14 @@
 import { setRequestLocale } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getUserProfile } from '@/lib/actions/auth';
 import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { getCityById } from '@/lib/actions/cities';
 import { getUserPhotos } from '@/lib/actions/user-photos';
 import { ProfileEditForm } from '@/components/profile/profile-edit-form';
+import { buildNoIndexMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildNoIndexMetadata('Edit profile');
 
 export default async function ProfileEditPage({
   params,

@@ -72,7 +72,7 @@
       "calendar": "Kalendář města",
       "calendarDesc": "Nepropásněte žádnou akci. Procházejte kalendář a filtrujte podle zájmů.",
       "connections": "Skutečná propojení",
-      "connectionsDesc": "Proměňte samotu v sociální začlenění. Spojte se s expaty a otevřenými místními.",
+      "connectionsDesc": "Méně samoty, více skutečných setkání. Poznávejte expaty i místní, kteří jsou také otevření novým kontaktům.",
       "multilingual": "Vícejazyčnost",
       "multilingualDesc": "K dispozici v několika jazycích. Najděte akce ve svém preferovaném jazyce, ať jste kdekoli.",
       "safety": "Důvěra a bezpečnost",
@@ -99,25 +99,28 @@
     "marketing": {
       "heroBadge": "Najděte své lidi na procházky, deskovky, jazykové kluby a další",
       "quickFormat1": "Setkání u kávy",
+      "quickFormat1Body": "Neformální rozhovory v menší skupině",
       "quickFormat2": "Jazykové kluby",
+      "quickFormat2Body": "Procvičování jazyka bez tlaku a trapných chvil",
       "quickFormat3": "Deskové hry",
+      "quickFormat3Body": "Seznamování je snazší, když vás spojí společná hra",
       "quickFormat4": "Procházky a výlety",
+      "quickFormat4Body": "Poznávejte město a seznamujte se cestou",
       "trustPoint1": "Vhodné pro malé skupiny",
       "trustPoint2": "Skvělé pro nováčky",
       "trustPoint3": "Vícejazyčné komunity",
       "tonightLabel": "Dnes večer ve vašem městě",
-      "quickTitle": "Najděte společenský plán, ke kterému se snadno přidáte",
-      "quickBody": "Přátelští hostitelé, skuteční lidé, místní komunity",
+      "quickTitle": "Najděte typ setkání, ke kterému se snadno přidáte",
       "quickMeta": "Zapojte se do konverzací ještě před příchodem",
       "statsEvents": "Vytvořené akce",
       "statsGroups": "Aktivní skupiny",
       "statsMembers": "Členové",
       "statsCities": "Města",
       "whyTitle": "Proč City-Pulse?",
-      "whySubtitle": "Vše, co potřebujete k nalezení svých lidí, pohodlnému zapojení a proměně společných zájmů v reálné plány.",
+      "whySubtitle": "Vše, co potřebujete k nalezení svých lidí, pohodlnému zapojení a proměně společných zájmů ve skutečná setkání.",
       "contactBadge": "Vytvořeno pro opravdová spojení",
       "contactTitle": "Začněte jednou akcí. Najděte celou komunitu.",
-      "contactSubtitle": "Poznejte lidi, kteří chtějí stejné večery, rozhovory, procházky, hry a místní plány jako vy.",
+      "contactSubtitle": "Poznejte lidi, které baví stejné večery, rozhovory, procházky, hry a víkendové plány jako vás.",
       "contactPrimary": "Prozkoumat akce",
       "contactSecondary": "Prozkoumat skupiny"
     }
@@ -157,7 +160,8 @@
     },
     "verifyEmail": {
       "title": "Zkontrolujte email",
-      "subtitle": "Poslali jsme ověřovací odkaz na váš email"
+      "subtitle": "Poslali jsme ověřovací odkaz na váš email",
+      "backToLogin": "Zpět na přihlášení"
     }
   },
   "events": {
@@ -180,7 +184,7 @@
       "online": "Online",
       "offline": "Offline",
       "allCountries": "Všechny země",
-      "helper": "Hledejte akce s dobrou společenskou energií, jasným formátem a atmosférou, ke které se snadno připojíte.",
+      "helper": "Hledejte akce s přívětivou atmosférou, jasným formátem a snadným vstupem pro nové účastníky.",
       "selectedCount": "{count, plural, one {# vybráno} few {# vybráno} other {# vybráno}}",
       "when": "Kdy",
       "nextWeek": "Příští týden",
@@ -244,7 +248,7 @@
       "firstCue": "Skvělá volba pro první návštěvu",
       "easyJoinTitle": "Proč je snadné se přidat",
       "easyJoinOnline": "Můžete se připojit odkudkoli a rychle se rozhodnout bez řešení dopravy.",
-      "easyJoinOffline": "Jasné místo konání a sociální signály pomáhají s rychlým rozhodnutím.",
+      "easyJoinOffline": "Jasně domluvené místo a přívětivá atmosféra usnadňují rozhodnutí přijít.",
       "free": "Zdarma",
       "cancelled": "Zrušeno",
       "completed": "Dokončeno",
@@ -264,8 +268,8 @@
       "writeRecap": "Napsat shrnutí"
     },
     "page": {
-      "heroBadge": "Najděte svůj další snadno dostupný plán",
-      "subtitle": "Objevujte přátelská setkání, opakující se komunity a místní plány, ke kterým se dokážete snadno připojit.",
+      "heroBadge": "Najděte svou další akci, ke které je snadné se přidat",
+      "subtitle": "Objevujte přátelská setkání, opakující se komunity a akce, kam můžete bez obav dorazit i poprvé.",
       "trust1": "Skvělé pro sólo návštěvníky",
       "trust2": "Procházky, deskovky, jazykové kluby",
       "trust3": "Seznamte se s lidmi ještě před příchodem",
@@ -276,11 +280,11 @@
       "sideItem2Title": "Jazykově přívětivá setkání",
       "sideItem2Body": "Skvělé, když chcete poznat místní i expaty.",
       "sideItem3Title": "Pořádají je skutečné komunity",
-      "sideItem3Body": "Najděte plány s kontextem, lidmi a pravidelnou energií.",
+      "sideItem3Body": "Hledejte akce, za kterými stojí skutečná komunita, známé tváře a pravidelná aktivita.",
       "sectionLabel": "Objevujte",
       "resultsTitle": "{count, plural, one {# akce, která stojí za to} few {# akce, které stojí za to} other {# akcí, které stojí za to}}",
       "noResultsTitle": "Zatím žádné odpovídající akce",
-      "sectionBody": "Hledejte přívětivé formáty, opakující se komunity a akce, které už nesou známky dobré sociální energie.",
+      "sectionBody": "Hledejte přívětivé formáty, opakující se komunity a akce, kde je snadné rychle zapadnout.",
       "emptyDescription": "Zkuste upravit filtry nebo se vraťte později"
     },
     "create": {
@@ -495,22 +499,22 @@
     },
     "page": {
       "heroBadge": "Komunity, kam je snazší přijít",
-      "subtitle": "Přidejte se k opakujícím se skupinám založeným na společných zájmech, přátelské atmosféře a plánech, které mění cizí lidi na známé tváře.",
+      "subtitle": "Přidejte se ke skupinám podle společných zájmů, kde se můžete postupně zapojit, potkávat známé tváře a cítit se mezi svými.",
       "trust1": "Opakující se komunity",
       "trust2": "Nejprve společné zájmy",
       "trust3": "Snadný způsob, jak se vídat pravidelně",
       "sideLabel": "Co skupiny přinášejí",
       "sideItem1Title": "Vaši lidé",
-      "sideItem1Body": "Vyberte si komunity podle vibeu, zájmů a četnosti setkání.",
+      "sideItem1Body": "Vyberte si komunity podle zájmů, atmosféry a četnosti setkání.",
       "sideItem2Title": "Více než jedna akce",
-      "sideItem2Body": "Skupiny vytvářejí kontinuitu, ne jen jednorázové plány.",
+      "sideItem2Body": "Skupiny pomáhají budovat pravidelné kontakty, ne jen jednorázová setkání.",
       "sideItem3Title": "Bezpečnější první krok",
       "sideItem3Body": "Je snazší vstoupit do místnosti, když už znáte kontext.",
       "sectionLabel": "Komunity",
-      "resultsTitle": "{count, plural, one {# skupina k objevení} few {# skupiny k objevení} other {# skupin k objevení}}",
+      "resultsTitle": "{count, plural, one {# skupina, která stojí za pozornost} few {# skupiny, které stojí za pozornost} other {# skupin, které stojí za pozornost}}",
       "noResultsTitle": "Zatím žádné skupiny",
       "sectionBody": "Vyberte si komunity, kam se budete chtít vracet: snadněji tam uvidíte známé tváře a vybudujete přátelství kolem společných rytmů.",
-      "emptyDescription": "Buďte první, kdo vytvoří komunitu"
+      "emptyDescription": "Vytvořte první komunitu a propojte lidi kolem společného zájmu"
     }
   },
   "profile": {
@@ -533,7 +537,7 @@
     "selectedCount": "{count, plural, one {# vybráno} few {# vybráno} other {# vybráno}}",
     "selectInterests": "Vyberte zájmy...",
     "age": "Věk",
-    "available": "Dostupný pro komunikaci",
+      "available": "Otevřený kontaktu",
     "unavailable": "Nedostupný",
     "eventsCreated": "Vytvořených akcí",
     "eventsAttended": "Navštívených akcí",
@@ -562,9 +566,9 @@
       "subscribed": "Odběry",
       "managed": "Moje skupiny",
       "noEvents": "Zatím žádné události",
-      "noEventsDescription": "Zatím je tu prázdno, ale další plán se může stát začátkem nové rutiny setkávání.",
+      "noEventsDescription": "Zatím je tu prázdno, ale další akce může být začátkem nové rutiny společných setkání.",
       "noGroups": "Zatím žádné skupiny",
-      "noGroupsDescription": "Skupiny proměňují občasné plány ve známé tváře a pravidelná spojení."
+      "noGroupsDescription": "Skupiny pomáhají proměnit občasná setkání ve známé tváře a pravidelný kontakt."
     },
     "breadcrumbs": "Komunita",
     "yearsOld": "{age} let",
@@ -581,9 +585,9 @@
     "allEvents": "Všechny akce",
     "exportGoogle": "Export do Google Kalendáře",
     "exportICal": "Export do iCal",
-    "subtitle": "Podívejte se, co se děje tento měsíc, a snadno najděte dny, kdy už vzniká společenský ruch.",
+    "subtitle": "Podívejte se, co se děje tento měsíc, a rychle najděte dny, kdy už se něco zajímavého chystá.",
     "allEventsHint": "Procházejte všechny veřejné akce a hledejte dny, kdy už se něco děje.",
-    "myEventsHint": "Mějte přehled o akcích, na které jdete, aby váš měsíc působil promyšleně.",
+    "myEventsHint": "Mějte přehled o akcích, na které se chystáte, aby vaše plány na měsíc zůstaly pohromadě.",
     "monthOverview": "Přehled měsíce",
     "noEventsDay": "Na tento den zatím nejsou žádné akce.",
     "online": "Online",
@@ -623,7 +627,7 @@
     "emptyTitle": "Zatím žádné městské akce",
     "emptyDescription": "Podívejte se později. Zobrazí se zde výstavy, koncerty, trhy a další veřejné městské akce.",
     "resultsTitle": "{count, plural, one {# oficiální akce} few {# oficiální akce} other {# oficiálních akcí}}",
-    "resultsDescription": "Kurátorovaný přehled veřejných kulturních akcí, které můžete spojit se svými společenskými plány."
+    "resultsDescription": "Kurátorovaný přehled veřejných kulturních akcí, které se dají snadno zařadit do vašich plánů na týden nebo víkend."
   },
   "report": {
     "report": "Nahlásit",
@@ -644,11 +648,11 @@
   },
   "footer": {
     "communityLabel": "Komunita City-Pulse",
-    "communityTitle": "Poznávejte lidi skrze společné zájmy, ne skrze trapný small talk.",
+    "communityTitle": "Poznávejte lidi skrze společné zájmy, ne přes křečovité seznamovací řeči.",
     "communityBody": "Objevujte místní skupiny, přívětivé akce a opakující se komunity pro procházky, hry, jazykové kluby a víkendové plány.",
     "exploreEvents": "Prozkoumat akce",
     "browseGroups": "Prozkoumat skupiny",
-    "brandDescription": "Sociální platforma pro offline komunity expatů a místních.",
+    "brandDescription": "Platforma pro offline komunity, setkávání a nová spojení mezi expaty a místními.",
     "legal": "Právní informace",
     "explore": "Prozkoumat",
     "terms": "Podmínky použití",

@@ -1,9 +1,9 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { getUser } from '@/lib/actions/auth';
 import { canEditGroup, getGroup } from '@/lib/actions/groups';
-import { getGroupPost, getGroupPostComments } from '@/lib/actions/group-posts';
+import { getGroupPostComments, getGroupPostInGroup } from '@/lib/actions/group-posts';
 import { GroupPostMediaGallery } from '@/components/groups/group-post-media-gallery';
 import { GroupPostComments } from '@/components/groups/group-post-comments';
 import { ShareButton } from '@/components/ui/share-button';
@@ -14,6 +14,8 @@ import { ArrowLeft, CalendarDays, Link2, Megaphone, Newspaper, Pencil } from 'lu
 import { SITE_NAME, SITE_URL } from '@/lib/constants';
 import { generateArticleJsonLd } from '@/lib/json-ld';
 import type { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/seo';
+import type { Locale } from '@/i18n/config';
 
 interface Props {
   params: Promise<{ locale: string; id: string; postId: string }>;
@@ -37,20 +39,19 @@ function getPostMeta(type: 'update' | 'announcement' | 'event_recap', t: Awaited
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, postId } = await params;
-  const post = await getGroupPost(postId);
+  const { id } = await params;
+  const post = await getGroupPostInGroup(id, postId);
   if (!post) return { title: 'Not Found' };
+  const postPath = post.slug || post.id;
 
-  return {
+  return buildPageMetadata({
+    locale: locale as Locale,
+    path: `/groups/${post.group_id}/posts/${postPath}`,
     title: `${post.title} | ${SITE_NAME}`,
-    description: post.content?.slice(0, 160),
-    openGraph: {
-      title: post.title,
-      description: post.content?.slice(0, 160),
-      type: 'article',
-      images: post.media?.[0]?.url ? [{ url: post.media[0].url }] : undefined,
-      url: `${SITE_URL}/${locale}/groups/${post.group_id}/posts/${post.id}`,
-    },
-  };
+    description: post.content?.slice(0, 160) || post.title,
+    image: post.media?.[0]?.url || null,
+    type: 'article',
+  });
 }
 
 export default async function GroupPostDetailPage({ params }: Props) {
@@ -58,21 +59,27 @@ export default async function GroupPostDetailPage({ params }: Props) {
   setRequestLocale(locale);
 
   const t = await getTranslations('groups.detail');
-  const [group, post, comments, user] = await Promise.all([
+  const [group, post, user] = await Promise.all([
     getGroup(id),
-    getGroupPost(postId),
-    getGroupPostComments(postId),
+    getGroupPostInGroup(id, postId),
     getUser(),
   ]);
 
   if (!group || !post || post.group_id !== id) notFound();
+
+  if (post.slug && post.slug !== postId) {
+    permanentRedirect(`/${locale}/groups/${id}/posts/${post.slug}`);
+  }
+
+  const comments = await getGroupPostComments(post.id);
 
   const isAuthenticated = !!user;
   const canEdit = isAuthenticated ? await canEditGroup(id) : false;
   const postMeta = getPostMeta(post.type, t);
   const authorName = post.profiles?.display_name || 'User';
   const authorInitials = authorName.split(' ').map((chunk) => chunk[0]).join('').toUpperCase().slice(0, 2);
-  const pagePath = `/${locale}/groups/${id}/posts/${post.id}`;
+  const postPath = post.slug || post.id;
+  const pagePath = `/${locale}/groups/${id}/posts/${postPath}`;
   const jsonLd = generateArticleJsonLd({
     id: post.id,
     title: post.title,

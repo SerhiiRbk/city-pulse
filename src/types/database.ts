@@ -143,6 +143,7 @@ export type GroupPostType = 'update' | 'announcement' | 'event_recap';
 export interface GroupPost {
   id: string;
   group_id: string;
+  slug: string | null;
   author_id: string;
   event_id: string | null;
   type: GroupPostType;
