@@ -16,7 +16,8 @@ import { ThemeToggle } from './theme-toggle';
 import { Logo } from '@/components/ui/logo';
 import { MobileNav } from './mobile-nav';
 import { NotificationBell } from '@/components/notifications/notification-bell';
-import { CalendarDays, Users, MapPin, MessageCircle, Plus, LogOut, User, Settings, Landmark, ShieldCheck } from 'lucide-react';
+import { HeaderMessagesButton } from '@/components/messages/header-messages-button';
+import { CalendarDays, Users, MapPin, Plus, LogOut, User, Settings, Landmark, ShieldCheck } from 'lucide-react';
 import type { Profile } from '@/types/database';
 
 interface HeaderProps {
@@ -75,12 +76,8 @@ export function Header({ user }: HeaderProps) {
 
           {user && (
             <>
-              <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
-                <Link href="/messages">
-                  <MessageCircle className="h-5 w-5" />
-                </Link>
-              </Button>
-              <div className="hidden md:flex">
+              <HeaderMessagesButton className="flex" />
+              <div className="flex">
                 <NotificationBell />
               </div>
             </>

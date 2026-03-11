@@ -601,11 +601,18 @@
     "send": "Отправить",
     "requestChat": "Запросить переписку",
     "chatRequested": "Запрос отправлен",
+    "chatDeclined": "Запрос на переписку отклонён",
+    "chatApprovedToast": "Запрос одобрен",
+    "chatDeclinedToast": "Запрос отклонён",
     "approve": "Одобрить",
     "decline": "Отклонить",
     "block": "Заблокировать",
     "unblock": "Разблокировать",
-    "blocked": "Пользователь заблокирован"
+    "blocked": "Пользователь заблокирован",
+    "timeNow": "сейчас",
+    "timeMinutesAgo": "{count} мин назад",
+    "timeHoursAgo": "{count} ч назад",
+    "timeDaysAgo": "{count} дн назад"
   },
   "notifications": {
     "title": "Уведомления",
@@ -614,6 +621,12 @@
     "newEvent": "Новое мероприятие по вашим интересам",
     "commentReply": "Кто-то ответил на ваш комментарий",
     "newMessage": "У вас новое сообщение",
+    "chatRequest": "Новый запрос на переписку",
+    "chatRequestBody": "Пользователь хочет начать с вами переписку.",
+    "chatApproved": "Запрос на переписку одобрен",
+    "chatApprovedBody": "Теперь вы можете продолжить переписку.",
+    "chatDeclined": "Запрос на переписку отклонён",
+    "chatDeclinedBody": "Ваш запрос на переписку отклонили.",
     "spotsAlmost": "Осталось всего {count} мест!",
     "reminder24h": "Завтра мероприятие: {name}",
     "reminder2h": "Мероприятие через 2 часа: {name}"

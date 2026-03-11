@@ -1,14 +1,22 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Send, Check, Shield } from 'lucide-react';
-import { sendMessage, approveConversation, markMessagesRead } from '@/lib/actions/messages';
+import {
+  sendMessage,
+  approveConversation,
+  declineConversation,
+  getConversation,
+  getMessages,
+  markMessagesRead,
+} from '@/lib/actions/messages';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { createClient } from '@/lib/supabase/client';
 
 interface Message {
   id: string;
@@ -42,11 +50,21 @@ export function ChatView({
   isRecipient,
 }: ChatViewProps) {
   const t = useTranslations('messages');
+  const locale = useLocale();
   const [messages, setMessages] = useState(initialMessages);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
+  const [pendingAction, setPendingAction] = useState<'approve' | 'decline' | null>(null);
   const [convStatus, setConvStatus] = useState(status);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMessages(initialMessages);
+  }, [initialMessages]);
+
+  useEffect(() => {
+    setConvStatus(status);
+  }, [status]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -55,6 +73,136 @@ export function ChatView({
   useEffect(() => {
     markMessagesRead(conversationId);
   }, [conversationId]);
+
+  useEffect(() => {
+    let active = true;
+
+    const refreshConversation = async () => {
+      const [nextMessages, nextConversation] = await Promise.all([
+        getMessages(conversationId),
+        getConversation(conversationId),
+      ]);
+
+      if (!active) return;
+
+      setMessages(nextMessages as Message[]);
+
+      if (nextConversation?.status) {
+        setConvStatus(nextConversation.status);
+      }
+
+      void markMessagesRead(conversationId);
+    };
+
+    const intervalId = window.setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        void refreshConversation();
+      }
+    }, 2500);
+
+    const handleFocus = () => {
+      void refreshConversation();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleFocus);
+
+    return () => {
+      active = false;
+      window.clearInterval(intervalId);
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleFocus);
+    };
+  }, [conversationId]);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    const messagesChannel = supabase
+      .channel(`messages:${conversationId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+          filter: `conversation_id=eq.${conversationId}`,
+        },
+        (payload) => {
+          const message = payload.new as {
+            id: string;
+            sender_id: string;
+            content: string;
+            created_at: string;
+            is_read: boolean;
+          };
+
+          setMessages((prev) => {
+            if (prev.some((item) => item.id === message.id)) return prev;
+
+            const nextMessage: Message = {
+              ...message,
+              profiles: {
+                display_name: otherUserName,
+                avatar_url: otherUserAvatar,
+              },
+            };
+
+            return [...prev, nextMessage];
+          });
+
+          if (message.sender_id !== currentUserId) {
+            void markMessagesRead(conversationId);
+          }
+        },
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'messages',
+          filter: `conversation_id=eq.${conversationId}`,
+        },
+        (payload) => {
+          const updated = payload.new as {
+            id: string;
+            is_read: boolean;
+          };
+
+          setMessages((prev) =>
+            prev.map((item) =>
+              item.id === updated.id ? { ...item, is_read: updated.is_read } : item,
+            ),
+          );
+        },
+      )
+      .subscribe();
+
+    const conversationsChannel = supabase
+      .channel(`conversations:${conversationId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'conversations',
+          filter: `id=eq.${conversationId}`,
+        },
+        (payload) => {
+          const updated = payload.new as { status?: string };
+          if (updated.status) {
+            setConvStatus(updated.status);
+          }
+        },
+      )
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(messagesChannel);
+      void supabase.removeChannel(conversationsChannel);
+    };
+  }, [conversationId, currentUserId, otherUserAvatar, otherUserName]);
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
@@ -65,26 +213,46 @@ export function ChatView({
     if (result.error) {
       toast.error(result.error);
     } else if (result.message) {
-      setMessages((prev) => [...prev, result.message!]);
+      setMessages((prev) =>
+        prev.some((item) => item.id === result.message!.id)
+          ? prev
+          : [...prev, result.message!],
+      );
       setInput('');
     }
     setSending(false);
   }
 
   async function handleApprove() {
+    setPendingAction('approve');
     const result = await approveConversation(conversationId);
     if (result.error) {
       toast.error(result.error);
     } else {
       setConvStatus('active');
-      toast.success('Chat approved');
+      toast.success(t('chatApprovedToast'));
     }
+    setPendingAction(null);
   }
 
-  if (convStatus === 'blocked') {
+  async function handleDecline() {
+    setPendingAction('decline');
+    const result = await declineConversation(conversationId);
+    if (result.error) {
+      toast.error(result.error);
+    } else {
+      setConvStatus('declined');
+      toast.success(t('chatDeclinedToast'));
+    }
+    setPendingAction(null);
+  }
+
+  if (convStatus === 'blocked' || convStatus === 'declined') {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <p className="text-muted-foreground">{t('blocked')}</p>
+        <p className="text-muted-foreground">
+          {convStatus === 'declined' ? t('chatDeclined') : t('blocked')}
+        </p>
       </div>
     );
   }
@@ -107,8 +275,17 @@ export function ChatView({
           <p className="flex-1 text-sm">{t('chatRequested')}</p>
           {isRecipient && (
             <div className="flex gap-2">
-              <Button size="sm" onClick={handleApprove}>{t('approve')}</Button>
-              <Button size="sm" variant="outline">{t('decline')}</Button>
+              <Button size="sm" onClick={handleApprove} disabled={pendingAction !== null}>
+                {t('approve')}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleDecline}
+                disabled={pendingAction !== null}
+              >
+                {t('decline')}
+              </Button>
             </div>
           )}
         </div>
@@ -128,7 +305,10 @@ export function ChatView({
               >
                 <p className="text-sm">{msg.content}</p>
                 <div className={cn('mt-1 flex items-center gap-1 text-[10px] opacity-60', isMine ? 'justify-end' : '')}>
-                  {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  {new Date(msg.created_at).toLocaleTimeString(locale, {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
                   {isMine && msg.is_read && <Check className="h-3 w-3" />}
                 </div>
               </div>

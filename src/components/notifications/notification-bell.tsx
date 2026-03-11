@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useCallback, useEffect, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -12,6 +12,8 @@ import { Bell, Check, MessageCircle, Calendar, Users, AlertCircle } from 'lucide
 import { getNotifications, markAsRead, markAllAsRead, getUnreadCount } from '@/lib/actions/notifications';
 import { Link } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
+import { createClient } from '@/lib/supabase/client';
+import { formatRelativeTime } from '@/lib/format-relative-time';
 
 interface Notification {
   id: string;
@@ -25,19 +27,102 @@ interface Notification {
 
 export function NotificationBell() {
   const t = useTranslations('notifications');
+  const tm = useTranslations('messages');
+  const locale = useLocale();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    getUnreadCount().then(setUnreadCount);
+  const refreshUnreadCount = useCallback(async () => {
+    const count = await getUnreadCount();
+    setUnreadCount(count);
+  }, []);
+
+  const refreshNotifications = useCallback(async () => {
+    const [count, list] = await Promise.all([getUnreadCount(), getNotifications(20)]);
+    setUnreadCount(count);
+    setNotifications(list as Notification[]);
   }, []);
 
   useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      void refreshUnreadCount();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [refreshUnreadCount]);
+
+  useEffect(() => {
     if (open) {
-      getNotifications(20).then(setNotifications);
+      const timeoutId = window.setTimeout(() => {
+        void refreshNotifications();
+      }, 0);
+
+      return () => window.clearTimeout(timeoutId);
     }
-  }, [open]);
+  }, [open, refreshNotifications]);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      if (document.visibilityState !== 'visible') return;
+
+      if (open) {
+        void refreshNotifications();
+      } else {
+        void refreshUnreadCount();
+      }
+    }, 15000);
+
+    const handleFocus = () => {
+      if (open) {
+        void refreshNotifications();
+      } else {
+        void refreshUnreadCount();
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleFocus);
+
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleFocus);
+    };
+  }, [open, refreshNotifications, refreshUnreadCount]);
+
+  useEffect(() => {
+    const supabase = createClient();
+    let active = true;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
+    void supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!active || !user) return;
+
+      channel = supabase
+        .channel(`notifications:${user.id}`)
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'notifications',
+            filter: `user_id=eq.${user.id}`,
+          },
+          () => {
+            void refreshNotifications();
+          },
+        )
+        .subscribe();
+    });
+
+    return () => {
+      active = false;
+      if (channel) {
+        void supabase.removeChannel(channel);
+      }
+    };
+  }, [refreshNotifications]);
 
   async function handleMarkAllRead() {
     await markAllAsRead();
@@ -68,6 +153,41 @@ export function NotificationBell() {
       default:
         return <AlertCircle className="h-4 w-4" />;
     }
+  }
+
+  function getNotificationText(n: Notification) {
+    if (n.type === 'new_message') {
+      return {
+        title: t('newMessage'),
+        body: n.body,
+      };
+    }
+
+    if (n.type === 'chat_request') {
+      return {
+        title: t('chatRequest'),
+        body: t('chatRequestBody'),
+      };
+    }
+
+    if (n.type === 'system' && n.data?.kind === 'chat_approved') {
+      return {
+        title: t('chatApproved'),
+        body: t('chatApprovedBody'),
+      };
+    }
+
+    if (n.type === 'system' && n.data?.kind === 'chat_declined') {
+      return {
+        title: t('chatDeclined'),
+        body: t('chatDeclinedBody'),
+      };
+    }
+
+    return {
+      title: n.title,
+      body: n.body,
+    };
   }
 
   function getLink(n: Notification): string | null {
@@ -105,6 +225,7 @@ export function NotificationBell() {
           ) : (
             notifications.map((n) => {
               const link = getLink(n);
+              const text = getNotificationText(n);
               const content = (
                 <div
                   className={cn(
@@ -115,10 +236,10 @@ export function NotificationBell() {
                 >
                   <div className="text-muted-foreground mt-0.5">{getIcon(n.type)}</div>
                   <div className="min-w-0 flex-1">
-                    <p className={cn('text-sm', !n.is_read && 'font-medium')}>{n.title}</p>
-                    {n.body && <p className="text-muted-foreground mt-0.5 text-xs">{n.body}</p>}
+                    <p className={cn('text-sm', !n.is_read && 'font-medium')}>{text.title}</p>
+                    {text.body && <p className="text-muted-foreground mt-0.5 text-xs">{text.body}</p>}
                     <p className="text-muted-foreground mt-1 text-[10px]">
-                      {formatTimeAgo(n.created_at)}
+                      {formatRelativeTime(n.created_at, locale, tm)}
                     </p>
                   </div>
                   {!n.is_read && <div className="bg-primary mt-1.5 h-2 w-2 shrink-0 rounded-full" />}
@@ -138,18 +259,4 @@ export function NotificationBell() {
       </PopoverContent>
     </Popover>
   );
-}
-
-function formatTimeAgo(dateStr: string) {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMin = Math.floor(diffMs / 60000);
-  if (diffMin < 1) return 'now';
-  if (diffMin < 60) return `${diffMin}m ago`;
-  const diffH = Math.floor(diffMin / 60);
-  if (diffH < 24) return `${diffH}h ago`;
-  const diffD = Math.floor(diffH / 24);
-  if (diffD < 7) return `${diffD}d ago`;
-  return date.toLocaleDateString();
 }

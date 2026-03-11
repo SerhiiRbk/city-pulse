@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createAdminClient, hasAdminEnv } from '@/lib/supabase/admin';
 
 export type ReportReason = 'spam' | 'harassment' | 'inappropriate' | 'fake' | 'other';
 export type TargetType = 'user' | 'event' | 'group' | 'comment';
@@ -91,6 +91,11 @@ export async function logActivity(data: {
   targetId?: string;
   metadata?: Record<string, unknown>;
 }) {
+  if (!hasAdminEnv()) {
+    console.warn('Skipping activity log insert: missing Supabase admin environment variables');
+    return;
+  }
+
   const supabase = createAdminClient();
   await supabase.from('activity_logs').insert({
     user_id: data.userId || null,

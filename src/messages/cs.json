@@ -601,11 +601,18 @@
     "send": "Odeslat",
     "requestChat": "Požádat o konverzaci",
     "chatRequested": "Žádost odeslána",
+    "chatDeclined": "Žádost o konverzaci byla odmítnuta",
+    "chatApprovedToast": "Konverzace schválena",
+    "chatDeclinedToast": "Žádost odmítnuta",
     "approve": "Schválit",
     "decline": "Odmítnout",
     "block": "Zablokovat",
     "unblock": "Odblokovat",
-    "blocked": "Uživatel je zablokován"
+    "blocked": "Uživatel je zablokován",
+    "timeNow": "teď",
+    "timeMinutesAgo": "před {count} min",
+    "timeHoursAgo": "před {count} h",
+    "timeDaysAgo": "před {count} d"
   },
   "notifications": {
     "title": "Oznámení",
@@ -614,6 +621,12 @@
     "newEvent": "Nová akce podle vašich zájmů",
     "commentReply": "Někdo odpověděl na váš komentář",
     "newMessage": "Máte novou zprávu",
+    "chatRequest": "Nová žádost o konverzaci",
+    "chatRequestBody": "Někdo s vámi chce začít konverzaci.",
+    "chatApproved": "Žádost o konverzaci schválena",
+    "chatApprovedBody": "Teď můžete v konverzaci pokračovat.",
+    "chatDeclined": "Žádost o konverzaci odmítnuta",
+    "chatDeclinedBody": "Vaše žádost o konverzaci byla odmítnuta.",
     "spotsAlmost": "Zbývá pouze {count} míst!",
     "reminder24h": "Zítra akce: {name}",
     "reminder2h": "Akce za 2 hodiny: {name}"

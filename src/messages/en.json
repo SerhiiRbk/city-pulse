@@ -601,11 +601,18 @@
     "send": "Send",
     "requestChat": "Request to chat",
     "chatRequested": "Chat request sent",
+    "chatDeclined": "Chat request declined",
+    "chatApprovedToast": "Chat approved",
+    "chatDeclinedToast": "Chat declined",
     "approve": "Approve",
     "decline": "Decline",
     "block": "Block user",
     "unblock": "Unblock user",
-    "blocked": "This user is blocked"
+    "blocked": "This user is blocked",
+    "timeNow": "now",
+    "timeMinutesAgo": "{count}m ago",
+    "timeHoursAgo": "{count}h ago",
+    "timeDaysAgo": "{count}d ago"
   },
   "notifications": {
     "title": "Notifications",
@@ -614,6 +621,12 @@
     "newEvent": "New event matching your interests",
     "commentReply": "Someone replied to your comment",
     "newMessage": "You have a new message",
+    "chatRequest": "New chat request",
+    "chatRequestBody": "Someone wants to start a conversation with you.",
+    "chatApproved": "Chat request approved",
+    "chatApprovedBody": "You can now continue the conversation.",
+    "chatDeclined": "Chat request declined",
+    "chatDeclinedBody": "Your chat request was declined.",
     "spotsAlmost": "Only {count} spots left!",
     "reminder24h": "Event tomorrow: {name}",
     "reminder2h": "Event in 2 hours: {name}"

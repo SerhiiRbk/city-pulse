@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createAdminClient, hasAdminEnv } from '@/lib/supabase/admin';
 
 export async function getNotifications(limit = 20) {
   const supabase = await createClient();
@@ -62,6 +62,11 @@ export async function createNotification(params: {
   body?: string;
   data?: Record<string, unknown>;
 }) {
+  if (!hasAdminEnv()) {
+    console.warn('Skipping notification creation: missing Supabase admin environment variables');
+    return { skipped: true };
+  }
+
   const supabase = createAdminClient();
   const { error } = await supabase.from('notifications').insert({
     user_id: params.userId,

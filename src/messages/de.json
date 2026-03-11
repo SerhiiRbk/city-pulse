@@ -601,11 +601,18 @@
     "send": "Senden",
     "requestChat": "Chat anfragen",
     "chatRequested": "Anfrage gesendet",
+    "chatDeclined": "Chat-Anfrage abgelehnt",
+    "chatApprovedToast": "Chat freigegeben",
+    "chatDeclinedToast": "Chat-Anfrage abgelehnt",
     "approve": "Genehmigen",
     "decline": "Ablehnen",
     "block": "Blockieren",
     "unblock": "Entblockieren",
-    "blocked": "Benutzer ist blockiert"
+    "blocked": "Benutzer ist blockiert",
+    "timeNow": "jetzt",
+    "timeMinutesAgo": "vor {count} Min.",
+    "timeHoursAgo": "vor {count} Std.",
+    "timeDaysAgo": "vor {count} Tg."
   },
   "notifications": {
     "title": "Benachrichtigungen",
@@ -614,6 +621,12 @@
     "newEvent": "Neue Veranstaltung nach Ihren Interessen",
     "commentReply": "Jemand hat auf Ihren Kommentar geantwortet",
     "newMessage": "Sie haben eine neue Nachricht",
+    "chatRequest": "Neue Chat-Anfrage",
+    "chatRequestBody": "Jemand möchte eine Unterhaltung mit Ihnen beginnen.",
+    "chatApproved": "Chat-Anfrage bestätigt",
+    "chatApprovedBody": "Sie können die Unterhaltung jetzt fortsetzen.",
+    "chatDeclined": "Chat-Anfrage abgelehnt",
+    "chatDeclinedBody": "Ihre Chat-Anfrage wurde abgelehnt.",
     "spotsAlmost": "Nur noch {count} Plätze!",
     "reminder24h": "Morgen Veranstaltung: {name}",
     "reminder2h": "Veranstaltung in 2 Stunden: {name}"

@@ -601,11 +601,18 @@
     "send": "Надіслати",
     "requestChat": "Запросити листування",
     "chatRequested": "Запит надіслано",
+    "chatDeclined": "Запит на листування відхилено",
+    "chatApprovedToast": "Запит схвалено",
+    "chatDeclinedToast": "Запит відхилено",
     "approve": "Схвалити",
     "decline": "Відхилити",
     "block": "Заблокувати",
     "unblock": "Розблокувати",
-    "blocked": "Користувача заблоковано"
+    "blocked": "Користувача заблоковано",
+    "timeNow": "зараз",
+    "timeMinutesAgo": "{count} хв тому",
+    "timeHoursAgo": "{count} год тому",
+    "timeDaysAgo": "{count} дн тому"
   },
   "notifications": {
     "title": "Сповіщення",
@@ -614,6 +621,12 @@
     "newEvent": "Новий захід за вашими інтересами",
     "commentReply": "Хтось відповів на ваш коментар",
     "newMessage": "У вас нове повідомлення",
+    "chatRequest": "Новий запит на листування",
+    "chatRequestBody": "Користувач хоче розпочати з вами розмову.",
+    "chatApproved": "Запит на листування схвалено",
+    "chatApprovedBody": "Тепер ви можете продовжити листування.",
+    "chatDeclined": "Запит на листування відхилено",
+    "chatDeclinedBody": "Ваш запит на листування відхилили.",
     "spotsAlmost": "Залишилось лише {count} місць!",
     "reminder24h": "Завтра захід: {name}",
     "reminder2h": "Захід через 2 години: {name}"
