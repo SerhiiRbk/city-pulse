@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Users, Calendar, Pencil, MapPin, CalendarPlus, Link2 } from 'lucide-react';
 import { GroupHeroActions } from '@/components/groups/group-hero-actions';
-import { COUNTRIES } from '@/lib/constants';
+import { COUNTRIES, LANGUAGES } from '@/lib/constants';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Locale } from '@/i18n/config';
@@ -75,6 +75,7 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
   const groupGalleryImages = canEdit ? await getGroupGalleryImages(id) : [];
   const t = await getTranslations('groups');
   const tDetail = await getTranslations('groups.detail');
+  const tProfile = await getTranslations('profile');
   const communityCue = group.member_count > 50
     ? tDetail('communityCueEstablished')
     : group.event_count > 2
@@ -87,6 +88,12 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
     })()
     : null;
   const locationLabel = [group.city, countryDisplay].filter(Boolean).join(', ');
+  const languageLabels = (group.languages || []).map((code: string) => {
+    const language = LANGUAGES.find((item) => item.code === code);
+    return language
+      ? ((language as Record<string, string>)[locale] || language.en)
+      : code;
+  });
   const allowedTabs = new Set(['upcoming', 'past', 'photos', 'posts', 'members', 'comments']);
   const initialTab = allowedTabs.has(resolvedSearchParams?.tab || '') ? resolvedSearchParams?.tab : 'upcoming';
   const initialRecapEventId = resolvedSearchParams?.compose === 'recap' ? resolvedSearchParams?.event : undefined;
@@ -161,6 +168,24 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
               <div className="flex items-center gap-2.5 px-5 py-4">
                 <MapPin className="text-primary h-4 w-4 shrink-0" />
                 <span className="text-sm">{locationLabel}</span>
+              </div>
+            )}
+
+            {languageLabels.length > 0 && (
+              <div className="px-5 py-4">
+                <p className="text-muted-foreground mb-2.5 text-xs font-medium uppercase tracking-wider">
+                  {tProfile('languages')}
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {languageLabels.map((language) => (
+                    <span
+                      key={language}
+                      className="inline-flex items-center rounded-full border border-border/50 bg-muted/40 px-2.5 py-1 text-[11px] font-medium"
+                    >
+                      {language}
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
 

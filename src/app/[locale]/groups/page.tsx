@@ -52,12 +52,16 @@ export default async function GroupsPage({
   const interestIds = filters.interest
     ? filters.interest.split(',').filter(Boolean)
     : [];
+  const languageCodes = filters.language
+    ? filters.language.split(',').filter(Boolean)
+    : [];
 
   const groups = await getGroups({
     country: filters.country,
     city_id: filters.city_id,
     city: filters.city,
     interests: interestIds.length > 0 ? interestIds : undefined,
+    languages: languageCodes.length > 0 ? languageCodes : undefined,
     limit: 24,
   });
 

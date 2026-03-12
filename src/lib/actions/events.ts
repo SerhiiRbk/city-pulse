@@ -6,6 +6,7 @@ import { nanoid } from '@/lib/utils';
 export async function createEvent(data: {
   title: string;
   description: string;
+  languages?: string[];
   category_id: string;
   starts_at: string;
   duration_minutes: number;
@@ -84,6 +85,7 @@ export async function updateEvent(
   data: Partial<{
     title: string;
     description: string;
+    languages: string[];
     category_id: string;
     starts_at: string;
     duration_minutes: number;
@@ -141,6 +143,7 @@ export async function getEvents(filters: {
   city_id?: string;
   category?: string;
   categories?: string[];
+  languages?: string[];
   date_from?: string;
   date_to?: string;
   is_free?: boolean;
@@ -163,6 +166,9 @@ export async function getEvents(filters: {
     query = query.in('category_id', filters.categories);
   } else if (filters.category) {
     query = query.eq('category_id', filters.category);
+  }
+  if (filters.languages && filters.languages.length > 0) {
+    query = query.overlaps('languages', filters.languages);
   }
   if (filters.date_from) query = query.gte('starts_at', filters.date_from);
   if (filters.date_to) query = query.lte('starts_at', filters.date_to);

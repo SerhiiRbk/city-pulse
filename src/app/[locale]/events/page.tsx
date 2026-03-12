@@ -52,12 +52,16 @@ export default async function EventsPage({
   const categoryIds = filters.category
     ? filters.category.split(',').filter(Boolean)
     : [];
+  const languageCodes = filters.language
+    ? filters.language.split(',').filter(Boolean)
+    : [];
 
   const events = await getEvents({
     country: filters.country,
     city_id: filters.city_id,
     city: filters.city,
     categories: categoryIds.length > 0 ? categoryIds : undefined,
+    languages: languageCodes.length > 0 ? languageCodes : undefined,
     date_from: filters.date_from,
     date_to: filters.date_to,
     is_free: filters.is_free === 'true' ? true : filters.is_free === 'false' ? false : undefined,

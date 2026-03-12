@@ -23,6 +23,7 @@ import {
 import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2, UsersRound, MapPin } from 'lucide-react';
 import { LocationPicker } from '@/components/maps/location-picker';
 import { CityPicker } from '@/components/ui/city-picker';
+import { LanguageMultiSelect } from '@/components/ui/language-multi-select';
 import { createEvent, uploadEventPhoto } from '@/lib/actions/events';
 import { resolveCity } from '@/lib/actions/cities';
 import { toast } from 'sonner';
@@ -80,6 +81,8 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [interestsPopoverOpen, setInterestsPopoverOpen] = useState(false);
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [languagesPopoverOpen, setLanguagesPopoverOpen] = useState(false);
   const [eventCountry, setEventCountry] = useState(initialDefaults.country || '');
   const [eventCity, setEventCity] = useState<City | null>(initialDefaults.city);
   const [location, setLocation] = useState<{
@@ -181,6 +184,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
     const data = {
       title: form.get('title') as string,
       description: form.get('description') as string,
+      languages,
       category_id: primaryCategory,
       starts_at: `${form.get('date')}T${form.get('time')}`,
       duration_minutes: Number(form.get('duration')) || 60,
@@ -342,6 +346,15 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
                 ))}
               </PopoverContent>
             </Popover>
+          </div>
+          <div className="space-y-2">
+            <Label>{t('language')}</Label>
+            <LanguageMultiSelect
+              value={languages}
+              onChange={setLanguages}
+              open={languagesPopoverOpen}
+              onOpenChange={setLanguagesPopoverOpen}
+            />
           </div>
         </CardContent>
       </Card>

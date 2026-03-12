@@ -2,7 +2,7 @@
 
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Heart, MapPin, Calendar, Users, Globe } from 'lucide-react';
@@ -10,7 +10,7 @@ import { formatDate } from '@/lib/utils';
 import { toggleAttendance, toggleFavorite } from '@/lib/actions/events';
 import { toast } from 'sonner';
 import { useState } from 'react';
-import { COUNTRIES } from '@/lib/constants';
+import { COUNTRIES, LANGUAGES } from '@/lib/constants';
 
 interface EventCardProps {
   event: {
@@ -28,6 +28,7 @@ interface EventCardProps {
     currency: string | null;
     max_attendees: number | null;
     going_count: number;
+    languages?: string[];
     category_slug: string | null;
     category_translations: Record<string, string> | null;
   };
@@ -50,6 +51,14 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
   const [going, setGoing] = useState(initialGoing || false);
   const [favorited, setFavorited] = useState(initialFav || false);
   const [goingCount, setGoingCount] = useState(event.going_count);
+  const languageLabels = (event.languages || [])
+    .map((code) => {
+      const language = LANGUAGES.find((item) => item.code === code);
+      return language
+        ? ((language as Record<string, string>)[locale] || language.en)
+        : code;
+    })
+    .slice(0, 2);
 
   const spotsLeft = event.max_attendees ? event.max_attendees - goingCount : null;
   const categoryLabel = event.category_translations?.[locale] || event.category_translations?.['en'] || event.category_slug || '';
@@ -210,6 +219,19 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
               )}
             </span>
           </div>
+          {languageLabels.length > 0 && (
+            <div className="mb-3 flex flex-wrap gap-1.5">
+              {languageLabels.map((language) => (
+                <Badge
+                  key={language}
+                  variant="outline"
+                  className="border-border/70 bg-background/70 text-[11px] font-medium"
+                >
+                  {language}
+                </Badge>
+              ))}
+            </div>
+          )}
           <p className="mb-4 text-sm text-muted-foreground">
             {goingCount > 0 ? t('alreadyIn', { count: goingCount }) : t('firstToJoin')}
           </p>

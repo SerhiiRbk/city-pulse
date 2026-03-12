@@ -292,6 +292,7 @@
       "name": "Název",
       "description": "Popis",
       "category": "Kategorie",
+      "language": "Jazyky",
       "date": "Datum",
       "time": "Čas",
       "duration": "Délka (minuty)",
@@ -341,6 +342,7 @@
     "filters": {
       "country": "Země",
       "city": "Město",
+      "language": "Jazyk",
       "interests": "Zájmy",
       "allCountries": "Všechny země",
       "helper": "Filtrujte komunity podle lokality a společných zájmů, abyste rychleji našli skupiny, kam se budete rádi vracet.",
@@ -356,6 +358,7 @@
       "country": "Země",
       "city": "Město",
       "cityPlaceholder": "Zadejte název města",
+      "language": "Jazyky",
       "interests": "Zájmy",
       "submit": "Vytvořit skupinu"
     },
@@ -486,6 +489,7 @@
       "country": "Země",
       "city": "Město",
       "cityPlaceholder": "Zadejte název města",
+      "language": "Jazyky",
       "interests": "Zájmy",
       "submit": "Uložit změny",
       "moderators": "Moderátoři",

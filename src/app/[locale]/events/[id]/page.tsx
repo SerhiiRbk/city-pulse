@@ -13,7 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { Link } from '@/i18n/navigation';
 import { MapPin, Calendar, Clock, Users, Globe, Star, Lock, Pencil } from 'lucide-react';
 import { formatDate, formatDuration } from '@/lib/utils';
-import { SITE_NAME, COUNTRIES } from '@/lib/constants';
+import { SITE_NAME, COUNTRIES, LANGUAGES } from '@/lib/constants';
 import { EventMap } from '@/components/maps/event-map';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { ShareButton } from '@/components/ui/share-button';
@@ -51,6 +51,7 @@ export default async function EventDetailPage({ params }: Props) {
   setRequestLocale(locale);
 
   const t = await getTranslations('events.detail');
+  const tProfile = await getTranslations('profile');
   const event = await getEvent(id);
 
   if (!event) notFound();
@@ -81,6 +82,12 @@ export default async function EventDetailPage({ params }: Props) {
     ? (countryObj as Record<string, string>)[locale] || countryObj.en
     : event.country || '';
   const locationLabel = [cityDisplay, countryDisplay].filter(Boolean).join(', ');
+  const languageLabels = (event.languages || []).map((code: string) => {
+    const language = LANGUAGES.find((item) => item.code === code);
+    return language
+      ? ((language as Record<string, string>)[locale] || language.en)
+      : code;
+  });
   const comfortCue = event.going_count >= 12
     ? t('popularCue')
     : event.going_count >= 4
@@ -126,6 +133,9 @@ export default async function EventDetailPage({ params }: Props) {
               )}
               {event.is_free && <Badge className="bg-success text-success-foreground">{t('free')}</Badge>}
               <Badge className="bg-primary/10 text-primary hover:bg-primary/10">{comfortCue}</Badge>
+              {languageLabels.map((language) => (
+                <Badge key={language} variant="outline">{language}</Badge>
+              ))}
             </div>
             <h1 className="text-2xl font-bold tracking-tight sm:text-4xl">{event.title}</h1>
 
@@ -305,6 +315,18 @@ export default async function EventDetailPage({ params }: Props) {
                   <div className="flex items-center gap-3">
                     <Globe className="text-muted-foreground h-5 w-5 shrink-0" />
                     <p className="text-sm">{t('online')}</p>
+                  </div>
+                )}
+
+                {languageLabels.length > 0 && (
+                  <div className="flex items-start gap-3">
+                    <Globe className="text-muted-foreground h-5 w-5 shrink-0" />
+                    <div>
+                      <p className="text-sm font-medium">{tProfile('languages')}</p>
+                      <p className="text-muted-foreground text-xs">
+                        {languageLabels.join(', ')}
+                      </p>
+                    </div>
                   </div>
                 )}
 

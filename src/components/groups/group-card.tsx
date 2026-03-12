@@ -1,11 +1,11 @@
 'use client';
 
 import { Link } from '@/i18n/navigation';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Users, Calendar, MapPin } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
-import { COUNTRIES } from '@/lib/constants';
+import { COUNTRIES, LANGUAGES } from '@/lib/constants';
 
 interface GroupCardProps {
   group: {
@@ -19,6 +19,7 @@ interface GroupCardProps {
     creator_avatar: string | null;
     city: string | null;
     country: string | null;
+    languages?: string[];
     city_name?: string | null;
     city_translations?: Record<string, string> | null;
   };
@@ -35,6 +36,14 @@ export function GroupCard({ group }: GroupCardProps) {
       return country ? ((country as Record<string, string>)[locale] || country.en) : group.country;
     })()
     : '';
+  const languageLabels = (group.languages || [])
+    .map((code) => {
+      const language = LANGUAGES.find((item) => item.code === code);
+      return language
+        ? ((language as Record<string, string>)[locale] || language.en)
+        : code;
+    })
+    .slice(0, 2);
   const activityCue = group.event_count > 3 ? t('cueActive') : group.member_count > 20 ? t('cueWelcoming') : t('cueGrowing');
 
   return (
@@ -72,6 +81,19 @@ export function GroupCard({ group }: GroupCardProps) {
             <div className="text-muted-foreground mb-3 flex items-center gap-1.5 text-sm">
               <MapPin className="h-3.5 w-3.5 shrink-0" />
               <span className="truncate">{[cityLabel, countryDisplay].filter(Boolean).join(', ')}</span>
+            </div>
+          )}
+          {languageLabels.length > 0 && (
+            <div className="mb-3 flex flex-wrap gap-1.5">
+              {languageLabels.map((language) => (
+                <Badge
+                  key={language}
+                  variant="outline"
+                  className="border-border/70 bg-background/70 text-[11px] font-medium"
+                >
+                  {language}
+                </Badge>
+              ))}
             </div>
           )}
           <div className="text-muted-foreground flex items-center gap-5 text-sm font-medium">

@@ -69,6 +69,7 @@ export interface Event {
   title: string;
   description: string;
   photos: string[];
+  languages: string[];
   category_id: string;
   starts_at: string;
   duration_minutes: number;
@@ -130,6 +131,7 @@ export interface Group {
   slug: string | null;
   description: string;
   cover_url: string | null;
+  languages: string[];
   country: string | null;
   city: string | null;
   city_id: string | null;

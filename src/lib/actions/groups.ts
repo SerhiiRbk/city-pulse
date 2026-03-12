@@ -61,6 +61,7 @@ export async function updateGroup(
     slug?: string | null;
     description?: string;
     cover_url?: string | null;
+    languages?: string[];
     country?: string | null;
     city?: string | null;
     city_id?: string | null;
@@ -200,6 +201,7 @@ export async function createGroup(data: {
   slug?: string | null;
   description: string;
   cover_url?: string;
+  languages?: string[];
   country?: string | null;
   city?: string | null;
   city_id?: string | null;
@@ -282,6 +284,7 @@ export async function getGroups(
     city?: string;
     city_id?: string;
     interests?: string[];
+    languages?: string[];
     limit?: number;
     offset?: number;
   } = {},
@@ -314,6 +317,10 @@ export async function getGroups(
     const groupIds = [...new Set((matches || []).map((row) => row.group_id))];
     if (groupIds.length === 0) return [];
     query = query.in('id', groupIds);
+  }
+
+  if (filters.languages && filters.languages.length > 0) {
+    query = query.overlaps('languages', filters.languages);
   }
 
   const { data } = await query.range(offset, offset + limit - 1);

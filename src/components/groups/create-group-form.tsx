@@ -19,6 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { LanguageMultiSelect } from '@/components/ui/language-multi-select';
 import { Loader2, X, ChevronsUpDown, Check, MapPin, Link2 } from 'lucide-react';
 import { CityPicker } from '@/components/ui/city-picker';
 import { createGroup, uploadGroupCover, isSlugAvailable } from '@/lib/actions/groups';
@@ -45,6 +46,8 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
   const [slugTouched, setSlugTouched] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [interestsPopoverOpen, setInterestsPopoverOpen] = useState(false);
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [languagesPopoverOpen, setLanguagesPopoverOpen] = useState(false);
 
   function getInterestLabel(interest: Interest): string {
     return interest.translations[locale] || interest.translations['en'] || interest.slug;
@@ -113,6 +116,7 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
       name,
       slug: normalizedSlug,
       description,
+      languages,
       country: country || null,
       city: selectedCity?.name || null,
       city_id: selectedCity?.id || null,
@@ -343,6 +347,20 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
               ))}
             </PopoverContent>
           </Popover>
+        </CardContent>
+      </Card>
+
+      <Card className="rounded-3xl border-border/50 shadow-sm">
+        <CardHeader>
+          <CardTitle>{t('language')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <LanguageMultiSelect
+            value={languages}
+            onChange={setLanguages}
+            open={languagesPopoverOpen}
+            onOpenChange={setLanguagesPopoverOpen}
+          />
         </CardContent>
       </Card>
 

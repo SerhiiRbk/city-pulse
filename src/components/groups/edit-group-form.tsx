@@ -19,6 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { LanguageMultiSelect } from '@/components/ui/language-multi-select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Search, Shield, X, UserPlus, ChevronsUpDown, Check, MapPin, Link2 } from 'lucide-react';
@@ -72,6 +73,8 @@ export function EditGroupForm({
   const [selectedCity, setSelectedCity] = useState<City | null>(initialCity || null);
   const [selectedInterests, setSelectedInterests] = useState<string[]>(groupInterestIds);
   const [interestsPopoverOpen, setInterestsPopoverOpen] = useState(false);
+  const [languages, setLanguages] = useState<string[]>(group.languages || []);
+  const [languagesPopoverOpen, setLanguagesPopoverOpen] = useState(false);
 
   const [moderators, setModerators] = useState<Member[]>(
     initialMembers.filter((m) => m.role === 'moderator')
@@ -154,6 +157,7 @@ export function EditGroupForm({
         name,
         slug: normalizedSlug,
         description,
+        languages,
         country: effectiveCountry,
         city: selectedCity?.name || null,
         city_id: selectedCity?.id || null,
@@ -434,6 +438,20 @@ export function EditGroupForm({
               ))}
             </PopoverContent>
           </Popover>
+        </CardContent>
+      </Card>
+
+      <Card className="rounded-3xl border-border/50 shadow-sm">
+        <CardHeader>
+          <CardTitle>{t('language')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <LanguageMultiSelect
+            value={languages}
+            onChange={setLanguages}
+            open={languagesPopoverOpen}
+            onOpenChange={setLanguagesPopoverOpen}
+          />
         </CardContent>
       </Card>
 

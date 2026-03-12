@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Check, ChevronsUpDown, Search, X } from 'lucide-react';
 import { cn, countryCodeToFlag } from '@/lib/utils';
-import { COUNTRIES } from '@/lib/constants';
+import { COUNTRIES, LANGUAGES } from '@/lib/constants';
 import { CityPicker } from '@/components/ui/city-picker';
 import type { City, Interest, InterestCategory } from '@/types/database';
 
@@ -36,6 +36,7 @@ interface GroupsFiltersProps {
     city_id?: string;
     country?: string;
     interest?: string;
+    language?: string;
   };
 }
 
@@ -45,10 +46,14 @@ export function GroupsFilters({ interests, categories, currentFilters }: GroupsF
   const router = useRouter();
   const pathname = usePathname();
   const [interestsOpen, setInterestsOpen] = useState(false);
+  const [languagesOpen, setLanguagesOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
 
   const selectedInterestIds = currentFilters.interest
     ? currentFilters.interest.split(',').filter(Boolean)
+    : [];
+  const selectedLanguages = currentFilters.language
+    ? currentFilters.language.split(',').filter(Boolean)
     : [];
 
   const currentCityValue = selectedCity ?? (
@@ -72,6 +77,12 @@ export function GroupsFilters({ interests, categories, currentFilters }: GroupsF
     return category.translations[locale] || category.translations.en || category.slug;
   }
 
+  function getLanguageLabel(code: string) {
+    const language = LANGUAGES.find((item) => item.code === code);
+    if (!language) return code;
+    return language[locale as keyof typeof language] || language.en;
+  }
+
   function applyFilters(overrides: Record<string, string | undefined>) {
     const params = new URLSearchParams();
     const merged = { ...currentFilters, ...overrides };
@@ -87,6 +98,13 @@ export function GroupsFilters({ interests, categories, currentFilters }: GroupsF
       ? selectedInterestIds.filter((item) => item !== id)
       : [...selectedInterestIds, id];
     applyFilters({ interest: next.length > 0 ? next.join(',') : undefined });
+  }
+
+  function toggleLanguage(code: string) {
+    const next = selectedLanguages.includes(code)
+      ? selectedLanguages.filter((item) => item !== code)
+      : [...selectedLanguages, code];
+    applyFilters({ language: next.length > 0 ? next.join(',') : undefined });
   }
 
   function clearFilters() {
@@ -120,12 +138,15 @@ export function GroupsFilters({ interests, categories, currentFilters }: GroupsF
         .map((interest) => getInterestLabel(interest as Interest))
         .join(', ')
     : null;
+  const languagesHint = selectedLanguages.length > 0
+    ? selectedLanguages.map((code) => getLanguageLabel(code)).join(', ')
+    : null;
 
   const controlTrigger = 'h-10 sm:h-11 w-full rounded-xl border-border/70 bg-background/92 text-foreground shadow-sm hover:bg-muted/70 hover:text-foreground [&>svg]:text-muted-foreground';
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
         <div>
           <Select
             value={currentFilters.country || ''}
@@ -224,6 +245,57 @@ export function GroupsFilters({ interests, categories, currentFilters }: GroupsF
           </Popover>
         </div>
 
+        <div>
+          <Popover open={languagesOpen} onOpenChange={setLanguagesOpen}>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      type="button"
+                      title={languagesHint || undefined}
+                      className={cn(controlTrigger, 'justify-between font-normal')}
+                    >
+                      {selectedLanguages.length > 0 ? (
+                        <span className="truncate">{t('selectedCount', { count: selectedLanguages.length })}</span>
+                      ) : (
+                        <span className="text-muted-foreground">{t('language')}</span>
+                      )}
+                      <ChevronsUpDown className="ml-1 h-4 w-4 shrink-0 opacity-60" />
+                    </Button>
+                  </PopoverTrigger>
+                </TooltipTrigger>
+                {languagesHint && (
+                  <TooltipContent side="top" sideOffset={8} className="max-w-sm">
+                    {languagesHint}
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
+            <PopoverContent className="max-h-72 w-[--radix-popover-trigger-width] overflow-y-auto p-2" align="start">
+              {LANGUAGES.map((language) => {
+                const selected = selectedLanguages.includes(language.code);
+                return (
+                  <button
+                    key={language.code}
+                    type="button"
+                    className={cn(
+                      'hover:bg-accent flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm transition-colors',
+                      selected && 'bg-accent',
+                    )}
+                    onClick={() => toggleLanguage(language.code)}
+                  >
+                    <Check className={cn('h-4 w-4 shrink-0', selected ? 'opacity-100' : 'opacity-0')} />
+                    <span className="text-base leading-none">{countryCodeToFlag(language.flag)}</span>
+                    {getLanguageLabel(language.code)}
+                  </button>
+                );
+              })}
+            </PopoverContent>
+          </Popover>
+        </div>
+
         <Button className="h-10 w-full rounded-xl px-6 font-semibold shadow-md sm:h-11" onClick={handleSearch}>
           <Search className="mr-2 h-4 w-4" />
           {t('searchCta')}
@@ -261,6 +333,17 @@ export function GroupsFilters({ interests, categories, currentFilters }: GroupsF
               </span>
             );
           })}
+          {selectedLanguages.map((code) => (
+            <span
+              key={code}
+              className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-muted px-3 py-1 text-xs font-medium text-foreground"
+            >
+              {getLanguageLabel(code)}
+              <button type="button" onClick={() => toggleLanguage(code)} className="ml-0.5 opacity-70 hover:opacity-100">
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          ))}
           <button
             type="button"
             onClick={clearFilters}

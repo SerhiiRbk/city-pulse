@@ -292,6 +292,7 @@
       "name": "Event name",
       "description": "Description",
       "category": "Category",
+      "language": "Languages",
       "date": "Date",
       "time": "Time",
       "duration": "Duration (minutes)",
@@ -341,6 +342,7 @@
     "filters": {
       "country": "Country",
       "city": "City",
+      "language": "Language",
       "interests": "Interests",
       "allCountries": "All countries",
       "helper": "Filter communities by location and shared interests to find groups that are easier to join regularly.",
@@ -356,6 +358,7 @@
       "country": "Country",
       "city": "City",
       "cityPlaceholder": "Enter city name",
+      "language": "Languages",
       "interests": "Interests",
       "submit": "Create group"
     },
@@ -486,6 +489,7 @@
       "country": "Country",
       "city": "City",
       "cityPlaceholder": "Enter city name",
+      "language": "Languages",
       "interests": "Interests",
       "submit": "Save changes",
       "moderators": "Moderators",

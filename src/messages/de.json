@@ -292,6 +292,7 @@
       "name": "Name",
       "description": "Beschreibung",
       "category": "Kategorie",
+      "language": "Sprachen",
       "date": "Datum",
       "time": "Uhrzeit",
       "duration": "Dauer (Minuten)",
@@ -341,6 +342,7 @@
     "filters": {
       "country": "Land",
       "city": "Stadt",
+      "language": "Sprache",
       "interests": "Interessen",
       "allCountries": "Alle Länder",
       "helper": "Filtere Communities nach Ort und gemeinsamen Interessen, um schneller Gruppen zu finden, zu denen man gerne zurückkehrt.",
@@ -356,6 +358,7 @@
       "country": "Land",
       "city": "Stadt",
       "cityPlaceholder": "Stadtname eingeben",
+      "language": "Sprachen",
       "interests": "Interessen",
       "submit": "Gruppe erstellen"
     },
@@ -486,6 +489,7 @@
       "country": "Land",
       "city": "Stadt",
       "cityPlaceholder": "Stadtname eingeben",
+      "language": "Sprachen",
       "interests": "Interessen",
       "submit": "Änderungen speichern",
       "moderators": "Moderatoren",
