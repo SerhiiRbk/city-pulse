@@ -65,6 +65,8 @@ export async function getSystemEvents(filters: {
     .select('*')
     .eq('is_system', true)
     .eq('status', 'published')
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
     .gte('starts_at', now)
     .order('starts_at', { ascending: true })
     .range(offset, offset + limit - 1);

@@ -33,6 +33,7 @@ export interface Profile {
   is_private: boolean;
   social_links: SocialLinks;
   hide_events: boolean;
+  is_blocked: boolean;
   role: 'user' | 'admin' | 'moderator';
   created_at: string;
   updated_at: string;
@@ -70,6 +71,7 @@ export interface Event {
   description: string;
   photos: string[];
   languages: string[];
+  is_blocked: boolean;
   category_id: string;
   starts_at: string;
   duration_minutes: number;
@@ -91,6 +93,7 @@ export interface Event {
   is_system: boolean;
   source_url: string | null;
   status: EventStatus;
+  organizer_is_blocked?: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -132,10 +135,12 @@ export interface Group {
   description: string;
   cover_url: string | null;
   languages: string[];
+  is_blocked: boolean;
   country: string | null;
   city: string | null;
   city_id: string | null;
   created_by: string;
+  creator_is_blocked?: boolean;
   created_at: string;
   updated_at: string;
 }

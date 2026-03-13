@@ -1,12 +1,12 @@
 import { setRequestLocale } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Link } from '@/i18n/navigation';
+import { MapPin, CalendarDays, Users } from 'lucide-react';
 import { AdminBlockToggleButton } from '@/components/admin/block-toggle-button';
 
-export default async function AdminUsersPage({
+export default async function AdminGroupsPage({
   params,
   searchParams,
 }: {
@@ -22,9 +22,11 @@ export default async function AdminUsersPage({
   const offset = (page - 1) * limit;
 
   const supabase = await createClient();
-  const { data: users, count } = await supabase
-    .from('profiles')
-    .select('id, display_name, email, avatar_url, role, city, country, is_available, is_blocked, created_at', { count: 'exact' })
+  const { data: groups, count } = await supabase
+    .from('groups_with_counts')
+    .select('id, name, city, member_count, event_count, creator_name, created_at, is_blocked', {
+      count: 'exact',
+    })
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
 
@@ -33,40 +35,41 @@ export default async function AdminUsersPage({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Users ({count || 0})</CardTitle>
+        <CardTitle>Groups ({count || 0})</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          {(users || []).map((u) => (
+          {(groups || []).map((group) => (
             <div
-              key={u.id}
+              key={group.id}
               className="flex items-center gap-3 rounded-xl border p-3 transition-colors hover:bg-accent/40"
             >
-              <Link href={`/profile/${u.id}`} className="flex min-w-0 flex-1 items-center gap-3">
-                <Avatar className="h-9 w-9">
-                  <AvatarImage src={u.avatar_url || undefined} />
-                  <AvatarFallback>{u.display_name?.[0] || '?'}</AvatarFallback>
-                </Avatar>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{u.display_name}</p>
-                  <p className="text-muted-foreground truncate text-xs">{u.email}</p>
+              <Link href={`/groups/${group.id}`} className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <p className="truncate text-sm font-medium">{group.name}</p>
+                  {group.is_blocked && <Badge variant="destructive" className="text-xs">Blocked</Badge>}
+                </div>
+                <div className="text-muted-foreground flex flex-wrap items-center gap-3 text-xs">
+                  <span>{group.creator_name || 'Unknown creator'}</span>
+                  {group.city && (
+                    <span className="flex items-center gap-0.5">
+                      <MapPin className="h-3 w-3" /> {group.city}
+                    </span>
+                  )}
+                  <span>{new Date(group.created_at).toLocaleDateString()}</span>
                 </div>
               </Link>
               <div className="flex flex-wrap items-center justify-end gap-2">
-                {u.role !== 'user' && (
-                  <Badge variant={u.role === 'admin' ? 'default' : 'secondary'}>{u.role}</Badge>
-                )}
-                {u.is_blocked && <Badge variant="destructive">Blocked</Badge>}
-                {u.city && (
-                  <span className="text-muted-foreground text-xs">{u.city}</span>
-                )}
-                <span className="text-muted-foreground text-xs">
-                  {new Date(u.created_at).toLocaleDateString()}
+                <span className="text-muted-foreground flex items-center gap-1 text-xs">
+                  <Users className="h-3 w-3" /> {group.member_count}
+                </span>
+                <span className="text-muted-foreground flex items-center gap-1 text-xs">
+                  <CalendarDays className="h-3 w-3" /> {group.event_count}
                 </span>
                 <AdminBlockToggleButton
-                  targetType="user"
-                  targetId={u.id}
-                  blocked={u.is_blocked}
+                  targetType="group"
+                  targetId={group.id}
+                  blocked={Boolean(group.is_blocked)}
                   compact
                 />
               </div>
@@ -78,7 +81,7 @@ export default async function AdminUsersPage({
             {Array.from({ length: Math.min(totalPages, 10) }, (_, i) => (
               <Link
                 key={i}
-                href={`/admin/users?page=${i + 1}`}
+                href={`/admin/groups?page=${i + 1}`}
                 className={`flex h-8 w-8 items-center justify-center rounded text-sm ${page === i + 1 ? 'bg-primary text-primary-foreground' : 'hover:bg-accent border'}`}
               >
                 {i + 1}

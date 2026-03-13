@@ -12,6 +12,8 @@ export async function getCalendarEvents(year: number, month: number) {
     .select('id, title, starts_at, city, is_online, is_free, going_count, category_slug, photos')
     .eq('status', 'published')
     .eq('is_private', false)
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
     .gte('starts_at', start)
     .lt('starts_at', end)
     .order('starts_at');
@@ -41,6 +43,8 @@ export async function getMyCalendarEvents(year: number, month: number) {
     .from('events_with_counts')
     .select('id, title, starts_at, city, is_online, is_free, going_count, category_slug, photos')
     .in('id', eventIds)
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
     .gte('starts_at', start)
     .lt('starts_at', end)
     .order('starts_at');

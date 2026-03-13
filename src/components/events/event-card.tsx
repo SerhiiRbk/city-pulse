@@ -16,6 +16,7 @@ interface EventCardProps {
   event: {
     id: string;
     title: string;
+    description?: string | null;
     photos: string[];
     starts_at: string;
     city: string | null;
@@ -109,10 +110,10 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
   }
 
   return (
-    <Link href={`/events/${event.id}`}>
-      <Card className="group gap-0 overflow-hidden rounded-3xl border-border/50 pt-0 pb-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <Link href={`/events/${event.id}`} className="block h-full">
+      <Card className="group flex h-[24rem] flex-col gap-0 overflow-hidden rounded-3xl border-border/50 pt-0 pb-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
         {/* Cover — ~55% of card */}
-        <div className="relative h-56 overflow-hidden">
+        <div className="relative h-52 overflow-hidden">
           {event.photos[0] ? (
             <img
               src={event.photos[0]}
@@ -125,6 +126,11 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
+          {event.description && (
+            <div className="absolute inset-x-3 bottom-14 rounded-2xl bg-black/55 p-3 text-sm leading-relaxed text-white opacity-0 shadow-lg backdrop-blur-md transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+              <p className="line-clamp-4">{event.description}</p>
+            </div>
+          )}
           {/* Badges on image */}
           <div className="absolute top-3 left-3 flex gap-1.5">
             {event.is_free ? (
@@ -170,7 +176,7 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
         </div>
 
         {/* Content — compact */}
-        <div className="p-5">
+        <div className="flex flex-1 flex-col p-4">
           {/* Category + attendees row */}
           <div className="mb-2.5 flex items-center justify-between gap-3">
             {categoryLabel ? (
@@ -232,13 +238,13 @@ export function EventCard({ event, isGoing: initialGoing, isFavorited: initialFa
               ))}
             </div>
           )}
-          <p className="mb-4 text-sm text-muted-foreground">
+          {/* <p className="mb-4 text-sm text-muted-foreground">
             {goingCount > 0 ? t('alreadyIn', { count: goingCount }) : t('firstToJoin')}
-          </p>
+          </p> */}
 
           {/* Join button */}
           {isAuthenticated && (
-            <div className="flex justify-end">
+            <div className="mt-auto flex justify-end">
               <Button
                 size="sm"
                 variant={going ? 'secondary' : 'default'}

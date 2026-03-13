@@ -47,9 +47,9 @@ export function GroupCard({ group }: GroupCardProps) {
   const activityCue = group.event_count > 3 ? t('cueActive') : group.member_count > 20 ? t('cueWelcoming') : t('cueGrowing');
 
   return (
-    <Link href={`/groups/${group.id}`}>
-      <Card className="group gap-0 overflow-hidden rounded-3xl border-border/50 pt-0 pb-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-        <div className="relative h-56 overflow-hidden">
+    <Link href={`/groups/${group.id}`} className="block h-full">
+      <Card className="group flex h-[24rem] flex-col gap-0 overflow-hidden rounded-3xl border-border/50 pt-0 pb-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+        <div className="relative h-52 overflow-hidden">
           {group.cover_url ? (
             <img
               src={group.cover_url}
@@ -62,6 +62,11 @@ export function GroupCard({ group }: GroupCardProps) {
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
+          {group.description && (
+            <div className="absolute inset-x-3 bottom-14 rounded-2xl bg-black/55 p-3 text-sm leading-relaxed text-white opacity-0 shadow-lg backdrop-blur-md transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+              <p className="line-clamp-4">{group.description}</p>
+            </div>
+          )}
           <div className="absolute bottom-3 left-3">
             <Badge variant="secondary" className="bg-white/90 backdrop-blur-md">
               <Users className="mr-1 h-3 w-3" />
@@ -74,9 +79,8 @@ export function GroupCard({ group }: GroupCardProps) {
             </Badge>
           </div>
         </div>
-        <div className="p-5">
-          <h3 className="mb-2 line-clamp-1 text-xl font-bold tracking-tight">{group.name}</h3>
-          <p className="text-muted-foreground mb-4 line-clamp-2 text-sm leading-relaxed">{group.description}</p>
+        <div className="flex flex-1 flex-col p-4">
+          <h3 className="mb-2 line-clamp-2 text-xl font-bold tracking-tight">{group.name}</h3>
           {(cityLabel || group.country) && (
             <div className="text-muted-foreground mb-3 flex items-center gap-1.5 text-sm">
               <MapPin className="h-3.5 w-3.5 shrink-0" />
@@ -96,7 +100,7 @@ export function GroupCard({ group }: GroupCardProps) {
               ))}
             </div>
           )}
-          <div className="text-muted-foreground flex items-center gap-5 text-sm font-medium">
+          <div className="mt-auto flex items-center gap-5 text-sm font-medium text-muted-foreground">
             <div className="flex items-center gap-1.5">
               <Users className="h-4 w-4" />
               <span>{t('members', { count: group.member_count })}</span>

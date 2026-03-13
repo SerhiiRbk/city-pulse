@@ -2,10 +2,18 @@
 
 import { createClient } from '@/lib/supabase/server';
 import type { Profile } from '@/types/database';
+import { canViewBlockedProfile, getViewerContext } from '@/lib/server/viewer-context';
 
 export async function getProfile(userId: string): Promise<Profile | null> {
   const supabase = await createClient();
-  const { data } = await supabase.from('profiles').select('*').eq('id', userId).single();
+  const [{ data }, viewer] = await Promise.all([
+    supabase.from('profiles').select('*').eq('id', userId).maybeSingle(),
+    getViewerContext(),
+  ]);
+
+  if (!data) return null;
+  if (!canViewBlockedProfile(viewer, userId, data.is_blocked)) return null;
+
   return data;
 }
 

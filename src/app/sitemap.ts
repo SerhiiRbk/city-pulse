@@ -20,10 +20,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const { data: events } = await supabase
-    .from('events')
+    .from('events_with_counts')
     .select('id, updated_at')
     .eq('status', 'published')
     .eq('is_private', false)
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
     .order('updated_at', { ascending: false })
     .limit(1000);
 
@@ -41,8 +43,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const { data: groups } = await supabase
-    .from('groups')
+    .from('groups_with_counts')
     .select('id, updated_at')
+    .eq('is_blocked', false)
+    .eq('creator_is_blocked', false)
     .order('updated_at', { ascending: false })
     .limit(500);
 
@@ -59,6 +63,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
+  const visibleGroupIds = new Set((groups || []).map((group) => group.id));
+
   const { data: posts } = await supabase
     .from('group_posts')
     .select('id, group_id, slug, updated_at')
@@ -67,6 +73,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   if (posts) {
     for (const post of posts) {
+      if (!visibleGroupIds.has(post.group_id)) continue;
       const postPath = post.slug || post.id;
       for (const locale of locales) {
         entries.push({
@@ -83,6 +90,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .from('profiles')
     .select('id, updated_at')
     .eq('is_private', false)
+    .eq('is_blocked', false)
     .order('updated_at', { ascending: false })
     .limit(500);
 

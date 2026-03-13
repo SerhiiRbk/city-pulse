@@ -177,7 +177,7 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
                   {tProfile('languages')}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
-                  {languageLabels.map((language) => (
+                  {languageLabels.map((language: string) => (
                     <span
                       key={language}
                       className="inline-flex items-center rounded-full border border-border/50 bg-muted/40 px-2.5 py-1 text-[11px] font-medium"

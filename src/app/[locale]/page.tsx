@@ -9,13 +9,15 @@ import {
   CalendarPlus, Bell, UsersRound, Sparkles, MessageCircle, Coffee, Languages,
 } from 'lucide-react';
 import { getUser } from '@/lib/actions/auth';
-import { getTodayEvents, getTomorrowEvents, getWeekendEvents, getPopularEvents, getTopGroups } from '@/lib/actions/landing';
-import { getUserEventStatuses } from '@/lib/actions/events';
+import { getTopGroups } from '@/lib/actions/landing';
+import { getEvents, getUserEventStatuses } from '@/lib/actions/events';
 import { EventCard } from '@/components/events/event-card';
 import { GroupCard } from '@/components/groups/group-card';
 import { generateOrganizationJsonLd } from '@/lib/json-ld';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
+
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
   params,
@@ -45,17 +47,13 @@ export default async function HomePage({
   const tNav = await getTranslations('nav');
   const user = await getUser();
 
-  const [todayEvents, tomorrowEvents, weekendEvents, popularEvents, topGroups] = await Promise.all([
-    getTodayEvents(6),
-    getTomorrowEvents(6),
-    getWeekendEvents(6),
-    getPopularEvents(6),
+  const [events, topGroups] = await Promise.all([
+    getEvents({ limit: 24 }),
     getTopGroups(4),
   ]);
 
-  const allEventIds = [...todayEvents, ...tomorrowEvents, ...weekendEvents, ...popularEvents].map((e) => e.id);
   const { goingSet, favoritedSet } = user
-    ? await getUserEventStatuses(allEventIds)
+    ? await getUserEventStatuses(events.map((event) => event.id))
     : { goingSet: new Set<string>(), favoritedSet: new Set<string>() };
 
   const featureCards = [
@@ -194,7 +192,7 @@ export default async function HomePage({
       </section>
 
       {/* Features */}
-      <section className="container mx-auto px-4 py-24">
+      <section className="container mx-auto px-4 pt-24 pb-14">
         <div className="mb-16 text-center">
           <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">{t('marketing.whyTitle')}</h2>
           <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
@@ -220,51 +218,12 @@ export default async function HomePage({
 
       <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-      {/* Today's Events */}
-      {todayEvents.length > 0 && (
-        <div className="pt-12">
-          <EventSection
-            title={t('sections.todayEvents')}
-            events={todayEvents}
-            isAuthenticated={!!user}
-            viewAllLabel={t('sections.viewAllEvents')}
-            goingSet={goingSet}
-            favoritedSet={favoritedSet}
-          />
-        </div>
-      )}
-
-      {/* Tomorrow's Events */}
-      {tomorrowEvents.length > 0 && (
-        <EventSection
-          title={t('sections.tomorrowEvents')}
-          events={tomorrowEvents}
-          isAuthenticated={!!user}
-          viewAllLabel={t('sections.viewAllEvents')}
-          goingSet={goingSet}
-          favoritedSet={favoritedSet}
-          alt
-        />
-      )}
-
-      {/* Weekend Events */}
-      {weekendEvents.length > 0 && (
-        <EventSection
-          title={t('sections.weekendEvents')}
-          events={weekendEvents}
-          isAuthenticated={!!user}
-          viewAllLabel={t('sections.viewAllEvents')}
-          goingSet={goingSet}
-          favoritedSet={favoritedSet}
-        />
-      )}
-
-      {/* Popular Events (fallback) */}
-      {todayEvents.length === 0 && tomorrowEvents.length === 0 && weekendEvents.length === 0 && popularEvents.length > 0 && (
-        <div className="pt-12">
+      {/* Events */}
+      {events.length > 0 && (
+        <div className="pt-4">
           <EventSection
             title={t('sections.topEvents')}
-            events={popularEvents}
+            events={events}
             isAuthenticated={!!user}
             viewAllLabel={t('sections.viewAllEvents')}
             goingSet={goingSet}
@@ -298,7 +257,7 @@ export default async function HomePage({
       )}
 
       {/* Empty state */}
-      {todayEvents.length === 0 && tomorrowEvents.length === 0 && weekendEvents.length === 0 && popularEvents.length === 0 && topGroups.length === 0 && (
+      {events.length === 0 && topGroups.length === 0 && (
         <section className="bg-muted/50 py-16">
           <div className="container mx-auto px-4 text-center">
             <h2 className="mb-4 text-2xl font-bold">{t('sections.topEvents')}</h2>
@@ -381,7 +340,6 @@ function EventSection({
   viewAllLabel,
   goingSet,
   favoritedSet,
-  alt,
 }: {
   title: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -390,10 +348,9 @@ function EventSection({
   viewAllLabel: string;
   goingSet: Set<string>;
   favoritedSet: Set<string>;
-  alt?: boolean;
 }) {
   return (
-    <section className={alt ? 'bg-muted/30 py-24' : 'py-20'}>
+    <section className="py-14">
       <div className="container mx-auto px-4">
         <div className="mb-12 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <h2 className="text-3xl font-bold tracking-tight md:text-4xl">{title}</h2>

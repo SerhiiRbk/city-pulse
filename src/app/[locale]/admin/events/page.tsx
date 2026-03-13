@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from '@/i18n/navigation';
 import { MapPin, Users } from 'lucide-react';
+import { AdminBlockToggleButton } from '@/components/admin/block-toggle-button';
 
 export default async function AdminEventsPage({
   params,
@@ -24,7 +25,7 @@ export default async function AdminEventsPage({
   const supabase = await createClient();
   let query = supabase
     .from('events_with_counts')
-    .select('id, title, status, city, going_count, starts_at, is_system, organizer_name', { count: 'exact' })
+    .select('id, title, status, city, going_count, starts_at, is_system, organizer_name, is_blocked', { count: 'exact' })
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
 
@@ -53,15 +54,15 @@ export default async function AdminEventsPage({
       <CardContent>
         <div className="space-y-2">
           {(events || []).map((e) => (
-            <Link
+            <div
               key={e.id}
-              href={`/events/${e.id}`}
-              className="hover:bg-accent flex items-center gap-3 rounded-lg border p-3 transition-colors"
+              className="flex items-center gap-3 rounded-xl border p-3 transition-colors hover:bg-accent/40"
             >
-              <div className="min-w-0 flex-1">
+              <Link href={`/events/${e.id}`} className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <p className="truncate text-sm font-medium">{e.title}</p>
                   {e.is_system && <Badge variant="secondary" className="text-xs">System</Badge>}
+                  {e.is_blocked && <Badge variant="destructive" className="text-xs">Blocked</Badge>}
                 </div>
                 <div className="text-muted-foreground flex items-center gap-3 text-xs">
                   <span>{e.organizer_name}</span>
@@ -72,8 +73,8 @@ export default async function AdminEventsPage({
                   )}
                   <span>{new Date(e.starts_at).toLocaleDateString()}</span>
                 </div>
-              </div>
-              <div className="flex items-center gap-2">
+              </Link>
+              <div className="flex flex-wrap items-center justify-end gap-2">
                 <Badge
                   variant={
                     e.status === 'published' ? 'default' :
@@ -87,8 +88,14 @@ export default async function AdminEventsPage({
                 <span className="text-muted-foreground flex items-center gap-1 text-xs">
                   <Users className="h-3 w-3" /> {e.going_count}
                 </span>
+                <AdminBlockToggleButton
+                  targetType="event"
+                  targetId={e.id}
+                  blocked={Boolean(e.is_blocked)}
+                  compact
+                />
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </CardContent>

@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { canViewBlockedOwnedResource, getViewerContext } from '@/lib/server/viewer-context';
 
 interface ManageableGroupRow {
   groups: {
@@ -23,22 +24,27 @@ interface GroupInterestItem {
 
 export async function canEditGroup(groupId: string) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return false;
+  const viewer = await getViewerContext();
+  if (!viewer.userId) return false;
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
+  if (viewer.isAdmin) return true;
 
-  if (profile?.role === 'admin' || profile?.role === 'moderator') return true;
+  const { data: group } = await supabase
+    .from('groups')
+    .select('created_by, is_blocked')
+    .eq('id', groupId)
+    .maybeSingle();
+
+  if (!group) return false;
+  if (group.created_by === viewer.userId) return true;
+  if (group.is_blocked) return false;
+  if (viewer.isModerator) return true;
 
   const { data: member } = await supabase
     .from('group_members')
     .select('role')
     .eq('group_id', groupId)
-    .eq('user_id', user.id)
+    .eq('user_id', viewer.userId)
     .single();
 
   return member?.role === 'admin' || member?.role === 'moderator';
@@ -191,6 +197,7 @@ export async function searchUsers(query: string) {
   const { data } = await supabase
     .from('profiles')
     .select('id, display_name, avatar_url')
+    .eq('is_blocked', false)
     .ilike('display_name', `%${query}%`)
     .limit(10);
   return data || [];
@@ -238,22 +245,46 @@ export async function createGroup(data: {
 
 export async function getGroup(groupId: string) {
   const supabase = await createClient();
-  const { data } = await supabase
-    .from('groups_with_counts')
-    .select('*')
-    .eq('id', groupId)
-    .single();
+  const [{ data }, viewer] = await Promise.all([
+    supabase
+      .from('groups_with_counts')
+      .select('*')
+      .eq('id', groupId)
+      .maybeSingle(),
+    getViewerContext(),
+  ]);
+
+  if (!data) return null;
+  if (!canViewBlockedOwnedResource(viewer, data.created_by, {
+    isBlocked: data.is_blocked,
+    ownerBlocked: data.creator_is_blocked,
+  })) {
+    return null;
+  }
+
   return data;
 }
 
 export async function getGroupByCountrySlug(country: string, slug: string) {
   const supabase = await createClient();
-  const { data } = await supabase
-    .from('groups_with_counts')
-    .select('*')
-    .eq('country', country.toUpperCase())
-    .eq('slug', slug.toLowerCase())
-    .single();
+  const [{ data }, viewer] = await Promise.all([
+    supabase
+      .from('groups_with_counts')
+      .select('*')
+      .eq('country', country.toUpperCase())
+      .eq('slug', slug.toLowerCase())
+      .maybeSingle(),
+    getViewerContext(),
+  ]);
+
+  if (!data) return null;
+  if (!canViewBlockedOwnedResource(viewer, data.created_by, {
+    isBlocked: data.is_blocked,
+    ownerBlocked: data.creator_is_blocked,
+  })) {
+    return null;
+  }
+
   return data;
 }
 
@@ -296,6 +327,8 @@ export async function getGroups(
   let query = supabase
     .from('groups_with_counts')
     .select('*')
+    .eq('is_blocked', false)
+    .eq('creator_is_blocked', false)
     .order('member_count', { ascending: false });
 
   if (filters.country) {
@@ -345,6 +378,8 @@ export async function getGroupEvents(groupId: string) {
     .select('*')
     .eq('group_id', groupId)
     .eq('status', 'published')
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
     .gte('starts_at', new Date().toISOString())
     .order('starts_at', { ascending: true });
   return data || [];
@@ -357,6 +392,8 @@ export async function getPastGroupEvents(groupId: string) {
     .select('*')
     .eq('group_id', groupId)
     .in('status', ['published', 'completed'])
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
     .lt('starts_at', new Date().toISOString())
     .order('starts_at', { ascending: false });
   return data || [];
@@ -369,6 +406,7 @@ export async function getGroupPhotos(groupId: string) {
     .select('id, title, photos')
     .eq('group_id', groupId)
     .eq('status', 'published')
+    .eq('is_blocked', false)
     .not('photos', 'is', null)
     .order('starts_at', { ascending: false });
 

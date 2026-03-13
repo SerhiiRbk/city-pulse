@@ -32,6 +32,8 @@ async function fetchEvents(dateStart: string, dateEnd: string, limit = 6) {
     .select('*')
     .eq('status', 'published')
     .eq('is_private', false)
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
     .gte('starts_at', dateStart)
     .lt('starts_at', dateEnd)
     .order('going_count', { ascending: false })
@@ -62,6 +64,8 @@ export async function getPopularEvents(limit = 6) {
     .select('*')
     .eq('status', 'published')
     .eq('is_private', false)
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
     .gte('starts_at', now)
     .order('going_count', { ascending: false })
     .limit(limit);
@@ -73,6 +77,8 @@ export async function getTopGroups(limit = 4) {
   const { data } = await supabase
     .from('groups_with_counts')
     .select('*')
+    .eq('is_blocked', false)
+    .eq('creator_is_blocked', false)
     .order('member_count', { ascending: false })
     .limit(limit);
   return data || [];

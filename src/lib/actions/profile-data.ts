@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { getViewerContext } from '@/lib/server/viewer-context';
 
 export async function getProfileFavoriteEvents(userId: string) {
   const supabase = await createClient();
@@ -15,6 +16,8 @@ export async function getProfileFavoriteEvents(userId: string) {
     .from('events_with_counts')
     .select('*')
     .in('id', ids)
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
     .order('starts_at', { ascending: true });
   return data || [];
 }
@@ -35,6 +38,8 @@ export async function getProfileGoingEvents(userId: string) {
     .in('id', ids)
     .gte('starts_at', new Date().toISOString())
     .eq('status', 'published')
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
     .order('starts_at', { ascending: true });
   return data || [];
 }
@@ -53,6 +58,8 @@ export async function getProfilePastEvents(userId: string) {
     .from('events_with_counts')
     .select('*')
     .in('id', ids)
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
     .lt('starts_at', new Date().toISOString())
     .order('starts_at', { ascending: false });
   return data || [];
@@ -60,12 +67,22 @@ export async function getProfilePastEvents(userId: string) {
 
 export async function getProfileCreatedEvents(userId: string) {
   const supabase = await createClient();
+  const viewer = await getViewerContext();
+  const canSeeBlocked = viewer.isAdmin || viewer.userId === userId;
 
-  const { data: organized } = await supabase
+  let organizedQuery = supabase
     .from('events_with_counts')
     .select('*')
     .eq('organizer_id', userId)
     .order('starts_at', { ascending: false });
+
+  if (!canSeeBlocked) {
+    organizedQuery = organizedQuery
+      .eq('is_blocked', false)
+      .eq('organizer_is_blocked', false);
+  }
+
+  const { data: organized } = await organizedQuery;
 
   const { data: moderated } = await supabase
     .from('event_moderators')
@@ -80,11 +97,19 @@ export async function getProfileCreatedEvents(userId: string) {
 
   if (extraIds.length === 0) return organized || [];
 
-  const { data: extra } = await supabase
+  let extraQuery = supabase
     .from('events_with_counts')
     .select('*')
     .in('id', extraIds)
     .order('starts_at', { ascending: false });
+
+  if (!canSeeBlocked) {
+    extraQuery = extraQuery
+      .eq('is_blocked', false)
+      .eq('organizer_is_blocked', false);
+  }
+
+  const { data: extra } = await extraQuery;
 
   return [...(organized || []), ...(extra || [])];
 }
@@ -102,12 +127,16 @@ export async function getProfileSubscribedGroups(userId: string) {
     .from('groups_with_counts')
     .select('*')
     .in('id', ids)
+    .eq('is_blocked', false)
+    .eq('creator_is_blocked', false)
     .order('member_count', { ascending: false });
   return data || [];
 }
 
 export async function getProfileManagedGroups(userId: string) {
   const supabase = await createClient();
+  const viewer = await getViewerContext();
+  const canSeeBlocked = viewer.isAdmin || viewer.userId === userId;
 
   const { data: memberships } = await supabase
     .from('group_members')
@@ -117,10 +146,18 @@ export async function getProfileManagedGroups(userId: string) {
   if (!memberships || memberships.length === 0) return [];
 
   const ids = memberships.map((m) => m.group_id);
-  const { data } = await supabase
+  let query = supabase
     .from('groups_with_counts')
     .select('*')
     .in('id', ids)
     .order('member_count', { ascending: false });
+
+  if (!canSeeBlocked) {
+    query = query
+      .eq('is_blocked', false)
+      .eq('creator_is_blocked', false);
+  }
+
+  const { data } = await query;
   return data || [];
 }

@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { nanoid } from '@/lib/utils';
+import { canViewBlockedOwnedResource, getViewerContext } from '@/lib/server/viewer-context';
 
 export async function createEvent(data: {
   title: string;
@@ -51,30 +52,27 @@ export async function createEvent(data: {
 
 export async function canEditEvent(eventId: string) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return false;
+  const viewer = await getViewerContext();
+  if (!viewer.userId) return false;
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  if (profile?.role === 'admin' || profile?.role === 'moderator') return true;
+  if (viewer.isAdmin) return true;
 
   const { data: event } = await supabase
     .from('events')
-    .select('organizer_id')
+    .select('organizer_id, is_blocked')
     .eq('id', eventId)
-    .single();
+    .maybeSingle();
 
-  if (event?.organizer_id === user.id) return true;
+  if (!event) return false;
+  if (event.organizer_id === viewer.userId) return true;
+  if (event.is_blocked) return false;
+  if (viewer.isModerator) return true;
 
   const { data: mod } = await supabase
     .from('event_moderators')
     .select('user_id')
     .eq('event_id', eventId)
-    .eq('user_id', user.id)
+    .eq('user_id', viewer.userId)
     .single();
 
   return !!mod;
@@ -129,11 +127,23 @@ export async function getEventRaw(eventId: string) {
 
 export async function getEvent(eventId: string) {
   const supabase = await createClient();
-  const { data } = await supabase
-    .from('events_with_counts')
-    .select('*')
-    .eq('id', eventId)
-    .single();
+  const [{ data }, viewer] = await Promise.all([
+    supabase
+      .from('events_with_counts')
+      .select('*')
+      .eq('id', eventId)
+      .maybeSingle(),
+    getViewerContext(),
+  ]);
+
+  if (!data) return null;
+  if (!canViewBlockedOwnedResource(viewer, data.organizer_id, {
+    isBlocked: data.is_blocked,
+    ownerBlocked: data.organizer_is_blocked,
+  })) {
+    return null;
+  }
+
   return data;
 }
 
@@ -157,6 +167,8 @@ export async function getEvents(filters: {
     .select('*')
     .eq('status', 'published')
     .eq('is_private', false)
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
     .order('starts_at', { ascending: true });
 
   if (filters.country) query = query.eq('country', filters.country);

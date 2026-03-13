@@ -133,7 +133,7 @@ export default async function EventDetailPage({ params }: Props) {
               )}
               {event.is_free && <Badge className="bg-success text-success-foreground">{t('free')}</Badge>}
               <Badge className="bg-primary/10 text-primary hover:bg-primary/10">{comfortCue}</Badge>
-              {languageLabels.map((language) => (
+              {languageLabels.map((language: string) => (
                 <Badge key={language} variant="outline">{language}</Badge>
               ))}
             </div>
