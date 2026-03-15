@@ -136,7 +136,11 @@
       "noAccount": "Nemáte účet?",
       "signUp": "Zaregistrovat se",
       "orContinueWith": "nebo pokračujte přes",
-      "google": "Pokračovat s Google"
+      "google": "Pokračovat s Google",
+      "legalPrefix": "Pokračováním souhlasíte s",
+      "legalMiddle": "a",
+      "termsLink": "Podmínkami použití",
+      "privacyLink": "Zásadami ochrany osobních údajů"
     },
     "register": {
       "title": "Vytvořte si účet",
@@ -145,6 +149,11 @@
       "email": "Email",
       "password": "Heslo",
       "confirmPassword": "Potvrďte heslo",
+      "acceptTermsPrefix": "Seznámil(a) jsem se a souhlasím s",
+      "acceptTermsMiddle": "a",
+      "termsLink": "Podmínkami použití",
+      "privacyLink": "Zásadami ochrany osobních údajů",
+      "acceptTermsError": "Musíte souhlasit s podmínkami použití a zásadami ochrany osobních údajů",
       "submit": "Zaregistrovat se",
       "hasAccount": "Již máte účet?",
       "signIn": "Přihlásit se",

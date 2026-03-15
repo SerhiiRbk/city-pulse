@@ -8,7 +8,12 @@ export async function signUp(formData: {
   password: string;
   displayName: string;
   locale: string;
+  acceptedTerms: boolean;
 }) {
+  if (!formData.acceptedTerms) {
+    return { error: 'You must accept the Terms & Conditions and Privacy Policy' };
+  }
+
   const supabase = await createClient();
 
   const { error } = await supabase.auth.signUp({
@@ -17,6 +22,8 @@ export async function signUp(formData: {
     options: {
       data: {
         display_name: formData.displayName,
+        accepted_terms_at: new Date().toISOString(),
+        accepted_privacy_at: new Date().toISOString(),
       },
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/${formData.locale}/auth/callback`,
     },

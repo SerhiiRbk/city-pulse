@@ -136,7 +136,11 @@
       "noAccount": "Нет аккаунта?",
       "signUp": "Зарегистрироваться",
       "orContinueWith": "или войти через",
-      "google": "Продолжить с Google"
+      "google": "Продолжить с Google",
+      "legalPrefix": "Продолжая, вы соглашаетесь с",
+      "legalMiddle": "и",
+      "termsLink": "Условиями использования",
+      "privacyLink": "Политикой конфиденциальности"
     },
     "register": {
       "title": "Создайте аккаунт",
@@ -145,6 +149,11 @@
       "email": "Email",
       "password": "Пароль",
       "confirmPassword": "Подтвердите пароль",
+      "acceptTermsPrefix": "Я ознакомился и согласен с",
+      "acceptTermsMiddle": "и",
+      "termsLink": "Условиями использования",
+      "privacyLink": "Политикой конфиденциальности",
+      "acceptTermsError": "Необходимо согласиться с условиями использования и политикой конфиденциальности",
       "submit": "Зарегистрироваться",
       "hasAccount": "Уже есть аккаунт?",
       "signIn": "Войти",

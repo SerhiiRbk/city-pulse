@@ -136,7 +136,11 @@
       "noAccount": "Kein Konto?",
       "signUp": "Registrieren",
       "orContinueWith": "oder weiter mit",
-      "google": "Mit Google fortfahren"
+      "google": "Mit Google fortfahren",
+      "legalPrefix": "Mit der Nutzung stimmen Sie den",
+      "legalMiddle": "und der",
+      "termsLink": "Nutzungsbedingungen",
+      "privacyLink": "Datenschutzrichtlinie"
     },
     "register": {
       "title": "Konto erstellen",
@@ -145,6 +149,11 @@
       "email": "Email",
       "password": "Passwort",
       "confirmPassword": "Passwort bestätigen",
+      "acceptTermsPrefix": "Ich habe die",
+      "acceptTermsMiddle": "und die",
+      "termsLink": "Nutzungsbedingungen",
+      "privacyLink": "Datenschutzrichtlinie",
+      "acceptTermsError": "Sie müssen den Nutzungsbedingungen und der Datenschutzrichtlinie zustimmen",
       "submit": "Registrieren",
       "hasAccount": "Bereits ein Konto?",
       "signIn": "Anmelden",

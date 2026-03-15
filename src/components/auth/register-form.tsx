@@ -20,6 +20,7 @@ export function RegisterForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -33,6 +34,12 @@ export function RegisterForm() {
       confirmPassword: formData.get('confirmPassword') as string,
     };
 
+    if (!hasAcceptedTerms) {
+      toast.error(t('acceptTermsError'));
+      setIsLoading(false);
+      return;
+    }
+
     const parsed = registerSchema.safeParse(data);
     if (!parsed.success) {
       toast.error(parsed.error.issues[0].message);
@@ -45,6 +52,7 @@ export function RegisterForm() {
       password: data.password,
       displayName: data.displayName,
       locale,
+      acceptedTerms: hasAcceptedTerms,
     });
 
     if (result?.error) {
@@ -57,6 +65,11 @@ export function RegisterForm() {
   }
 
   async function handleGoogleLogin() {
+    if (!hasAcceptedTerms) {
+      toast.error(t('acceptTermsError'));
+      return;
+    }
+
     setIsGoogleLoading(true);
     const result = await signInWithGoogle(locale);
     if (result?.error) {
@@ -114,6 +127,28 @@ export function RegisterForm() {
               disabled={isLoading}
             />
           </div>
+          <label className="flex items-start gap-3 rounded-2xl border border-border/60 bg-muted/30 p-3 text-sm leading-relaxed">
+            <input
+              type="checkbox"
+              name="acceptedTerms"
+              checked={hasAcceptedTerms}
+              onChange={(e) => setHasAcceptedTerms(e.target.checked)}
+              className="mt-1 h-4 w-4 rounded border-input"
+              disabled={isLoading || isGoogleLoading}
+              required
+            />
+            <span className="text-muted-foreground">
+              {t('acceptTermsPrefix')}{' '}
+              <Link href="/terms" className="font-medium text-foreground underline underline-offset-4">
+                {t('termsLink')}
+              </Link>{' '}
+              {t('acceptTermsMiddle')}{' '}
+              <Link href="/privacy" className="font-medium text-foreground underline underline-offset-4">
+                {t('privacyLink')}
+              </Link>
+              .
+            </span>
+          </label>
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {t('submit')}
@@ -130,7 +165,7 @@ export function RegisterForm() {
           variant="outline"
           className="w-full"
           onClick={handleGoogleLogin}
-          disabled={isGoogleLoading}
+          disabled={isGoogleLoading || !hasAcceptedTerms}
         >
           {isGoogleLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">

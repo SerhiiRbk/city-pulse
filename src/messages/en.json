@@ -136,7 +136,11 @@
       "noAccount": "Don't have an account?",
       "signUp": "Sign up",
       "orContinueWith": "or continue with",
-      "google": "Continue with Google"
+      "google": "Continue with Google",
+      "legalPrefix": "By continuing, you agree to the",
+      "legalMiddle": "and",
+      "termsLink": "Terms & Conditions",
+      "privacyLink": "Privacy Policy"
     },
     "register": {
       "title": "Create your account",
@@ -145,6 +149,11 @@
       "email": "Email",
       "password": "Password",
       "confirmPassword": "Confirm password",
+      "acceptTermsPrefix": "I have read and agree to the",
+      "acceptTermsMiddle": "and",
+      "termsLink": "Terms & Conditions",
+      "privacyLink": "Privacy Policy",
+      "acceptTermsError": "You must accept the Terms & Conditions and Privacy Policy",
       "submit": "Sign up",
       "hasAccount": "Already have an account?",
       "signIn": "Log in",

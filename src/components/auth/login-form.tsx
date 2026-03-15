@@ -129,6 +129,18 @@ export function LoginForm() {
           </svg>
           {t('google')}
         </Button>
+
+        <p className="mt-4 text-center text-xs leading-relaxed text-muted-foreground">
+          {t('legalPrefix')}{' '}
+          <Link href="/terms" className="font-medium text-foreground underline underline-offset-4">
+            {t('termsLink')}
+          </Link>{' '}
+          {t('legalMiddle')}{' '}
+          <Link href="/privacy" className="font-medium text-foreground underline underline-offset-4">
+            {t('privacyLink')}
+          </Link>
+          .
+        </p>
       </CardContent>
       <CardFooter className="justify-center">
         <p className="text-muted-foreground text-sm">

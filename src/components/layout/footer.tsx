@@ -75,12 +75,12 @@ export function Footer() {
             <h4 className="mb-3 font-semibold">{t('legal')}</h4>
             <ul className="text-muted-foreground space-y-2 text-sm">
               <li>
-                <Link href="/" className="hover:text-foreground transition-colors">
+                <Link href="/terms" className="hover:text-foreground transition-colors">
                   {t('terms')}
                 </Link>
               </li>
               <li>
-                <Link href="/" className="hover:text-foreground transition-colors">
+                <Link href="/privacy" className="hover:text-foreground transition-colors">
                   {t('privacy')}
                 </Link>
               </li>
