@@ -322,12 +322,46 @@ export async function getEventAttendees(eventId: string) {
   return data || [];
 }
 
-export async function addComment(eventId: string, content: string, parentId?: string) {
+export async function addComment(
+  eventId: string,
+  content: string,
+  parentId?: string,
+  options?: { quotedText?: string; quotedAuthorName?: string; replyToId?: string },
+) {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
+
+  const isReply = !!parentId;
+  let autoApprove = true;
+
+  if (isReply) {
+    const { data: event } = await supabase
+      .from('events')
+      .select('organizer_id')
+      .eq('id', eventId)
+      .single();
+
+    const isOrganizer = event?.organizer_id === user.id;
+
+    const { data: mod } = await supabase
+      .from('event_moderators')
+      .select('user_id')
+      .eq('event_id', eventId)
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    const isSiteStaff = profile?.role === 'admin' || profile?.role === 'moderator';
+    autoApprove = isOrganizer || !!mod || isSiteStaff;
+  }
 
   const { data, error } = await supabase
     .from('event_comments')
@@ -336,7 +370,10 @@ export async function addComment(eventId: string, content: string, parentId?: st
       user_id: user.id,
       content,
       parent_id: parentId || null,
-      is_approved: true,
+      is_approved: autoApprove,
+      quoted_text: options?.quotedText || null,
+      quoted_author_name: options?.quotedAuthorName || null,
+      reply_to_id: options?.replyToId || null,
     })
     .select('*, profiles(display_name, avatar_url)')
     .single();
@@ -351,9 +388,28 @@ export async function getComments(eventId: string) {
     .from('event_comments')
     .select('*, profiles(display_name, avatar_url)')
     .eq('event_id', eventId)
-    .eq('is_approved', true)
     .order('created_at', { ascending: true });
   return data || [];
+}
+
+export async function approveComment(commentId: string) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('event_comments')
+    .update({ is_approved: true })
+    .eq('id', commentId);
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
+export async function deleteComment(commentId: string) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('event_comments')
+    .delete()
+    .eq('id', commentId);
+  if (error) return { error: error.message };
+  return { success: true };
 }
 
 export async function getEventModerators(eventId: string) {

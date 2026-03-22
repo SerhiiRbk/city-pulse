@@ -427,24 +427,78 @@ export async function getGroupComments(groupId: string) {
     .from('group_comments')
     .select('*, profiles(id, display_name, avatar_url)')
     .eq('group_id', groupId)
-    .is('parent_id', null)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: true });
   return data || [];
 }
 
-export async function addGroupComment(groupId: string, content: string) {
+export async function addGroupComment(
+  groupId: string,
+  content: string,
+  parentId?: string,
+  options?: { quotedText?: string; quotedAuthorName?: string; replyToId?: string },
+) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
 
+  const isReply = !!parentId;
+  let autoApprove = true;
+
+  if (isReply) {
+    const { data: group } = await supabase
+      .from('groups')
+      .select('created_by')
+      .eq('id', groupId)
+      .single();
+
+    const isOwner = group?.created_by === user.id;
+
+    const { data: member } = await supabase
+      .from('group_members')
+      .select('role')
+      .eq('group_id', groupId)
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    const isGroupMod = member?.role === 'admin' || member?.role === 'moderator';
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    const isSiteStaff = profile?.role === 'admin' || profile?.role === 'moderator';
+    autoApprove = isOwner || isGroupMod || isSiteStaff;
+  }
+
   const { data, error } = await supabase
     .from('group_comments')
-    .insert({ group_id: groupId, user_id: user.id, content })
+    .insert({
+      group_id: groupId,
+      user_id: user.id,
+      content,
+      parent_id: parentId || null,
+      is_approved: autoApprove,
+      quoted_text: options?.quotedText || null,
+      quoted_author_name: options?.quotedAuthorName || null,
+      reply_to_id: options?.replyToId || null,
+    })
     .select('*, profiles(id, display_name, avatar_url)')
     .single();
 
   if (error) return { error: error.message };
   return { comment: data };
+}
+
+export async function approveGroupComment(commentId: string) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('group_comments')
+    .update({ is_approved: true })
+    .eq('id', commentId);
+  if (error) return { error: error.message };
+  return { success: true };
 }
 
 export async function deleteGroupComment(commentId: string) {

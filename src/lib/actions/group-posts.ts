@@ -333,7 +333,12 @@ export async function updateGroupPost(postId: string, data: { title: string; con
   };
 }
 
-export async function addGroupPostComment(postId: string, content: string) {
+export async function addGroupPostComment(
+  postId: string,
+  content: string,
+  parentId?: string,
+  options?: { quotedText?: string; quotedAuthorName?: string; replyToId?: string },
+) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -345,11 +350,42 @@ export async function addGroupPostComment(postId: string, content: string) {
 
   const { data: post } = await supabase
     .from('group_posts')
-    .select('id')
+    .select('id, group_id')
     .eq('id', postId)
     .single();
 
   if (!post) return { error: 'Post not found' };
+
+  const isReply = !!parentId;
+  let autoApprove = true;
+
+  if (isReply) {
+    const { data: group } = await supabase
+      .from('groups')
+      .select('created_by')
+      .eq('id', post.group_id)
+      .single();
+
+    const isOwner = group?.created_by === user.id;
+
+    const { data: member } = await supabase
+      .from('group_members')
+      .select('role')
+      .eq('group_id', post.group_id)
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    const isGroupMod = member?.role === 'admin' || member?.role === 'moderator';
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    const isSiteStaff = profile?.role === 'admin' || profile?.role === 'moderator';
+    autoApprove = isOwner || isGroupMod || isSiteStaff;
+  }
 
   const { data: comment, error } = await supabase
     .from('group_post_comments')
@@ -357,6 +393,11 @@ export async function addGroupPostComment(postId: string, content: string) {
       post_id: postId,
       user_id: user.id,
       content: text,
+      parent_id: parentId || null,
+      is_approved: autoApprove,
+      quoted_text: options?.quotedText || null,
+      quoted_author_name: options?.quotedAuthorName || null,
+      reply_to_id: options?.replyToId || null,
     })
     .select('*, profiles:user_id(id, display_name, avatar_url)')
     .single();
@@ -369,6 +410,16 @@ export async function addGroupPostComment(postId: string, content: string) {
       profiles: normalizeSingleRelation((comment as { profiles?: GroupPostAuthor[] | GroupPostAuthor | null }).profiles),
     } satisfies GroupPostCommentWithProfile,
   };
+}
+
+export async function approveGroupPostComment(commentId: string) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('group_post_comments')
+    .update({ is_approved: true })
+    .eq('id', commentId);
+  if (error) return { error: error.message };
+  return { success: true };
 }
 
 export async function deleteGroupPostComment(commentId: string) {
