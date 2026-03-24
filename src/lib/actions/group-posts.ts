@@ -117,66 +117,58 @@ export async function getFeedPosts(options?: {
     if (groupIds.length === 0) return [];
   }
 
-  let query = supabase
+  const { data: feedRows } = await supabase.rpc('get_feed_posts', {
+    p_group_ids: groupIds,
+    p_country: options?.country || null,
+    p_city: options?.city || null,
+    p_language: options?.language || null,
+    p_type: options?.type || null,
+    p_limit: limit,
+  });
+
+  if (!feedRows || feedRows.length === 0) return [];
+
+  const postIds = (feedRows as Array<{ id: string }>).map((r) => r.id);
+
+  const { data: postsData } = await supabase
     .from('group_posts')
     .select(`
       *,
       profiles:author_id(id, display_name, avatar_url),
       events:event_id(id, title, starts_at),
-      media:group_post_media(*),
-      groups:group_id(id, name, slug, cover_url, country, city, is_blocked, languages)
+      media:group_post_media(*)
     `)
-    .order('published_at', { ascending: false })
-    .limit(limit);
+    .in('id', postIds)
+    .order('published_at', { ascending: false });
 
-  if (groupIds) {
-    query = query.in('group_id', groupIds);
-  }
+  const groupMap = (feedRows as Array<{
+    id: string;
+    group_id: string;
+    group_name: string;
+    group_slug: string | null;
+    group_cover_url: string | null;
+    group_country: string | null;
+    group_city: string | null;
+  }>).reduce<Record<string, FeedPost['group']>>((acc, row) => {
+    acc[row.id] = {
+      id: row.group_id,
+      name: row.group_name,
+      slug: row.group_slug,
+      cover_url: row.group_cover_url,
+      country: row.group_country,
+      city: row.group_city,
+    };
+    return acc;
+  }, {});
 
-  if (options?.type) {
-    query = query.eq('type', options.type);
-  }
-
-  const { data } = await query;
-
-  let posts = ((data || []) as Array<GroupPost & {
+  return ((postsData || []) as Array<GroupPost & {
     profiles?: GroupPostAuthor[] | GroupPostAuthor | null;
     events?: GroupPostEvent[] | GroupPostEvent | null;
     media?: GroupPostMedia[] | null;
-    groups?: { id: string; name: string; slug: string | null; cover_url: string | null; country: string | null; city: string | null; is_blocked: boolean; languages: string[] } | { id: string; name: string; slug: string | null; cover_url: string | null; country: string | null; city: string | null; is_blocked: boolean; languages: string[] }[] | null;
-  }>).filter((post) => {
-    const g = Array.isArray(post.groups) ? post.groups[0] : post.groups;
-    return g && !g.is_blocked;
-  }).map((post) => {
-    const rawGroup = Array.isArray(post.groups) ? post.groups[0] : post.groups;
-    const group = rawGroup ? { id: rawGroup.id, name: rawGroup.name, slug: rawGroup.slug, cover_url: rawGroup.cover_url, country: rawGroup.country, city: rawGroup.city } : null;
-    const { groups: _groups, ...rest } = post;
-    return {
-      ...normalizeGroupPost(rest as GroupPost & {
-        profiles?: GroupPostAuthor[] | GroupPostAuthor | null;
-        events?: GroupPostEvent[] | GroupPostEvent | null;
-        media?: GroupPostMedia[] | null;
-      }),
-      group,
-    };
-  });
-
-  if (options?.country) {
-    posts = posts.filter((p) => p.group?.country === options.country);
-  }
-  if (options?.city) {
-    posts = posts.filter((p) => p.group?.city === options.city);
-  }
-  if (options?.language) {
-    const rawGroup = (data || []).reduce<Record<string, string[]>>((acc, post) => {
-      const g = Array.isArray(post.groups) ? post.groups[0] : post.groups;
-      if (g) acc[g.id] = (g as { languages?: string[] }).languages || [];
-      return acc;
-    }, {});
-    posts = posts.filter((p) => p.group && rawGroup[p.group.id]?.includes(options.language!));
-  }
-
-  return posts;
+  }>).map((post) => ({
+    ...normalizeGroupPost(post),
+    group: groupMap[post.id] || null,
+  }));
 }
 
 export async function getGroupPosts(groupId: string): Promise<GroupPostWithRelations[]> {
