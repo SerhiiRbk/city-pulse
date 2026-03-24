@@ -17,7 +17,7 @@ import { Logo } from '@/components/ui/logo';
 import { MobileNav } from './mobile-nav';
 import { NotificationBell } from '@/components/notifications/notification-bell';
 import { HeaderMessagesButton } from '@/components/messages/header-messages-button';
-import { CalendarDays, Users, MapPin, Plus, LogOut, User, Settings, Landmark, ShieldCheck } from 'lucide-react';
+import { CalendarDays, Users, MapPin, Plus, LogOut, User, Settings, Landmark, ShieldCheck, Newspaper } from 'lucide-react';
 import type { Profile } from '@/types/database';
 
 interface HeaderProps {
@@ -47,6 +47,12 @@ export function Header({ user }: HeaderProps) {
               <Link href="/groups" className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
                 {t('groups')}
+              </Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild className="rounded-full">
+              <Link href="/feed" className="flex items-center gap-2">
+                <Newspaper className="h-4 w-4" />
+                {t('feed')}
               </Link>
             </Button>
             <Button variant="ghost" size="sm" asChild className="rounded-full">

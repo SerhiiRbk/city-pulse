@@ -45,6 +45,7 @@
     "createEvent": "Veranstaltung erstellen",
     "createGroup": "Gruppe erstellen",
     "cityEvents": "Stadtevents",
+    "feed": "Feed",
     "admin": "Admin"
   },
   "landing": {
@@ -551,6 +552,27 @@
       "sectionBody": "Wähle Communities, zu denen du gern zurückkehrst: Dort sieht man bekannte Gesichter wieder und baut Freundschaften über gemeinsame Routinen auf.",
       "emptyDescription": "Erstelle die erste Community und bringe Menschen rund um ein gemeinsames Interesse zusammen"
     }
+  },
+  "feed": {
+    "title": "Community-Feed",
+    "subtitle": "Bleiben Sie über Beiträge aus Ihren Gruppen auf dem Laufenden und entdecken Sie neue Gemeinschaften.",
+    "myFeed": "Mein Feed",
+    "discover": "Entdecken",
+    "empty": "Noch keine Beiträge",
+    "emptyMyFeed": "Treten Sie Gruppen bei, um deren Beiträge in Ihrem Feed zu sehen.",
+    "emptyDiscover": "Keine Beiträge gefunden. Versuchen Sie, Ihre Filter anzupassen.",
+    "filterCountry": "Land",
+    "filterLanguage": "Sprache",
+    "filterType": "Beitragstyp",
+    "allTypes": "Alle Typen",
+    "allCountries": "Alle Länder",
+    "allLanguages": "Alle Sprachen",
+    "typeUpdate": "Update",
+    "typeAnnouncement": "Ankündigung",
+    "typeRecap": "Veranstaltungsrückblick",
+    "inGroup": "in",
+    "openPost": "Weiterlesen",
+    "linkedEvent": "Verknüpfte Veranstaltung"
   },
   "profile": {
     "title": "Profil",

@@ -45,6 +45,7 @@
     "createEvent": "Create event",
     "createGroup": "Create group",
     "cityEvents": "City events",
+    "feed": "Feed",
     "admin": "Admin"
   },
   "landing": {
@@ -551,6 +552,27 @@
       "sectionBody": "Pick communities that make it easy to come back regularly, see familiar faces, and build friendships around shared routines.",
       "emptyDescription": "Be the first to create a community"
     }
+  },
+  "feed": {
+    "title": "Community Feed",
+    "subtitle": "Stay up to date with posts from groups you follow and discover new communities.",
+    "myFeed": "My Feed",
+    "discover": "Discover",
+    "empty": "No posts yet",
+    "emptyMyFeed": "Join groups to see their posts in your feed.",
+    "emptyDiscover": "No posts found. Try adjusting your filters.",
+    "filterCountry": "Country",
+    "filterLanguage": "Language",
+    "filterType": "Post type",
+    "allTypes": "All types",
+    "allCountries": "All countries",
+    "allLanguages": "All languages",
+    "typeUpdate": "Update",
+    "typeAnnouncement": "Announcement",
+    "typeRecap": "Event recap",
+    "inGroup": "in",
+    "openPost": "Read more",
+    "linkedEvent": "Linked event"
   },
   "profile": {
     "title": "Profile",

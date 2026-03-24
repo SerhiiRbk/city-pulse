@@ -87,6 +87,98 @@ function normalizeGroupPost(post: GroupPost & {
   };
 }
 
+export interface FeedPost extends GroupPostWithRelations {
+  group: { id: string; name: string; slug: string | null; cover_url: string | null; country: string | null; city: string | null } | null;
+}
+
+export async function getFeedPosts(options?: {
+  myGroups?: boolean;
+  country?: string;
+  city?: string;
+  language?: string;
+  type?: string;
+  limit?: number;
+}): Promise<FeedPost[]> {
+  const supabase = await createClient();
+  const limit = options?.limit || 30;
+
+  let groupIds: string[] | null = null;
+
+  if (options?.myGroups) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return [];
+
+    const { data: memberships } = await supabase
+      .from('group_members')
+      .select('group_id')
+      .eq('user_id', user.id);
+
+    groupIds = (memberships || []).map((m) => m.group_id);
+    if (groupIds.length === 0) return [];
+  }
+
+  let query = supabase
+    .from('group_posts')
+    .select(`
+      *,
+      profiles:author_id(id, display_name, avatar_url),
+      events:event_id(id, title, starts_at),
+      media:group_post_media(*),
+      groups:group_id(id, name, slug, cover_url, country, city, is_blocked, languages)
+    `)
+    .order('published_at', { ascending: false })
+    .limit(limit);
+
+  if (groupIds) {
+    query = query.in('group_id', groupIds);
+  }
+
+  if (options?.type) {
+    query = query.eq('type', options.type);
+  }
+
+  const { data } = await query;
+
+  let posts = ((data || []) as Array<GroupPost & {
+    profiles?: GroupPostAuthor[] | GroupPostAuthor | null;
+    events?: GroupPostEvent[] | GroupPostEvent | null;
+    media?: GroupPostMedia[] | null;
+    groups?: { id: string; name: string; slug: string | null; cover_url: string | null; country: string | null; city: string | null; is_blocked: boolean; languages: string[] } | { id: string; name: string; slug: string | null; cover_url: string | null; country: string | null; city: string | null; is_blocked: boolean; languages: string[] }[] | null;
+  }>).filter((post) => {
+    const g = Array.isArray(post.groups) ? post.groups[0] : post.groups;
+    return g && !g.is_blocked;
+  }).map((post) => {
+    const rawGroup = Array.isArray(post.groups) ? post.groups[0] : post.groups;
+    const group = rawGroup ? { id: rawGroup.id, name: rawGroup.name, slug: rawGroup.slug, cover_url: rawGroup.cover_url, country: rawGroup.country, city: rawGroup.city } : null;
+    const { groups: _groups, ...rest } = post;
+    return {
+      ...normalizeGroupPost(rest as GroupPost & {
+        profiles?: GroupPostAuthor[] | GroupPostAuthor | null;
+        events?: GroupPostEvent[] | GroupPostEvent | null;
+        media?: GroupPostMedia[] | null;
+      }),
+      group,
+    };
+  });
+
+  if (options?.country) {
+    posts = posts.filter((p) => p.group?.country === options.country);
+  }
+  if (options?.city) {
+    posts = posts.filter((p) => p.group?.city === options.city);
+  }
+  if (options?.language) {
+    const rawGroup = (data || []).reduce<Record<string, string[]>>((acc, post) => {
+      const g = Array.isArray(post.groups) ? post.groups[0] : post.groups;
+      if (g) acc[g.id] = (g as { languages?: string[] }).languages || [];
+      return acc;
+    }, {});
+    posts = posts.filter((p) => p.group && rawGroup[p.group.id]?.includes(options.language!));
+  }
+
+  return posts;
+}
+
 export async function getGroupPosts(groupId: string): Promise<GroupPostWithRelations[]> {
   const supabase = await createClient();
   const { data } = await supabase

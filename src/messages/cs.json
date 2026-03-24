@@ -45,6 +45,7 @@
     "createEvent": "Vytvořit akci",
     "createGroup": "Vytvořit skupinu",
     "cityEvents": "Městské akce",
+    "feed": "Feed",
     "admin": "Admin"
   },
   "landing": {
@@ -551,6 +552,27 @@
       "sectionBody": "Vyberte si komunity, kam se budete chtít vracet: snadněji tam uvidíte známé tváře a vybudujete přátelství kolem společných rytmů.",
       "emptyDescription": "Vytvořte první komunitu a propojte lidi kolem společného zájmu"
     }
+  },
+  "feed": {
+    "title": "Komunitní feed",
+    "subtitle": "Sledujte příspěvky ze skupin, ve kterých jste, a objevujte nové komunity.",
+    "myFeed": "Můj feed",
+    "discover": "Objevit",
+    "empty": "Zatím žádné příspěvky",
+    "emptyMyFeed": "Připojte se ke skupinám, abyste viděli jejich příspěvky ve svém feedu.",
+    "emptyDiscover": "Žádné příspěvky nenalezeny. Zkuste upravit filtry.",
+    "filterCountry": "Země",
+    "filterLanguage": "Jazyk",
+    "filterType": "Typ příspěvku",
+    "allTypes": "Všechny typy",
+    "allCountries": "Všechny země",
+    "allLanguages": "Všechny jazyky",
+    "typeUpdate": "Aktualizace",
+    "typeAnnouncement": "Oznámení",
+    "typeRecap": "Shrnutí akce",
+    "inGroup": "v",
+    "openPost": "Číst dále",
+    "linkedEvent": "Propojená akce"
   },
   "profile": {
     "title": "Profil",
