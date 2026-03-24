@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { canViewBlockedOwnedResource, getViewerContext } from '@/lib/server/viewer-context';
+import { createNotification } from '@/lib/actions/notifications';
 
 interface ManageableGroupRow {
   groups: {
@@ -441,16 +442,16 @@ export async function addGroupComment(
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
 
+  const { data: group } = await supabase
+    .from('groups')
+    .select('created_by, name')
+    .eq('id', groupId)
+    .single();
+
   const isReply = !!parentId;
   let autoApprove = true;
 
   if (isReply) {
-    const { data: group } = await supabase
-      .from('groups')
-      .select('created_by')
-      .eq('id', groupId)
-      .single();
-
     const isOwner = group?.created_by === user.id;
 
     const { data: member } = await supabase
@@ -488,6 +489,79 @@ export async function addGroupComment(
     .single();
 
   if (error) return { error: error.message };
+
+  const commenterName = data.profiles?.display_name || 'Someone';
+  const snippet = content.length > 80 ? content.slice(0, 77) + '...' : content;
+  const alreadyNotified = new Set<string>([user.id]);
+
+  if (isReply && parentId) {
+    const { data: parentComment } = await supabase
+      .from('group_comments')
+      .select('user_id')
+      .eq('id', parentId)
+      .single();
+
+    if (parentComment && !alreadyNotified.has(parentComment.user_id)) {
+      alreadyNotified.add(parentComment.user_id);
+      void createNotification({
+        userId: parentComment.user_id,
+        type: 'comment_reply',
+        title: `${commenterName} replied to your comment`,
+        body: snippet,
+        data: { groupId },
+      });
+    }
+
+    if (options?.replyToId && options.replyToId !== parentId) {
+      const { data: replyToComment } = await supabase
+        .from('group_comments')
+        .select('user_id')
+        .eq('id', options.replyToId)
+        .single();
+
+      if (replyToComment && !alreadyNotified.has(replyToComment.user_id)) {
+        alreadyNotified.add(replyToComment.user_id);
+        void createNotification({
+          userId: replyToComment.user_id,
+          type: 'comment_reply',
+          title: `${commenterName} replied to your comment`,
+          body: snippet,
+          data: { groupId },
+        });
+      }
+    }
+  }
+
+  if (group?.created_by && !alreadyNotified.has(group.created_by)) {
+    alreadyNotified.add(group.created_by);
+    void createNotification({
+      userId: group.created_by,
+      type: 'new_comment',
+      title: `${commenterName} commented in "${group.name}"`,
+      body: snippet,
+      data: { groupId },
+    });
+  }
+
+  const { data: groupMods } = await supabase
+    .from('group_members')
+    .select('user_id')
+    .eq('group_id', groupId)
+    .in('role', ['admin', 'moderator']);
+
+  for (const mod of groupMods || []) {
+    if (!alreadyNotified.has(mod.user_id)) {
+      alreadyNotified.add(mod.user_id);
+      void createNotification({
+        userId: mod.user_id,
+        type: 'new_comment',
+        title: `${commenterName} commented in "${group?.name || 'group'}"`,
+        body: snippet,
+        data: { groupId },
+      });
+    }
+  }
+
   return { comment: data };
 }
 

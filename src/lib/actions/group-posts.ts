@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { canEditGroup } from '@/lib/actions/groups';
+import { createNotification } from '@/lib/actions/notifications';
 import { nanoid } from 'nanoid';
 import type { GroupPost, GroupPostComment, GroupPostMedia, GroupPostType } from '@/types/database';
 import { isValidSlug, toSlug } from '@/lib/utils';
@@ -403,13 +404,91 @@ export async function addGroupPostComment(
     .single();
 
   if (error) return { error: error.message };
-  return {
-    success: true,
-    comment: {
-      ...(comment as GroupPostComment),
-      profiles: normalizeSingleRelation((comment as { profiles?: GroupPostAuthor[] | GroupPostAuthor | null }).profiles),
-    } satisfies GroupPostCommentWithProfile,
-  };
+
+  const normalizedComment = {
+    ...(comment as GroupPostComment),
+    profiles: normalizeSingleRelation((comment as { profiles?: GroupPostAuthor[] | GroupPostAuthor | null }).profiles),
+  } satisfies GroupPostCommentWithProfile;
+
+  const commenterName = normalizedComment.profiles?.display_name || 'Someone';
+  const snippet = text.length > 80 ? text.slice(0, 77) + '...' : text;
+  const alreadyNotified = new Set<string>([user.id]);
+
+  if (isReply && parentId) {
+    const { data: parentComment } = await supabase
+      .from('group_post_comments')
+      .select('user_id')
+      .eq('id', parentId)
+      .single();
+
+    if (parentComment && !alreadyNotified.has(parentComment.user_id)) {
+      alreadyNotified.add(parentComment.user_id);
+      void createNotification({
+        userId: parentComment.user_id,
+        type: 'comment_reply',
+        title: `${commenterName} replied to your comment`,
+        body: snippet,
+        data: { groupId: post.group_id },
+      });
+    }
+
+    if (options?.replyToId && options.replyToId !== parentId) {
+      const { data: replyToComment } = await supabase
+        .from('group_post_comments')
+        .select('user_id')
+        .eq('id', options.replyToId)
+        .single();
+
+      if (replyToComment && !alreadyNotified.has(replyToComment.user_id)) {
+        alreadyNotified.add(replyToComment.user_id);
+        void createNotification({
+          userId: replyToComment.user_id,
+          type: 'comment_reply',
+          title: `${commenterName} replied to your comment`,
+          body: snippet,
+          data: { groupId: post.group_id },
+        });
+      }
+    }
+  }
+
+  const { data: group } = await supabase
+    .from('groups')
+    .select('created_by, name')
+    .eq('id', post.group_id)
+    .single();
+
+  if (group?.created_by && !alreadyNotified.has(group.created_by)) {
+    alreadyNotified.add(group.created_by);
+    void createNotification({
+      userId: group.created_by,
+      type: 'new_comment',
+      title: `${commenterName} commented in "${group.name}"`,
+      body: snippet,
+      data: { groupId: post.group_id },
+    });
+  }
+
+  const { data: groupMods } = await supabase
+    .from('group_members')
+    .select('user_id')
+    .eq('group_id', post.group_id)
+    .in('role', ['admin', 'moderator']);
+
+  for (const mod of groupMods || []) {
+    if (!alreadyNotified.has(mod.user_id)) {
+      alreadyNotified.add(mod.user_id);
+      void createNotification({
+        userId: mod.user_id,
+        type: 'new_comment',
+        title: `${commenterName} commented in "${group?.name || 'group'}"`,
+        body: snippet,
+        data: { groupId: post.group_id },
+      });
+    }
+  }
+
+  return { success: true, comment: normalizedComment };
 }
 
 export async function approveGroupPostComment(commentId: string) {

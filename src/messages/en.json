@@ -655,6 +655,7 @@
     "markAllRead": "Mark all as read",
     "newEvent": "New event matching your interests",
     "commentReply": "Someone replied to your comment",
+    "newComment": "New comment",
     "newMessage": "You have a new message",
     "chatRequest": "New chat request",
     "chatRequestBody": "Someone wants to start a conversation with you.",
