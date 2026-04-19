@@ -1,8 +1,22 @@
 'use server';
 
+import { updateTag } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { canViewBlockedOwnedResource, getViewerContext } from '@/lib/server/viewer-context';
 import { createNotification } from '@/lib/actions/notifications';
+import {
+  createGroupSchema,
+  groupCommentSchema,
+  updateGroupSchema,
+  type CreateGroupInput,
+  type GroupCommentInput,
+  type UpdateGroupInput,
+} from '@/lib/validations/groups';
+import { prettyZodError } from '@/lib/validations/common';
+
+function revalidateLandingGroups() {
+  updateTag('landing:groups');
+}
 
 interface ManageableGroupRow {
   groups: {
@@ -61,20 +75,10 @@ export async function getGroupRaw(groupId: string) {
   return data;
 }
 
-export async function updateGroup(
-  groupId: string,
-  data: {
-    name?: string;
-    slug?: string | null;
-    description?: string;
-    cover_url?: string | null;
-    languages?: string[];
-    country?: string | null;
-    city?: string | null;
-    city_id?: string | null;
-    interest_ids?: string[];
-  }
-) {
+export async function updateGroup(groupId: string, data: UpdateGroupInput) {
+  const parsed = updateGroupSchema.safeParse(data);
+  if (!parsed.success) return { error: prettyZodError(parsed.error) };
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
@@ -82,7 +86,7 @@ export async function updateGroup(
   const allowed = await canEditGroup(groupId);
   if (!allowed) return { error: 'No permission to edit this group' };
 
-  const { interest_ids, ...groupData } = data;
+  const { interest_ids, ...groupData } = parsed.data;
 
   const { error } = await supabase.from('groups').update(groupData).eq('id', groupId);
   if (error) return { error: error.message };
@@ -96,6 +100,7 @@ export async function updateGroup(
     }
   }
 
+  revalidateLandingGroups();
   return { success: true };
 }
 
@@ -204,22 +209,15 @@ export async function searchUsers(query: string) {
   return data || [];
 }
 
-export async function createGroup(data: {
-  name: string;
-  slug?: string | null;
-  description: string;
-  cover_url?: string;
-  languages?: string[];
-  country?: string | null;
-  city?: string | null;
-  city_id?: string | null;
-  interest_ids?: string[];
-}) {
+export async function createGroup(data: CreateGroupInput) {
+  const parsed = createGroupSchema.safeParse(data);
+  if (!parsed.success) return { error: prettyZodError(parsed.error) };
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
 
-  const { interest_ids, ...groupData } = data;
+  const { interest_ids, ...groupData } = parsed.data;
 
   const { data: group, error } = await supabase
     .from('groups')
@@ -241,6 +239,7 @@ export async function createGroup(data: {
     );
   }
 
+  revalidateLandingGroups();
   return { success: true, group };
 }
 
@@ -438,6 +437,15 @@ export async function addGroupComment(
   parentId?: string,
   options?: { quotedText?: string; quotedAuthorName?: string; replyToId?: string },
 ) {
+  const parsed = groupCommentSchema.safeParse({
+    content,
+    parentId,
+    replyToId: options?.replyToId,
+    quotedText: options?.quotedText,
+    quotedAuthorName: options?.quotedAuthorName,
+  } satisfies GroupCommentInput);
+  if (!parsed.success) return { error: prettyZodError(parsed.error) };
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
@@ -478,12 +486,12 @@ export async function addGroupComment(
     .insert({
       group_id: groupId,
       user_id: user.id,
-      content,
-      parent_id: parentId || null,
+      content: parsed.data.content,
+      parent_id: parsed.data.parentId || null,
       is_approved: autoApprove,
-      quoted_text: options?.quotedText || null,
-      quoted_author_name: options?.quotedAuthorName || null,
-      reply_to_id: options?.replyToId || null,
+      quoted_text: parsed.data.quotedText || null,
+      quoted_author_name: parsed.data.quotedAuthorName || null,
+      reply_to_id: parsed.data.replyToId || null,
     })
     .select('*, profiles(id, display_name, avatar_url)')
     .single();
@@ -491,7 +499,8 @@ export async function addGroupComment(
   if (error) return { error: error.message };
 
   const commenterName = data.profiles?.display_name || 'Someone';
-  const snippet = content.length > 80 ? content.slice(0, 77) + '...' : content;
+  const snippet =
+    parsed.data.content.length > 80 ? parsed.data.content.slice(0, 77) + '...' : parsed.data.content;
   const alreadyNotified = new Set<string>([user.id]);
 
   if (isReply && parentId) {

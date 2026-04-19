@@ -1,32 +1,28 @@
 'use server';
 
+import { updateTag } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { nanoid } from '@/lib/utils';
 import { canViewBlockedOwnedResource, getViewerContext } from '@/lib/server/viewer-context';
 import { createNotification } from '@/lib/actions/notifications';
+import {
+  createEventSchema,
+  eventCommentSchema,
+  updateEventSchema,
+  type CreateEventInput,
+  type EventCommentInput,
+  type UpdateEventInput,
+} from '@/lib/validations/events';
+import { prettyZodError } from '@/lib/validations/common';
 
-export async function createEvent(data: {
-  title: string;
-  description: string;
-  languages?: string[];
-  category_id: string;
-  starts_at: string;
-  duration_minutes: number;
-  is_online: boolean;
-  is_free: boolean;
-  price?: number;
-  currency?: string;
-  max_attendees?: number;
-  country?: string;
-  city?: string;
-  city_id?: string | null;
-  address?: string;
-  lat?: number;
-  lng?: number;
-  is_private: boolean;
-  photos?: string[];
-  group_id?: string | null;
-}) {
+function revalidateLandingEvents() {
+  updateTag('landing:events');
+}
+
+export async function createEvent(input: CreateEventInput) {
+  const parsed = createEventSchema.safeParse(input);
+  if (!parsed.success) return { error: prettyZodError(parsed.error) };
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -35,9 +31,9 @@ export async function createEvent(data: {
   if (!user) return { error: 'Not authenticated' };
 
   const eventData = {
-    ...data,
+    ...parsed.data,
     organizer_id: user.id,
-    private_token: data.is_private ? nanoid(24) : null,
+    private_token: parsed.data.is_private ? nanoid(24) : null,
     status: 'published' as const,
   };
 
@@ -48,6 +44,7 @@ export async function createEvent(data: {
     .single();
 
   if (error) return { error: error.message };
+  revalidateLandingEvents();
   return { success: true, event };
 }
 
@@ -79,31 +76,10 @@ export async function canEditEvent(eventId: string) {
   return !!mod;
 }
 
-export async function updateEvent(
-  eventId: string,
-  data: Partial<{
-    title: string;
-    description: string;
-    languages: string[];
-    category_id: string;
-    starts_at: string;
-    duration_minutes: number;
-    is_online: boolean;
-    is_free: boolean;
-    price: number | null;
-    currency: string | null;
-    max_attendees: number | null;
-    country: string | null;
-    city: string | null;
-    city_id: string | null;
-    address: string | null;
-    lat: number | null;
-    lng: number | null;
-    is_private: boolean;
-    status: string;
-    photos: string[];
-  }>,
-) {
+export async function updateEvent(eventId: string, data: UpdateEventInput) {
+  const parsed = updateEventSchema.safeParse(data);
+  if (!parsed.success) return { error: prettyZodError(parsed.error) };
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
@@ -111,8 +87,9 @@ export async function updateEvent(
   const allowed = await canEditEvent(eventId);
   if (!allowed) return { error: 'No permission to edit this event' };
 
-  const { error } = await supabase.from('events').update(data).eq('id', eventId);
+  const { error } = await supabase.from('events').update(parsed.data).eq('id', eventId);
   if (error) return { error: error.message };
+  revalidateLandingEvents();
   return { success: true };
 }
 
@@ -329,6 +306,15 @@ export async function addComment(
   parentId?: string,
   options?: { quotedText?: string; quotedAuthorName?: string; replyToId?: string },
 ) {
+  const parsed = eventCommentSchema.safeParse({
+    content,
+    parentId,
+    replyToId: options?.replyToId,
+    quotedText: options?.quotedText,
+    quotedAuthorName: options?.quotedAuthorName,
+  } satisfies EventCommentInput);
+  if (!parsed.success) return { error: prettyZodError(parsed.error) };
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -369,12 +355,12 @@ export async function addComment(
     .insert({
       event_id: eventId,
       user_id: user.id,
-      content,
-      parent_id: parentId || null,
+      content: parsed.data.content,
+      parent_id: parsed.data.parentId || null,
       is_approved: autoApprove,
-      quoted_text: options?.quotedText || null,
-      quoted_author_name: options?.quotedAuthorName || null,
-      reply_to_id: options?.replyToId || null,
+      quoted_text: parsed.data.quotedText || null,
+      quoted_author_name: parsed.data.quotedAuthorName || null,
+      reply_to_id: parsed.data.replyToId || null,
     })
     .select('*, profiles(display_name, avatar_url)')
     .single();
@@ -382,7 +368,8 @@ export async function addComment(
   if (error) return { error: error.message };
 
   const commenterName = data.profiles?.display_name || 'Someone';
-  const snippet = content.length > 80 ? content.slice(0, 77) + '...' : content;
+  const snippet =
+    parsed.data.content.length > 80 ? parsed.data.content.slice(0, 77) + '...' : parsed.data.content;
   const alreadyNotified = new Set<string>([user.id]);
 
   if (isReply && parentId) {

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { IBM_Plex_Sans, JetBrains_Mono } from 'next/font/google';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
@@ -6,11 +7,10 @@ import { notFound } from 'next/navigation';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/sonner';
-import { Header } from '@/components/layout/header';
+import { HeaderAuthSlot } from '@/components/layout/header-slot';
 import { Footer } from '@/components/layout/footer';
 import { routing } from '@/i18n/routing';
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from '@/lib/constants';
-import { getUserProfile } from '@/lib/actions/auth';
 import '../globals.css';
 
 const sansFont = IBM_Plex_Sans({
@@ -69,13 +69,6 @@ export default async function LocaleLayout({
 
   const messages = await getMessages();
 
-  let profile = null;
-  try {
-    profile = await getUserProfile();
-  } catch {
-    // Not authenticated — that's fine
-  }
-
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={`${sansFont.variable} ${monoFont.variable} font-sans antialiased`}>
@@ -88,9 +81,22 @@ export default async function LocaleLayout({
           >
             <TooltipProvider>
               <div className="flex min-h-screen flex-col">
-                <Header user={profile} />
-                <main className="flex-1">{children}</main>
-                <Footer />
+                <Suspense
+                  fallback={
+                    <div
+                      aria-hidden="true"
+                      className="sticky top-0 z-50 h-16 w-full border-b bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70"
+                    />
+                  }
+                >
+                  <HeaderAuthSlot />
+                </Suspense>
+                <main className="flex-1">
+                  <Suspense fallback={null}>{children}</Suspense>
+                </main>
+                <Suspense fallback={null}>
+                  <Footer />
+                </Suspense>
               </div>
               <Toaster richColors position="top-right" />
             </TooltipProvider>

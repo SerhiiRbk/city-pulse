@@ -5,6 +5,8 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
 import { getConversations } from '@/lib/actions/messages';
@@ -133,9 +135,15 @@ export function ConversationList({ conversations, currentUserId, activeConversat
 
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <p className="text-muted-foreground">{t('noMessages')}</p>
-      </div>
+      <EmptyState
+        icon="messages"
+        title={t('noMessages')}
+        description={t('noMessagesDescription')}
+      >
+        <Button asChild variant="outline">
+          <Link href="/groups">{t('findGroupsCta')}</Link>
+        </Button>
+      </EmptyState>
     );
   }
 

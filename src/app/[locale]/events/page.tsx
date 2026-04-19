@@ -7,7 +7,7 @@ import { EventsFilters } from '@/components/events/events-filters';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
-import { CalendarPlus, Sparkles, UsersRound, Languages } from 'lucide-react';
+import { CalendarPlus, Sparkles } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 
@@ -77,75 +77,68 @@ export default async function EventsPage({
     <div>
       <section className="relative overflow-hidden bg-slate-950">
         <div
+          aria-hidden
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1800&q=80')" }}
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1800&q=80')",
+          }}
         />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.14),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.18),transparent_30%)]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/60 to-slate-950/92" />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.14),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.18),transparent_30%)]"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/60 to-slate-950/92"
+        />
 
-        <div className="relative z-10 container mx-auto px-4 pt-14 pb-10 sm:pt-16 sm:pb-12 md:pt-24 md:pb-18">
-          <div className="grid items-end gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-            <div>
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs text-white/90 backdrop-blur-sm sm:mb-4 sm:text-sm">
+        <div className="relative z-10 container mx-auto max-w-6xl px-4 pt-14 pb-24 sm:pt-20 sm:pb-32 md:pt-24">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+            <div className="max-w-3xl">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90 backdrop-blur sm:text-sm">
                 <Sparkles className="h-4 w-4" />
                 {tPage('heroBadge')}
               </div>
-              <h1 className="text-4xl font-bold tracking-tight text-white drop-shadow-lg sm:text-5xl md:text-6xl">
+              <h1 className="text-4xl font-extrabold tracking-tight text-white drop-shadow-lg sm:text-5xl md:text-6xl">
                 {t('title')}
               </h1>
-              <p className="mt-3 max-w-2xl text-base text-white/80 drop-shadow sm:text-lg md:text-xl">
+              <p className="mt-3 max-w-2xl text-base text-white/80 drop-shadow sm:text-lg">
                 {tPage('subtitle')}
               </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {[
-                  tPage('trust1'),
-                  tPage('trust2'),
-                  tPage('trust3'),
-                ].map((item) => (
-                  <span key={item} className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs text-white/85 backdrop-blur-sm sm:text-sm">
+
+              <div className="mt-5 flex flex-wrap items-center gap-2">
+                {[tPage('trust1'), tPage('trust2'), tPage('trust3')].map((item) => (
+                  <span
+                    key={item}
+                    className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs text-white/85 backdrop-blur sm:text-sm"
+                  >
                     {item}
                   </span>
                 ))}
               </div>
-              <div className="mt-6 flex flex-wrap gap-3">
-                {user && (
-                  <Button asChild size="lg" className="rounded-full px-6 shadow-xl">
-                    <Link href="/events/create" className="flex items-center gap-2">
-                      <CalendarPlus className="h-5 w-5" />
-                      {tPage('createCta')}
-                    </Link>
-                  </Button>
-                )}
-              </div>
             </div>
 
-            <div className="hidden rounded-[2rem] border border-white/15 bg-white/10 p-4 shadow-2xl backdrop-blur-md lg:block">
-              <div className="rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5 text-white">
-                <p className="text-xs uppercase tracking-[0.18em] text-white/55">{tPage('sideLabel')}</p>
-                <div className="mt-4 space-y-3">
-                  {[
-                    { icon: UsersRound, title: tPage('sideItem1Title'), body: tPage('sideItem1Body') },
-                    { icon: Languages, title: tPage('sideItem2Title'), body: tPage('sideItem2Body') },
-                    { icon: Sparkles, title: tPage('sideItem3Title'), body: tPage('sideItem3Body') },
-                  ].map(({ icon: Icon, title, body }) => (
-                    <div key={title} className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <div className="flex items-start gap-3">
-                        <span className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10">
-                          <Icon className="h-4 w-4" />
-                        </span>
-                        <div>
-                          <p className="font-semibold">{title}</p>
-                          <p className="mt-1 text-sm text-white/65">{body}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            {user && (
+              <Button
+                asChild
+                size="lg"
+                className="shrink-0 self-start rounded-full px-6 shadow-xl"
+              >
+                <Link href="/events/create" className="flex items-center gap-2">
+                  <CalendarPlus className="h-5 w-5" />
+                  {tPage('createCta')}
+                </Link>
+              </Button>
+            )}
           </div>
+        </div>
+      </section>
 
-          <div className="mx-auto mt-7 max-w-5xl rounded-[1.9rem] border border-border/70 bg-background/92 p-3 shadow-2xl backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 sm:mt-8 sm:p-4">
+      {/* Floating filter bar that overlaps the hero — creates depth and lets the photo breathe */}
+      <div className="relative z-20 -mt-16 sm:-mt-20">
+        <div className="container mx-auto max-w-6xl px-4">
+          <div className="rounded-[1.75rem] border border-border/60 bg-background/95 p-3 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.35)] ring-1 ring-black/5 backdrop-blur-xl supports-[backdrop-filter]:bg-background/85 sm:p-4">
             <EventsFilters
               interests={interests}
               categories={interestCategories}
@@ -153,7 +146,7 @@ export default async function EventsPage({
             />
           </div>
         </div>
-      </section>
+      </div>
 
       <section className="container mx-auto px-4 py-12">
         <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">

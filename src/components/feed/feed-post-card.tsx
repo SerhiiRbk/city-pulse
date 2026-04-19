@@ -1,6 +1,4 @@
-'use client';
-
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Link } from '@/i18n/navigation';
 import { GroupPostMediaGallery } from '@/components/groups/group-post-media-gallery';
@@ -21,11 +19,11 @@ function getPostTypeMeta(type: GroupPostType) {
 }
 
 function formatDate(dateStr: string, locale: string) {
-  return new Date(dateStr).toLocaleDateString(locale, {
+  return new Intl.DateTimeFormat(locale, {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
-  });
+  }).format(new Date(dateStr));
 }
 
 interface FeedPostCardProps {
@@ -33,8 +31,8 @@ interface FeedPostCardProps {
   locale: string;
 }
 
-export function FeedPostCard({ post, locale }: FeedPostCardProps) {
-  const t = useTranslations('feed');
+export async function FeedPostCard({ post, locale }: FeedPostCardProps) {
+  const t = await getTranslations('feed');
   const { Icon: TypeIcon } = getPostTypeMeta(post.type);
   const authorName = post.profiles?.display_name || 'User';
   const authorInitials = authorName
@@ -48,6 +46,13 @@ export function FeedPostCard({ post, locale }: FeedPostCardProps) {
   const postHref = post.group
     ? `/groups/${post.group.id}/posts/${post.slug || post.id}`
     : '#';
+
+  const typeLabel =
+    post.type === 'update'
+      ? t('typeUpdate')
+      : post.type === 'announcement'
+        ? t('typeAnnouncement')
+        : t('typeRecap');
 
   return (
     <article className="overflow-hidden rounded-[2rem] border border-border/50 bg-card shadow-sm transition-shadow hover:shadow-md">
@@ -64,11 +69,14 @@ export function FeedPostCard({ post, locale }: FeedPostCardProps) {
               className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium ${POST_TYPE_STYLES[post.type]}`}
             >
               <TypeIcon className="h-3.5 w-3.5" />
-              {post.type === 'update' ? t('typeUpdate') : post.type === 'announcement' ? t('typeAnnouncement') : t('typeRecap')}
+              {typeLabel}
             </span>
-            <span className="text-xs text-muted-foreground">
+            <time
+              className="text-xs text-muted-foreground"
+              dateTime={post.published_at}
+            >
               {formatDate(post.published_at, locale)}
-            </span>
+            </time>
           </div>
 
           {post.group && (
