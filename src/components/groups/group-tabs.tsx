@@ -1,16 +1,17 @@
 'use client';
 
-import { type ComponentProps, useState } from 'react';
+import { type ComponentProps, useState, useCallback } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { EventCard } from '@/components/events/event-card';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Calendar, History, Image as ImageIcon, MessageCircle, Send, Trash2, Users, Plus, FolderOpen } from 'lucide-react';
-import { addGroupComment, deleteGroupComment } from '@/lib/actions/groups';
+import { Calendar, Check, CornerDownRight, History, Image as ImageIcon, MessageCircle, MessageSquareQuote, Reply, Send, Trash2, Users, Plus, FolderOpen, X } from 'lucide-react';
+import { addGroupComment, deleteGroupComment, approveGroupComment } from '@/lib/actions/groups';
 import { createAlbum } from '@/lib/actions/albums';
 import { GroupPostsTab } from '@/components/groups/group-posts-tab';
 import { toast } from 'sonner';
@@ -30,11 +31,23 @@ interface GroupComment {
   user_id: string;
   content: string;
   created_at: string;
+  parent_id?: string | null;
+  is_approved?: boolean;
+  quoted_text?: string | null;
+  quoted_author_name?: string | null;
+  reply_to_id?: string | null;
   profiles?: {
     id?: string;
     display_name?: string;
     avatar_url?: string | null;
   } | null;
+}
+
+interface GroupReplyTarget {
+  commentId: string;
+  parentId: string;
+  authorName: string;
+  quotedText?: string;
 }
 
 interface GroupTabsProps {
@@ -85,17 +98,57 @@ export function GroupTabs({
   const [newAlbumTitle, setNewAlbumTitle] = useState('');
   const [newAlbumDesc, setNewAlbumDesc] = useState('');
   const [creatingAlbum, setCreatingAlbum] = useState(false);
+  const [replyTarget, setReplyTarget] = useState<GroupReplyTarget | null>(null);
+
+  const topLevelComments = comments.filter((c) => !c.parent_id);
+  const repliesByParent = comments.reduce<Record<string, GroupComment[]>>((acc, c) => {
+    if (c.parent_id) {
+      (acc[c.parent_id] ||= []).push(c);
+    }
+    return acc;
+  }, {});
+
+  const handleReply = useCallback((comment: GroupComment) => {
+    const parentId = comment.parent_id || comment.id;
+    const selection = window.getSelection()?.toString().trim();
+    const authorName = comment.profiles?.display_name || 'User';
+    let quotedText: string | undefined;
+    if (selection && comment.content.includes(selection)) {
+      quotedText = selection;
+    }
+    setReplyTarget({ commentId: comment.id, parentId, authorName, quotedText });
+    setCommentText('');
+  }, []);
+
+  const handleQuoteFullComment = useCallback((comment: GroupComment) => {
+    const parentId = comment.parent_id || comment.id;
+    const authorName = comment.profiles?.display_name || 'User';
+    setReplyTarget({ commentId: comment.id, parentId, authorName, quotedText: comment.content });
+    setCommentText('');
+  }, []);
 
   async function handleSendComment() {
     if (!commentText.trim()) return;
     setSending(true);
     try {
-      const result = await addGroupComment(groupId, commentText.trim());
+      const result = await addGroupComment(
+        groupId,
+        commentText.trim(),
+        replyTarget?.parentId,
+        replyTarget
+          ? {
+              quotedText: replyTarget.quotedText,
+              quotedAuthorName: replyTarget.authorName,
+              replyToId: replyTarget.commentId,
+            }
+          : undefined,
+      );
       if (result.error) {
         toast.error(result.error);
       } else if (result.comment) {
-        setComments((prev) => [result.comment as GroupComment, ...prev]);
+        setComments((prev) => [...prev, result.comment as GroupComment]);
         setCommentText('');
+        setReplyTarget(null);
       }
     } catch {
       toast.error(t('commentSendError'));
@@ -110,10 +163,21 @@ export function GroupTabs({
       if (result.error) {
         toast.error(result.error);
       } else {
-        setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+        setComments((prev) => prev.filter((c) => c.id !== commentId && c.parent_id !== commentId));
       }
     } catch {
       toast.error(t('commentDeleteError'));
+    }
+  }
+
+  async function handleApproveComment(commentId: string) {
+    const result = await approveGroupComment(commentId);
+    if (result.error) {
+      toast.error(result.error);
+    } else {
+      setComments((prev) =>
+        prev.map((c) => (c.id === commentId ? { ...c, is_approved: true } : c)),
+      );
     }
   }
 
@@ -191,7 +255,7 @@ export function GroupTabs({
         <TabsTrigger value="comments" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
           <MessageCircle className="h-4 w-4" />
           <span className="whitespace-nowrap text-xs sm:text-sm">{t('commentsTitle')}</span>
-          <CountBadge count={comments.length} />
+          <CountBadge count={topLevelComments.length} />
         </TabsTrigger>
       </TabsList>
 
@@ -344,10 +408,31 @@ export function GroupTabs({
       <TabsContent value="comments" className="pt-6">
         {isAuthenticated && (
           <div className="bg-muted/30 mb-6 rounded-xl p-4">
+            {replyTarget && (
+              <div className="mb-3 flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2">
+                <Reply className="h-3.5 w-3.5 shrink-0 text-primary" />
+                <span className="text-xs text-muted-foreground">
+                  {t('replyTo', { name: replyTarget.authorName })}
+                </span>
+                {replyTarget.quotedText && (
+                  <span className="ml-1 truncate text-xs italic text-muted-foreground/70">
+                    &ldquo;{replyTarget.quotedText.slice(0, 80)}
+                    {replyTarget.quotedText.length > 80 ? '...' : ''}&rdquo;
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setReplyTarget(null)}
+                  className="ml-auto shrink-0 rounded-full p-0.5 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            )}
             <Textarea
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
-              placeholder={t('writeComment')}
+              placeholder={replyTarget ? t('reply') + '...' : t('writeComment')}
               className="bg-background mb-3 min-h-[80px] resize-none rounded-lg border-0 shadow-sm"
               maxLength={1000}
             />
@@ -364,48 +449,193 @@ export function GroupTabs({
           </div>
         )}
 
-        {comments.length === 0 ? (
+        {topLevelComments.length === 0 ? (
           <div className="rounded-[2rem] border border-border/50 bg-card p-6 shadow-sm">
             <EmptyState icon="messages" title={t('noComments')} className="py-10" />
           </div>
         ) : (
-          <div className="space-y-1">
-            {comments.map((comment) => (
-              <div key={comment.id} className="group hover:bg-muted/30 flex gap-4 rounded-2xl p-5 transition-colors">
-                <Link href={`/profile/${comment.profiles?.id || comment.user_id}`}>
-                  <Avatar className="h-10 w-10 shrink-0">
-                    <AvatarImage src={comment.profiles?.avatar_url || undefined} />
-                    <AvatarFallback>{comment.profiles?.display_name?.[0] || '?'}</AvatarFallback>
-                  </Avatar>
-                </Link>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href={`/profile/${comment.profiles?.id || comment.user_id}`}
-                      className="text-sm font-semibold hover:underline"
-                    >
-                      {comment.profiles?.display_name || 'User'}
-                    </Link>
-                    <span className="text-muted-foreground text-xs">
-                      {formatCommentDate(comment.created_at)}
-                    </span>
-                    {currentUserId === comment.user_id && (
-                      <button
-                        onClick={() => handleDeleteComment(comment.id)}
-                        className="text-muted-foreground hover:text-destructive ml-auto rounded-full p-1 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
-                        title={t('deleteComment')}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    )}
-                  </div>
-                  <p className="text-muted-foreground mt-1 whitespace-pre-wrap text-sm leading-relaxed">{comment.content}</p>
+          <div className="space-y-0.5">
+            {topLevelComments.map((comment) => {
+              const replies = repliesByParent[comment.id] || [];
+              const visibleReplies = replies.filter(
+                (r) => r.is_approved !== false || canEdit || r.user_id === currentUserId,
+              );
+              return (
+                <div key={comment.id}>
+                  <GroupCommentItem
+                    comment={comment}
+                    isReply={false}
+                    canModerate={canEdit}
+                    currentUserId={currentUserId}
+                    isAuthenticated={isAuthenticated}
+                    comments={comments}
+                    onReply={handleReply}
+                    onQuote={handleQuoteFullComment}
+                    onDelete={handleDeleteComment}
+                    onApprove={handleApproveComment}
+                    formatDate={formatCommentDate}
+                    t={t}
+                  />
+                  {visibleReplies.map((reply) => (
+                    <GroupCommentItem
+                      key={reply.id}
+                      comment={reply}
+                      isReply
+                      canModerate={canEdit}
+                      currentUserId={currentUserId}
+                      isAuthenticated={isAuthenticated}
+                      comments={comments}
+                      onReply={handleReply}
+                      onQuote={handleQuoteFullComment}
+                      onDelete={handleDeleteComment}
+                      onApprove={handleApproveComment}
+                      formatDate={formatCommentDate}
+                      t={t}
+                    />
+                  ))}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </TabsContent>
     </Tabs>
+  );
+}
+
+function GroupCommentItem({
+  comment,
+  isReply,
+  canModerate,
+  currentUserId,
+  isAuthenticated,
+  comments,
+  onReply,
+  onQuote,
+  onDelete,
+  onApprove,
+  formatDate,
+  t,
+}: {
+  comment: GroupComment;
+  isReply: boolean;
+  canModerate: boolean;
+  currentUserId?: string;
+  isAuthenticated: boolean;
+  comments: GroupComment[];
+  onReply: (c: GroupComment) => void;
+  onQuote: (c: GroupComment) => void;
+  onDelete: (id: string) => void;
+  onApprove: (id: string) => void;
+  formatDate: (d: string) => string;
+  t: ReturnType<typeof useTranslations>;
+}) {
+  const isPending = comment.is_approved === false;
+  const canSee = !isPending || canModerate || comment.user_id === currentUserId;
+  const canDelete = comment.user_id === currentUserId || canModerate;
+
+  if (!canSee) return null;
+
+  const targetComment = comment.reply_to_id
+    ? comments.find((c) => c.id === comment.reply_to_id)
+    : null;
+
+  return (
+    <div
+      className={`group flex gap-3 rounded-2xl p-3 transition-colors hover:bg-muted/30 ${
+        isReply ? 'ml-10 sm:ml-14' : ''
+      } ${isPending ? 'opacity-70' : ''}`}
+    >
+      <Link href={`/profile/${comment.profiles?.id || comment.user_id}`}>
+        <Avatar className="h-8 w-8 shrink-0">
+          <AvatarImage src={comment.profiles?.avatar_url || undefined} />
+          <AvatarFallback>{comment.profiles?.display_name?.[0] || '?'}</AvatarFallback>
+        </Avatar>
+      </Link>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <Link
+            href={`/profile/${comment.profiles?.id || comment.user_id}`}
+            className="text-sm font-semibold hover:underline"
+          >
+            {comment.profiles?.display_name || 'User'}
+          </Link>
+          <span className="text-muted-foreground text-xs">
+            {formatDate(comment.created_at)}
+          </span>
+          {isPending && (
+            <Badge variant="outline" className="text-[10px] border-amber-300 text-amber-600">
+              {t('pendingApproval')}
+            </Badge>
+          )}
+          <div className="ml-auto flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+            {isPending && canModerate && (
+              <button
+                type="button"
+                onClick={() => onApprove(comment.id)}
+                className="rounded-full p-1 text-muted-foreground hover:text-green-600"
+                title={t('approve')}
+              >
+                <Check className="h-3.5 w-3.5" />
+              </button>
+            )}
+            {isAuthenticated && (
+              <button
+                type="button"
+                onClick={() => onQuote(comment)}
+                className="rounded-full p-1 text-muted-foreground hover:text-primary"
+                title={t('quoting')}
+              >
+                <MessageSquareQuote className="h-3.5 w-3.5" />
+              </button>
+            )}
+            {isAuthenticated && (
+              <button
+                type="button"
+                onClick={() => onReply(comment)}
+                className="rounded-full p-1 text-muted-foreground hover:text-primary"
+                title={t('reply')}
+              >
+                <Reply className="h-3.5 w-3.5" />
+              </button>
+            )}
+            {canDelete && (
+              <button
+                type="button"
+                onClick={() => onDelete(comment.id)}
+                className="rounded-full p-1 text-muted-foreground hover:text-destructive"
+                title={t('deleteComment')}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {comment.quoted_text && (
+          <div className="mt-1.5 rounded-lg border-l-2 border-primary/30 bg-muted/50 px-3 py-1.5">
+            {comment.quoted_author_name && (
+              <span className="text-xs font-medium text-primary/70">
+                {comment.quoted_author_name}
+              </span>
+            )}
+            <p className="text-xs text-muted-foreground italic line-clamp-3">
+              {comment.quoted_text}
+            </p>
+          </div>
+        )}
+
+        {!comment.quoted_text && targetComment && isReply && (
+          <div className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+            <CornerDownRight className="h-3 w-3" />
+            <span>{targetComment.profiles?.display_name || 'User'}</span>
+          </div>
+        )}
+
+        <p className="text-muted-foreground mt-1 whitespace-pre-wrap text-sm leading-relaxed">
+          {comment.content}
+        </p>
+      </div>
+    </div>
   );
 }

@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { nanoid } from '@/lib/utils';
 import { canViewBlockedOwnedResource, getViewerContext } from '@/lib/server/viewer-context';
+import { createNotification } from '@/lib/actions/notifications';
 
 export async function createEvent(data: {
   title: string;
@@ -322,12 +323,46 @@ export async function getEventAttendees(eventId: string) {
   return data || [];
 }
 
-export async function addComment(eventId: string, content: string, parentId?: string) {
+export async function addComment(
+  eventId: string,
+  content: string,
+  parentId?: string,
+  options?: { quotedText?: string; quotedAuthorName?: string; replyToId?: string },
+) {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
+
+  const { data: event } = await supabase
+    .from('events')
+    .select('organizer_id, title')
+    .eq('id', eventId)
+    .single();
+
+  const isReply = !!parentId;
+  let autoApprove = true;
+
+  if (isReply) {
+    const isOrganizer = event?.organizer_id === user.id;
+
+    const { data: mod } = await supabase
+      .from('event_moderators')
+      .select('user_id')
+      .eq('event_id', eventId)
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    const isSiteStaff = profile?.role === 'admin' || profile?.role === 'moderator';
+    autoApprove = isOrganizer || !!mod || isSiteStaff;
+  }
 
   const { data, error } = await supabase
     .from('event_comments')
@@ -336,12 +371,87 @@ export async function addComment(eventId: string, content: string, parentId?: st
       user_id: user.id,
       content,
       parent_id: parentId || null,
-      is_approved: true,
+      is_approved: autoApprove,
+      quoted_text: options?.quotedText || null,
+      quoted_author_name: options?.quotedAuthorName || null,
+      reply_to_id: options?.replyToId || null,
     })
     .select('*, profiles(display_name, avatar_url)')
     .single();
 
   if (error) return { error: error.message };
+
+  const commenterName = data.profiles?.display_name || 'Someone';
+  const snippet = content.length > 80 ? content.slice(0, 77) + '...' : content;
+  const alreadyNotified = new Set<string>([user.id]);
+
+  if (isReply && parentId) {
+    const { data: parentComment } = await supabase
+      .from('event_comments')
+      .select('user_id')
+      .eq('id', parentId)
+      .single();
+
+    if (parentComment && !alreadyNotified.has(parentComment.user_id)) {
+      alreadyNotified.add(parentComment.user_id);
+      void createNotification({
+        userId: parentComment.user_id,
+        type: 'comment_reply',
+        title: `${commenterName} replied to your comment`,
+        body: snippet,
+        data: { eventId },
+      });
+    }
+
+    if (options?.replyToId && options.replyToId !== parentId) {
+      const { data: replyToComment } = await supabase
+        .from('event_comments')
+        .select('user_id')
+        .eq('id', options.replyToId)
+        .single();
+
+      if (replyToComment && !alreadyNotified.has(replyToComment.user_id)) {
+        alreadyNotified.add(replyToComment.user_id);
+        void createNotification({
+          userId: replyToComment.user_id,
+          type: 'comment_reply',
+          title: `${commenterName} replied to your comment`,
+          body: snippet,
+          data: { eventId },
+        });
+      }
+    }
+  }
+
+  if (event?.organizer_id && !alreadyNotified.has(event.organizer_id)) {
+    alreadyNotified.add(event.organizer_id);
+    void createNotification({
+      userId: event.organizer_id,
+      type: 'new_comment',
+      title: `${commenterName} commented on "${event.title}"`,
+      body: snippet,
+      data: { eventId },
+    });
+  }
+
+  const { data: mods } = await supabase
+    .from('event_moderators')
+    .select('user_id')
+    .eq('event_id', eventId);
+
+  for (const mod of mods || []) {
+    if (!alreadyNotified.has(mod.user_id)) {
+      alreadyNotified.add(mod.user_id);
+      void createNotification({
+        userId: mod.user_id,
+        type: 'new_comment',
+        title: `${commenterName} commented on "${event?.title || 'event'}"`,
+        body: snippet,
+        data: { eventId },
+      });
+    }
+  }
+
   return { comment: data };
 }
 
@@ -351,9 +461,28 @@ export async function getComments(eventId: string) {
     .from('event_comments')
     .select('*, profiles(display_name, avatar_url)')
     .eq('event_id', eventId)
-    .eq('is_approved', true)
     .order('created_at', { ascending: true });
   return data || [];
+}
+
+export async function approveComment(commentId: string) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('event_comments')
+    .update({ is_approved: true })
+    .eq('id', commentId);
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
+export async function deleteComment(commentId: string) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('event_comments')
+    .delete()
+    .eq('id', commentId);
+  if (error) return { error: error.message };
+  return { success: true };
 }
 
 export async function getEventModerators(eventId: string) {

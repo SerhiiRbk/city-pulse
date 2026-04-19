@@ -1,4 +1,6 @@
 -- Human-readable slugs for group posts and recaps
+create extension if not exists unaccent with schema public;
+
 alter table public.group_posts add column if not exists slug text;
 
 create unique index if not exists idx_group_posts_group_slug

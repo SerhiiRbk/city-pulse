@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { canEditGroup } from '@/lib/actions/groups';
+import { createNotification } from '@/lib/actions/notifications';
 import { nanoid } from 'nanoid';
 import type { GroupPost, GroupPostComment, GroupPostMedia, GroupPostType } from '@/types/database';
 import { isValidSlug, toSlug } from '@/lib/utils';
@@ -84,6 +85,90 @@ function normalizeGroupPost(post: GroupPost & {
     events: normalizeSingleRelation(post.events),
     media: normalizeManyRelation(post.media).sort((a, b) => a.sort_order - b.sort_order),
   };
+}
+
+export interface FeedPost extends GroupPostWithRelations {
+  group: { id: string; name: string; slug: string | null; cover_url: string | null; country: string | null; city: string | null } | null;
+}
+
+export async function getFeedPosts(options?: {
+  myGroups?: boolean;
+  country?: string;
+  city?: string;
+  language?: string;
+  type?: string;
+  limit?: number;
+}): Promise<FeedPost[]> {
+  const supabase = await createClient();
+  const limit = options?.limit || 30;
+
+  let groupIds: string[] | null = null;
+
+  if (options?.myGroups) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return [];
+
+    const { data: memberships } = await supabase
+      .from('group_members')
+      .select('group_id')
+      .eq('user_id', user.id);
+
+    groupIds = (memberships || []).map((m) => m.group_id);
+    if (groupIds.length === 0) return [];
+  }
+
+  const { data: feedRows } = await supabase.rpc('get_feed_posts', {
+    p_group_ids: groupIds,
+    p_country: options?.country || null,
+    p_city: options?.city || null,
+    p_language: options?.language || null,
+    p_type: options?.type || null,
+    p_limit: limit,
+  });
+
+  if (!feedRows || feedRows.length === 0) return [];
+
+  const postIds = (feedRows as Array<{ id: string }>).map((r) => r.id);
+
+  const { data: postsData } = await supabase
+    .from('group_posts')
+    .select(`
+      *,
+      profiles:author_id(id, display_name, avatar_url),
+      events:event_id(id, title, starts_at),
+      media:group_post_media(*)
+    `)
+    .in('id', postIds)
+    .order('published_at', { ascending: false });
+
+  const groupMap = (feedRows as Array<{
+    id: string;
+    group_id: string;
+    group_name: string;
+    group_slug: string | null;
+    group_cover_url: string | null;
+    group_country: string | null;
+    group_city: string | null;
+  }>).reduce<Record<string, FeedPost['group']>>((acc, row) => {
+    acc[row.id] = {
+      id: row.group_id,
+      name: row.group_name,
+      slug: row.group_slug,
+      cover_url: row.group_cover_url,
+      country: row.group_country,
+      city: row.group_city,
+    };
+    return acc;
+  }, {});
+
+  return ((postsData || []) as Array<GroupPost & {
+    profiles?: GroupPostAuthor[] | GroupPostAuthor | null;
+    events?: GroupPostEvent[] | GroupPostEvent | null;
+    media?: GroupPostMedia[] | null;
+  }>).map((post) => ({
+    ...normalizeGroupPost(post),
+    group: groupMap[post.id] || null,
+  }));
 }
 
 export async function getGroupPosts(groupId: string): Promise<GroupPostWithRelations[]> {
@@ -333,7 +418,12 @@ export async function updateGroupPost(postId: string, data: { title: string; con
   };
 }
 
-export async function addGroupPostComment(postId: string, content: string) {
+export async function addGroupPostComment(
+  postId: string,
+  content: string,
+  parentId?: string,
+  options?: { quotedText?: string; quotedAuthorName?: string; replyToId?: string },
+) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -345,11 +435,42 @@ export async function addGroupPostComment(postId: string, content: string) {
 
   const { data: post } = await supabase
     .from('group_posts')
-    .select('id')
+    .select('id, group_id')
     .eq('id', postId)
     .single();
 
   if (!post) return { error: 'Post not found' };
+
+  const isReply = !!parentId;
+  let autoApprove = true;
+
+  if (isReply) {
+    const { data: group } = await supabase
+      .from('groups')
+      .select('created_by')
+      .eq('id', post.group_id)
+      .single();
+
+    const isOwner = group?.created_by === user.id;
+
+    const { data: member } = await supabase
+      .from('group_members')
+      .select('role')
+      .eq('group_id', post.group_id)
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    const isGroupMod = member?.role === 'admin' || member?.role === 'moderator';
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    const isSiteStaff = profile?.role === 'admin' || profile?.role === 'moderator';
+    autoApprove = isOwner || isGroupMod || isSiteStaff;
+  }
 
   const { data: comment, error } = await supabase
     .from('group_post_comments')
@@ -357,18 +478,111 @@ export async function addGroupPostComment(postId: string, content: string) {
       post_id: postId,
       user_id: user.id,
       content: text,
+      parent_id: parentId || null,
+      is_approved: autoApprove,
+      quoted_text: options?.quotedText || null,
+      quoted_author_name: options?.quotedAuthorName || null,
+      reply_to_id: options?.replyToId || null,
     })
     .select('*, profiles:user_id(id, display_name, avatar_url)')
     .single();
 
   if (error) return { error: error.message };
-  return {
-    success: true,
-    comment: {
-      ...(comment as GroupPostComment),
-      profiles: normalizeSingleRelation((comment as { profiles?: GroupPostAuthor[] | GroupPostAuthor | null }).profiles),
-    } satisfies GroupPostCommentWithProfile,
-  };
+
+  const normalizedComment = {
+    ...(comment as GroupPostComment),
+    profiles: normalizeSingleRelation((comment as { profiles?: GroupPostAuthor[] | GroupPostAuthor | null }).profiles),
+  } satisfies GroupPostCommentWithProfile;
+
+  const commenterName = normalizedComment.profiles?.display_name || 'Someone';
+  const snippet = text.length > 80 ? text.slice(0, 77) + '...' : text;
+  const alreadyNotified = new Set<string>([user.id]);
+
+  if (isReply && parentId) {
+    const { data: parentComment } = await supabase
+      .from('group_post_comments')
+      .select('user_id')
+      .eq('id', parentId)
+      .single();
+
+    if (parentComment && !alreadyNotified.has(parentComment.user_id)) {
+      alreadyNotified.add(parentComment.user_id);
+      void createNotification({
+        userId: parentComment.user_id,
+        type: 'comment_reply',
+        title: `${commenterName} replied to your comment`,
+        body: snippet,
+        data: { groupId: post.group_id },
+      });
+    }
+
+    if (options?.replyToId && options.replyToId !== parentId) {
+      const { data: replyToComment } = await supabase
+        .from('group_post_comments')
+        .select('user_id')
+        .eq('id', options.replyToId)
+        .single();
+
+      if (replyToComment && !alreadyNotified.has(replyToComment.user_id)) {
+        alreadyNotified.add(replyToComment.user_id);
+        void createNotification({
+          userId: replyToComment.user_id,
+          type: 'comment_reply',
+          title: `${commenterName} replied to your comment`,
+          body: snippet,
+          data: { groupId: post.group_id },
+        });
+      }
+    }
+  }
+
+  const { data: group } = await supabase
+    .from('groups')
+    .select('created_by, name')
+    .eq('id', post.group_id)
+    .single();
+
+  if (group?.created_by && !alreadyNotified.has(group.created_by)) {
+    alreadyNotified.add(group.created_by);
+    void createNotification({
+      userId: group.created_by,
+      type: 'new_comment',
+      title: `${commenterName} commented in "${group.name}"`,
+      body: snippet,
+      data: { groupId: post.group_id },
+    });
+  }
+
+  const { data: groupMods } = await supabase
+    .from('group_members')
+    .select('user_id')
+    .eq('group_id', post.group_id)
+    .in('role', ['admin', 'moderator']);
+
+  for (const mod of groupMods || []) {
+    if (!alreadyNotified.has(mod.user_id)) {
+      alreadyNotified.add(mod.user_id);
+      void createNotification({
+        userId: mod.user_id,
+        type: 'new_comment',
+        title: `${commenterName} commented in "${group?.name || 'group'}"`,
+        body: snippet,
+        data: { groupId: post.group_id },
+      });
+    }
+  }
+
+  return { success: true, comment: normalizedComment };
+}
+
+export async function approveGroupPostComment(commentId: string) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('group_post_comments')
+    .update({ is_approved: true })
+    .eq('id', commentId);
+  if (error) return { error: error.message };
+  return { success: true };
 }
 
 export async function deleteGroupPostComment(commentId: string) {

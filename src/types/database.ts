@@ -176,6 +176,11 @@ export interface GroupPostComment {
   post_id: string;
   user_id: string;
   content: string;
+  parent_id: string | null;
+  is_approved: boolean;
+  quoted_text: string | null;
+  quoted_author_name: string | null;
+  reply_to_id: string | null;
   created_at: string;
 }
 

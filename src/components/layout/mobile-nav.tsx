@@ -20,6 +20,7 @@ import {
   Settings,
   LogOut,
   Landmark,
+  Newspaper,
 } from 'lucide-react';
 import type { Profile } from '@/types/database';
 
@@ -75,6 +76,12 @@ export function MobileNav({ user }: MobileNavProps) {
             <Link href="/groups" className="flex items-center gap-3">
               <Users className="h-5 w-5" />
               {t('groups')}
+            </Link>
+          </Button>
+          <Button variant="ghost" className="justify-start" asChild onClick={close}>
+            <Link href="/feed" className="flex items-center gap-3">
+              <Newspaper className="h-5 w-5" />
+              {t('feed')}
             </Link>
           </Button>
           <Button variant="ghost" className="justify-start" asChild onClick={close}>

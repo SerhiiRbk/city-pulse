@@ -143,6 +143,9 @@ export function NotificationBell() {
       case 'new_message':
       case 'chat_request':
         return <MessageCircle className="h-4 w-4" />;
+      case 'new_comment':
+      case 'comment_reply':
+        return <MessageCircle className="h-4 w-4" />;
       case 'event_reminder_24h':
       case 'event_reminder_2h':
       case 'new_event':
@@ -157,37 +160,30 @@ export function NotificationBell() {
 
   function getNotificationText(n: Notification) {
     if (n.type === 'new_message') {
-      return {
-        title: t('newMessage'),
-        body: n.body,
-      };
+      return { title: t('newMessage'), body: n.body };
     }
 
     if (n.type === 'chat_request') {
-      return {
-        title: t('chatRequest'),
-        body: t('chatRequestBody'),
-      };
+      return { title: t('chatRequest'), body: t('chatRequestBody') };
     }
 
     if (n.type === 'system' && n.data?.kind === 'chat_approved') {
-      return {
-        title: t('chatApproved'),
-        body: t('chatApprovedBody'),
-      };
+      return { title: t('chatApproved'), body: t('chatApprovedBody') };
     }
 
     if (n.type === 'system' && n.data?.kind === 'chat_declined') {
-      return {
-        title: t('chatDeclined'),
-        body: t('chatDeclinedBody'),
-      };
+      return { title: t('chatDeclined'), body: t('chatDeclinedBody') };
     }
 
-    return {
-      title: n.title,
-      body: n.body,
-    };
+    if (n.type === 'comment_reply') {
+      return { title: t('commentReply'), body: n.body };
+    }
+
+    if (n.type === 'new_comment') {
+      return { title: t('newComment'), body: n.body };
+    }
+
+    return { title: n.title, body: n.body };
   }
 
   function getLink(n: Notification): string | null {

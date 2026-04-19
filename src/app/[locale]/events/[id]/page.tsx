@@ -267,6 +267,8 @@ export default async function EventDetailPage({ params }: Props) {
             eventId={id}
             initialComments={comments}
             isAuthenticated={isAuthenticated}
+            currentUserId={user?.id}
+            canModerate={canEdit}
           />
 
           {event.status === 'completed' && isAuthenticated && going && (
