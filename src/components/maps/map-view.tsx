@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { STADIA_ATTRIBUTION, buildStadiaTileUrl } from '@/lib/maps/stadia';
 
 interface MapViewProps {
   lat: number;
@@ -33,8 +34,9 @@ export function MapView({ lat, lng, zoom = 13, marker, onClick, className }: Map
 
     const map = L.map(mapRef.current).setView([lat, lng], zoom);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    L.tileLayer(buildStadiaTileUrl(), {
+      attribution: STADIA_ATTRIBUTION,
+      maxZoom: 20,
     }).addTo(map);
 
     if (onClick) {

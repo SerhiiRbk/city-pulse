@@ -7,7 +7,7 @@ import { EventsFilters } from '@/components/events/events-filters';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
-import { CalendarPlus, Sparkles } from 'lucide-react';
+import { CalendarPlus, List, Map as MapIcon, Sparkles } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 
@@ -43,6 +43,7 @@ export default async function EventsPage({
   const filters = await searchParams;
   const t = await getTranslations('events');
   const tPage = await getTranslations('events.page');
+  const tMap = await getTranslations('events.map');
   const user = await getUser();
   const [interests, interestCategories] = await Promise.all([
     getInterests(),
@@ -55,6 +56,17 @@ export default async function EventsPage({
   const languageCodes = filters.language
     ? filters.language.split(',').filter(Boolean)
     : [];
+
+  // Build map link that preserves the handful of filters relevant to the map
+  // view (category + free-only). Date range is not forwarded because the map
+  // uses coarse presets (today/weekend/etc) rather than arbitrary dates.
+  const mapHref = (() => {
+    const qs = new URLSearchParams();
+    if (categoryIds.length > 0) qs.set('category', categoryIds.join(','));
+    if (filters.is_free === 'true') qs.set('is_free', 'true');
+    const query = qs.toString();
+    return query ? `/events/map?${query}` : '/events/map';
+  })();
 
   const events = await getEvents({
     country: filters.country,
@@ -116,6 +128,26 @@ export default async function EventsPage({
                     {item}
                   </span>
                 ))}
+              </div>
+
+              <div className="mt-5 inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/10 p-1 backdrop-blur">
+                <span className="rounded-full bg-white px-4 py-1.5 text-sm font-medium text-slate-900 shadow-sm">
+                  <span className="flex items-center gap-2">
+                    <List className="h-4 w-4" />
+                    {tMap('viewList')}
+                  </span>
+                </span>
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-full text-white/90 hover:bg-white/10 hover:text-white"
+                >
+                  <Link href={mapHref} className="flex items-center gap-2">
+                    <MapIcon className="h-4 w-4" />
+                    {tMap('viewMap')}
+                  </Link>
+                </Button>
               </div>
             </div>
 

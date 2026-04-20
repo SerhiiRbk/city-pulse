@@ -17,6 +17,7 @@ import { prettyZodError } from '@/lib/validations/common';
 
 function revalidateLandingEvents() {
   updateTag('landing:events');
+  updateTag('events:map');
 }
 
 export async function createEvent(input: CreateEventInput) {
