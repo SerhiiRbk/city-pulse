@@ -40,9 +40,14 @@ export default async function CityEventsPage({
   const user = await getUser();
   const events = await getSystemEvents({ city: filters.city, limit: 24 });
 
-  const { goingSet, favoritedSet } = user
+  const { goingSet, waitlistSet, interestedSet, favoritedSet } = user
     ? await getUserEventStatuses(events.map((e) => e.id))
-    : { goingSet: new Set<string>(), favoritedSet: new Set<string>() };
+    : {
+        goingSet: new Set<string>(),
+        waitlistSet: new Set<string>(),
+        interestedSet: new Set<string>(),
+        favoritedSet: new Set<string>(),
+      };
 
   return (
     <div>
@@ -108,7 +113,7 @@ export default async function CityEventsPage({
                 <Badge className="absolute top-2 right-2 z-10 bg-amber-500 text-white shadow-md">
                   {t('systemBadge')}
                 </Badge>
-                <EventCard event={event} isGoing={goingSet.has(event.id)} isFavorited={favoritedSet.has(event.id)} isAuthenticated={!!user} />
+                <EventCard event={event} isGoing={goingSet.has(event.id)} isWaitlisted={waitlistSet.has(event.id)} isInterested={interestedSet.has(event.id)} isFavorited={favoritedSet.has(event.id)} isAuthenticated={!!user} />
               </div>
             ))}
           </div>

@@ -71,7 +71,16 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
   const allEventIds = [...upcomingEvents, ...pastEvents].map((event: GroupEvent) => event.id);
   const [status, canEdit, eventStatuses] = isAuthenticated
     ? await Promise.all([getUserGroupStatus(id), canEditGroup(id), getUserEventStatuses(allEventIds)])
-    : [{ isMember: false, isSubscribed: false, role: null }, false, { goingSet: new Set<string>(), favoritedSet: new Set<string>() }];
+    : [
+        { isMember: false, isSubscribed: false, role: null },
+        false,
+        {
+          goingSet: new Set<string>(),
+          waitlistSet: new Set<string>(),
+          interestedSet: new Set<string>(),
+          favoritedSet: new Set<string>(),
+        },
+      ];
   const groupGalleryImages = canEdit ? await getGroupGalleryImages(id) : [];
   const t = await getTranslations('groups');
   const tDetail = await getTranslations('groups.detail');
@@ -246,6 +255,7 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
             isAuthenticated={isAuthenticated}
             currentUserId={user?.id}
             goingEventIds={Array.from(eventStatuses.goingSet)}
+            waitlistedEventIds={Array.from(eventStatuses.waitlistSet)}
             favoritedEventIds={Array.from(eventStatuses.favoritedSet)}
             initialTab={initialTab}
             initialRecapEventId={initialRecapEventId}

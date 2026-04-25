@@ -6,7 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Heart, MapPin, Calendar, Users, Globe, Clock } from 'lucide-react';
 import { formatDate, formatDuration } from '@/lib/utils';
-import { toggleAttendance, toggleFavorite } from '@/lib/actions/events';
+import {
+  toggleAttendance,
+  toggleFavorite,
+  type AttendanceStatus,
+} from '@/lib/actions/events';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { COUNTRIES } from '@/lib/constants';
@@ -27,22 +31,43 @@ interface EventListCardProps {
     currency: string | null;
     max_attendees: number | null;
     going_count: number;
+    waitlist_count?: number;
     category_slug: string | null;
     category_translations: Record<string, string> | null;
     status: string;
   };
   isGoing?: boolean;
+  isWaitlisted?: boolean;
+  isInterested?: boolean;
   isFavorited?: boolean;
   isAuthenticated?: boolean;
 }
 
-export function EventListCard({ event, isGoing: initialGoing, isFavorited: initialFav, isAuthenticated }: EventListCardProps) {
+export function EventListCard({
+  event,
+  isGoing: initialGoing,
+  isWaitlisted: initialWait,
+  isInterested: initialInterested,
+  isFavorited: initialFav,
+  isAuthenticated,
+}: EventListCardProps) {
   const t = useTranslations('events.card');
   const tDetail = useTranslations('events.detail');
   const locale = useLocale();
-  const [going, setGoing] = useState(initialGoing || false);
+  const initialStatus: AttendanceStatus = initialGoing
+    ? 'going'
+    : initialWait
+      ? 'waitlist'
+      : initialInterested
+        ? 'interested'
+        : 'none';
+  const [status, setStatus] = useState<AttendanceStatus>(initialStatus);
+  const going = status === 'going';
+  const onWaitlist = status === 'waitlist';
   const [favorited, setFavorited] = useState(initialFav || false);
   const [goingCount, setGoingCount] = useState(event.going_count);
+  const spotsLeft = event.max_attendees ? event.max_attendees - goingCount : null;
+  const isFull = event.max_attendees != null && (spotsLeft ?? 0) <= 0;
 
   const categoryLabel = event.category_translations?.[locale] || event.category_translations?.['en'] || event.category_slug || '';
   const countryDisplay = event.country
@@ -61,17 +86,28 @@ export function EventListCard({ event, isGoing: initialGoing, isFavorited: initi
   async function handleToggleGoing(e: React.MouseEvent) {
     e.preventDefault();
     if (!isAuthenticated) return;
-    const prev = going;
-    setGoing(!prev);
-    setGoingCount((c) => (prev ? c - 1 : c + 1));
+    const prev = status;
+    const optimistic: AttendanceStatus =
+      prev === 'none' ? (isFull ? 'waitlist' : 'going') : 'none';
+    setStatus(optimistic);
+    if (prev === 'going' && optimistic === 'none') setGoingCount((c) => c - 1);
+    else if (prev === 'none' && optimistic === 'going') setGoingCount((c) => c + 1);
 
     const result = await toggleAttendance(event.id);
     if (result.error) {
-      setGoing(prev);
-      setGoingCount((c) => (prev ? c + 1 : c - 1));
-    } else {
-      toast.success(result.going ? tDetail('registeredForEvent') : tDetail('cancelledAttendance'));
+      setStatus(prev);
+      if (prev === 'going' && optimistic === 'none') setGoingCount((c) => c + 1);
+      else if (prev === 'none' && optimistic === 'going') setGoingCount((c) => c - 1);
+      return;
     }
+    const next = result.status ?? 'none';
+    setStatus(next);
+    if (next === 'going' && optimistic !== 'going') setGoingCount((c) => c + 1);
+    else if (next !== 'going' && optimistic === 'going') setGoingCount((c) => c - 1);
+
+    if (next === 'going') toast.success(tDetail('registeredForEvent'));
+    else if (next === 'waitlist') toast.success(tDetail('addedToWaitlist'));
+    else toast.success(tDetail('cancelledAttendance'));
   }
 
   async function handleToggleFavorite(e: React.MouseEvent) {
@@ -183,16 +219,27 @@ export function EventListCard({ event, isGoing: initialGoing, isFavorited: initi
                   <Users className="h-3.5 w-3.5" />
                   {goingCount}
                 </span>
+                {isFull && (
+                  <Badge variant="destructive" className="rounded-md px-1.5 py-0 text-[10px]">
+                    {t('noSpotsLeft')}
+                  </Badge>
+                )}
               </div>
 
               {isAuthenticated && (
                 <Button
                   size="sm"
-                  variant={going ? 'secondary' : 'default'}
+                  variant={going || onWaitlist ? 'secondary' : 'default'}
                   className="h-8 px-4 text-xs"
                   onClick={handleToggleGoing}
                 >
-                  {going ? t('going') : t('join')}
+                  {going
+                    ? t('going')
+                    : onWaitlist
+                      ? t('onWaitlist')
+                      : isFull
+                        ? t('joinWaitlist')
+                        : t('join')}
                 </Button>
               )}
             </div>

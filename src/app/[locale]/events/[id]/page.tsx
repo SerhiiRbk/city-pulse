@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { getEvent, getUserAttendance, getEventAttendees, getComments, canEditEvent } from '@/lib/actions/events';
+import { getEvent, getUserAttendance, getEventAttendees, getEventRoster, getComments, canEditEvent } from '@/lib/actions/events';
 import { getGroupPostByEventId } from '@/lib/actions/group-posts';
 import { Button } from '@/components/ui/button';
 import { getUser } from '@/lib/actions/auth';
@@ -18,6 +18,7 @@ import { EventMap } from '@/components/maps/event-map';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { ShareButton } from '@/components/ui/share-button';
 import { EventManagement } from '@/components/events/event-management';
+import { AttendanceRoster, type RosterEntry } from '@/components/events/attendance-roster';
 import { EventReviewForm } from '@/components/events/event-review-form';
 import { EventPhotoGallery } from '@/components/events/event-photo-gallery';
 import { generateEventJsonLd } from '@/lib/json-ld';
@@ -60,14 +61,30 @@ export default async function EventDetailPage({ params }: Props) {
   const isAuthenticated = !!user;
   const isOrganizer = user?.id === event.organizer_id;
   const canEdit = isAuthenticated ? await canEditEvent(id) : false;
-  const { going, favorited } = isAuthenticated
+  const { going, favorited, status: attendanceStatus } = isAuthenticated
     ? await getUserAttendance(id)
-    : { going: false, favorited: false };
+    : { going: false, favorited: false, status: 'none' as const };
   const attendees = await getEventAttendees(id);
   const comments = await getComments(id);
   const recap = event.group_id ? await getGroupPostByEventId(id) : null;
 
   const spotsLeft = event.max_attendees ? event.max_attendees - (event.going_count || 0) : null;
+  const isFull = event.max_attendees != null && (spotsLeft ?? 0) <= 0;
+  const waitlistCount = event.waitlist_count ?? 0;
+  const interestedCount = event.interested_count ?? 0;
+
+  const isPastEvent = new Date(event.starts_at).getTime() < Date.now();
+  const canManageAttendance = canEdit && isPastEvent;
+  const roster = canManageAttendance ? await getEventRoster(id) : [];
+  const rosterEntries: RosterEntry[] = roster.map((row) => {
+    const profile = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
+    return {
+      user_id: row.user_id,
+      status: row.status as RosterEntry['status'],
+      display_name: profile?.display_name || 'User',
+      avatar_url: profile?.avatar_url ?? null,
+    };
+  });
   const categoryLabel = event.category_translations?.[locale] || event.category_translations?.['en'] || '';
   const orgInitials = (event.organizer_name || 'U')
     .split(' ')
@@ -271,6 +288,10 @@ export default async function EventDetailPage({ params }: Props) {
             canModerate={canEdit}
           />
 
+          {canManageAttendance && (
+            <AttendanceRoster eventId={id} initialEntries={rosterEntries} />
+          )}
+
           {event.status === 'completed' && isAuthenticated && going && (
             <EventReviewForm eventId={id} />
           )}
@@ -288,9 +309,10 @@ export default async function EventDetailPage({ params }: Props) {
             <CardContent className="space-y-5 pt-5 sm:space-y-6 sm:pt-6">
               <EventActions
                 eventId={id}
-                initialGoing={going}
+                initialStatus={attendanceStatus}
                 initialFavorited={favorited}
                 isAuthenticated={isAuthenticated}
+                isFull={isFull}
               />
               <ShareButton title={event.title} className="w-full rounded-xl" />
 
@@ -339,6 +361,16 @@ export default async function EventDetailPage({ params }: Props) {
                     {spotsLeft !== null && (
                       <p className="text-muted-foreground text-xs">
                         {spotsLeft > 0 ? t('spotsLeft', { count: spotsLeft }) : t('noSpotsLeft')}
+                      </p>
+                    )}
+                    {waitlistCount > 0 && (
+                      <p className="text-muted-foreground text-xs">
+                        {t('waitlistCount', { count: waitlistCount })}
+                      </p>
+                    )}
+                    {interestedCount > 0 && (
+                      <p className="text-muted-foreground text-xs">
+                        {t('interestedCount', { count: interestedCount })}
                       </p>
                     )}
                   </div>
@@ -403,9 +435,10 @@ export default async function EventDetailPage({ params }: Props) {
           </div>
           <EventActions
             eventId={id}
-            initialGoing={going}
+            initialStatus={attendanceStatus}
             initialFavorited={favorited}
             isAuthenticated={isAuthenticated}
+            isFull={isFull}
             compact
           />
         </div>

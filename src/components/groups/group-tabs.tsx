@@ -63,6 +63,7 @@ interface GroupTabsProps {
   isAuthenticated: boolean;
   currentUserId?: string;
   goingEventIds?: string[];
+  waitlistedEventIds?: string[];
   favoritedEventIds?: string[];
   initialTab?: string;
   initialRecapEventId?: string;
@@ -81,12 +82,14 @@ export function GroupTabs({
   isAuthenticated,
   currentUserId,
   goingEventIds = [],
+  waitlistedEventIds = [],
   favoritedEventIds = [],
   initialTab = 'upcoming',
   initialRecapEventId,
 }: GroupTabsProps) {
   const t = useTranslations('groups.detail');
   const goingSet = new Set(goingEventIds);
+  const waitlistSet = new Set(waitlistedEventIds);
   const favSet = new Set(favoritedEventIds);
   const locale = useLocale();
   const router = useRouter();
@@ -268,7 +271,7 @@ export function GroupTabs({
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {upcomingEvents.map((event) => (
-              <EventCard key={event.id} event={event} isGoing={goingSet.has(event.id)} isFavorited={favSet.has(event.id)} isAuthenticated={isAuthenticated} />
+              <EventCard key={event.id} event={event} isGoing={goingSet.has(event.id)} isWaitlisted={waitlistSet.has(event.id)} isFavorited={favSet.has(event.id)} isAuthenticated={isAuthenticated} />
             ))}
           </div>
         )}
@@ -283,7 +286,7 @@ export function GroupTabs({
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {pastEvents.map((event) => (
-              <EventCard key={event.id} event={event} isGoing={goingSet.has(event.id)} isFavorited={favSet.has(event.id)} isAuthenticated={isAuthenticated} />
+              <EventCard key={event.id} event={event} isGoing={goingSet.has(event.id)} isWaitlisted={waitlistSet.has(event.id)} isFavorited={favSet.has(event.id)} isAuthenticated={isAuthenticated} />
             ))}
           </div>
         )}

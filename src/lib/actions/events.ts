@@ -175,7 +175,32 @@ export async function getEvents(filters: {
   return data || [];
 }
 
-export async function toggleAttendance(eventId: string) {
+export type AttendanceStatus =
+  | 'none'
+  | 'interested'
+  | 'going'
+  | 'waitlist'
+  | 'attended'
+  | 'no_show'
+  | 'cancelled';
+
+function normalizeAttendanceStatus(raw: string | null | undefined): AttendanceStatus {
+  switch (raw) {
+    case 'interested':
+    case 'going':
+    case 'waitlist':
+    case 'attended':
+    case 'no_show':
+    case 'cancelled':
+      return raw;
+    default:
+      return 'none';
+  }
+}
+
+export async function toggleAttendance(
+  eventId: string,
+): Promise<{ error?: string; status?: AttendanceStatus }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -189,19 +214,92 @@ export async function toggleAttendance(eventId: string) {
     .eq('user_id', user.id)
     .single();
 
-  if (existing && existing.status === 'going') {
+  // Going or waitlist → leave on toggle. Interested does NOT count — a second
+  // click of "Join" upgrades an 'interested' RSVP to 'going'.
+  if (existing && (existing.status === 'going' || existing.status === 'waitlist')) {
     await supabase
       .from('event_attendees')
       .delete()
       .eq('event_id', eventId)
       .eq('user_id', user.id);
-    return { going: false };
+    return { status: 'none' };
   }
 
-  await supabase
+  // Upsert as 'going'; DB trigger may downgrade to 'waitlist' if the event
+  // is at capacity. This path also upgrades an existing 'interested' row.
+  const { data: inserted } = await supabase
     .from('event_attendees')
-    .upsert({ event_id: eventId, user_id: user.id, status: 'going' });
-  return { going: true };
+    .upsert({ event_id: eventId, user_id: user.id, status: 'going' })
+    .select('status')
+    .single();
+
+  return { status: normalizeAttendanceStatus(inserted?.status) };
+}
+
+export async function setInterest(
+  eventId: string,
+  interested: boolean,
+): Promise<{ error?: string; status?: AttendanceStatus }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const { data: existing } = await supabase
+    .from('event_attendees')
+    .select('status')
+    .eq('event_id', eventId)
+    .eq('user_id', user.id)
+    .single();
+
+  if (!interested) {
+    // Only clear rows that represent interest; never delete a going/waitlist
+    // RSVP through this action.
+    if (existing?.status === 'interested') {
+      await supabase
+        .from('event_attendees')
+        .delete()
+        .eq('event_id', eventId)
+        .eq('user_id', user.id);
+    }
+    return { status: 'none' };
+  }
+
+  // Do not downgrade an active RSVP into 'interested'.
+  if (existing?.status === 'going' || existing?.status === 'waitlist') {
+    return { status: normalizeAttendanceStatus(existing.status) };
+  }
+
+  const { data: inserted } = await supabase
+    .from('event_attendees')
+    .upsert({ event_id: eventId, user_id: user.id, status: 'interested' })
+    .select('status')
+    .single();
+
+  return { status: normalizeAttendanceStatus(inserted?.status) };
+}
+
+/**
+ * Organizer / moderator-only: mark a user's post-event attendance outcome.
+ * RLS ensures non-privileged callers cannot set 'attended' / 'no_show'.
+ */
+export async function markAttendance(
+  eventId: string,
+  userId: string,
+  outcome: 'attended' | 'no_show' | 'going',
+): Promise<{ error?: string; status?: AttendanceStatus }> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('event_attendees')
+    .update({ status: outcome })
+    .eq('event_id', eventId)
+    .eq('user_id', userId)
+    .select('status')
+    .single();
+
+  if (error) return { error: error.message };
+  return { status: normalizeAttendanceStatus(data?.status) };
 }
 
 export async function toggleFavorite(eventId: string) {
@@ -233,12 +331,16 @@ export async function toggleFavorite(eventId: string) {
   return { favorited: true };
 }
 
-export async function getUserAttendance(eventId: string) {
+export async function getUserAttendance(eventId: string): Promise<{
+  status: AttendanceStatus;
+  going: boolean;
+  favorited: boolean;
+}> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { going: false, favorited: false };
+  if (!user) return { status: 'none', going: false, favorited: false };
 
   const [{ data: attendance }, { data: favorite }] = await Promise.all([
     supabase
@@ -255,28 +357,40 @@ export async function getUserAttendance(eventId: string) {
       .single(),
   ]);
 
+  const status = normalizeAttendanceStatus(attendance?.status);
+
   return {
-    going: attendance?.status === 'going',
+    status,
+    going: status === 'going',
     favorited: !!favorite,
   };
 }
 
 export async function getUserEventStatuses(eventIds: string[]): Promise<{
   goingSet: Set<string>;
+  waitlistSet: Set<string>;
+  interestedSet: Set<string>;
   favoritedSet: Set<string>;
 }> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user || eventIds.length === 0) return { goingSet: new Set(), favoritedSet: new Set() };
+  if (!user || eventIds.length === 0) {
+    return {
+      goingSet: new Set(),
+      waitlistSet: new Set(),
+      interestedSet: new Set(),
+      favoritedSet: new Set(),
+    };
+  }
 
   const [{ data: attendances }, { data: favorites }] = await Promise.all([
     supabase
       .from('event_attendees')
-      .select('event_id')
+      .select('event_id, status')
       .eq('user_id', user.id)
-      .eq('status', 'going')
+      .in('status', ['going', 'waitlist', 'interested'])
       .in('event_id', eventIds),
     supabase
       .from('event_favorites')
@@ -285,8 +399,19 @@ export async function getUserEventStatuses(eventIds: string[]): Promise<{
       .in('event_id', eventIds),
   ]);
 
+  const goingSet = new Set<string>();
+  const waitlistSet = new Set<string>();
+  const interestedSet = new Set<string>();
+  for (const row of attendances || []) {
+    if (row.status === 'going') goingSet.add(row.event_id);
+    else if (row.status === 'waitlist') waitlistSet.add(row.event_id);
+    else if (row.status === 'interested') interestedSet.add(row.event_id);
+  }
+
   return {
-    goingSet: new Set((attendances || []).map((a) => a.event_id)),
+    goingSet,
+    waitlistSet,
+    interestedSet,
     favoritedSet: new Set((favorites || []).map((f) => f.event_id)),
   };
 }
@@ -298,6 +423,22 @@ export async function getEventAttendees(eventId: string) {
     .select('user_id, status, profiles(display_name, avatar_url)')
     .eq('event_id', eventId)
     .eq('status', 'going');
+  return data || [];
+}
+
+/**
+ * Organizer-facing roster: includes every active/past participant row
+ * (going, waitlist, attended, no_show, cancelled). Used for post-event
+ * attendance marking.
+ */
+export async function getEventRoster(eventId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('event_attendees')
+    .select('user_id, status, created_at, profiles(display_name, avatar_url)')
+    .eq('event_id', eventId)
+    .in('status', ['going', 'waitlist', 'attended', 'no_show'])
+    .order('created_at', { ascending: true });
   return data || [];
 }
 
