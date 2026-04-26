@@ -2,8 +2,10 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { getUser } from '@/lib/actions/auth';
 import { getCalendarEvents, getMyCalendarEvents } from '@/lib/actions/calendar';
+import { ensureCalendarToken } from '@/lib/actions/calendar-token';
 import { CalendarPageClient } from '@/components/calendar/calendar-page-client';
 import { buildPageMetadata } from '@/lib/seo';
+import { SITE_URL } from '@/lib/constants';
 
 export async function generateMetadata({
   params,
@@ -36,9 +38,10 @@ export default async function CalendarPage({
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
 
-  const [allEvents, myEvents] = await Promise.all([
+  const [allEvents, myEvents, calendarToken] = await Promise.all([
     getCalendarEvents(year, month),
     user ? getMyCalendarEvents(year, month) : Promise.resolve([]),
+    user ? ensureCalendarToken() : Promise.resolve(null),
   ]);
 
   // Compute today-context stats on the server so the hero stays useful
@@ -109,6 +112,8 @@ export default async function CalendarPage({
         initialYear={year}
         initialMonth={month}
         isAuthenticated={!!user}
+        calendarToken={calendarToken}
+        siteUrl={SITE_URL}
       />
     </div>
   );

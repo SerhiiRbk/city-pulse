@@ -5,7 +5,19 @@ import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ChevronLeft, ChevronRight, Globe, MapPin, Users } from 'lucide-react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Globe,
+  MapPin,
+  Users,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { categoryColor } from '@/lib/events/category-colors';
 import type { CalendarEvent } from './calendar-page-client';
@@ -120,7 +132,9 @@ export function CalendarView({
   return (
     <div className="space-y-5">
       {/* Month navigator. Sits flush above the grid so the eye reads it
-          as the grid's caption rather than a separate widget. */}
+          as the grid's caption rather than a separate widget. The month
+          label itself opens a popover for jumping months/years — much
+          faster than clicking ‹/› fifteen times. */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Button
@@ -132,9 +146,15 @@ export function CalendarView({
           >
             <ChevronLeft className="h-5 w-5" />
           </Button>
-          <h2 className="text-xl font-semibold capitalize tracking-tight sm:text-2xl">
-            {monthName}
-          </h2>
+          <MonthJumper
+            year={year}
+            month={month}
+            label={monthName}
+            onPick={(y, m) => {
+              onNavigate(y, m);
+              setSelectedDay(null);
+            }}
+          />
           <Button
             variant="ghost"
             size="icon"
@@ -313,6 +333,104 @@ export function CalendarView({
         </div>
       )}
     </div>
+  );
+}
+
+/**
+ * Year + month picker shown when clicking the navigator label.
+ *
+ * Local "draft year" state lets users page through years without
+ * triggering a fetch on each tick — only picking a month commits the
+ * jump. The current year is bracketed by a configurable window so the
+ * picker stays useful for long-running calendars without becoming a
+ * sprawling date input.
+ */
+function MonthJumper({
+  year,
+  month,
+  label,
+  onPick,
+}: {
+  year: number;
+  month: number;
+  label: string;
+  onPick: (year: number, month: number) => void;
+}) {
+  const locale = useLocale();
+  const [open, setOpen] = useState(false);
+  const [draftYear, setDraftYear] = useState(year);
+
+  // Keep the draft year synced with the displayed month whenever the
+  // popover re-opens. Without this, navigating ‹/› outside the popover
+  // could leave the year selector stuck on a stale page.
+  function handleOpenChange(next: boolean) {
+    if (next) setDraftYear(year);
+    setOpen(next);
+  }
+
+  const months = useMemo(() => {
+    return Array.from({ length: 12 }, (_, i) =>
+      new Date(2024, i, 1).toLocaleDateString(locale, { month: 'short' }),
+    );
+  }, [locale]);
+
+  return (
+    <Popover open={open} onOpenChange={handleOpenChange}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          className="h-auto gap-1.5 rounded-full px-3 py-1.5 text-xl font-semibold capitalize tracking-tight hover:bg-muted/60 sm:text-2xl"
+        >
+          {label}
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-72 p-3">
+        <div className="mb-2 flex items-center justify-between">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 rounded-full"
+            onClick={() => setDraftYear((y) => y - 1)}
+            aria-label={`Year ${draftYear - 1}`}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="text-sm font-semibold tabular-nums">
+            {draftYear}
+          </span>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 rounded-full"
+            onClick={() => setDraftYear((y) => y + 1)}
+            aria-label={`Year ${draftYear + 1}`}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+        <div className="grid grid-cols-3 gap-1.5">
+          {months.map((name, i) => {
+            const m = i + 1;
+            const isCurrent = draftYear === year && m === month;
+            return (
+              <Button
+                key={name}
+                variant={isCurrent ? 'default' : 'ghost'}
+                size="sm"
+                className="h-9 rounded-xl text-xs font-medium capitalize"
+                onClick={() => {
+                  onPick(draftYear, m);
+                  setOpen(false);
+                }}
+              >
+                {name}
+              </Button>
+            );
+          })}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
 

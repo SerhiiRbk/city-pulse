@@ -527,9 +527,9 @@
     "detail": {
       "creator": "Created by",
       "membersList": "Members",
-      "eventsTitle": "Upcoming events",
+      "eventsTitle": "Upcoming",
       "noEvents": "No upcoming events",
-      "pastEventsTitle": "Past events",
+      "pastEventsTitle": "Past",
       "noPastEvents": "No past events",
       "photosTitle": "Photo albums",
       "noPhotos": "No albums yet",

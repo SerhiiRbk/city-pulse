@@ -527,9 +527,9 @@
     "detail": {
       "creator": "Создатель",
       "membersList": "Участники",
-      "eventsTitle": "Предстоящие мероприятия",
+      "eventsTitle": "Предстоящие",
       "noEvents": "Нет предстоящих мероприятий",
-      "pastEventsTitle": "Прошедшие мероприятия",
+      "pastEventsTitle": "Прошедшие",
       "noPastEvents": "Нет прошедших мероприятий",
       "photosTitle": "Фотоальбомы",
       "noPhotos": "Альбомов пока нет",
