@@ -7,8 +7,19 @@ import { EventsFilters } from '@/components/events/events-filters';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
-import { CalendarPlus, List, Map as MapIcon, Sparkles } from 'lucide-react';
+import {
+  ArrowDownUp,
+  CalendarCheck,
+  CalendarPlus,
+  Eye,
+  EyeOff,
+  Flame,
+  List,
+  Map as MapIcon,
+  Sparkles,
+} from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
+import type { EventSort } from '@/lib/actions/events';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({
@@ -68,6 +79,12 @@ export default async function EventsPage({
     return query ? `/events/map?${query}` : '/events/map';
   })();
 
+  const allowedSorts = ['soon', 'popular'] as const;
+  const sort: EventSort = (allowedSorts as readonly string[]).includes(filters.sort ?? '')
+    ? (filters.sort as EventSort)
+    : 'soon';
+  const includePast = filters.include_past === 'true';
+
   const events = await getEvents({
     country: filters.country,
     city_id: filters.city_id,
@@ -79,7 +96,20 @@ export default async function EventsPage({
     is_free: filters.is_free === 'true' ? true : filters.is_free === 'false' ? false : undefined,
     is_online: filters.is_online === 'true' ? true : filters.is_online === 'false' ? false : undefined,
     limit: 24,
+    sort,
+    include_past: includePast,
   });
+
+  // Build URLs that flip a single param while preserving everything else.
+  const buildHref = (overrides: Record<string, string | undefined>) => {
+    const qs = new URLSearchParams();
+    for (const [key, value] of Object.entries({ ...filters, ...overrides })) {
+      if (value === undefined || value === '') continue;
+      qs.set(key, value as string);
+    }
+    const query = qs.toString();
+    return query ? `/events?${query}` : '/events';
+  };
 
   const { goingSet, waitlistSet, interestedSet, favoritedSet } = user
     ? await getUserEventStatuses(events.map((e) => e.id))
@@ -157,16 +187,29 @@ export default async function EventsPage({
             </div>
 
             {user && (
-              <Button
-                asChild
-                size="lg"
-                className="shrink-0 self-start rounded-full px-6 shadow-xl"
-              >
-                <Link href="/events/create" className="flex items-center gap-2">
-                  <CalendarPlus className="h-5 w-5" />
-                  {tPage('createCta')}
-                </Link>
-              </Button>
+              <div className="flex shrink-0 flex-wrap gap-2 self-start sm:flex-col sm:items-stretch">
+                <Button
+                  asChild
+                  size="lg"
+                  className="rounded-full px-6 shadow-xl"
+                >
+                  <Link href="/events/create" className="flex items-center gap-2">
+                    <CalendarPlus className="h-5 w-5" />
+                    {tPage('createCta')}
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="ghost"
+                  className="rounded-full border border-white/15 bg-white/10 px-6 text-white/90 backdrop-blur hover:bg-white/20 hover:text-white"
+                >
+                  <Link href="/events/my" className="flex items-center gap-2">
+                    <CalendarCheck className="h-5 w-5" />
+                    {tPage('myEventsCta')}
+                  </Link>
+                </Button>
+              </div>
             )}
           </div>
         </div>
@@ -196,6 +239,54 @@ export default async function EventsPage({
           <p className="max-w-xl text-sm text-muted-foreground">
             {tPage('sectionBody')}
           </p>
+        </div>
+
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-muted/30 p-1">
+            <span className="hidden items-center gap-1.5 px-2 py-1 text-xs font-medium uppercase tracking-wider text-muted-foreground sm:inline-flex">
+              <ArrowDownUp className="h-3 w-3" />
+              {tPage('sort.label')}
+            </span>
+            {[
+              { value: 'soon' as const, label: tPage('sort.soon'), Icon: Sparkles },
+              { value: 'popular' as const, label: tPage('sort.popular'), Icon: Flame },
+            ].map(({ value, label, Icon }) => {
+              const isActive = sort === value;
+              return (
+                <Button
+                  key={value}
+                  asChild
+                  size="sm"
+                  variant={isActive ? 'default' : 'ghost'}
+                  className="rounded-full px-3"
+                >
+                  <Link href={buildHref({ sort: value === 'soon' ? undefined : value })}>
+                    <Icon className="mr-1.5 h-3.5 w-3.5" />
+                    {label}
+                  </Link>
+                </Button>
+              );
+            })}
+          </div>
+
+          <Button
+            asChild
+            size="sm"
+            variant={includePast ? 'secondary' : 'outline'}
+            className="rounded-full"
+          >
+            <Link
+              href={buildHref({ include_past: includePast ? undefined : 'true' })}
+              className="flex items-center gap-1.5"
+            >
+              {includePast ? (
+                <EyeOff className="h-3.5 w-3.5" />
+              ) : (
+                <Eye className="h-3.5 w-3.5" />
+              )}
+              {includePast ? tPage('hidePast') : tPage('showPast')}
+            </Link>
+          </Button>
         </div>
         {events.length === 0 ? (
           <EmptyState

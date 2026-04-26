@@ -18,7 +18,8 @@ export async function getCachedLandingEvents(limit = 24) {
     .eq('is_private', false)
     .eq('is_blocked', false)
     .eq('organizer_is_blocked', false)
-    .gte('starts_at', sinceIso)
+    // Hide finished events but keep currently in-progress ones visible.
+    .gte('ends_at', sinceIso)
     .order('starts_at', { ascending: true })
     .limit(limit);
   return data ?? [];
@@ -62,7 +63,8 @@ export async function getCachedLandingStats(): Promise<LandingStats> {
       .eq('status', 'published')
       .eq('is_private', false)
       .eq('is_blocked', false)
-      .gte('starts_at', nowIso),
+      // Count events that haven't ended yet (includes in-progress).
+      .gte('ends_at', nowIso),
     supabase
       .from('groups')
       .select('id', { count: 'exact', head: true })

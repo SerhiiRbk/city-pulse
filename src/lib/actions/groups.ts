@@ -373,6 +373,7 @@ export async function getGroupMembers(groupId: string) {
 
 export async function getGroupEvents(groupId: string) {
   const supabase = await createClient();
+  const nowIso = new Date().toISOString();
   const { data } = await supabase
     .from('events_with_counts')
     .select('*')
@@ -380,13 +381,15 @@ export async function getGroupEvents(groupId: string) {
     .eq('status', 'published')
     .eq('is_blocked', false)
     .eq('organizer_is_blocked', false)
-    .gte('starts_at', new Date().toISOString())
+    // Keep ongoing group events in the upcoming list until they end.
+    .gte('ends_at', nowIso)
     .order('starts_at', { ascending: true });
   return data || [];
 }
 
 export async function getPastGroupEvents(groupId: string) {
   const supabase = await createClient();
+  const nowIso = new Date().toISOString();
   const { data } = await supabase
     .from('events_with_counts')
     .select('*')
@@ -394,7 +397,7 @@ export async function getPastGroupEvents(groupId: string) {
     .in('status', ['published', 'completed'])
     .eq('is_blocked', false)
     .eq('organizer_is_blocked', false)
-    .lt('starts_at', new Date().toISOString())
+    .lt('ends_at', nowIso)
     .order('starts_at', { ascending: false });
   return data || [];
 }

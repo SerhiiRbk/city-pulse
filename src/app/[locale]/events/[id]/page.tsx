@@ -17,6 +17,7 @@ import { SITE_NAME, COUNTRIES, LANGUAGES } from '@/lib/constants';
 import { EventMap } from '@/components/maps/event-map';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { ShareButton } from '@/components/ui/share-button';
+import { AddToCalendarButton } from '@/components/events/add-to-calendar';
 import { EventManagement } from '@/components/events/event-management';
 import { AttendanceRoster, type RosterEntry } from '@/components/events/attendance-roster';
 import { EventReviewForm } from '@/components/events/event-review-form';
@@ -314,7 +315,22 @@ export default async function EventDetailPage({ params }: Props) {
                 isAuthenticated={isAuthenticated}
                 isFull={isFull}
               />
-              <ShareButton title={event.title} className="w-full rounded-xl" />
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <ShareButton title={event.title} className="flex-1 rounded-xl" />
+                <AddToCalendarButton
+                  event={{
+                    id: event.id,
+                    title: event.title,
+                    description: event.description,
+                    address: event.address,
+                    city: event.city,
+                    starts_at: event.starts_at,
+                    duration_minutes: event.duration_minutes,
+                    is_online: event.is_online,
+                  }}
+                  className="flex-1 rounded-xl"
+                />
+              </div>
 
               <div className="space-y-3">
                 <div className="flex items-center gap-3">

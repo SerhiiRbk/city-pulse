@@ -50,7 +50,8 @@
     "createGroup": "Create group",
     "cityEvents": "City events",
     "feed": "Feed",
-    "admin": "Admin"
+    "admin": "Admin",
+    "myEvents": "My events"
   },
   "landing": {
     "hero": {
@@ -296,7 +297,11 @@
       "recapCreateHint": "Share what happened, key takeaways, and photos in the group feed.",
       "recapPendingHint": "The organizers have not published a recap yet.",
       "viewRecap": "View recap",
-      "writeRecap": "Write recap"
+      "writeRecap": "Write recap",
+      "addToCalendar": "Add to calendar",
+      "addToGoogle": "Google Calendar",
+      "addToApple": "Apple / Outlook",
+      "downloadIcs": "Download .ics"
     },
     "attendance": {
       "title": "Attendance check-in",
@@ -321,6 +326,7 @@
       "trust2": "Walks, board games, language clubs",
       "trust3": "Meet people before you show up",
       "createCta": "Create event",
+      "myEventsCta": "My events",
       "sideLabel": "Best for new connections",
       "sideItem1Title": "Small-group outings",
       "sideItem1Body": "Less pressure, easier first conversations.",
@@ -332,7 +338,73 @@
       "resultsTitle": "{count, plural, one {# event worth joining} other {# events worth joining}}",
       "noResultsTitle": "No matching events yet",
       "sectionBody": "Look for welcoming formats, recurring communities, and events that already show signs of good social energy.",
-      "emptyDescription": "Try adjusting your filters or check back later"
+      "emptyDescription": "Try adjusting your filters or check back later",
+      "sort": {
+        "label": "Sort",
+        "soon": "Soonest",
+        "popular": "Popular"
+      },
+      "showPast": "Show past events",
+      "hidePast": "Hide past events"
+    },
+    "myEvents": {
+      "heroBadge": "Your hosting hub",
+      "title": "My events",
+      "subtitle": "Everything you organize or moderate, in one place — including past events for recap and reflection.",
+      "createCta": "Create event",
+      "backToEvents": "Browse all events",
+      "upcomingLabel": "Upcoming",
+      "upcomingTitle": "{count, plural, one {# upcoming event} other {# upcoming events}}",
+      "noUpcoming": "No upcoming events. Plan something new and bring your community together.",
+      "pastLabel": "Past",
+      "pastTitle": "{count, plural, one {# past event} other {# past events}}",
+      "draftsLabel": "Drafts",
+      "draftsTitle": "{count, plural, one {# draft} other {# drafts}}",
+      "draftsDescription": "Only you can see these. Publish when you're ready to invite people.",
+      "emptyTitle": "You haven't organized any events yet",
+      "emptyDescription": "Once you create or moderate events, they'll show up here so you can manage them anytime.",
+      "stats": {
+        "upcoming": "Upcoming",
+        "past": "Past",
+        "drafts": "Drafts",
+        "rsvps": "Total RSVPs"
+      },
+      "status": {
+        "draft": "Draft — only visible to you",
+        "cancelled": "Cancelled",
+        "completed": "Completed",
+        "past": "Already happened",
+        "blocked": "Blocked by moderation"
+      },
+      "card": {
+        "edit": "Edit",
+        "publish": "Publish",
+        "publishSuccess": "Event published",
+        "cancel": "Cancel",
+        "cancelConfirmTitle": "Cancel this event?",
+        "cancelConfirmDescription": "This cannot be undone. All attendees will be notified.",
+        "cancelDismiss": "Keep event",
+        "cancelConfirm": "Yes, cancel",
+        "cancelSuccess": "Event cancelled",
+        "markComplete": "Mark complete",
+        "completeSuccess": "Event marked complete",
+        "duplicate": "Duplicate",
+        "duplicateSuccess": "Event duplicated as draft",
+        "viewRecap": "Recap",
+        "roster": "{count, plural, =0 {No RSVPs} one {1 RSVP} other {# RSVPs}}",
+        "rsvps": "{count, plural, one {1 going} other {# going}}"
+      },
+      "subscribe": {
+        "title": "Subscribe in your calendar",
+        "description": "Get every event you organize or RSVP to delivered to Google Calendar, Apple Calendar, or Outlook automatically.",
+        "googleCta": "Add to Google Calendar",
+        "icsCta": "Copy subscribe URL",
+        "icsCopied": "Subscribe URL copied",
+        "downloadCta": "Download .ics",
+        "regenerateCta": "Regenerate URL",
+        "regenerateConfirm": "Regenerating will invalidate the old URL on every calendar that uses it. Continue?",
+        "regenerated": "URL regenerated"
+      }
     },
     "map": {
       "pageTitle": "Events map",

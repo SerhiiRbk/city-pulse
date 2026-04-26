@@ -17,7 +17,7 @@ import { Logo } from '@/components/ui/logo';
 import { MobileNav } from './mobile-nav';
 import { NotificationBell } from '@/components/notifications/notification-bell';
 import { HeaderMessagesButton } from '@/components/messages/header-messages-button';
-import { CalendarDays, Users, MapPin, Plus, LogOut, User, Settings, Landmark, ShieldCheck, Newspaper } from 'lucide-react';
+import { CalendarDays, Users, MapPin, Plus, LogOut, User, Settings, Landmark, ShieldCheck, Newspaper, CalendarCheck } from 'lucide-react';
 import type { Profile } from '@/types/database';
 
 interface HeaderProps {
@@ -141,6 +141,12 @@ function UserMenu({ user }: { user: Profile }) {
           <Link href={`/profile/${user.id}`} className="flex items-center gap-2">
             <User className="h-4 w-4" />
             {t('profile')}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/events/my" className="flex items-center gap-2">
+            <CalendarCheck className="h-4 w-4" />
+            {t('myEvents')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>

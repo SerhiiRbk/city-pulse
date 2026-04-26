@@ -9,7 +9,7 @@ export async function cancelEvent(eventId: string) {
 
   const { data: event } = await supabase
     .from('events')
-    .select('organizer_id, status')
+    .select('organizer_id, status, title')
     .eq('id', eventId)
     .single();
 
@@ -23,6 +23,40 @@ export async function cancelEvent(eventId: string) {
     .eq('id', eventId);
 
   if (error) return { error: error.message };
+
+  // Notify everyone who had a stake in this event. We swallow errors
+  // here on purpose — the cancellation succeeded and the user
+  // shouldn't be blocked on a notification side-effect.
+  try {
+    const { data: stakeholders } = await supabase
+      .from('event_attendees')
+      .select('user_id')
+      .eq('event_id', eventId)
+      .in('status', ['going', 'waitlist', 'interested']);
+
+    const uniqueUsers = Array.from(
+      new Set(
+        (stakeholders ?? [])
+          .map((row) => row.user_id)
+          .filter((id) => id && id !== user.id),
+      ),
+    );
+
+    if (uniqueUsers.length > 0) {
+      const rows = uniqueUsers.map((userId) => ({
+        user_id: userId,
+        type: 'event_cancelled' as const,
+        title: `${event.title} was cancelled`,
+        body:
+          'The organiser cancelled this event. Browse other events or check back later.',
+        data: { event_id: eventId },
+      }));
+      await supabase.from('notifications').insert(rows);
+    }
+  } catch {
+    // Best-effort fan-out — never fail cancellation on notification errors.
+  }
+
   return { success: true };
 }
 

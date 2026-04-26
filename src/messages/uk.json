@@ -50,7 +50,8 @@
     "createGroup": "Створити групу",
     "cityEvents": "Афіша",
     "feed": "Стрічка",
-    "admin": "Адмін"
+    "admin": "Адмін",
+    "myEvents": "Мої заходи"
   },
   "landing": {
     "hero": {
@@ -296,7 +297,11 @@
       "recapCreateHint": "Опублікуйте у стрічці групи, як пройшов захід, що запам'яталося та які висновки.",
       "recapPendingHint": "Організатори ще не опублікували звіт про захід.",
       "viewRecap": "Відкрити звіт",
-      "writeRecap": "Написати звіт"
+      "writeRecap": "Написати звіт",
+      "addToCalendar": "Додати в календар",
+      "addToGoogle": "Google Calendar",
+      "addToApple": "Apple / Outlook",
+      "downloadIcs": "Завантажити .ics"
     },
     "attendance": {
       "title": "Відмітка присутності",
@@ -321,6 +326,7 @@
       "trust2": "Прогулянки, настілки, мовні клуби",
       "trust3": "Познайомтеся з людьми ще до зустрічі",
       "createCta": "Створити захід",
+      "myEventsCta": "Мої заходи",
       "sideLabel": "Найкраще для нових знайомств",
       "sideItem1Title": "Невеликі зустрічі",
       "sideItem1Body": "Менше тиску, легше почати першу розмову.",
@@ -332,7 +338,73 @@
       "resultsTitle": "{count, plural, one {# захід, куди варто піти} few {# заходи, куди варто піти} other {# заходів, куди варто піти}}",
       "noResultsTitle": "Відповідних заходів поки немає",
       "sectionBody": "Обирайте формати, де простіше відчути себе своїм: з чіткою атмосферою, регулярністю та живим спілкуванням.",
-      "emptyDescription": "Спробуйте змінити фільтри або поверніться пізніше"
+      "emptyDescription": "Спробуйте змінити фільтри або поверніться пізніше",
+      "sort": {
+        "label": "Сортування",
+        "soon": "Найближчі",
+        "popular": "Популярні"
+      },
+      "showPast": "Показати минулі",
+      "hidePast": "Приховати минулі"
+    },
+    "myEvents": {
+      "heroBadge": "Ваш центр організатора",
+      "title": "Мої заходи",
+      "subtitle": "Усі заходи, які ви організовуєте або модеруєте — зокрема й минулі, щоб підбити підсумки.",
+      "createCta": "Створити захід",
+      "backToEvents": "Усі заходи",
+      "upcomingLabel": "Майбутні",
+      "upcomingTitle": "{count, plural, one {# майбутній захід} few {# майбутні заходи} other {# майбутніх заходів}}",
+      "noUpcoming": "Майбутніх заходів немає. Сплануйте новий і зберіть свою спільноту.",
+      "pastLabel": "Минулі",
+      "pastTitle": "{count, plural, one {# минулий захід} few {# минулі заходи} other {# минулих заходів}}",
+      "draftsLabel": "Чернетки",
+      "draftsTitle": "{count, plural, one {# чернетка} few {# чернетки} other {# чернеток}}",
+      "draftsDescription": "Бачите тільки ви. Опублікуйте, коли будете готові запросити людей.",
+      "emptyTitle": "Ви ще не організовували заходів",
+      "emptyDescription": "Щойно ви створите захід або станете його модератором, він з'явиться тут.",
+      "stats": {
+        "upcoming": "Майбутніх",
+        "past": "Минулих",
+        "drafts": "Чернеток",
+        "rsvps": "Усього RSVP"
+      },
+      "status": {
+        "draft": "Чернетка — бачите тільки ви",
+        "cancelled": "Скасовано",
+        "completed": "Завершено",
+        "past": "Уже відбувся",
+        "blocked": "Заблоковано модерацією"
+      },
+      "card": {
+        "edit": "Редагувати",
+        "publish": "Опублікувати",
+        "publishSuccess": "Захід опубліковано",
+        "cancel": "Скасувати",
+        "cancelConfirmTitle": "Скасувати цей захід?",
+        "cancelConfirmDescription": "Дію не можна скасувати. Усі учасники отримають сповіщення.",
+        "cancelDismiss": "Залишити",
+        "cancelConfirm": "Так, скасувати",
+        "cancelSuccess": "Захід скасовано",
+        "markComplete": "Позначити завершеним",
+        "completeSuccess": "Захід позначено завершеним",
+        "duplicate": "Дублювати",
+        "duplicateSuccess": "Створено чернетку-копію",
+        "viewRecap": "Підсумок",
+        "roster": "{count, plural, =0 {Немає RSVP} one {1 RSVP} few {# RSVP} other {# RSVP}}",
+        "rsvps": "{count, plural, one {# іде} few {# ідуть} other {# ідуть}}"
+      },
+      "subscribe": {
+        "title": "Підписка в календар",
+        "description": "Підпишіться — і всі заходи, які ви організовуєте або на які йдете, потраплятимуть у Google Calendar, Apple Calendar або Outlook автоматично.",
+        "googleCta": "Додати в Google Calendar",
+        "icsCta": "Скопіювати посилання",
+        "icsCopied": "Посилання скопійовано",
+        "downloadCta": "Завантажити .ics",
+        "regenerateCta": "Перевипустити",
+        "regenerateConfirm": "Усі попередні підписки перестануть працювати. Продовжити?",
+        "regenerated": "Посилання оновлено"
+      }
     },
     "map": {
       "pageTitle": "Мапа подій",

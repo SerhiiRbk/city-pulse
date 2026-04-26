@@ -67,7 +67,8 @@ export async function getSystemEvents(filters: {
     .eq('status', 'published')
     .eq('is_blocked', false)
     .eq('organizer_is_blocked', false)
-    .gte('starts_at', now)
+    // Keep ongoing system events visible until they end.
+    .gte('ends_at', now)
     .order('starts_at', { ascending: true })
     .range(offset, offset + limit - 1);
 

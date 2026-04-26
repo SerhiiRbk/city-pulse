@@ -27,6 +27,7 @@ function weekendRange() {
 
 async function fetchEvents(dateStart: string, dateEnd: string, limit = 6) {
   const supabase = await createClient();
+  const nowIso = new Date().toISOString();
   const { data } = await supabase
     .from('events_with_counts')
     .select('*')
@@ -36,6 +37,8 @@ async function fetchEvents(dateStart: string, dateEnd: string, limit = 6) {
     .eq('organizer_is_blocked', false)
     .gte('starts_at', dateStart)
     .lt('starts_at', dateEnd)
+    // Skip events that have already finished within the bucket window.
+    .gte('ends_at', nowIso)
     .order('going_count', { ascending: false })
     .limit(limit);
   return data || [];
@@ -66,7 +69,8 @@ export async function getPopularEvents(limit = 6) {
     .eq('is_private', false)
     .eq('is_blocked', false)
     .eq('organizer_is_blocked', false)
-    .gte('starts_at', now)
+    // Keep in-progress events on the popular shelf until they actually end.
+    .gte('ends_at', now)
     .order('going_count', { ascending: false })
     .limit(limit);
   return data || [];

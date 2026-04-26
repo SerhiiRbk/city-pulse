@@ -47,7 +47,8 @@ export async function getDashboardStats() {
       .from('events')
       .select('*', { count: 'exact', head: true })
       .eq('status', 'published')
-      .gte('starts_at', now.toISOString()),
+      // Count events that haven't ended yet (consistent with discovery surfaces).
+      .gte('ends_at', now.toISOString()),
     supabase
       .from('profiles')
       .select('*', { count: 'exact', head: true })
@@ -61,7 +62,7 @@ export async function getDashboardStats() {
       .from('events_with_counts')
       .select('id, title, going_count, starts_at, city')
       .eq('status', 'published')
-      .gte('starts_at', now.toISOString())
+      .gte('ends_at', now.toISOString())
       .order('going_count', { ascending: false })
       .limit(5),
     supabase

@@ -88,9 +88,64 @@ export async function updateEvent(eventId: string, data: UpdateEventInput) {
   const allowed = await canEditEvent(eventId);
   if (!allowed) return { error: 'No permission to edit this event' };
 
+  // Capture pre-update state so we can detect a postpone and notify
+  // attendees once after the write succeeds.
+  const { data: before } = await supabase
+    .from('events')
+    .select('starts_at, title, status')
+    .eq('id', eventId)
+    .single();
+
   const { error } = await supabase.from('events').update(parsed.data).eq('id', eventId);
   if (error) return { error: error.message };
   revalidateLandingEvents();
+
+  // Best-effort notify attendees if the start time moved while the
+  // event is still published. Postpone-or-bring-forward both qualify.
+  try {
+    const newStart = parsed.data.starts_at;
+    if (
+      before &&
+      before.status === 'published' &&
+      typeof newStart === 'string' &&
+      newStart !== before.starts_at
+    ) {
+      const movedForward = new Date(newStart).getTime() > new Date(before.starts_at).getTime();
+      const { data: stakeholders } = await supabase
+        .from('event_attendees')
+        .select('user_id')
+        .eq('event_id', eventId)
+        .in('status', ['going', 'waitlist', 'interested']);
+
+      const uniqueUsers = Array.from(
+        new Set(
+          (stakeholders ?? [])
+            .map((row) => row.user_id)
+            .filter((id) => id && id !== user.id),
+        ),
+      );
+
+      if (uniqueUsers.length > 0) {
+        const rows = uniqueUsers.map((userId) => ({
+          user_id: userId,
+          type: 'event_postponed' as const,
+          title: `${before.title} — new start time`,
+          body: movedForward
+            ? 'The organiser moved this event later. Check the new start time in your calendar.'
+            : 'The organiser moved this event earlier. Double-check the new start time.',
+          data: {
+            event_id: eventId,
+            previous_starts_at: before.starts_at,
+            new_starts_at: newStart,
+          },
+        }));
+        await supabase.from('notifications').insert(rows);
+      }
+    }
+  } catch {
+    // Best-effort — never fail an edit because of notifications.
+  }
+
   return { success: true };
 }
 
@@ -126,6 +181,8 @@ export async function getEvent(eventId: string) {
   return data;
 }
 
+export type EventSort = 'soon' | 'popular';
+
 export async function getEvents(filters: {
   country?: string;
   city?: string;
@@ -139,6 +196,20 @@ export async function getEvents(filters: {
   is_online?: boolean;
   limit?: number;
   offset?: number;
+  /**
+   * When true, do not filter out events that have already started.
+   * Default behavior hides past events from public discovery surfaces;
+   * organizer/moderator views can opt in to see them.
+   */
+  include_past?: boolean;
+  /**
+   * Sort strategy applied after filtering. Default `soon` orders by
+   * start time ascending — best for "what's next". `popular` ranks by
+   * RSVP count. Reviews-based sorting is intentionally not exposed
+   * here: reviews are written after an event ends, so they have no
+   * meaningful signal for the upcoming-events listing.
+   */
+  sort?: EventSort;
 }) {
   const supabase = await createClient();
   let query = supabase
@@ -147,8 +218,14 @@ export async function getEvents(filters: {
     .eq('status', 'published')
     .eq('is_private', false)
     .eq('is_blocked', false)
-    .eq('organizer_is_blocked', false)
-    .order('starts_at', { ascending: true });
+    .eq('organizer_is_blocked', false);
+
+  if (!filters.include_past) {
+    // Hide only events that have actually finished, so currently
+    // in-progress events stay visible. `ends_at` is exposed by the
+    // events_with_counts view as starts_at + duration_minutes.
+    query = query.gte('ends_at', new Date().toISOString());
+  }
 
   if (filters.country) query = query.eq('country', filters.country);
   if (filters.city_id) query = query.eq('city_id', filters.city_id);
@@ -165,6 +242,19 @@ export async function getEvents(filters: {
   if (filters.date_to) query = query.lte('starts_at', filters.date_to);
   if (filters.is_free !== undefined) query = query.eq('is_free', filters.is_free);
   if (filters.is_online !== undefined) query = query.eq('is_online', filters.is_online);
+
+  const sort: EventSort = filters.sort ?? 'soon';
+  switch (sort) {
+    case 'popular':
+      query = query
+        .order('going_count', { ascending: false })
+        .order('starts_at', { ascending: true });
+      break;
+    case 'soon':
+    default:
+      query = query.order('starts_at', { ascending: true });
+      break;
+  }
 
   const limit = filters.limit || 12;
   const offset = filters.offset || 0;

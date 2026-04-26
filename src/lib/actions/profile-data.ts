@@ -32,11 +32,13 @@ export async function getProfileGoingEvents(userId: string) {
   if (!att || att.length === 0) return [];
 
   const ids = att.map((a) => a.event_id);
+  const nowIso = new Date().toISOString();
   const { data } = await supabase
     .from('events_with_counts')
     .select('*')
     .in('id', ids)
-    .gte('starts_at', new Date().toISOString())
+    // Currently in-progress events stay in the "Going" bucket until they end.
+    .gte('ends_at', nowIso)
     .eq('status', 'published')
     .eq('is_blocked', false)
     .eq('organizer_is_blocked', false)
@@ -54,13 +56,15 @@ export async function getProfilePastEvents(userId: string) {
   if (!att || att.length === 0) return [];
 
   const ids = att.map((a) => a.event_id);
+  const nowIso = new Date().toISOString();
   const { data } = await supabase
     .from('events_with_counts')
     .select('*')
     .in('id', ids)
     .eq('is_blocked', false)
     .eq('organizer_is_blocked', false)
-    .lt('starts_at', new Date().toISOString())
+    // Past = events whose end time is in the past.
+    .lt('ends_at', nowIso)
     .order('starts_at', { ascending: false });
   return data || [];
 }

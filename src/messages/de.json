@@ -50,7 +50,8 @@
     "createGroup": "Gruppe erstellen",
     "cityEvents": "Stadtevents",
     "feed": "Feed",
-    "admin": "Admin"
+    "admin": "Admin",
+    "myEvents": "Meine Veranstaltungen"
   },
   "landing": {
     "hero": {
@@ -296,7 +297,11 @@
       "recapCreateHint": "Teile im Gruppenfeed, wie die Veranstaltung gelaufen ist, was besonders war und welche Erkenntnisse es gab.",
       "recapPendingHint": "Die Organisatoren haben noch keinen Rückblick veröffentlicht.",
       "viewRecap": "Rückblick ansehen",
-      "writeRecap": "Rückblick schreiben"
+      "writeRecap": "Rückblick schreiben",
+      "addToCalendar": "Zum Kalender hinzufügen",
+      "addToGoogle": "Google Calendar",
+      "addToApple": "Apple / Outlook",
+      "downloadIcs": ".ics herunterladen"
     },
     "attendance": {
       "title": "Anwesenheitsliste",
@@ -321,6 +326,7 @@
       "trust2": "Spaziergänge, Brettspiele, Sprachclubs",
       "trust3": "Menschen kennenlernen, bevor du kommst",
       "createCta": "Veranstaltung erstellen",
+      "myEventsCta": "Meine Veranstaltungen",
       "sideLabel": "Am besten für neue Verbindungen",
       "sideItem1Title": "Kleine Gruppen",
       "sideItem1Body": "Weniger Druck, einfachere erste Gespräche.",
@@ -332,7 +338,73 @@
       "resultsTitle": "{count, plural, one {# Veranstaltung, die sich lohnt} other {# Veranstaltungen, die sich lohnen}}",
       "noResultsTitle": "Noch keine passenden Veranstaltungen",
       "sectionBody": "Achte auf einladende Formate, wiederkehrende Communities und Events, bei denen man schnell Anschluss findet.",
-      "emptyDescription": "Passe deine Filter an oder schau später noch einmal vorbei"
+      "emptyDescription": "Passe deine Filter an oder schau später noch einmal vorbei",
+      "sort": {
+        "label": "Sortierung",
+        "soon": "Demnächst",
+        "popular": "Beliebt"
+      },
+      "showPast": "Vergangene anzeigen",
+      "hidePast": "Vergangene ausblenden"
+    },
+    "myEvents": {
+      "heroBadge": "Dein Organisator-Hub",
+      "title": "Meine Veranstaltungen",
+      "subtitle": "Alles, was du organisierst oder moderierst — auch vergangene Veranstaltungen für Rückblick und Reflexion.",
+      "createCta": "Veranstaltung erstellen",
+      "backToEvents": "Alle Veranstaltungen",
+      "upcomingLabel": "Bevorstehend",
+      "upcomingTitle": "{count, plural, one {# bevorstehende Veranstaltung} other {# bevorstehende Veranstaltungen}}",
+      "noUpcoming": "Keine bevorstehenden Veranstaltungen. Plane etwas Neues und bring deine Community zusammen.",
+      "pastLabel": "Vergangen",
+      "pastTitle": "{count, plural, one {# vergangene Veranstaltung} other {# vergangene Veranstaltungen}}",
+      "draftsLabel": "Entwürfe",
+      "draftsTitle": "{count, plural, one {# Entwurf} other {# Entwürfe}}",
+      "draftsDescription": "Nur du siehst sie. Veröffentliche sie, sobald du bereit bist, Gäste einzuladen.",
+      "emptyTitle": "Du hast noch keine Veranstaltungen organisiert",
+      "emptyDescription": "Sobald du Veranstaltungen erstellst oder moderierst, erscheinen sie hier zur einfachen Verwaltung.",
+      "stats": {
+        "upcoming": "Bevorstehend",
+        "past": "Vergangen",
+        "drafts": "Entwürfe",
+        "rsvps": "RSVPs gesamt"
+      },
+      "status": {
+        "draft": "Entwurf — nur du siehst ihn",
+        "cancelled": "Abgesagt",
+        "completed": "Abgeschlossen",
+        "past": "Bereits stattgefunden",
+        "blocked": "Von der Moderation blockiert"
+      },
+      "card": {
+        "edit": "Bearbeiten",
+        "publish": "Veröffentlichen",
+        "publishSuccess": "Veranstaltung veröffentlicht",
+        "cancel": "Absagen",
+        "cancelConfirmTitle": "Diese Veranstaltung absagen?",
+        "cancelConfirmDescription": "Die Aktion kann nicht rückgängig gemacht werden. Alle Teilnehmer werden benachrichtigt.",
+        "cancelDismiss": "Behalten",
+        "cancelConfirm": "Ja, absagen",
+        "cancelSuccess": "Veranstaltung abgesagt",
+        "markComplete": "Als abgeschlossen markieren",
+        "completeSuccess": "Als abgeschlossen markiert",
+        "duplicate": "Duplizieren",
+        "duplicateSuccess": "Entwurf-Kopie erstellt",
+        "viewRecap": "Rückblick",
+        "roster": "{count, plural, =0 {Keine RSVPs} one {1 RSVP} other {# RSVPs}}",
+        "rsvps": "{count, plural, one {# kommt} other {# kommen}}"
+      },
+      "subscribe": {
+        "title": "In Kalender abonnieren",
+        "description": "Abonniere einmal — und jede Veranstaltung, die du organisierst oder besuchst, erscheint automatisch in Google Calendar, Apple Calendar oder Outlook.",
+        "googleCta": "Zu Google Calendar hinzufügen",
+        "icsCta": "Abo-Link kopieren",
+        "icsCopied": "Link kopiert",
+        "downloadCta": ".ics herunterladen",
+        "regenerateCta": "Link erneuern",
+        "regenerateConfirm": "Alle bisher abonnierten Kalender funktionieren danach nicht mehr. Fortfahren?",
+        "regenerated": "Link erneuert"
+      }
     },
     "map": {
       "pageTitle": "Veranstaltungskarte",

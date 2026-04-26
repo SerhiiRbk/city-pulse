@@ -30,6 +30,12 @@ export function buildPageMetadata(input: {
   description: string;
   image?: string | null;
   type?: 'website' | 'article' | 'profile';
+  /**
+   * When provided, attaches a robots policy to the page metadata. Pass
+   * `{ index: false, follow: false }` for personal/dashboard surfaces that
+   * shouldn't appear in search results.
+   */
+  robots?: Metadata['robots'];
 }): Metadata {
   const url = buildLocalizedUrl(input.locale, input.path);
 
@@ -44,6 +50,7 @@ export function buildPageMetadata(input: {
       type: input.type || 'website',
       images: input.image ? [{ url: input.image }] : undefined,
     },
+    ...(input.robots ? { robots: input.robots } : {}),
   };
 }
 

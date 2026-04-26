@@ -50,7 +50,8 @@
     "createGroup": "Vytvořit skupinu",
     "cityEvents": "Městské akce",
     "feed": "Feed",
-    "admin": "Admin"
+    "admin": "Admin",
+    "myEvents": "Moje akce"
   },
   "landing": {
     "hero": {
@@ -296,7 +297,11 @@
       "recapCreateHint": "Sdílejte ve skupinovém feedu, jak akce proběhla, co bylo nejzajímavější a jaké z ní plynou závěry.",
       "recapPendingHint": "Organizátoři zatím shrnutí akce nezveřejnili.",
       "viewRecap": "Zobrazit shrnutí",
-      "writeRecap": "Napsat shrnutí"
+      "writeRecap": "Napsat shrnutí",
+      "addToCalendar": "Přidat do kalendáře",
+      "addToGoogle": "Google Calendar",
+      "addToApple": "Apple / Outlook",
+      "downloadIcs": "Stáhnout .ics"
     },
     "attendance": {
       "title": "Evidence účasti",
@@ -321,6 +326,7 @@
       "trust2": "Procházky, deskovky, jazykové kluby",
       "trust3": "Seznamte se s lidmi ještě před příchodem",
       "createCta": "Vytvořit akci",
+      "myEventsCta": "Moje akce",
       "sideLabel": "Nejlepší pro nová spojení",
       "sideItem1Title": "Menší skupiny",
       "sideItem1Body": "Menší tlak, snadnější první rozhovory.",
@@ -332,7 +338,73 @@
       "resultsTitle": "{count, plural, one {# akce, která stojí za to} few {# akce, které stojí za to} other {# akcí, které stojí za to}}",
       "noResultsTitle": "Zatím žádné odpovídající akce",
       "sectionBody": "Hledejte přívětivé formáty, opakující se komunity a akce, kde je snadné rychle zapadnout.",
-      "emptyDescription": "Zkuste upravit filtry nebo se vraťte později"
+      "emptyDescription": "Zkuste upravit filtry nebo se vraťte později",
+      "sort": {
+        "label": "Řazení",
+        "soon": "Nejdříve",
+        "popular": "Populární"
+      },
+      "showPast": "Zobrazit minulé",
+      "hidePast": "Skrýt minulé"
+    },
+    "myEvents": {
+      "heroBadge": "Vaše centrum organizátora",
+      "title": "Moje akce",
+      "subtitle": "Vše, co pořádáte nebo moderujete, na jednom místě — včetně minulých akcí pro shrnutí a reflexi.",
+      "createCta": "Vytvořit akci",
+      "backToEvents": "Procházet všechny akce",
+      "upcomingLabel": "Nadcházející",
+      "upcomingTitle": "{count, plural, one {# nadcházející akce} few {# nadcházející akce} other {# nadcházejících akcí}}",
+      "noUpcoming": "Žádné nadcházející akce. Naplánujte něco nového a spojte svou komunitu.",
+      "pastLabel": "Minulé",
+      "pastTitle": "{count, plural, one {# minulá akce} few {# minulé akce} other {# minulých akcí}}",
+      "draftsLabel": "Koncepty",
+      "draftsTitle": "{count, plural, one {# koncept} few {# koncepty} other {# konceptů}}",
+      "draftsDescription": "Vidíte je jen vy. Publikujte je, až budete připraveni pozvat lidi.",
+      "emptyTitle": "Zatím jste žádné akce nepořádali",
+      "emptyDescription": "Jakmile vytvoříte nebo budete moderovat akci, zobrazí se zde pro snadnou správu.",
+      "stats": {
+        "upcoming": "Nadcházející",
+        "past": "Minulé",
+        "drafts": "Koncepty",
+        "rsvps": "Celkem RSVP"
+      },
+      "status": {
+        "draft": "Koncept — vidíte jen vy",
+        "cancelled": "Zrušeno",
+        "completed": "Dokončeno",
+        "past": "Už proběhlo",
+        "blocked": "Zablokováno moderací"
+      },
+      "card": {
+        "edit": "Upravit",
+        "publish": "Publikovat",
+        "publishSuccess": "Akce publikována",
+        "cancel": "Zrušit",
+        "cancelConfirmTitle": "Zrušit tuto akci?",
+        "cancelConfirmDescription": "Akci nelze vrátit zpět. Všichni účastníci dostanou oznámení.",
+        "cancelDismiss": "Ponechat",
+        "cancelConfirm": "Ano, zrušit",
+        "cancelSuccess": "Akce zrušena",
+        "markComplete": "Označit jako dokončené",
+        "completeSuccess": "Akce označena jako dokončená",
+        "duplicate": "Duplikovat",
+        "duplicateSuccess": "Vytvořen koncept-duplikát",
+        "viewRecap": "Shrnutí",
+        "roster": "{count, plural, =0 {Žádné RSVP} one {1 RSVP} few {# RSVP} other {# RSVP}}",
+        "rsvps": "{count, plural, one {# přijde} few {# přijdou} other {# přijde}}"
+      },
+      "subscribe": {
+        "title": "Přihlásit do kalendáře",
+        "description": "Každá akce, kterou pořádáte nebo na kterou jdete, se automaticky objeví v Google Calendaru, Apple Calendaru nebo Outlooku.",
+        "googleCta": "Přidat do Google Calendaru",
+        "icsCta": "Kopírovat odkaz",
+        "icsCopied": "Odkaz zkopírován",
+        "downloadCta": "Stáhnout .ics",
+        "regenerateCta": "Obnovit odkaz",
+        "regenerateConfirm": "Všechny dříve přihlášené kalendáře přestanou fungovat. Pokračovat?",
+        "regenerated": "Odkaz obnoven"
+      }
     },
     "map": {
       "pageTitle": "Mapa akcí",
