@@ -795,6 +795,7 @@
   },
   "calendar": {
     "title": "Календарь",
+    "eyebrow": "Ваш месяц одним взглядом",
     "myEvents": "Мои события",
     "allEvents": "Все события",
     "exportGoogle": "Экспорт в Google Календарь",
@@ -805,7 +806,21 @@
     "monthOverview": "Обзор месяца",
     "noEventsDay": "На этот день пока нет событий.",
     "online": "Онлайн",
-    "free": "Бесплатно"
+    "free": "Бесплатно",
+    "today": "Сегодня",
+    "prevMonth": "Предыдущий месяц",
+    "nextMonth": "Следующий месяц",
+    "selectPrompt": "Выберите день, чтобы увидеть, что в нём происходит.",
+    "moreEvents": "+{count} ещё",
+    "eventsCount": "{count, plural, one {# событие} few {# события} other {# событий}}",
+    "morning": "Утро",
+    "afternoon": "День",
+    "evening": "Вечер",
+    "stats": {
+      "thisMonth": "Событий в этом месяце",
+      "today": "Сегодня",
+      "mine": "В вашем списке"
+    }
   },
   "messages": {
     "title": "Сообщения",

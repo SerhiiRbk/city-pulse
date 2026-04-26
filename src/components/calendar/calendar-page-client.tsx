@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CalendarView } from './calendar-view';
 import { getCalendarEvents, getMyCalendarEvents } from '@/lib/actions/calendar';
 
-interface CalendarEvent {
+export interface CalendarEvent {
   id: string;
   title: string;
   starts_at: string;
@@ -14,6 +14,8 @@ interface CalendarEvent {
   is_online: boolean;
   is_free: boolean;
   going_count: number;
+  category_id: string | null;
+  photos: string[] | null;
 }
 
 interface CalendarPageClientProps {
@@ -38,14 +40,17 @@ export function CalendarPageClient({
   const [myEvents, setMyEvents] = useState<CalendarEvent[]>(initialMyEvents);
   const [tab, setTab] = useState('all');
 
-  const fetchEvents = useCallback(async (y: number, m: number) => {
-    const [all, my] = await Promise.all([
-      getCalendarEvents(y, m),
-      isAuthenticated ? getMyCalendarEvents(y, m) : Promise.resolve([]),
-    ]);
-    setAllEvents(all);
-    setMyEvents(my);
-  }, [isAuthenticated]);
+  const fetchEvents = useCallback(
+    async (y: number, m: number) => {
+      const [all, my] = await Promise.all([
+        getCalendarEvents(y, m),
+        isAuthenticated ? getMyCalendarEvents(y, m) : Promise.resolve([]),
+      ]);
+      setAllEvents(all as CalendarEvent[]);
+      setMyEvents(my as CalendarEvent[]);
+    },
+    [isAuthenticated],
+  );
 
   function handleNavigate(y: number, m: number) {
     setYear(y);
@@ -58,44 +63,52 @@ export function CalendarPageClient({
     }
   }, [year, month, initialYear, initialMonth, fetchEvents]);
 
+  if (!isAuthenticated) {
+    return (
+      <CalendarView
+        events={allEvents}
+        year={year}
+        month={month}
+        onNavigate={handleNavigate}
+      />
+    );
+  }
+
   return (
-    <div>
-      {isAuthenticated ? (
-        <Tabs value={tab} onValueChange={setTab}>
-          <div className="mb-6 rounded-[1.5rem] border border-border/50 bg-card p-2 shadow-sm">
-            <div className="mb-3 px-3 pt-2 text-sm text-muted-foreground">
-              {tab === 'all' ? t('allEventsHint') : t('myEventsHint')}
-            </div>
-            <TabsList className="h-auto w-full justify-start rounded-2xl bg-muted/40 p-1">
-              <TabsTrigger value="all" className="rounded-xl px-4 py-2.5">{t('allEvents')}</TabsTrigger>
-              <TabsTrigger value="my" className="rounded-xl px-4 py-2.5">{t('myEvents')}</TabsTrigger>
-            </TabsList>
-          </div>
-          <TabsContent value="all">
-            <CalendarView
-              events={allEvents}
-              year={year}
-              month={month}
-              onNavigate={handleNavigate}
-            />
-          </TabsContent>
-          <TabsContent value="my">
-            <CalendarView
-              events={myEvents}
-              year={year}
-              month={month}
-              onNavigate={handleNavigate}
-            />
-          </TabsContent>
-        </Tabs>
-      ) : (
+    <Tabs value={tab} onValueChange={setTab} className="space-y-5">
+      {/* Lighter tab strip than before: no wrapping card so the focus
+          stays on the calendar grid below. The contextual hint sits to
+          the right of the tabs on desktop, under them on mobile. */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <TabsList className="h-auto self-start rounded-full bg-muted/50 p-1">
+          <TabsTrigger value="all" className="rounded-full px-4 py-1.5 text-sm">
+            {t('allEvents')}
+          </TabsTrigger>
+          <TabsTrigger value="my" className="rounded-full px-4 py-1.5 text-sm">
+            {t('myEvents')}
+          </TabsTrigger>
+        </TabsList>
+        <p className="text-xs text-muted-foreground sm:max-w-sm sm:text-right">
+          {tab === 'all' ? t('allEventsHint') : t('myEventsHint')}
+        </p>
+      </div>
+
+      <TabsContent value="all" className="mt-0">
         <CalendarView
           events={allEvents}
           year={year}
           month={month}
           onNavigate={handleNavigate}
         />
-      )}
-    </div>
+      </TabsContent>
+      <TabsContent value="my" className="mt-0">
+        <CalendarView
+          events={myEvents}
+          year={year}
+          month={month}
+          onNavigate={handleNavigate}
+        />
+      </TabsContent>
+    </Tabs>
   );
 }

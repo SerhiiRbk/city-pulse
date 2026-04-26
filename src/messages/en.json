@@ -795,6 +795,7 @@
   },
   "calendar": {
     "title": "Calendar",
+    "eyebrow": "Your month at a glance",
     "myEvents": "My events",
     "allEvents": "All events",
     "exportGoogle": "Export to Google Calendar",
@@ -805,7 +806,21 @@
     "monthOverview": "Month overview",
     "noEventsDay": "No events on this day yet.",
     "online": "Online",
-    "free": "Free"
+    "free": "Free",
+    "today": "Today",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "selectPrompt": "Tap a day to see what's happening that day.",
+    "moreEvents": "+{count} more",
+    "eventsCount": "{count, plural, one {# event} other {# events}}",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening",
+    "stats": {
+      "thisMonth": "Events this month",
+      "today": "Today",
+      "mine": "On your list"
+    }
   },
   "messages": {
     "title": "Messages",

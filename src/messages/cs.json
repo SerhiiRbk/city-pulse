@@ -795,6 +795,7 @@
   },
   "calendar": {
     "title": "Kalendář",
+    "eyebrow": "Váš měsíc na první pohled",
     "myEvents": "Moje akce",
     "allEvents": "Všechny akce",
     "exportGoogle": "Export do Google Kalendáře",
@@ -805,7 +806,21 @@
     "monthOverview": "Přehled měsíce",
     "noEventsDay": "Na tento den zatím nejsou žádné akce.",
     "online": "Online",
-    "free": "Zdarma"
+    "free": "Zdarma",
+    "today": "Dnes",
+    "prevMonth": "Předchozí měsíc",
+    "nextMonth": "Další měsíc",
+    "selectPrompt": "Vyberte den, abyste viděli, co se v něm děje.",
+    "moreEvents": "+{count} dalších",
+    "eventsCount": "{count, plural, one {# akce} few {# akce} other {# akcí}}",
+    "morning": "Ráno",
+    "afternoon": "Odpoledne",
+    "evening": "Večer",
+    "stats": {
+      "thisMonth": "Akcí tento měsíc",
+      "today": "Dnes",
+      "mine": "Ve vašem seznamu"
+    }
   },
   "messages": {
     "title": "Zprávy",

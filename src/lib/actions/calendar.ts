@@ -10,7 +10,9 @@ export async function getCalendarEvents(year: number, month: number) {
 
   const { data } = await supabase
     .from('events_with_counts')
-    .select('id, title, starts_at, city, is_online, is_free, going_count, category_slug, photos')
+    .select(
+      'id, title, starts_at, city, is_online, is_free, going_count, category_id, category_slug, photos',
+    )
     .eq('status', 'published')
     .eq('is_private', false)
     .eq('is_blocked', false)
@@ -42,7 +44,9 @@ export async function getMyCalendarEvents(year: number, month: number) {
 
   const { data } = await supabase
     .from('events_with_counts')
-    .select('id, title, starts_at, city, is_online, is_free, going_count, category_slug, photos')
+    .select(
+      'id, title, starts_at, city, is_online, is_free, going_count, category_id, category_slug, photos',
+    )
     .in('id', eventIds)
     .eq('is_blocked', false)
     .eq('organizer_is_blocked', false)

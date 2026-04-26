@@ -795,6 +795,7 @@
   },
   "calendar": {
     "title": "Календар",
+    "eyebrow": "Ваш місяць одним поглядом",
     "myEvents": "Мої події",
     "allEvents": "Усі події",
     "exportGoogle": "Експорт у Google Календар",
@@ -805,7 +806,21 @@
     "monthOverview": "Огляд місяця",
     "noEventsDay": "На цей день подій поки немає.",
     "online": "Онлайн",
-    "free": "Безкоштовно"
+    "free": "Безкоштовно",
+    "today": "Сьогодні",
+    "prevMonth": "Попередній місяць",
+    "nextMonth": "Наступний місяць",
+    "selectPrompt": "Оберіть день, щоб побачити, що в ньому відбувається.",
+    "moreEvents": "+{count} ще",
+    "eventsCount": "{count, plural, one {# подія} few {# події} other {# подій}}",
+    "morning": "Ранок",
+    "afternoon": "День",
+    "evening": "Вечір",
+    "stats": {
+      "thisMonth": "Подій цього місяця",
+      "today": "Сьогодні",
+      "mine": "У вашому списку"
+    }
   },
   "messages": {
     "title": "Повідомлення",
