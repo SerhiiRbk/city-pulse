@@ -9,7 +9,7 @@ export async function cancelEvent(eventId: string) {
 
   const { data: event } = await supabase
     .from('events')
-    .select('organizer_id, status, title')
+    .select('organizer_id, status, title, is_system')
     .eq('id', eventId)
     .single();
 
@@ -52,6 +52,40 @@ export async function cancelEvent(eventId: string) {
         data: { event_id: eventId },
       }));
       await supabase.from('notifications').insert(rows);
+    }
+
+    /*
+     * If the cancelled event is a system event, every linked "Идём вместе"
+     * meetup is now misaligned: the editorial parent is gone but their
+     * timeslot/title was inherited from it. We notify meetup organizers
+     * so they can decide whether to keep the get-together or call it off.
+     * The meetups themselves stay published — we do NOT auto-cancel them
+     * because some groups still want to meet at "where the show would have
+     * been" and that's a legitimate community decision.
+     */
+    if (event.is_system) {
+      const { data: meetups } = await supabase
+        .from('events')
+        .select('id, organizer_id, title')
+        .eq('parent_system_event_id', eventId)
+        .eq('status', 'published');
+      if (meetups && meetups.length > 0) {
+        const rows = meetups
+          .filter((m) => m.organizer_id && m.organizer_id !== user.id)
+          .map((m) => ({
+            user_id: m.organizer_id as string,
+            type: 'event_parent_cancelled' as const,
+            title: `${event.title} was cancelled`,
+            body: `Your meetup "${m.title}" linked to this listing — please confirm or call it off.`,
+            data: {
+              event_id: m.id,
+              parent_system_event_id: eventId,
+            },
+          }));
+        if (rows.length > 0) {
+          await supabase.from('notifications').insert(rows);
+        }
+      }
     }
   } catch {
     // Best-effort fan-out — never fail cancellation on notification errors.

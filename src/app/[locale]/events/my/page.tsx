@@ -1,8 +1,12 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirect } from 'next/navigation';
 import { getUser } from '@/lib/actions/auth';
-import { getProfileCreatedEvents } from '@/lib/actions/profile-data';
+import {
+  getProfileCreatedEvents,
+  getProfileInterestedSystemEvents,
+} from '@/lib/actions/profile-data';
 import { getUserEventStatuses } from '@/lib/actions/events';
+import { EventCard } from '@/components/events/event-card';
 import { MyEventCard } from '@/components/events/my-event-card';
 import { CalendarSubscribeCard } from '@/components/events/calendar-subscribe-card';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -16,9 +20,11 @@ import {
   FileText,
   ListChecks,
   Sparkles,
+  Star,
   Users,
 } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
+import { nowMs } from '@/lib/utils';
 import type { Metadata } from 'next';
 import type { Locale } from '@/i18n/config';
 
@@ -60,14 +66,15 @@ export default async function MyEventsPage({
 
   const tMy = await getTranslations('events.myEvents');
 
-  const [events, calendarToken] = await Promise.all([
+  const [events, savedSystemEvents, calendarToken] = await Promise.all([
     getProfileCreatedEvents(user.id),
+    getProfileInterestedSystemEvents(user.id),
     ensureCalendarToken(),
   ]);
 
   // Bucket: drafts go in their own section. Live/past split uses ends_at so
   // currently in-progress events stay in the upcoming bucket.
-  const now = Date.now();
+  const now = nowMs();
   const drafts = events
     .filter((e) => e.status === 'draft')
     .sort((a, b) => new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime());
@@ -84,7 +91,10 @@ export default async function MyEventsPage({
         new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime(),
     );
 
-  const eventIds = events.map((e) => e.id);
+  const eventIds = [
+    ...events.map((e) => e.id),
+    ...savedSystemEvents.map((e) => e.id),
+  ];
   const { goingSet, waitlistSet, interestedSet, favoritedSet } =
     await getUserEventStatuses(eventIds);
 
@@ -186,7 +196,7 @@ export default async function MyEventsPage({
       </section>
 
       <section className="container mx-auto px-4 py-12">
-        {events.length === 0 ? (
+        {events.length === 0 && savedSystemEvents.length === 0 ? (
           <EmptyState
             icon="events"
             title={tMy('emptyTitle')}
@@ -201,6 +211,37 @@ export default async function MyEventsPage({
           </EmptyState>
         ) : (
           <div className="space-y-14">
+            {savedSystemEvents.length > 0 && (
+              /*
+               * "В календаре" — system events the user marked as Interested.
+               * They live above the personal organizer feeds because this is
+               * usually a forward-looking agenda for *upcoming* outings, and
+               * helps users notice what's on their schedule before sliding
+               * into their own drafts/upcoming/past breakdown.
+               */
+              <Section
+                label={tMy('savedLabel')}
+                title={tMy('savedTitle', { count: savedSystemEvents.length })}
+                tone="primary"
+                icon={<Star className="h-4 w-4" />}
+                description={tMy('savedDescription')}
+              >
+                <Grid>
+                  {savedSystemEvents.map((event) => (
+                    <EventCard
+                      key={event.id}
+                      event={event}
+                      isAuthenticated
+                      isGoing={goingSet.has(event.id)}
+                      isWaitlisted={waitlistSet.has(event.id)}
+                      isInterested={interestedSet.has(event.id)}
+                      isFavorited={favoritedSet.has(event.id)}
+                    />
+                  ))}
+                </Grid>
+              </Section>
+            )}
+
             {drafts.length > 0 && (
               <Section
                 label={tMy('draftsLabel')}

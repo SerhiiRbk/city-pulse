@@ -228,6 +228,8 @@
       "share": "Teilen",
       "attendees": "{count, plural, one {# Teilnehmer} other {# Teilnehmer}}",
       "cuePopular": "Beliebt bei Einheimischen",
+      "cueAfisha": "Redaktionsauswahl",
+      "badgeAfisha": "Afisha",
       "cueEasy": "Leicht beizutreten",
       "startingSoon": "Beginnt bald",
       "inHours": "In {count} Std.",
@@ -301,7 +303,45 @@
       "addToCalendar": "Zum Kalender hinzufügen",
       "addToGoogle": "Google Calendar",
       "addToApple": "Apple / Outlook",
-      "downloadIcs": ".ics herunterladen"
+      "downloadIcs": ".ics herunterladen",
+      "systemEditorialTitle": "Stadt-Veranstaltung",
+      "systemEditorialSubtitle": "Wir veranstalten dieses Event nicht — wir helfen dir nur, es nicht zu verpassen.",
+      "goWithGroupNew": "Gemeinsam hingehen",
+      "goWithGroupExisting": "Einer Gruppe beitreten"
+    },
+    "systemActions": {
+      "interested": "Du hast Interesse",
+      "markInterested": "Interesse merken"
+    },
+    "meetup": {
+      "sectionLabel": "Gemeinsam hingehen",
+      "sectionTitleEmpty": "Sei der erste, der ein Treffen plant",
+      "sectionTitleWithCount": "{count, plural, one {# Gruppe geht hin} other {# Gruppen gehen hin}}",
+      "sectionDescription": "Plane mit Leuten von City-Pulse — Treffen am Eingang, Drink davor, gemeinsame Anfahrt.",
+      "ctaLogin": "Melde dich an, um ein Treffen zu starten",
+      "spotsLeft": "{count, plural, one {noch # Platz frei} other {noch # Plätze frei}}",
+      "full": "Voll",
+      "private": "Privat",
+      "goingCount": "{count, plural, one {# geht hin} other {# gehen hin}}",
+      "defaultTitle": "Gemeinsam zu „{event}“",
+      "cta": "Treffen starten",
+      "dialogTitle": "Treffen planen",
+      "dialogDescription": "Öffne es für andere von City-Pulse, die zu „{event}“ gehen. Datum und Ort werden aus dem Listing übernommen.",
+      "fieldTitle": "Gruppenname",
+      "fieldTitlePlaceholder": "Nach-Feierabend-Crew",
+      "fieldTitleHint": "Sag, wen du einlädst.",
+      "fieldPitch": "Beschreibung (optional)",
+      "fieldPitchPlaceholder": "Wir treffen uns 30 Minuten vor Beginn am Haupteingang.",
+      "fieldMeetingPoint": "Treffpunkt (optional)",
+      "fieldMeetingPointPlaceholder": "Haupteingang · 18:30",
+      "fieldCap": "Gruppen-Limit",
+      "fieldCapPlaceholder": "8",
+      "fieldPrivate": "Privater Link",
+      "fieldPrivateHint": "Nur Personen mit dem Link sehen das Treffen.",
+      "cancel": "Abbrechen",
+      "submit": "Erstellen",
+      "createSuccess": "Treffen erstellt",
+      "createError": "Treffen konnte nicht erstellt werden"
     },
     "attendance": {
       "title": "Anwesenheitsliste",
@@ -345,7 +385,12 @@
         "popular": "Beliebt"
       },
       "showPast": "Vergangene anzeigen",
-      "hidePast": "Vergangene ausblenden"
+      "hidePast": "Vergangene ausblenden",
+      "source": {
+        "all": "Alle",
+        "community": "Community",
+        "afisha": "Afisha"
+      }
     },
     "myEvents": {
       "heroBadge": "Dein Organisator-Hub",
@@ -361,6 +406,9 @@
       "draftsLabel": "Entwürfe",
       "draftsTitle": "{count, plural, one {# Entwurf} other {# Entwürfe}}",
       "draftsDescription": "Nur du siehst sie. Veröffentliche sie, sobald du bereit bist, Gäste einzuladen.",
+      "savedLabel": "Im Kalender",
+      "savedTitle": "{count, plural, one {# gespeicherte Stadt-Veranstaltung} other {# gespeicherte Stadt-Veranstaltungen}}",
+      "savedDescription": "Redaktionelle Veranstaltungen, die du dir gemerkt hast — direkt neben deinen eigenen.",
       "emptyTitle": "Du hast noch keine Veranstaltungen organisiert",
       "emptyDescription": "Sobald du Veranstaltungen erstellst oder moderierst, erscheinen sie hier zur einfachen Verwaltung.",
       "stats": {
@@ -911,5 +959,138 @@
     "about": "Über City-Pulse",
     "contact": "Kontakt",
     "copyright": "© {year} City-Pulse. Alle Rechte vorbehalten."
+  },
+  "admin": {
+    "systemEvents": {
+      "dashboard": {
+        "eyebrow": "Redaktion",
+        "title": "Afisha · Veröffentlichungsplan",
+        "subtitle": "Plane, kuratiere und veröffentliche redaktionelle Stadt-Veranstaltungen.",
+        "openCalendar": "Kalender",
+        "openTemplates": "Vorlagen",
+        "newDraft": "Neuer Entwurf",
+        "pipelineTitle": "Pipeline nach Städten",
+        "pipelineEmpty": "Noch nichts geplant — fang mit einem Entwurf an.",
+        "inFlightTitle": "In Arbeit",
+        "inFlightEmpty": "Entwürfe und Reviews tauchen hier auf."
+      },
+      "composer": {
+        "titleNew": "Neue Stadt-Veranstaltung",
+        "titleEdit": "Veranstaltung bearbeiten",
+        "subtitle": "Anlegen, prüfen und veröffentlichen — alles an einem Ort.",
+        "backToDashboard": "Zurück zum Dashboard",
+        "viewLive": "Im Frontend ansehen",
+        "sourceTitle": "Aus Quelle importieren",
+        "sourceUrlPlaceholder": "Partner-URL einfügen (Veranstaltungsseite, Location…)",
+        "importButton": "Aus URL füllen",
+        "sourceHint": "Wir holen Titel, Beschreibung und Cover. Die finale Fassung schreibst immer du.",
+        "basicsTitle": "Basics",
+        "titleLabel": "Titel",
+        "titlePlaceholder": "Öffentlicher Titel — konkret und aussagekräftig.",
+        "pitchLabel": "Pitch",
+        "pitchPlaceholder": "Ein Satz, warum man hingehen sollte.",
+        "pitchHint": "{length, plural, one {# Zeichen} other {# Zeichen}}",
+        "descriptionLabel": "Beschreibung",
+        "descriptionPlaceholder": "Was ist es? Warum lohnt es sich?",
+        "coverLabel": "Cover-URL",
+        "coverPlaceholder": "https://",
+        "whenTitle": "Wann",
+        "startsAtLabel": "Beginn",
+        "durationLabel": "Dauer (Minuten)",
+        "whereTitle": "Wo",
+        "cityLabel": "Stadt",
+        "cityPlaceholder": "Berlin",
+        "addressLabel": "Adresse",
+        "addressPlaceholder": "Straße und Nummer",
+        "curationTitle": "Kuration",
+        "categoryLabel": "Kategorie",
+        "categoryPlaceholder": "Kategorie wählen",
+        "partnerNameLabel": "Partner / Location",
+        "partnerNamePlaceholder": "Goethe-Institut",
+        "partnerUrlLabel": "Partner-URL",
+        "freeLabel": "Eintritt frei",
+        "freeHint": "Deaktivieren, um Preis und Währung anzugeben.",
+        "priceLabel": "Preis",
+        "currencyLabel": "Währung",
+        "actionsTitle": "Veröffentlichung",
+        "currentStatusLabel": "Status",
+        "saveDraftButton": "Entwurf speichern",
+        "sendToReviewButton": "Zur Review",
+        "publishButton": "Veröffentlichen",
+        "publishBlockedHint": "Behebe die markierten Punkte vor der Veröffentlichung.",
+        "publishGatesFailed": "Einige Prüfungen sind fehlgeschlagen — siehe Panel oben.",
+        "importError": {
+          "invalid_url": "Das sieht nicht nach einer URL aus.",
+          "invalid_protocol": "Nur http(s) wird unterstützt.",
+          "private_address": "Private Adressen sind nicht erlaubt.",
+          "fetch_failed": "Seite konnte nicht geladen werden."
+        },
+        "status": {
+          "draft": "Entwurf",
+          "review": "Review",
+          "scheduled": "Geplant",
+          "published": "Veröffentlicht"
+        }
+      },
+      "gates": {
+        "panelTitle": "Qualitätsprüfung",
+        "summary": "{errors, plural, =0 {alles ok} other {# Fehler}}{warnings, plural, =0 {} other { · # Hinweise}}",
+        "allClear": "Alle Prüfungen bestanden — bereit zum Veröffentlichen.",
+        "titleShort": "Titel braucht mindestens 6 Zeichen.",
+        "noCity": "Stadt auswählen.",
+        "noCategory": "Kategorie auswählen.",
+        "descriptionShort": "Beschreibung ist kurz ({current}/{min} Zeichen).",
+        "pitchMissing": "Pitch fehlt.",
+        "pitchShort": "Pitch ist kurz ({current}/{min} Zeichen).",
+        "pitchLong": "Pitch ist zu lang ({current}/{max} Zeichen).",
+        "coverMissing": "Cover hinzufügen — ohne Bild zieht die Veranstaltung weniger Aufmerksamkeit.",
+        "dateMissing": "Startdatum angeben.",
+        "dateInvalid": "Das Datum sieht nicht gültig aus.",
+        "datePast": "Beginn liegt in der Vergangenheit.",
+        "dateClose": "Weniger als {min} Tage bis zum Start — besser früher planen.",
+        "possibleDuplicate": "{count, plural, one {# mögliches Duplikat gefunden} other {# mögliche Duplikate gefunden}} — vor dem Veröffentlichen prüfen.",
+        "noPartner": "Kein Partner angegeben."
+      },
+      "calendar": {
+        "title": "Redaktionskalender",
+        "subtitle": "Zieh einen Entwurf auf einen anderen Tag, um neu zu planen.",
+        "back": "Zurück zum Dashboard",
+        "prevMonth": "Zurück",
+        "nextMonth": "Vor",
+        "saving": "Speichere…"
+      },
+      "templates": {
+        "title": "Vorlagen",
+        "subtitle": "Startgerüst — die Endfassung gehört immer dir.",
+        "back": "Zurück zum Dashboard",
+        "useTemplate": "Vorlage verwenden",
+        "items": {
+          "openAirConcert": {
+            "label": "Open-Air-Konzert",
+            "description": "Konzertabend unter freiem Himmel mit Headliner und Vorband."
+          },
+          "farmersMarket": {
+            "label": "Bauernmarkt",
+            "description": "Halbtägiger Markt regionaler Produzenten — wiederkehrender Wochenend-Slot."
+          },
+          "galleryOpening": {
+            "label": "Vernissage",
+            "description": "Ausstellungseröffnung mit Künstler:in und kurzer Führung."
+          },
+          "filmFestival": {
+            "label": "Festival-Vorführung",
+            "description": "Themen-Screening mit Intro und Q&A nach dem Abspann."
+          },
+          "streetFoodFair": {
+            "label": "Streetfood-Markt",
+            "description": "Streetfood-Court mit verschiedenen Anbietern — familienfreundlich."
+          },
+          "bookLaunch": {
+            "label": "Buchvorstellung",
+            "description": "Lesung, Signierstunde und kurzes Q&A mit der Autorin oder dem Autor."
+          }
+        }
+      }
+    }
   }
 }

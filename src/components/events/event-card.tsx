@@ -5,9 +5,10 @@ import { Link } from '@/i18n/navigation';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Heart, MapPin, Calendar, Users, Globe } from 'lucide-react';
+import { Heart, MapPin, Calendar, Users, Globe, Sparkles, Star } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import {
+  setInterest,
   toggleAttendance,
   toggleFavorite,
   type AttendanceStatus,
@@ -34,6 +35,8 @@ interface EventCardProps {
     max_attendees: number | null;
     going_count: number;
     waitlist_count?: number;
+    interested_count?: number;
+    is_system?: boolean;
     languages?: string[];
     category_slug: string | null;
     category_translations: Record<string, string> | null;
@@ -71,10 +74,13 @@ export function EventCard({
         ? 'interested'
         : 'none';
   const [status, setStatus] = useState<AttendanceStatus>(initialStatus);
+  const isSystem = !!event.is_system;
+  const isInterested = status === 'interested';
   const going = status === 'going';
   const onWaitlist = status === 'waitlist';
   const [favorited, setFavorited] = useState(initialFav || false);
   const [goingCount, setGoingCount] = useState(event.going_count);
+  const [interestedCount, setInterestedCount] = useState(event.interested_count ?? 0);
   const languageLabels = (event.languages || [])
     .map((code) => {
       const language = LANGUAGES.find((item) => item.code === code);
@@ -87,7 +93,13 @@ export function EventCard({
   const spotsLeft = event.max_attendees ? event.max_attendees - goingCount : null;
   const isFull = event.max_attendees != null && (spotsLeft ?? 0) <= 0;
   const categoryLabel = event.category_translations?.[locale] || event.category_translations?.['en'] || event.category_slug || '';
-  const socialCue = goingCount >= 12 ? t('cuePopular') : goingCount >= 4 ? t('cueEasy') : tDetail('firstCue');
+  const socialCue = isSystem
+    ? t('cueAfisha')
+    : goingCount >= 12
+      ? t('cuePopular')
+      : goingCount >= 4
+        ? t('cueEasy')
+        : tDetail('firstCue');
 
   async function handleToggleGoing(e: React.MouseEvent) {
     e.preventDefault();
@@ -118,6 +130,27 @@ export function EventCard({
     if (next === 'going') toast.success(tDetail('registeredForEvent'));
     else if (next === 'waitlist') toast.success(tDetail('addedToWaitlist'));
     else toast.success(tDetail('cancelledAttendance'));
+  }
+
+  async function handleToggleInterest(e: React.MouseEvent) {
+    e.preventDefault();
+    if (!isAuthenticated) return;
+    const prev = status;
+    const next: AttendanceStatus = prev === 'interested' ? 'none' : 'interested';
+    setStatus(next);
+    if (next === 'interested') setInterestedCount((c) => c + 1);
+    else if (prev === 'interested') setInterestedCount((c) => Math.max(0, c - 1));
+
+    const result = await setInterest(event.id, next === 'interested');
+    if (result.error) {
+      setStatus(prev);
+      if (next === 'interested') setInterestedCount((c) => Math.max(0, c - 1));
+      else if (prev === 'interested') setInterestedCount((c) => c + 1);
+      return;
+    }
+    setStatus(result.status ?? 'none');
+    if (next === 'interested') toast.success(tDetail('markedInterested'));
+    else toast.success(tDetail('unmarkedInterested'));
   }
 
   function getRelativeTime(dateStr: string): string | null {
@@ -172,6 +205,12 @@ export function EventCard({
           )}
           {/* Badges on image */}
           <div className="absolute top-3 left-3 flex gap-1.5">
+            {isSystem && (
+              <Badge className="bg-amber-500/95 text-white backdrop-blur-md hover:bg-amber-500">
+                <Sparkles className="mr-1 h-3 w-3" />
+                {t('badgeAfisha')}
+              </Badge>
+            )}
             {event.is_free ? (
               <Badge className="bg-success/90 text-success-foreground backdrop-blur-md hover:bg-success">{t('free')}</Badge>
             ) : (
@@ -225,18 +264,32 @@ export function EventCard({
             ) : (
               <span />
             )}
+            {/*
+             * Counter row: community events highlight headcount + capacity, but
+             * system events have no capacity ownership, so we show "interested"
+             * as the social signal instead.
+             */}
             <div className="text-muted-foreground flex items-center gap-1.5 text-xs font-medium">
-              <Users className="h-3.5 w-3.5" />
-              <span>{goingCount}</span>
-              {spotsLeft !== null && spotsLeft > 0 && spotsLeft <= 5 && (
-                <Badge variant="destructive" className="ml-1 px-1.5 py-0 text-[10px]">
-                  {t('spotsLeft', { count: spotsLeft })}
-                </Badge>
-              )}
-              {spotsLeft !== null && spotsLeft <= 0 && (
-                <Badge variant="destructive" className="ml-1 px-1.5 py-0 text-[10px]">
-                  {t('noSpotsLeft')}
-                </Badge>
+              {isSystem ? (
+                <>
+                  <Star className="h-3.5 w-3.5" />
+                  <span>{interestedCount}</span>
+                </>
+              ) : (
+                <>
+                  <Users className="h-3.5 w-3.5" />
+                  <span>{goingCount}</span>
+                  {spotsLeft !== null && spotsLeft > 0 && spotsLeft <= 5 && (
+                    <Badge variant="destructive" className="ml-1 px-1.5 py-0 text-[10px]">
+                      {t('spotsLeft', { count: spotsLeft })}
+                    </Badge>
+                  )}
+                  {spotsLeft !== null && spotsLeft <= 0 && (
+                    <Badge variant="destructive" className="ml-1 px-1.5 py-0 text-[10px]">
+                      {t('noSpotsLeft')}
+                    </Badge>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -281,23 +334,42 @@ export function EventCard({
             {goingCount > 0 ? t('alreadyIn', { count: goingCount }) : t('firstToJoin')}
           </p> */}
 
-          {/* Join button */}
+          {/*
+           * Bottom CTA: community events use the going/waitlist join button;
+           * system events get a soft "Interested" toggle instead, mirroring
+           * the action bar on the event detail page.
+           */}
           {isAuthenticated && (
             <div className="mt-auto flex justify-end">
-              <Button
-                size="sm"
-                variant={going || onWaitlist ? 'secondary' : 'default'}
-                className="w-full rounded-xl font-semibold"
-                onClick={handleToggleGoing}
-              >
-                {going
-                  ? t('going')
-                  : onWaitlist
-                    ? t('onWaitlist')
-                    : isFull
-                      ? t('joinWaitlist')
-                      : t('join')}
-              </Button>
+              {isSystem ? (
+                <Button
+                  size="sm"
+                  variant={isInterested ? 'secondary' : 'default'}
+                  className="w-full rounded-xl font-semibold"
+                  onClick={handleToggleInterest}
+                  aria-pressed={isInterested}
+                >
+                  <Star
+                    className={`mr-1.5 h-4 w-4 ${isInterested ? 'fill-amber-400 text-amber-500' : ''}`}
+                  />
+                  {isInterested ? t('interested') : t('markInterested')}
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  variant={going || onWaitlist ? 'secondary' : 'default'}
+                  className="w-full rounded-xl font-semibold"
+                  onClick={handleToggleGoing}
+                >
+                  {going
+                    ? t('going')
+                    : onWaitlist
+                      ? t('onWaitlist')
+                      : isFull
+                        ? t('joinWaitlist')
+                        : t('join')}
+                </Button>
+              )}
             </div>
           )}
         </div>

@@ -228,6 +228,8 @@
       "share": "Поделиться",
       "attendees": "{count, plural, one {# участник} few {# участника} other {# участников}}",
       "cuePopular": "Популярно среди местных",
+      "cueAfisha": "Кураторская подборка",
+      "badgeAfisha": "Афиша",
       "cueEasy": "Легко присоединиться",
       "startingSoon": "Скоро начнётся",
       "inHours": "Через {count} ч",
@@ -301,7 +303,45 @@
       "addToCalendar": "Добавить в календарь",
       "addToGoogle": "Google Calendar",
       "addToApple": "Apple / Outlook",
-      "downloadIcs": "Скачать .ics"
+      "downloadIcs": "Скачать .ics",
+      "systemEditorialTitle": "Городское событие",
+      "systemEditorialSubtitle": "Мы не организуем это мероприятие — просто помогаем не пропустить его.",
+      "goWithGroupNew": "Иду компанией",
+      "goWithGroupExisting": "Присоединиться к компании"
+    },
+    "systemActions": {
+      "interested": "Вы заинтересованы",
+      "markInterested": "В календарь"
+    },
+    "meetup": {
+      "sectionLabel": "Идём вместе",
+      "sectionTitleEmpty": "Создайте первую компанию",
+      "sectionTitleWithCount": "{count, plural, one {# компания идёт} few {# компании идут} many {# компаний идут} other {# компаний идут}}",
+      "sectionDescription": "Соберите своих или познакомьтесь с теми, кто тоже идёт — встреча у входа, кофе до начала, дорога вместе.",
+      "ctaLogin": "Войдите, чтобы создать встречу",
+      "spotsLeft": "{count, plural, one {ещё # место} few {ещё # места} many {ещё # мест} other {ещё # мест}}",
+      "full": "Мест нет",
+      "private": "По ссылке",
+      "goingCount": "{count, plural, one {# идёт} few {# идут} many {# идут} other {# идут}}",
+      "defaultTitle": "Идём на «{event}» вместе",
+      "cta": "Создать встречу",
+      "dialogTitle": "Запланировать встречу",
+      "dialogDescription": "Откройте её для тех, кто тоже идёт на «{event}». Дата и место наследуются из афиши.",
+      "fieldTitle": "Название группы",
+      "fieldTitlePlaceholder": "Идём после работы",
+      "fieldTitleHint": "Расскажите, кого зовёте.",
+      "fieldPitch": "Описание (необязательно)",
+      "fieldPitchPlaceholder": "Встречаемся у главного входа за 30 минут до начала.",
+      "fieldMeetingPoint": "Место встречи (необязательно)",
+      "fieldMeetingPointPlaceholder": "Главный вход · 18:30",
+      "fieldCap": "Лимит участников",
+      "fieldCapPlaceholder": "8",
+      "fieldPrivate": "Приватная ссылка",
+      "fieldPrivateHint": "Встречу увидят только те, у кого есть ссылка.",
+      "cancel": "Отмена",
+      "submit": "Создать",
+      "createSuccess": "Встреча создана",
+      "createError": "Не удалось создать встречу"
     },
     "attendance": {
       "title": "Отметка посещения",
@@ -345,7 +385,12 @@
         "popular": "Популярные"
       },
       "showPast": "Показать прошедшие",
-      "hidePast": "Скрыть прошедшие"
+      "hidePast": "Скрыть прошедшие",
+      "source": {
+        "all": "Все",
+        "community": "Сообщество",
+        "afisha": "Афиша"
+      }
     },
     "myEvents": {
       "heroBadge": "Ваш центр организатора",
@@ -361,6 +406,9 @@
       "draftsLabel": "Черновики",
       "draftsTitle": "{count, plural, one {# черновик} few {# черновика} other {# черновиков}}",
       "draftsDescription": "Их видите только вы. Опубликуйте, когда будете готовы пригласить людей.",
+      "savedLabel": "В календаре",
+      "savedTitle": "{count, plural, one {# событие из афиши} few {# события из афиши} many {# событий из афиши} other {# событий из афиши}}",
+      "savedDescription": "События из афиши, которые вы отметили как интересные. Они рядом с вашими собственными мероприятиями.",
       "emptyTitle": "Вы ещё не организовывали мероприятий",
       "emptyDescription": "Как только вы создадите мероприятие или станете его модератором, оно появится здесь.",
       "stats": {
@@ -911,5 +959,138 @@
     "about": "О City-Pulse",
     "contact": "Связаться с нами",
     "copyright": "© {year} City-Pulse. Все права защищены."
+  },
+  "admin": {
+    "systemEvents": {
+      "dashboard": {
+        "eyebrow": "Редакция",
+        "title": "Афиша · план публикаций",
+        "subtitle": "Планируйте, готовьте и публикуйте кураторские городские события.",
+        "openCalendar": "Календарь",
+        "openTemplates": "Шаблоны",
+        "newDraft": "Новый черновик",
+        "pipelineTitle": "Воронка по городам",
+        "pipelineEmpty": "Пока ничего не запланировано — начните с черновика.",
+        "inFlightTitle": "В работе",
+        "inFlightEmpty": "Черновики и материалы на ревью появятся здесь."
+      },
+      "composer": {
+        "titleNew": "Новое городское событие",
+        "titleEdit": "Редактирование события",
+        "subtitle": "Соберите, проверьте и опубликуйте кураторскую запись.",
+        "backToDashboard": "К дашборду",
+        "viewLive": "На сайте",
+        "sourceTitle": "Импорт из источника",
+        "sourceUrlPlaceholder": "Вставьте URL партнёра (страница события, площадки и т. п.)",
+        "importButton": "Заполнить по URL",
+        "sourceHint": "Подтянем заголовок, описание и обложку. Финальный текст всегда за вами.",
+        "basicsTitle": "Основное",
+        "titleLabel": "Заголовок",
+        "titlePlaceholder": "Публичное название — конкретное и информативное.",
+        "pitchLabel": "Анонс",
+        "pitchPlaceholder": "Одно предложение, которое объясняет, почему это интересно.",
+        "pitchHint": "{length, plural, one {# символ} few {# символа} many {# символов} other {# символов}}",
+        "descriptionLabel": "Описание",
+        "descriptionPlaceholder": "Что это? Почему стоит прийти?",
+        "coverLabel": "URL обложки",
+        "coverPlaceholder": "https://",
+        "whenTitle": "Когда",
+        "startsAtLabel": "Начало",
+        "durationLabel": "Длительность (минуты)",
+        "whereTitle": "Где",
+        "cityLabel": "Город",
+        "cityPlaceholder": "Praha",
+        "addressLabel": "Адрес",
+        "addressPlaceholder": "Улица и номер",
+        "curationTitle": "Кураторская часть",
+        "categoryLabel": "Категория",
+        "categoryPlaceholder": "Выберите категорию",
+        "partnerNameLabel": "Партнёр / площадка",
+        "partnerNamePlaceholder": "Goethe-Institut",
+        "partnerUrlLabel": "URL партнёра",
+        "freeLabel": "Бесплатный вход",
+        "freeHint": "Выключите, чтобы указать цену и валюту.",
+        "priceLabel": "Цена",
+        "currencyLabel": "Валюта",
+        "actionsTitle": "Публикация",
+        "currentStatusLabel": "Статус",
+        "saveDraftButton": "Сохранить черновик",
+        "sendToReviewButton": "Отправить на ревью",
+        "publishButton": "Опубликовать",
+        "publishBlockedHint": "Исправьте подсвеченные проблемы перед публикацией.",
+        "publishGatesFailed": "Часть проверок не пройдена — посмотрите панель выше.",
+        "importError": {
+          "invalid_url": "Это не похоже на URL.",
+          "invalid_protocol": "Поддерживаются только http(s) ссылки.",
+          "private_address": "Приватные адреса не разрешены.",
+          "fetch_failed": "Не удалось загрузить страницу."
+        },
+        "status": {
+          "draft": "Черновик",
+          "review": "Ревью",
+          "scheduled": "Запланировано",
+          "published": "Опубликовано"
+        }
+      },
+      "gates": {
+        "panelTitle": "Контроль качества",
+        "summary": "{errors, plural, =0 {готово} other {ошибок: #}}{warnings, plural, =0 {} other { · предупреждений: #}}",
+        "allClear": "Все проверки пройдены — можно публиковать.",
+        "titleShort": "В заголовке должно быть минимум 6 символов.",
+        "noCity": "Выберите город.",
+        "noCategory": "Выберите категорию.",
+        "descriptionShort": "Описание короткое ({current}/{min} символов).",
+        "pitchMissing": "Добавьте анонс.",
+        "pitchShort": "Анонс короткий ({current}/{min} символов).",
+        "pitchLong": "Анонс слишком длинный ({current}/{max} символов).",
+        "coverMissing": "Добавьте обложку — без неё событие хуже привлекает внимание.",
+        "dateMissing": "Укажите дату начала.",
+        "dateInvalid": "Дата выглядит некорректно.",
+        "datePast": "Дата начала уже в прошлом.",
+        "dateClose": "До начала меньше {min} дней — лучше планировать заранее.",
+        "possibleDuplicate": "{count, plural, one {найдено возможный дубль} few {найдено # возможных дубля} many {найдено # возможных дублей} other {найдено # возможных дублей}} — проверьте перед публикацией.",
+        "noPartner": "Партнёр не указан."
+      },
+      "calendar": {
+        "title": "Редакторский календарь",
+        "subtitle": "Перетащите черновик на новый день, чтобы изменить дату.",
+        "back": "К дашборду",
+        "prevMonth": "Назад",
+        "nextMonth": "Вперёд",
+        "saving": "Сохраняем…"
+      },
+      "templates": {
+        "title": "Шаблоны",
+        "subtitle": "Стартовая точка — финальную версию доведёте перед публикацией.",
+        "back": "К дашборду",
+        "useTemplate": "Использовать шаблон",
+        "items": {
+          "openAirConcert": {
+            "label": "Концерт open-air",
+            "description": "Вечер музыки на открытом воздухе с одним хедлайнером и разогревом."
+          },
+          "farmersMarket": {
+            "label": "Фермерский рынок",
+            "description": "Рынок локальных производителей на полдня — повторяющийся слот по выходным."
+          },
+          "galleryOpening": {
+            "label": "Открытие выставки",
+            "description": "Вернисаж с присутствием художника и короткой кураторской экскурсией."
+          },
+          "filmFestival": {
+            "label": "Фестивальный показ",
+            "description": "Тематический показ с интро и Q&A после титров."
+          },
+          "streetFoodFair": {
+            "label": "Ярмарка стритфуда",
+            "description": "Уличный фудкорт с разными участниками — формат для всей семьи."
+          },
+          "bookLaunch": {
+            "label": "Презентация книги",
+            "description": "Чтения, автограф-сессия и короткие Q&A с автором."
+          }
+        }
+      }
+    }
   }
 }

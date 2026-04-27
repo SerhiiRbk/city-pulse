@@ -229,6 +229,8 @@
       "attendees": "{count, plural, one {# attendee} other {# attendees}}",
       "cuePopular": "Popular with locals",
       "cueEasy": "Easy to join",
+      "cueAfisha": "Curated by editors",
+      "badgeAfisha": "Afisha",
       "startingSoon": "Starting soon",
       "inHours": "In {count}h",
       "inDays": "In {count} days",
@@ -301,7 +303,45 @@
       "addToCalendar": "Add to calendar",
       "addToGoogle": "Google Calendar",
       "addToApple": "Apple / Outlook",
-      "downloadIcs": "Download .ics"
+      "downloadIcs": "Download .ics",
+      "systemEditorialTitle": "City listing",
+      "systemEditorialSubtitle": "We don't host this event — we just keep it on your calendar so you don't miss it.",
+      "goWithGroupNew": "Go with a group",
+      "goWithGroupExisting": "Join a group going"
+    },
+    "systemActions": {
+      "interested": "You're interested",
+      "markInterested": "Mark interested"
+    },
+    "meetup": {
+      "sectionLabel": "Going together",
+      "sectionTitleEmpty": "Be the first to plan a meetup",
+      "sectionTitleWithCount": "{count, plural, one {# meetup} other {# meetups}} going",
+      "sectionDescription": "Plan with people from City-Pulse — meet at the entrance, grab a drink before, share a ride.",
+      "ctaLogin": "Log in to start a meetup",
+      "spotsLeft": "{count, plural, one {# spot left} other {# spots left}}",
+      "full": "Full",
+      "private": "Private",
+      "goingCount": "{count, plural, one {# going} other {# going}}",
+      "defaultTitle": "Going to {event} together",
+      "cta": "Start a meetup",
+      "dialogTitle": "Plan a meetup",
+      "dialogDescription": "Open this to friends from City-Pulse going to “{event}”. Date and place are inherited from the listing.",
+      "fieldTitle": "Group name",
+      "fieldTitlePlaceholder": "After-work crew",
+      "fieldTitleHint": "Tell people who's invited.",
+      "fieldPitch": "Pitch (optional)",
+      "fieldPitchPlaceholder": "We'll meet at the main entrance 30 minutes early.",
+      "fieldMeetingPoint": "Meeting point (optional)",
+      "fieldMeetingPointPlaceholder": "Main entrance · 18:30",
+      "fieldCap": "Group cap",
+      "fieldCapPlaceholder": "8",
+      "fieldPrivate": "Private link",
+      "fieldPrivateHint": "Only people with the link can see this meetup.",
+      "cancel": "Cancel",
+      "submit": "Create meetup",
+      "createSuccess": "Meetup created",
+      "createError": "Could not create meetup"
     },
     "attendance": {
       "title": "Attendance check-in",
@@ -345,7 +385,12 @@
         "popular": "Popular"
       },
       "showPast": "Show past events",
-      "hidePast": "Hide past events"
+      "hidePast": "Hide past events",
+      "source": {
+        "all": "All",
+        "community": "Community",
+        "afisha": "Afisha"
+      }
     },
     "myEvents": {
       "heroBadge": "Your hosting hub",
@@ -361,6 +406,9 @@
       "draftsLabel": "Drafts",
       "draftsTitle": "{count, plural, one {# draft} other {# drafts}}",
       "draftsDescription": "Only you can see these. Publish when you're ready to invite people.",
+      "savedLabel": "On your calendar",
+      "savedTitle": "{count, plural, one {# city event saved} other {# city events saved}}",
+      "savedDescription": "Editorial picks from Afisha you marked as interested. They live alongside your own events.",
       "emptyTitle": "You haven't organized any events yet",
       "emptyDescription": "Once you create or moderate events, they'll show up here so you can manage them anytime.",
       "stats": {
@@ -911,5 +959,138 @@
     "about": "About City-Pulse",
     "contact": "Contact us",
     "copyright": "© {year} City-Pulse. All rights reserved."
+  },
+  "admin": {
+    "systemEvents": {
+      "dashboard": {
+        "eyebrow": "Editorial",
+        "title": "Afisha pipeline",
+        "subtitle": "Plan, draft, and publish curated city events for the cities you cover.",
+        "openCalendar": "Calendar",
+        "openTemplates": "Templates",
+        "newDraft": "New draft",
+        "pipelineTitle": "Pipeline by city",
+        "pipelineEmpty": "Nothing in the pipeline yet — start a draft.",
+        "inFlightTitle": "In flight",
+        "inFlightEmpty": "Drafts and reviews will appear here."
+      },
+      "composer": {
+        "titleNew": "New city event",
+        "titleEdit": "Edit city event",
+        "subtitle": "Compose, review, and publish an editorial listing.",
+        "backToDashboard": "Back to dashboard",
+        "viewLive": "View live",
+        "sourceTitle": "Quick import",
+        "sourceUrlPlaceholder": "Paste partner URL (Facebook event, venue page…)",
+        "importButton": "Pre-fill from URL",
+        "sourceHint": "We'll pull title, description, and cover image. You stay in control of the final copy.",
+        "basicsTitle": "Basics",
+        "titleLabel": "Title",
+        "titlePlaceholder": "Public title — keep it specific.",
+        "pitchLabel": "Editorial pitch",
+        "pitchPlaceholder": "One sentence that tells someone scrolling why they should care.",
+        "pitchHint": "{length, plural, one {# character} other {# characters}}",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "What is this? Why is it worth showing up?",
+        "coverLabel": "Cover image URL",
+        "coverPlaceholder": "https://",
+        "whenTitle": "When",
+        "startsAtLabel": "Starts at",
+        "durationLabel": "Duration (minutes)",
+        "whereTitle": "Where",
+        "cityLabel": "City",
+        "cityPlaceholder": "Praha",
+        "addressLabel": "Address",
+        "addressPlaceholder": "Street + number",
+        "curationTitle": "Curation",
+        "categoryLabel": "Category",
+        "categoryPlaceholder": "Pick a category",
+        "partnerNameLabel": "Partner / venue",
+        "partnerNamePlaceholder": "Goethe-Institut",
+        "partnerUrlLabel": "Partner URL",
+        "freeLabel": "Free entry",
+        "freeHint": "Toggle off to capture price + currency.",
+        "priceLabel": "Price",
+        "currencyLabel": "Currency",
+        "actionsTitle": "Publish",
+        "currentStatusLabel": "Status",
+        "saveDraftButton": "Save draft",
+        "sendToReviewButton": "Send to review",
+        "publishButton": "Publish",
+        "publishBlockedHint": "Fix the highlighted issues before publishing.",
+        "publishGatesFailed": "Some quality gates failed — see the panel above.",
+        "importError": {
+          "invalid_url": "That doesn't look like a URL.",
+          "invalid_protocol": "Use http(s) URLs only.",
+          "private_address": "Private addresses aren't allowed.",
+          "fetch_failed": "We couldn't load that page."
+        },
+        "status": {
+          "draft": "Draft",
+          "review": "Review",
+          "scheduled": "Scheduled",
+          "published": "Published"
+        }
+      },
+      "gates": {
+        "panelTitle": "Quality gates",
+        "summary": "{errors, plural, =0 {ready} other {# errors}}{warnings, plural, =0 {} other { · # warnings}}",
+        "allClear": "All checks passed — ready to publish.",
+        "titleShort": "Title needs at least 6 characters.",
+        "noCity": "Pick a city.",
+        "noCategory": "Pick a category.",
+        "descriptionShort": "Description is short ({current}/{min} characters).",
+        "pitchMissing": "Add an editorial pitch.",
+        "pitchShort": "Pitch is short ({current}/{min} characters).",
+        "pitchLong": "Pitch is too long ({current}/{max} characters).",
+        "coverMissing": "Add a cover image — listings without one underperform.",
+        "dateMissing": "Pick a start date.",
+        "dateInvalid": "That date doesn't look right.",
+        "datePast": "Start date is in the past.",
+        "dateClose": "Less than {min} day until start — consider scheduling further out.",
+        "possibleDuplicate": "{count, plural, one {# possible duplicate found} other {# possible duplicates found}} — double-check before publishing.",
+        "noPartner": "No partner credited yet."
+      },
+      "calendar": {
+        "title": "Editorial calendar",
+        "subtitle": "Drag a draft to a new day to reschedule.",
+        "back": "Back to dashboard",
+        "prevMonth": "Previous",
+        "nextMonth": "Next",
+        "saving": "Saving…"
+      },
+      "templates": {
+        "title": "Templates",
+        "subtitle": "Pick a starting point — you'll customise everything before publishing.",
+        "back": "Back to dashboard",
+        "useTemplate": "Use this template",
+        "items": {
+          "openAirConcert": {
+            "label": "Open-air concert",
+            "description": "Outdoor music night with one headliner and one warm-up act."
+          },
+          "farmersMarket": {
+            "label": "Farmers market",
+            "description": "Half-day market with local producers — recurring weekend slot."
+          },
+          "galleryOpening": {
+            "label": "Gallery opening",
+            "description": "Vernissage with the artist present and short curator talk."
+          },
+          "filmFestival": {
+            "label": "Film festival night",
+            "description": "Themed screening with intro and Q&A after the credits."
+          },
+          "streetFoodFair": {
+            "label": "Street food fair",
+            "description": "Open-air food court — multiple vendors, family-friendly."
+          },
+          "bookLaunch": {
+            "label": "Book launch",
+            "description": "Reading + signing + short Q&A with the author."
+          }
+        }
+      }
+    }
   }
 }

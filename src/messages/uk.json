@@ -228,6 +228,8 @@
       "share": "Поділитися",
       "attendees": "{count, plural, one {# учасник} few {# учасники} other {# учасників}}",
       "cuePopular": "Популярно серед місцевих",
+      "cueAfisha": "Відбір редакції",
+      "badgeAfisha": "Афіша",
       "cueEasy": "Легко приєднатися",
       "startingSoon": "Скоро почнеться",
       "inHours": "Через {count} год",
@@ -301,7 +303,45 @@
       "addToCalendar": "Додати в календар",
       "addToGoogle": "Google Calendar",
       "addToApple": "Apple / Outlook",
-      "downloadIcs": "Завантажити .ics"
+      "downloadIcs": "Завантажити .ics",
+      "systemEditorialTitle": "Подія міста",
+      "systemEditorialSubtitle": "Ми не організовуємо цю подію — просто допомагаємо не пропустити її.",
+      "goWithGroupNew": "Ідемо компанією",
+      "goWithGroupExisting": "Долучитися до компанії"
+    },
+    "systemActions": {
+      "interested": "Вам цікаво",
+      "markInterested": "У календар"
+    },
+    "meetup": {
+      "sectionLabel": "Ідемо разом",
+      "sectionTitleEmpty": "Створіть першу зустріч",
+      "sectionTitleWithCount": "{count, plural, one {# компанія йде} few {# компанії йдуть} many {# компаній йдуть} other {# компаній йдуть}}",
+      "sectionDescription": "Зберіть своїх або познайомтеся з тими, хто також іде — зустріч біля входу, кава перед, дорога разом.",
+      "ctaLogin": "Увійдіть, щоб створити зустріч",
+      "spotsLeft": "{count, plural, one {ще # місце} few {ще # місця} many {ще # місць} other {ще # місць}}",
+      "full": "Місць немає",
+      "private": "За посиланням",
+      "goingCount": "{count, plural, one {# іде} few {# йдуть} many {# йдуть} other {# йдуть}}",
+      "defaultTitle": "Ідемо на «{event}» разом",
+      "cta": "Створити зустріч",
+      "dialogTitle": "Запланувати зустріч",
+      "dialogDescription": "Відкрийте її для тих, хто також іде на «{event}». Дату й місце успадковано з афіші.",
+      "fieldTitle": "Назва групи",
+      "fieldTitlePlaceholder": "Ідемо після роботи",
+      "fieldTitleHint": "Розкажіть, кого запрошуєте.",
+      "fieldPitch": "Опис (необов'язково)",
+      "fieldPitchPlaceholder": "Зустрічаємось біля головного входу за 30 хвилин до початку.",
+      "fieldMeetingPoint": "Місце зустрічі (необов'язково)",
+      "fieldMeetingPointPlaceholder": "Головний вхід · 18:30",
+      "fieldCap": "Ліміт учасників",
+      "fieldCapPlaceholder": "8",
+      "fieldPrivate": "Приватне посилання",
+      "fieldPrivateHint": "Зустріч побачать лише ті, у кого є посилання.",
+      "cancel": "Скасувати",
+      "submit": "Створити",
+      "createSuccess": "Зустріч створено",
+      "createError": "Не вдалося створити зустріч"
     },
     "attendance": {
       "title": "Відмітка присутності",
@@ -345,7 +385,12 @@
         "popular": "Популярні"
       },
       "showPast": "Показати минулі",
-      "hidePast": "Приховати минулі"
+      "hidePast": "Приховати минулі",
+      "source": {
+        "all": "Усі",
+        "community": "Спільнота",
+        "afisha": "Афіша"
+      }
     },
     "myEvents": {
       "heroBadge": "Ваш центр організатора",
@@ -361,6 +406,9 @@
       "draftsLabel": "Чернетки",
       "draftsTitle": "{count, plural, one {# чернетка} few {# чернетки} other {# чернеток}}",
       "draftsDescription": "Бачите тільки ви. Опублікуйте, коли будете готові запросити людей.",
+      "savedLabel": "У календарі",
+      "savedTitle": "{count, plural, one {# подія з афіші} few {# події з афіші} many {# подій з афіші} other {# подій з афіші}}",
+      "savedDescription": "Події з афіші, які ви позначили як цікаві. Вони поряд із вашими власними заходами.",
       "emptyTitle": "Ви ще не організовували заходів",
       "emptyDescription": "Щойно ви створите захід або станете його модератором, він з'явиться тут.",
       "stats": {
@@ -911,5 +959,138 @@
     "about": "Про City-Pulse",
     "contact": "Зв'язатися з нами",
     "copyright": "© {year} City-Pulse. Усі права захищені."
+  },
+  "admin": {
+    "systemEvents": {
+      "dashboard": {
+        "eyebrow": "Редакція",
+        "title": "Афіша · план публікацій",
+        "subtitle": "Плануйте, готуйте та публікуйте кураторські міські події.",
+        "openCalendar": "Календар",
+        "openTemplates": "Шаблони",
+        "newDraft": "Нова чернетка",
+        "pipelineTitle": "Воронка по містах",
+        "pipelineEmpty": "Поки нічого не заплановано — почніть із чернетки.",
+        "inFlightTitle": "У роботі",
+        "inFlightEmpty": "Чернетки та матеріали на ревʼю зʼявляться тут."
+      },
+      "composer": {
+        "titleNew": "Нова міська подія",
+        "titleEdit": "Редагування події",
+        "subtitle": "Створіть, перевірте та опублікуйте кураторський запис.",
+        "backToDashboard": "До дашборда",
+        "viewLive": "На сайті",
+        "sourceTitle": "Імпорт із джерела",
+        "sourceUrlPlaceholder": "Вставте URL партнера (сторінка події, майданчик тощо)",
+        "importButton": "Заповнити з URL",
+        "sourceHint": "Підтягнемо заголовок, опис і обкладинку. Фінальний текст завжди за вами.",
+        "basicsTitle": "Основне",
+        "titleLabel": "Заголовок",
+        "titlePlaceholder": "Публічна назва — конкретна та інформативна.",
+        "pitchLabel": "Анонс",
+        "pitchPlaceholder": "Одне речення, яке пояснює, чому це цікаво.",
+        "pitchHint": "{length, plural, one {# символ} few {# символи} many {# символів} other {# символів}}",
+        "descriptionLabel": "Опис",
+        "descriptionPlaceholder": "Що це? Чому варто прийти?",
+        "coverLabel": "URL обкладинки",
+        "coverPlaceholder": "https://",
+        "whenTitle": "Коли",
+        "startsAtLabel": "Початок",
+        "durationLabel": "Тривалість (хвилини)",
+        "whereTitle": "Де",
+        "cityLabel": "Місто",
+        "cityPlaceholder": "Praha",
+        "addressLabel": "Адреса",
+        "addressPlaceholder": "Вулиця і номер",
+        "curationTitle": "Кураторська частина",
+        "categoryLabel": "Категорія",
+        "categoryPlaceholder": "Виберіть категорію",
+        "partnerNameLabel": "Партнер / майданчик",
+        "partnerNamePlaceholder": "Goethe-Institut",
+        "partnerUrlLabel": "URL партнера",
+        "freeLabel": "Безкоштовний вхід",
+        "freeHint": "Вимкніть, щоб вказати ціну та валюту.",
+        "priceLabel": "Ціна",
+        "currencyLabel": "Валюта",
+        "actionsTitle": "Публікація",
+        "currentStatusLabel": "Статус",
+        "saveDraftButton": "Зберегти чернетку",
+        "sendToReviewButton": "На ревʼю",
+        "publishButton": "Опублікувати",
+        "publishBlockedHint": "Виправте підсвічені проблеми перед публікацією.",
+        "publishGatesFailed": "Частина перевірок не пройдена — подивіться панель вище.",
+        "importError": {
+          "invalid_url": "Це не схоже на URL.",
+          "invalid_protocol": "Підтримуються тільки http(s) посилання.",
+          "private_address": "Приватні адреси не дозволені.",
+          "fetch_failed": "Не вдалося завантажити сторінку."
+        },
+        "status": {
+          "draft": "Чернетка",
+          "review": "Ревʼю",
+          "scheduled": "Заплановано",
+          "published": "Опубліковано"
+        }
+      },
+      "gates": {
+        "panelTitle": "Контроль якості",
+        "summary": "{errors, plural, =0 {готово} other {помилок: #}}{warnings, plural, =0 {} other { · попереджень: #}}",
+        "allClear": "Усі перевірки пройдено — можна публікувати.",
+        "titleShort": "У заголовку має бути щонайменше 6 символів.",
+        "noCity": "Виберіть місто.",
+        "noCategory": "Виберіть категорію.",
+        "descriptionShort": "Опис короткий ({current}/{min} символів).",
+        "pitchMissing": "Додайте анонс.",
+        "pitchShort": "Анонс короткий ({current}/{min} символів).",
+        "pitchLong": "Анонс задовгий ({current}/{max} символів).",
+        "coverMissing": "Додайте обкладинку — без неї подія гірше привертає увагу.",
+        "dateMissing": "Вкажіть дату початку.",
+        "dateInvalid": "Дата виглядає некоректно.",
+        "datePast": "Дата початку вже у минулому.",
+        "dateClose": "До початку менше {min} днів — краще планувати раніше.",
+        "possibleDuplicate": "{count, plural, one {знайдено можливий дубль} few {знайдено # можливих дублі} many {знайдено # можливих дублів} other {знайдено # можливих дублів}} — перевірте перед публікацією.",
+        "noPartner": "Партнера не вказано."
+      },
+      "calendar": {
+        "title": "Редакторський календар",
+        "subtitle": "Перетягніть чернетку на новий день, щоб змінити дату.",
+        "back": "До дашборда",
+        "prevMonth": "Назад",
+        "nextMonth": "Вперед",
+        "saving": "Зберігаємо…"
+      },
+      "templates": {
+        "title": "Шаблони",
+        "subtitle": "Стартова точка — фінальну версію доведете перед публікацією.",
+        "back": "До дашборда",
+        "useTemplate": "Використати шаблон",
+        "items": {
+          "openAirConcert": {
+            "label": "Концерт open-air",
+            "description": "Вечір музики просто неба з одним хедлайнером і розігрівом."
+          },
+          "farmersMarket": {
+            "label": "Фермерський ринок",
+            "description": "Ринок локальних виробників на пів дня — повторюваний слот на вихідних."
+          },
+          "galleryOpening": {
+            "label": "Відкриття виставки",
+            "description": "Вернісаж із присутністю художника та короткою кураторською екскурсією."
+          },
+          "filmFestival": {
+            "label": "Фестивальний показ",
+            "description": "Тематичний показ із інтро та Q&A після титрів."
+          },
+          "streetFoodFair": {
+            "label": "Ярмарок стрітфуду",
+            "description": "Вуличний фудкорт з різними учасниками — формат для всієї родини."
+          },
+          "bookLaunch": {
+            "label": "Презентація книги",
+            "description": "Читання, автограф-сесія та короткі Q&A з автором."
+          }
+        }
+      }
+    }
   }
 }

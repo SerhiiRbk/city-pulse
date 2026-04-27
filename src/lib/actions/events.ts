@@ -89,10 +89,11 @@ export async function updateEvent(eventId: string, data: UpdateEventInput) {
   if (!allowed) return { error: 'No permission to edit this event' };
 
   // Capture pre-update state so we can detect a postpone and notify
-  // attendees once after the write succeeds.
+  // attendees once after the write succeeds. We also need is_system here
+  // so a system-event reschedule can fan out to linked meetup organizers.
   const { data: before } = await supabase
     .from('events')
-    .select('starts_at, title, status')
+    .select('starts_at, title, status, is_system')
     .eq('id', eventId)
     .single();
 
@@ -140,6 +141,41 @@ export async function updateEvent(eventId: string, data: UpdateEventInput) {
           },
         }));
         await supabase.from('notifications').insert(rows);
+      }
+
+      /*
+       * Postpone propagation for system events: meetup organizers anchored
+       * to this listing inherited the original starts_at, so a shift here
+       * stale-dates their entire plan. We notify them so they can decide
+       * whether to mirror the change manually (we do NOT auto-rewrite the
+       * meetup row — date changes for a meetup affect already-RSVP'd
+       * attendees and need the organizer's explicit consent).
+       */
+      if (before.is_system) {
+        const { data: meetups } = await supabase
+          .from('events')
+          .select('id, organizer_id, title')
+          .eq('parent_system_event_id', eventId)
+          .eq('status', 'published');
+        if (meetups && meetups.length > 0) {
+          const rows = meetups
+            .filter((m) => m.organizer_id && m.organizer_id !== user.id)
+            .map((m) => ({
+              user_id: m.organizer_id as string,
+              type: 'event_parent_postponed' as const,
+              title: `${before.title} moved`,
+              body: `Your meetup "${m.title}" was anchored to this listing. Update or cancel it as needed.`,
+              data: {
+                event_id: m.id,
+                parent_system_event_id: eventId,
+                previous_starts_at: before.starts_at,
+                new_starts_at: newStart,
+              },
+            }));
+          if (rows.length > 0) {
+            await supabase.from('notifications').insert(rows);
+          }
+        }
       }
     }
   } catch {
@@ -194,6 +230,15 @@ export async function getEvents(filters: {
   date_to?: string;
   is_free?: boolean;
   is_online?: boolean;
+  /**
+   * Tri-state filter on the editorial Афиша flag:
+   *   - undefined: include both community and system events (default).
+   *   - true: only system (Афиша) events.
+   *   - false: only community events (hides Афиша).
+   * Surfaced on the /events page as a toggle so people who want to ignore
+   * city listings can do so without losing access to community gatherings.
+   */
+  is_system?: boolean;
   limit?: number;
   offset?: number;
   /**
@@ -242,6 +287,7 @@ export async function getEvents(filters: {
   if (filters.date_to) query = query.lte('starts_at', filters.date_to);
   if (filters.is_free !== undefined) query = query.eq('is_free', filters.is_free);
   if (filters.is_online !== undefined) query = query.eq('is_online', filters.is_online);
+  if (filters.is_system !== undefined) query = query.eq('is_system', filters.is_system);
 
   const sort: EventSort = filters.sort ?? 'soon';
   switch (sort) {
@@ -296,6 +342,17 @@ export async function toggleAttendance(
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
+
+  // System events cannot accept going/waitlist; UI should never trigger
+  // this path for them, but we guard anyway in case of stale clients.
+  const { data: ev } = await supabase
+    .from('events')
+    .select('is_system')
+    .eq('id', eventId)
+    .single();
+  if (ev?.is_system) {
+    return { error: 'system_events_no_rsvp' };
+  }
 
   const { data: existing } = await supabase
     .from('event_attendees')

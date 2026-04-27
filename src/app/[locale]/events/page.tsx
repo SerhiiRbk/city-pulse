@@ -84,6 +84,14 @@ export default async function EventsPage({
     ? (filters.sort as EventSort)
     : 'soon';
   const includePast = filters.include_past === 'true';
+  // Tri-state filter for the editorial "Афиша" track. Default mixes both
+  // system and community events so first-time visitors see the full feed.
+  const sourceFilter: 'all' | 'community' | 'afisha' =
+    filters.source === 'community' || filters.source === 'afisha'
+      ? filters.source
+      : 'all';
+  const isSystemFilter =
+    sourceFilter === 'community' ? false : sourceFilter === 'afisha' ? true : undefined;
 
   const events = await getEvents({
     country: filters.country,
@@ -95,6 +103,7 @@ export default async function EventsPage({
     date_to: filters.date_to,
     is_free: filters.is_free === 'true' ? true : filters.is_free === 'false' ? false : undefined,
     is_online: filters.is_online === 'true' ? true : filters.is_online === 'false' ? false : undefined,
+    is_system: isSystemFilter,
     limit: 24,
     sort,
     include_past: includePast,
@@ -269,24 +278,57 @@ export default async function EventsPage({
             })}
           </div>
 
-          <Button
-            asChild
-            size="sm"
-            variant={includePast ? 'secondary' : 'outline'}
-            className="rounded-full"
-          >
-            <Link
-              href={buildHref({ include_past: includePast ? undefined : 'true' })}
-              className="flex items-center gap-1.5"
+          <div className="flex flex-wrap items-center gap-2">
+            {/*
+             * Tri-state source filter — controls what tracks the listing
+             * shows. Defaults to "all" so first-time visitors get a unified
+             * feed; switching to "community" or "afisha" persists in the
+             * URL like every other filter.
+             */}
+            <div className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-muted/30 p-1">
+              {(
+                [
+                  { value: 'all' as const, label: tPage('source.all') },
+                  { value: 'community' as const, label: tPage('source.community') },
+                  { value: 'afisha' as const, label: tPage('source.afisha') },
+                ]
+              ).map(({ value, label }) => {
+                const isActive = sourceFilter === value;
+                return (
+                  <Button
+                    key={value}
+                    asChild
+                    size="sm"
+                    variant={isActive ? 'default' : 'ghost'}
+                    className="rounded-full px-3"
+                  >
+                    <Link href={buildHref({ source: value === 'all' ? undefined : value })}>
+                      {label}
+                    </Link>
+                  </Button>
+                );
+              })}
+            </div>
+
+            <Button
+              asChild
+              size="sm"
+              variant={includePast ? 'secondary' : 'outline'}
+              className="rounded-full"
             >
-              {includePast ? (
-                <EyeOff className="h-3.5 w-3.5" />
-              ) : (
-                <Eye className="h-3.5 w-3.5" />
-              )}
-              {includePast ? tPage('hidePast') : tPage('showPast')}
-            </Link>
-          </Button>
+              <Link
+                href={buildHref({ include_past: includePast ? undefined : 'true' })}
+                className="flex items-center gap-1.5"
+              >
+                {includePast ? (
+                  <EyeOff className="h-3.5 w-3.5" />
+                ) : (
+                  <Eye className="h-3.5 w-3.5" />
+                )}
+                {includePast ? tPage('hidePast') : tPage('showPast')}
+              </Link>
+            </Button>
+          </div>
         </div>
         {events.length === 0 ? (
           <EmptyState

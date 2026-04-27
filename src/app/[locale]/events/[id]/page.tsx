@@ -5,6 +5,9 @@ import { getGroupPostByEventId } from '@/lib/actions/group-posts';
 import { Button } from '@/components/ui/button';
 import { getUser } from '@/lib/actions/auth';
 import { EventActions } from '@/components/events/event-actions';
+import { SystemEventActions } from '@/components/events/system-event-actions';
+import { SystemEventMeetups } from '@/components/events/system-event-meetups';
+import { getMeetupCountForSystemEvent } from '@/lib/actions/meetups';
 import { EventComments } from '@/components/events/event-comments';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -12,7 +15,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Link } from '@/i18n/navigation';
 import { MapPin, Calendar, Clock, Users, Globe, Star, Lock, Pencil } from 'lucide-react';
-import { formatDate, formatDuration } from '@/lib/utils';
+import { formatDate, formatDuration, nowMs } from '@/lib/utils';
 import { SITE_NAME, COUNTRIES, LANGUAGES } from '@/lib/constants';
 import { EventMap } from '@/components/maps/event-map';
 import { ReportDialog } from '@/components/reports/report-dialog';
@@ -69,12 +72,17 @@ export default async function EventDetailPage({ params }: Props) {
   const comments = await getComments(id);
   const recap = event.group_id ? await getGroupPostByEventId(id) : null;
 
+  const isSystemEvent = !!event.is_system;
   const spotsLeft = event.max_attendees ? event.max_attendees - (event.going_count || 0) : null;
   const isFull = event.max_attendees != null && (spotsLeft ?? 0) <= 0;
   const waitlistCount = event.waitlist_count ?? 0;
   const interestedCount = event.interested_count ?? 0;
+  // For system events we surface a "Going with a group" CTA in the sidebar;
+  // the count drives the pill so users can tell at a glance whether
+  // someone has already started a meetup.
+  const meetupCount = isSystemEvent ? await getMeetupCountForSystemEvent(id) : 0;
 
-  const isPastEvent = new Date(event.starts_at).getTime() < Date.now();
+  const isPastEvent = new Date(event.starts_at).getTime() < nowMs();
   const canManageAttendance = canEdit && isPastEvent;
   const roster = canManageAttendance ? await getEventRoster(id) : [];
   const rosterEntries: RosterEntry[] = roster.map((row) => {
@@ -150,7 +158,11 @@ export default async function EventDetailPage({ params }: Props) {
                 </Badge>
               )}
               {event.is_free && <Badge className="bg-success text-success-foreground">{t('free')}</Badge>}
-              <Badge className="bg-primary/10 text-primary hover:bg-primary/10">{comfortCue}</Badge>
+              {isSystemEvent ? (
+                <Badge variant="secondary">{t('systemBadge')}</Badge>
+              ) : (
+                <Badge className="bg-primary/10 text-primary hover:bg-primary/10">{comfortCue}</Badge>
+              )}
               {languageLabels.map((language: string) => (
                 <Badge key={language} variant="outline">{language}</Badge>
               ))}
@@ -185,12 +197,20 @@ export default async function EventDetailPage({ params }: Props) {
           <div className="rounded-2xl border border-border/50 bg-muted/30 p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm font-semibold">{t('easyJoinTitle')}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{easyJoinCopy}</p>
+                <p className="text-sm font-semibold">
+                  {isSystemEvent ? t('systemEditorialTitle') : t('easyJoinTitle')}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {isSystemEvent ? t('systemEditorialSubtitle') : easyJoinCopy}
+                </p>
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Users className="h-4 w-4" />
-                <span>{t('goingCount', { count: event.going_count || 0 })}</span>
+                <span>
+                  {isSystemEvent
+                    ? t('interestedCount', { count: interestedCount })
+                    : t('goingCount', { count: event.going_count || 0 })}
+                </span>
               </div>
             </div>
           </div>
@@ -204,6 +224,24 @@ export default async function EventDetailPage({ params }: Props) {
               {event.description}
             </div>
           </div>
+
+          {/*
+           * "Идём вместе" — meetup hub. Only rendered for system events;
+           * community events already are the meetup, so a recursive shelf
+           * here would be confusing.
+           */}
+          {isSystemEvent && (
+            <SystemEventMeetups
+              parentEvent={{
+                id: event.id,
+                title: event.title,
+                starts_at: event.starts_at,
+                city: event.city,
+                address: event.address,
+              }}
+              isAuthenticated={isAuthenticated}
+            />
+          )}
 
           {event.group_id && event.status === 'completed' && (
             <div className="rounded-[2rem] border border-border/50 bg-card shadow-sm">
@@ -293,7 +331,7 @@ export default async function EventDetailPage({ params }: Props) {
             <AttendanceRoster eventId={id} initialEntries={rosterEntries} />
           )}
 
-          {event.status === 'completed' && isAuthenticated && going && (
+          {event.status === 'completed' && isAuthenticated && going && !isSystemEvent && (
             <EventReviewForm eventId={id} />
           )}
 
@@ -308,16 +346,14 @@ export default async function EventDetailPage({ params }: Props) {
         <div className="space-y-4 sm:space-y-6 lg:sticky lg:top-24 lg:self-start">
           <Card className="rounded-2xl border-border/50 shadow-sm">
             <CardContent className="space-y-5 pt-5 sm:space-y-6 sm:pt-6">
-              <EventActions
-                eventId={id}
-                initialStatus={attendanceStatus}
-                initialFavorited={favorited}
-                isAuthenticated={isAuthenticated}
-                isFull={isFull}
-              />
-              <div className="flex flex-col gap-2 sm:flex-row">
-                <ShareButton title={event.title} className="flex-1 rounded-xl" />
-                <AddToCalendarButton
+              {isSystemEvent ? (
+                /*
+                 * System events (Афиша) don't carry RSVP — render a tailored
+                 * action bar (Save to calendar / Interested / Favorite / Share).
+                 * The "Going with a group" CTA will be wired in Block B4 once
+                 * the meetup model migration lands.
+                 */
+                <SystemEventActions
                   event={{
                     id: event.id,
                     title: event.title,
@@ -328,9 +364,42 @@ export default async function EventDetailPage({ params }: Props) {
                     duration_minutes: event.duration_minutes,
                     is_online: event.is_online,
                   }}
-                  className="flex-1 rounded-xl"
+                  initialStatus={attendanceStatus}
+                  initialFavorited={favorited}
+                  isAuthenticated={isAuthenticated}
+                  meetupCta={{
+                    label: t(meetupCount > 0 ? 'goWithGroupExisting' : 'goWithGroupNew'),
+                    href: '#meetups',
+                    count: meetupCount,
+                  }}
                 />
-              </div>
+              ) : (
+                <>
+                  <EventActions
+                    eventId={id}
+                    initialStatus={attendanceStatus}
+                    initialFavorited={favorited}
+                    isAuthenticated={isAuthenticated}
+                    isFull={isFull}
+                  />
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <ShareButton title={event.title} className="flex-1 rounded-xl" />
+                    <AddToCalendarButton
+                      event={{
+                        id: event.id,
+                        title: event.title,
+                        description: event.description,
+                        address: event.address,
+                        city: event.city,
+                        starts_at: event.starts_at,
+                        duration_minutes: event.duration_minutes,
+                        is_online: event.is_online,
+                      }}
+                      className="flex-1 rounded-xl"
+                    />
+                  </div>
+                </>
+              )}
 
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
@@ -373,21 +442,32 @@ export default async function EventDetailPage({ params }: Props) {
                 <div className="flex items-center gap-3">
                   <Users className="text-muted-foreground h-5 w-5 shrink-0" />
                   <div>
-                    <p className="text-sm">{t('goingCount', { count: event.going_count || 0 })}</p>
-                    {spotsLeft !== null && (
-                      <p className="text-muted-foreground text-xs">
-                        {spotsLeft > 0 ? t('spotsLeft', { count: spotsLeft }) : t('noSpotsLeft')}
-                      </p>
-                    )}
-                    {waitlistCount > 0 && (
-                      <p className="text-muted-foreground text-xs">
-                        {t('waitlistCount', { count: waitlistCount })}
-                      </p>
-                    )}
-                    {interestedCount > 0 && (
-                      <p className="text-muted-foreground text-xs">
-                        {t('interestedCount', { count: interestedCount })}
-                      </p>
+                    {/*
+                     * Counter for community events shows "X going" + spots/waitlist;
+                     * system events have no attendance ownership, so we surface the
+                     * "interested" count as the headline number instead.
+                     */}
+                    {isSystemEvent ? (
+                      <p className="text-sm">{t('interestedCount', { count: interestedCount })}</p>
+                    ) : (
+                      <>
+                        <p className="text-sm">{t('goingCount', { count: event.going_count || 0 })}</p>
+                        {spotsLeft !== null && (
+                          <p className="text-muted-foreground text-xs">
+                            {spotsLeft > 0 ? t('spotsLeft', { count: spotsLeft }) : t('noSpotsLeft')}
+                          </p>
+                        )}
+                        {waitlistCount > 0 && (
+                          <p className="text-muted-foreground text-xs">
+                            {t('waitlistCount', { count: waitlistCount })}
+                          </p>
+                        )}
+                        {interestedCount > 0 && (
+                          <p className="text-muted-foreground text-xs">
+                            {t('interestedCount', { count: interestedCount })}
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>

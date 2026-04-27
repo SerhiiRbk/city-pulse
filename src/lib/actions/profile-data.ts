@@ -118,6 +118,40 @@ export async function getProfileCreatedEvents(userId: string) {
   return [...(organized || []), ...(extra || [])];
 }
 
+/**
+ * Returns upcoming system events the user marked as `interested`.
+ *
+ * Used by the personal "В календаре" section on /events/my — system events
+ * cannot be RSVP'd to, so an "interested" row is the user's only commitment
+ * signal and forms a personal city-events agenda. Past events are intentionally
+ * excluded since the section is forward-looking.
+ */
+export async function getProfileInterestedSystemEvents(userId: string) {
+  const supabase = await createClient();
+  const { data: rows } = await supabase
+    .from('event_attendees')
+    .select('event_id')
+    .eq('user_id', userId)
+    .eq('status', 'interested');
+
+  if (!rows || rows.length === 0) return [];
+
+  const ids = rows.map((r) => r.event_id);
+  const nowIso = new Date().toISOString();
+
+  const { data } = await supabase
+    .from('events_with_counts')
+    .select('*')
+    .in('id', ids)
+    .eq('is_system', true)
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
+    .gte('ends_at', nowIso)
+    .order('starts_at', { ascending: true });
+
+  return data || [];
+}
+
 export async function getProfileSubscribedGroups(userId: string) {
   const supabase = await createClient();
   const { data: subs } = await supabase

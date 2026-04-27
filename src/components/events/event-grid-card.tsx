@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Badge } from '@/components/ui/badge';
-import { Heart, MapPin, Calendar, Users, Globe } from 'lucide-react';
+import { Heart, MapPin, Calendar, Users, Globe, Sparkles } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { toggleFavorite } from '@/lib/actions/events';
 import { toast } from 'sonner';
@@ -24,6 +24,7 @@ interface EventGridCardProps {
     price: number | null;
     currency: string | null;
     going_count: number;
+    is_system?: boolean;
     category_slug: string | null;
     category_translations: Record<string, string> | null;
     status: string;
@@ -77,6 +78,15 @@ export function EventGridCard({ event, isFavorited: initialFav, isAuthenticated 
             </div>
           )}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+
+          {event.is_system && (
+            <div className="absolute top-3 left-3 z-10">
+              <Badge className="bg-amber-500/95 text-white backdrop-blur-md hover:bg-amber-500">
+                <Sparkles className="mr-1 h-3 w-3" />
+                {tCard('badgeAfisha')}
+              </Badge>
+            </div>
+          )}
 
           {isAuthenticated && (
             <button
