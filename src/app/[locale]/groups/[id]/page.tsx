@@ -18,6 +18,8 @@ import { getUserEventStatuses } from '@/lib/actions/events';
 import { GroupActions } from '@/components/groups/group-actions';
 import { GroupTabs } from '@/components/groups/group-tabs';
 import { CopyDirectLink } from '@/components/groups/copy-direct-link';
+import { RichTextView } from '@/components/ui/rich-text-view';
+import type { RichTextDoc } from '@/lib/rich-text/types';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Users, Calendar, Pencil, MapPin, CalendarPlus, ArrowRight, ChevronRight } from 'lucide-react';
@@ -222,12 +224,14 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
             )}
 
             {/* Description */}
-            {group.description && (
+            {(group.description_json || (group.description && group.description.trim())) && (
               <div className="px-5 py-4">
                 <p className="text-muted-foreground text-xs font-medium uppercase tracking-wider">{tDetail('description')}</p>
-                <p className="text-foreground mt-1.5 whitespace-pre-wrap break-words text-sm leading-relaxed">
-                  {group.description}
-                </p>
+                <RichTextView
+                  doc={group.description_json as RichTextDoc | null}
+                  fallbackText={group.description}
+                  className="text-foreground mt-1.5 break-words text-sm leading-relaxed"
+                />
               </div>
             )}
 

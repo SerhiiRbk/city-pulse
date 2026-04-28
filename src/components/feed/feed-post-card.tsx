@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Link } from '@/i18n/navigation';
 import { GroupPostMediaGallery } from '@/components/groups/group-post-media-gallery';
+import { LinkifiedText } from '@/components/ui/linkified-text';
 import { CalendarDays, Megaphone, Newspaper, Users } from 'lucide-react';
 import type { FeedPost } from '@/lib/actions/group-posts';
 import type { GroupPostType } from '@/types/database';
@@ -109,7 +110,7 @@ export async function FeedPostCard({ post, locale }: FeedPostCardProps) {
           <h3 className="text-lg font-semibold text-foreground hover:underline">{post.title}</h3>
         </Link>
         <p className="mt-2 line-clamp-4 whitespace-pre-wrap text-sm leading-7 text-muted-foreground">
-          {post.content}
+          <LinkifiedText text={post.content} />
         </p>
 
         {post.content.length > 300 && (

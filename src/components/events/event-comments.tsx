@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { LinkifiedText } from '@/components/ui/linkified-text';
 import { Check, CornerDownRight, Loader2, MessageSquareQuote, Reply, Send, Trash2, X } from 'lucide-react';
 import { addComment, approveComment, deleteComment } from '@/lib/actions/events';
 import { toast } from 'sonner';
@@ -221,7 +222,7 @@ export function EventComments({
                 </span>
               )}
               <p className="text-xs text-muted-foreground italic line-clamp-3">
-                {comment.quoted_text}
+                <LinkifiedText text={comment.quoted_text} />
               </p>
             </div>
           )}
@@ -230,7 +231,9 @@ export function EventComments({
             <ReplyToIndicator replyToId={comment.reply_to_id} />
           )}
 
-          <p className="text-muted-foreground mt-1 text-sm leading-relaxed">{comment.content}</p>
+          <p className="text-muted-foreground mt-1 whitespace-pre-wrap text-sm leading-relaxed">
+            <LinkifiedText text={comment.content} />
+          </p>
         </div>
       </div>
     );

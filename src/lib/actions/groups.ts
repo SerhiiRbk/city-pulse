@@ -13,6 +13,45 @@ import {
   type UpdateGroupInput,
 } from '@/lib/validations/groups';
 import { prettyZodError } from '@/lib/validations/common';
+import {
+  parseAndValidateRichTextDoc,
+  RichTextValidationError,
+} from '@/lib/rich-text/validate';
+import { extractPlainText } from '@/lib/rich-text/extract-plain';
+import type { Json } from '@/types/database';
+
+const MAX_DESCRIPTION_PLAIN_LENGTH = 4000;
+
+/**
+ * Normalises the optional rich-text description payload coming
+ * from group create/update actions. Mirrors the helper in
+ * `@/lib/actions/events.ts` (kept inline rather than exported to
+ * avoid a circular import between the two action modules).
+ *
+ * Inputs:
+ *   * `undefined` — caller didn't touch the description; leave both
+ *     `description` and `description_json` untouched on the row;
+ *   * `null` — caller explicitly wants to clear the rich body;
+ *   * any other value — must round-trip through
+ *     `parseAndValidateRichTextDoc` (server-side whitelist). On
+ *     success we return both the validated JSON doc and a clamped
+ *     plain-text projection so the trigger has a defensible mirror
+ *     to write into `description`.
+ */
+function normalizeDescriptionRichText(
+  raw: unknown,
+): { kind: 'untouched' } | { kind: 'cleared' } | { kind: 'set'; doc: Json; plain: string } | { error: string } {
+  if (raw === undefined) return { kind: 'untouched' };
+  if (raw === null) return { kind: 'cleared' };
+  try {
+    const doc = parseAndValidateRichTextDoc(raw);
+    const plain = extractPlainText(doc).slice(0, MAX_DESCRIPTION_PLAIN_LENGTH);
+    return { kind: 'set', doc: doc as unknown as Json, plain };
+  } catch (err) {
+    if (err instanceof RichTextValidationError) return { error: err.message };
+    return { error: 'Invalid description body' };
+  }
+}
 
 function revalidateLandingGroups() {
   updateTag('landing:groups');
@@ -86,9 +125,20 @@ export async function updateGroup(groupId: string, data: UpdateGroupInput) {
   const allowed = await canEditGroup(groupId);
   if (!allowed) return { error: 'No permission to edit this group' };
 
-  const { interest_ids, ...groupData } = parsed.data;
+  const richBody = normalizeDescriptionRichText(parsed.data.description_json);
+  if ('error' in richBody) return richBody;
 
-  const { error } = await supabase.from('groups').update(groupData).eq('id', groupId);
+  const { interest_ids, description_json: _ignoredJson, ...groupData } = parsed.data;
+
+  const updatePayload: Record<string, unknown> = { ...groupData };
+  if (richBody.kind === 'set') {
+    updatePayload.description = richBody.plain;
+    updatePayload.description_json = richBody.doc;
+  } else if (richBody.kind === 'cleared') {
+    updatePayload.description_json = null;
+  }
+
+  const { error } = await supabase.from('groups').update(updatePayload).eq('id', groupId);
   if (error) return { error: error.message };
 
   if (interest_ids !== undefined) {
@@ -217,11 +267,20 @@ export async function createGroup(data: CreateGroupInput) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
 
-  const { interest_ids, ...groupData } = parsed.data;
+  const richBody = normalizeDescriptionRichText(parsed.data.description_json);
+  if ('error' in richBody) return richBody;
+
+  const { interest_ids, description_json: _ignoredJson, ...groupData } = parsed.data;
+
+  const insertPayload: Record<string, unknown> = { ...groupData, created_by: user.id };
+  if (richBody.kind === 'set') {
+    insertPayload.description = richBody.plain;
+    insertPayload.description_json = richBody.doc;
+  }
 
   const { data: group, error } = await supabase
     .from('groups')
-    .insert({ ...groupData, created_by: user.id })
+    .insert(insertPayload)
     .select()
     .single();
 

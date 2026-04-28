@@ -26,6 +26,8 @@ import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2, Shield, Sea
 import { LocationPicker } from '@/components/maps/location-picker';
 import { CityPicker } from '@/components/ui/city-picker';
 import { LanguageMultiSelect } from '@/components/ui/language-multi-select';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
+import { useRichEditorLabels } from '@/components/ui/use-rich-editor-labels';
 import {
   updateEvent,
   uploadEventPhoto,
@@ -37,7 +39,30 @@ import { searchUsers } from '@/lib/actions/groups';
 import { toast } from 'sonner';
 import { cn, countryCodeToFlag } from '@/lib/utils';
 import { COUNTRIES } from '@/lib/constants';
+import { extractPlainText } from '@/lib/rich-text/extract-plain';
+import { plainTextToRichTextDoc } from '@/lib/rich-text/from-plain';
+import { richTextHasContent } from '@/lib/rich-text/validate';
+import type { RichTextDoc } from '@/lib/rich-text/types';
 import type { Event, Interest, InterestCategory, City } from '@/types/database';
+
+/**
+ * Loads the editor with whatever the row currently has:
+ *   * If the event already has a rich JSON doc, use it as-is so the
+ *     edit is lossless;
+ *   * otherwise lift the legacy plain text into a minimal valid doc
+ *     (paragraphs split on blank lines, hard-breaks on single
+ *     newlines) so the user can keep editing in the new editor.
+ */
+function loadDescriptionDoc(event: Event): RichTextDoc {
+  if (
+    event.description_json &&
+    typeof event.description_json === 'object' &&
+    !Array.isArray(event.description_json)
+  ) {
+    return event.description_json as unknown as RichTextDoc;
+  }
+  return plainTextToRichTextDoc(event.description ?? '');
+}
 
 interface EventModerator {
   user_id: string;
@@ -66,6 +91,8 @@ export function EditEventForm({ event, interests, categories, moderators: initia
   const [isOnline, setIsOnline] = useState(event.is_online);
   const [isFree, setIsFree] = useState(event.is_free);
   const [isPrivate, setIsPrivate] = useState(event.is_private);
+  const [descriptionDoc, setDescriptionDoc] = useState<RichTextDoc>(() => loadDescriptionDoc(event));
+  const editorLabels = useRichEditorLabels();
   const [selectedCategory, setSelectedCategory] = useState(event.category_id || '');
   const [selectedInterests, setSelectedInterests] = useState<string[]>(
     event.category_id ? [event.category_id] : [],
@@ -222,9 +249,20 @@ export function EditEventForm({ event, interests, categories, moderators: initia
     const finalCountry = (eventCountry && eventCountry !== '__none' ? eventCountry : null) || null;
     const finalCityName = eventCity?.name || location.city || null;
 
+    // Same contract as the create form: forward the rich body
+    // when the user wrote anything visible, plus a plain-text
+    // projection so legacy consumers keep working. When the doc
+    // collapses to "" we send `description_json: null` to clear
+    // the rich column on the row (legacy plain-text mode).
+    const hasRichDescription = richTextHasContent(descriptionDoc);
+    const descriptionPlain = hasRichDescription
+      ? extractPlainText(descriptionDoc).slice(0, 4000)
+      : '';
+
     const data = {
       title: form.get('title') as string,
-      description: form.get('description') as string,
+      description: descriptionPlain,
+      description_json: hasRichDescription ? descriptionDoc : null,
       languages,
       category_id: primaryCategory,
       starts_at: `${form.get('date')}T${form.get('time')}`,
@@ -249,7 +287,7 @@ export function EditEventForm({ event, interests, categories, moderators: initia
 
     const result = await updateEvent(event.id, data);
 
-    if (result.error) {
+    if ('error' in result) {
       toast.error(result.error);
     } else {
       toast.success('Event updated!');
@@ -280,12 +318,12 @@ export function EditEventForm({ event, interests, categories, moderators: initia
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">{t('description')}</Label>
-            <textarea
-              id="description"
-              name="description"
-              defaultValue={event.description}
-              rows={4}
-              className="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            <RichTextEditor
+              ariaLabel={t('description')}
+              value={descriptionDoc}
+              onChange={setDescriptionDoc}
+              labels={editorLabels}
+              maxLength={4000}
             />
           </div>
 

@@ -24,12 +24,22 @@ import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2, UsersRound,
 import { LocationPicker } from '@/components/maps/location-picker';
 import { CityPicker } from '@/components/ui/city-picker';
 import { LanguageMultiSelect } from '@/components/ui/language-multi-select';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
+import { useRichEditorLabels } from '@/components/ui/use-rich-editor-labels';
 import { createEvent, uploadEventPhoto } from '@/lib/actions/events';
 import { resolveCity } from '@/lib/actions/cities';
 import { toast } from 'sonner';
 import { cn, countryCodeToFlag } from '@/lib/utils';
 import { COUNTRIES } from '@/lib/constants';
+import { extractPlainText } from '@/lib/rich-text/extract-plain';
+import { richTextHasContent } from '@/lib/rich-text/validate';
+import type { RichTextDoc } from '@/lib/rich-text/types';
 import type { Interest, InterestCategory, City } from '@/types/database';
+
+const EMPTY_DESCRIPTION_DOC: RichTextDoc = {
+  type: 'doc',
+  content: [{ type: 'paragraph' }],
+};
 
 interface ManageableGroup {
   id: string;
@@ -78,6 +88,8 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
   const [isOnline, setIsOnline] = useState(false);
   const [isFree, setIsFree] = useState(true);
   const [isPrivate, setIsPrivate] = useState(false);
+  const [descriptionDoc, setDescriptionDoc] = useState<RichTextDoc>(EMPTY_DESCRIPTION_DOC);
+  const editorLabels = useRichEditorLabels();
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [interestsPopoverOpen, setInterestsPopoverOpen] = useState(false);
@@ -181,9 +193,20 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
     const finalCountry = (eventCountry && eventCountry !== '__none' ? eventCountry : undefined) || undefined;
     const finalCityName = eventCity?.name || location.city || undefined;
 
+    // Send the rich body when the user wrote anything; otherwise
+    // leave both fields untouched on the server side. We always
+    // forward the plain-text projection too so legacy consumers
+    // (cards, OG snippets, search) keep getting a usable string
+    // even before the trigger redrives `description` from JSON.
+    const hasRichDescription = richTextHasContent(descriptionDoc);
+    const descriptionPlain = hasRichDescription
+      ? extractPlainText(descriptionDoc).slice(0, 4000)
+      : '';
+
     const data = {
       title: form.get('title') as string,
-      description: form.get('description') as string,
+      description: descriptionPlain,
+      description_json: hasRichDescription ? descriptionDoc : undefined,
       languages,
       category_id: primaryCategory,
       starts_at: `${form.get('date')}T${form.get('time')}`,
@@ -272,11 +295,12 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">{t('description')}</Label>
-            <textarea
-              id="description"
-              name="description"
-              rows={4}
-              className="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            <RichTextEditor
+              ariaLabel={t('description')}
+              value={descriptionDoc}
+              onChange={setDescriptionDoc}
+              labels={editorLabels}
+              maxLength={4000}
             />
           </div>
           <div className="space-y-2">

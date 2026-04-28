@@ -14,6 +14,43 @@ import {
   type UpdateEventInput,
 } from '@/lib/validations/events';
 import { prettyZodError } from '@/lib/validations/common';
+import {
+  parseAndValidateRichTextDoc,
+  RichTextValidationError,
+} from '@/lib/rich-text/validate';
+import { extractPlainText } from '@/lib/rich-text/extract-plain';
+import type { Json } from '@/types/database';
+
+const MAX_DESCRIPTION_PLAIN_LENGTH = 4000;
+
+/**
+ * Normalises the optional rich-text description payload coming
+ * from event/group create/update actions.
+ *
+ * Inputs:
+ *   * `undefined` — caller didn't touch the description; leave both
+ *     `description` and `description_json` untouched on the row;
+ *   * `null` — caller explicitly wants to clear the rich body;
+ *   * any other value — must round-trip through
+ *     `parseAndValidateRichTextDoc` (server-side whitelist). On
+ *     success we return both the validated JSON doc and a clamped
+ *     plain-text projection so the trigger has a defensible mirror
+ *     to write into `description`.
+ */
+function normalizeDescriptionRichText(
+  raw: unknown,
+): { kind: 'untouched' } | { kind: 'cleared' } | { kind: 'set'; doc: Json; plain: string } | { error: string } {
+  if (raw === undefined) return { kind: 'untouched' };
+  if (raw === null) return { kind: 'cleared' };
+  try {
+    const doc = parseAndValidateRichTextDoc(raw);
+    const plain = extractPlainText(doc).slice(0, MAX_DESCRIPTION_PLAIN_LENGTH);
+    return { kind: 'set', doc: doc as unknown as Json, plain };
+  } catch (err) {
+    if (err instanceof RichTextValidationError) return { error: err.message };
+    return { error: 'Invalid description body' };
+  }
+}
 
 function revalidateLandingEvents() {
   updateTag('landing:events');
@@ -31,12 +68,28 @@ export async function createEvent(input: CreateEventInput) {
 
   if (!user) return { error: 'Not authenticated' };
 
-  const eventData = {
-    ...parsed.data,
+  const richBody = normalizeDescriptionRichText(parsed.data.description_json);
+  if ('error' in richBody) return richBody;
+
+  // The plain `description` from the form is a best-effort fallback
+  // (used when the client never sends `description_json`, e.g. third
+  // party callers). When the rich doc is set we override it with the
+  // server-derived plain text so the row matches what the trigger
+  // would have written anyway, and so old clients reading
+  // `description` see exactly the same string the editor produced.
+  const { description_json: _ignoredJson, ...rest } = parsed.data;
+  const eventData: Record<string, unknown> = {
+    ...rest,
     organizer_id: user.id,
     private_token: parsed.data.is_private ? nanoid(24) : null,
     status: 'published' as const,
   };
+  if (richBody.kind === 'set') {
+    eventData.description = richBody.plain;
+    eventData.description_json = richBody.doc;
+  } else if (richBody.kind === 'cleared') {
+    eventData.description_json = null;
+  }
 
   const { data: event, error } = await supabase
     .from('events')
@@ -97,7 +150,27 @@ export async function updateEvent(eventId: string, data: UpdateEventInput) {
     .eq('id', eventId)
     .single();
 
-  const { error } = await supabase.from('events').update(parsed.data).eq('id', eventId);
+  // Reconcile the optional rich-text body. We only forward the
+  // sub-set of {description, description_json} that the caller
+  // actually intended to change so partial updates (e.g. moderators
+  // toggling status) don't accidentally clear out the rich content.
+  const richBody = normalizeDescriptionRichText(parsed.data.description_json);
+  if ('error' in richBody) return richBody;
+
+  const { description_json: _ignoredJson, ...rest } = parsed.data;
+  const updatePayload: Record<string, unknown> = { ...rest };
+  if (richBody.kind === 'set') {
+    updatePayload.description = richBody.plain;
+    updatePayload.description_json = richBody.doc;
+  } else if (richBody.kind === 'cleared') {
+    updatePayload.description_json = null;
+    // We deliberately don't touch `description` here: clearing the
+    // rich doc resets the column to "freeform plain text" mode and
+    // the existing plain string (if any) stays as the canonical
+    // value until the caller rewrites it.
+  }
+
+  const { error } = await supabase.from('events').update(updatePayload).eq('id', eventId);
   if (error) return { error: error.message };
   revalidateLandingEvents();
 

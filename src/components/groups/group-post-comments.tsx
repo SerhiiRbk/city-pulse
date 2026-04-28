@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
+import { LinkifiedText } from '@/components/ui/linkified-text';
 import {
   addGroupPostComment,
   deleteGroupPostComment,
@@ -215,7 +216,7 @@ export function GroupPostComments({
                 </span>
               )}
               <p className="text-xs text-muted-foreground italic line-clamp-3">
-                {comment.quoted_text}
+                <LinkifiedText text={comment.quoted_text} />
               </p>
             </div>
           )}
@@ -228,7 +229,7 @@ export function GroupPostComments({
           )}
 
           <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
-            {comment.content}
+            <LinkifiedText text={comment.content} />
           </p>
         </div>
       </div>

@@ -33,7 +33,26 @@
     "send": "Надіслати",
     "searchAddress": "Знайти адресу...",
     "searchCity": "Знайти місто...",
-    "noCitiesFound": "Міст не знайдено"
+    "noCitiesFound": "Міст не знайдено",
+    "rich": {
+      "bold": "Жирний",
+      "italic": "Курсив",
+      "strike": "Закреслений",
+      "heading2": "Заголовок",
+      "heading3": "Підзаголовок",
+      "bulletList": "Маркований список",
+      "orderedList": "Нумерований список",
+      "blockquote": "Цитата",
+      "link": "Посилання",
+      "linkDialogTitle": "Додати посилання",
+      "linkPlaceholder": "https://example.com",
+      "linkSave": "Зберегти",
+      "linkRemove": "Видалити посилання",
+      "linkCancel": "Скасувати",
+      "linkInvalid": "Використовуйте URL з http або https",
+      "charactersUsed": "{used} / {max}",
+      "charactersOverflow": "Досягнуто максимуму"
+    }
   },
   "nav": {
     "home": "Головна",

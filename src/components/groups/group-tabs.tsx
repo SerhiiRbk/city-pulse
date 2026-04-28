@@ -1,6 +1,7 @@
 'use client';
 
-import { type ComponentProps, useState, useCallback } from 'react';
+import { type ComponentProps, useState, useCallback, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { EventCard } from '@/components/events/event-card';
@@ -10,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { LinkifiedText } from '@/components/ui/linkified-text';
 import { Calendar, Check, CornerDownRight, History, Image as ImageIcon, MessageCircle, MessageSquareQuote, Reply, Send, Trash2, Users, Plus, FolderOpen, X } from 'lucide-react';
 import { addGroupComment, deleteGroupComment, approveGroupComment } from '@/lib/actions/groups';
 import { createAlbum } from '@/lib/actions/albums';
@@ -93,6 +95,34 @@ export function GroupTabs({
   const favSet = new Set(favoritedEventIds);
   const locale = useLocale();
   const router = useRouter();
+  // Drive the active tab off the URL so that in-page links like
+  // `<Link href="?tab=members">` actually switch the tab on soft navigation.
+  // `defaultValue` on Radix `Tabs` is read once on mount; subsequent renders
+  // (which is what a client-side navigation produces here) ignore it.
+  const searchParams = useSearchParams();
+  const allowedTabs = useMemo(
+    () => new Set(['upcoming', 'past', 'photos', 'posts', 'members', 'comments']),
+    [],
+  );
+  const tabFromUrl = searchParams.get('tab') ?? '';
+  const activeTab = allowedTabs.has(tabFromUrl) ? tabFromUrl : (initialTab ?? 'upcoming');
+
+  const handleTabChange = useCallback(
+    (value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      // `upcoming` is the default — drop the param so the URL stays clean.
+      if (value === 'upcoming') {
+        params.delete('tab');
+      } else {
+        params.set('tab', value);
+      }
+      const query = params.toString();
+      router.replace(query ? `/groups/${groupId}?${query}` : `/groups/${groupId}`, {
+        scroll: false,
+      });
+    },
+    [groupId, router, searchParams],
+  );
   const [comments, setComments] = useState<GroupComment[]>(initialComments);
   const [albums, setAlbums] = useState(initialAlbums);
   const [commentText, setCommentText] = useState('');
@@ -228,7 +258,7 @@ export function GroupTabs({
   }
 
   return (
-    <Tabs defaultValue={initialTab}>
+    <Tabs value={activeTab} onValueChange={handleTabChange}>
       {/*
         Layout notes for this tab strip:
 
@@ -669,7 +699,7 @@ function GroupCommentItem({
               </span>
             )}
             <p className="text-xs text-muted-foreground italic line-clamp-3">
-              {comment.quoted_text}
+              <LinkifiedText text={comment.quoted_text} />
             </p>
           </div>
         )}
@@ -682,7 +712,7 @@ function GroupCommentItem({
         )}
 
         <p className="text-muted-foreground mt-1 whitespace-pre-wrap text-sm leading-relaxed">
-          {comment.content}
+          <LinkifiedText text={comment.content} />
         </p>
       </div>
     </div>

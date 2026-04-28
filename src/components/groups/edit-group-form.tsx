@@ -24,6 +24,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Search, Shield, X, UserPlus, ChevronsUpDown, Check, MapPin, Link2 } from 'lucide-react';
 import { CityPicker } from '@/components/ui/city-picker';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
+import { useRichEditorLabels } from '@/components/ui/use-rich-editor-labels';
 import {
   updateGroup,
   uploadGroupCover,
@@ -35,7 +37,29 @@ import {
 import { toast } from 'sonner';
 import { COUNTRIES } from '@/lib/constants';
 import { cn, countryCodeToFlag, toSlug, isValidSlug } from '@/lib/utils';
+import { extractPlainText } from '@/lib/rich-text/extract-plain';
+import { plainTextToRichTextDoc } from '@/lib/rich-text/from-plain';
+import { richTextHasContent } from '@/lib/rich-text/validate';
+import type { RichTextDoc } from '@/lib/rich-text/types';
 import type { Group, Interest, InterestCategory, City } from '@/types/database';
+
+/**
+ * Loads the editor with whatever the row currently has:
+ *   * If the group already has a rich JSON doc, use it as-is so the
+ *     edit is lossless;
+ *   * otherwise lift the legacy plain text into a minimal valid doc
+ *     so the user can keep editing in the new editor.
+ */
+function loadDescriptionDoc(group: Group): RichTextDoc {
+  if (
+    group.description_json &&
+    typeof group.description_json === 'object' &&
+    !Array.isArray(group.description_json)
+  ) {
+    return group.description_json as unknown as RichTextDoc;
+  }
+  return plainTextToRichTextDoc(group.description ?? '');
+}
 
 interface Member {
   user_id: string;
@@ -66,7 +90,8 @@ export function EditGroupForm({
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState(group.name);
   const [slug, setSlug] = useState(group.slug || '');
-  const [description, setDescription] = useState(group.description || '');
+  const [descriptionDoc, setDescriptionDoc] = useState<RichTextDoc>(() => loadDescriptionDoc(group));
+  const editorLabels = useRichEditorLabels();
   const [coverPreview, setCoverPreview] = useState<string | null>(group.cover_url);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [country, setCountry] = useState(group.country || '');
@@ -153,10 +178,21 @@ export function EditGroupForm({
         await uploadGroupCover(formData, group.id);
       }
 
+      // Rich body wins over plain text. We always forward a plain
+      // projection so older clients that read the `description`
+      // column see the user's intent, and pass `description_json:
+      // null` to clear the JSON column when the doc collapses to
+      // empty (legacy plain-text mode).
+      const hasRichDescription = richTextHasContent(descriptionDoc);
+      const description = hasRichDescription
+        ? extractPlainText(descriptionDoc).slice(0, 4000)
+        : '';
+
       const result = await updateGroup(group.id, {
         name,
         slug: normalizedSlug,
         description,
+        description_json: hasRichDescription ? descriptionDoc : null,
         languages,
         country: effectiveCountry,
         city: selectedCity?.name || null,
@@ -287,12 +323,12 @@ export function EditGroupForm({
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">{t('description')}</Label>
-            <textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={4}
-              className="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            <RichTextEditor
+              ariaLabel={t('description')}
+              value={descriptionDoc}
+              onChange={setDescriptionDoc}
+              labels={editorLabels}
+              maxLength={4000}
             />
           </div>
           <div className="space-y-2">

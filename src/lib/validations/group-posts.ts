@@ -3,12 +3,22 @@ import { uuidSchema } from './common';
 
 export const groupPostTypeSchema = z.enum(['update', 'announcement', 'event_recap']);
 
+/**
+ * Rich text content is validated structurally by `validateRichTextDoc`
+ * in `@/lib/rich-text/validate.ts` — Zod here only forwards the value
+ * unchanged. We deliberately don't try to model the entire ProseMirror
+ * schema in Zod: the dedicated validator returns a normalised tree and
+ * is the single source of truth (rejecting unknown nodes/marks, capping
+ * sizes, sanitising link hrefs, etc.).
+ */
+const richTextDocLikeSchema = z.unknown();
+
 export const createGroupPostSchema = z
   .object({
     groupId: uuidSchema,
     type: groupPostTypeSchema,
     title: z.string().trim().min(1, 'Title is required').max(200, 'Title is too long'),
-    content: z.string().trim().min(1, 'Content is required').max(4000, 'Content is too long'),
+    contentJson: richTextDocLikeSchema,
     eventId: uuidSchema.nullable().optional(),
   })
   .superRefine((data, ctx) => {
@@ -19,11 +29,26 @@ export const createGroupPostSchema = z
         path: ['eventId'],
       });
     }
+    if (!data.contentJson) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Content is required',
+        path: ['contentJson'],
+      });
+    }
   });
 
 export const updateGroupPostSchema = z.object({
   title: z.string().trim().min(1).max(200),
-  content: z.string().trim().min(1).max(4000),
+  contentJson: richTextDocLikeSchema,
+}).superRefine((data, ctx) => {
+  if (!data.contentJson) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'Content is required',
+      path: ['contentJson'],
+    });
+  }
 });
 
 export const groupPostCommentSchema = z.object({

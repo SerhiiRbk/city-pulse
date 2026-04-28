@@ -26,6 +26,8 @@ import { AttendanceRoster, type RosterEntry } from '@/components/events/attendan
 import { EventReviewForm } from '@/components/events/event-review-form';
 import { EventPhotoGallery } from '@/components/events/event-photo-gallery';
 import { generateEventJsonLd } from '@/lib/json-ld';
+import { RichTextView } from '@/components/ui/rich-text-view';
+import type { RichTextDoc } from '@/lib/rich-text/types';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Locale } from '@/i18n/config';
@@ -218,12 +220,16 @@ export default async function EventDetailPage({ params }: Props) {
           <Separator />
 
           {/* Description */}
-          <div>
-            <h2 className="mb-2 font-semibold">{t('description')}</h2>
-            <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap">
-              {event.description}
+          {(event.description_json || (event.description && event.description.trim())) && (
+            <div>
+              <h2 className="mb-2 font-semibold">{t('description')}</h2>
+              <RichTextView
+                doc={event.description_json as RichTextDoc | null}
+                fallbackText={event.description}
+                className="text-sm leading-7 text-foreground/90"
+              />
             </div>
-          </div>
+          )}
 
           {/*
            * "Идём вместе" — meetup hub. Only rendered for system events;

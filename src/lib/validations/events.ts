@@ -11,9 +11,22 @@ const currencySchema = z
   .length(3, 'Currency must be a 3-letter ISO code')
   .toUpperCase();
 
+/**
+ * The rich body is structurally validated server-side by
+ * `parseAndValidateRichTextDoc` (see `@/lib/rich-text/validate.ts`),
+ * which is the single source of truth for the allowed shape. Zod
+ * here just forwards the value as `unknown` — modeling the entire
+ * ProseMirror schema in Zod would duplicate the whitelist and drift
+ * from it. The plain `description` field is kept for legacy callers
+ * and is also auto-derived by a BEFORE-trigger from
+ * `description_json` whenever it's set (migration 046).
+ */
+const richTextDocLikeSchema = z.unknown();
+
 const baseEventFields = {
   title: z.string().trim().min(3, 'Title is too short').max(120, 'Title is too long'),
   description: z.string().trim().max(4000, 'Description is too long').default(''),
+  description_json: richTextDocLikeSchema.optional(),
   languages: z
     .array(z.enum(languageCodes))
     .max(5, 'Up to 5 languages')

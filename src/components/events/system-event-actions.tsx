@@ -107,12 +107,17 @@ export function SystemEventActions({
 
   return (
     <div className="space-y-2">
-      {/* Primary row — Save to calendar + Interested + Favorite + Share */}
+      {/* Primary row — Save to calendar + Interested + Favorite + Share.
+          Icon-only buttons use the square `icon-lg` size (40×40) instead of
+          the default `size` (which is rectangular due to `has-[>svg]:px-4`)
+          so they don't visually crowd the sidebar at narrow widths and
+          their icons stay properly centered without clipping. */}
       <div className="flex flex-wrap items-stretch gap-2">
         <AddToCalendarButton event={event} className="flex-1 min-w-[220px] rounded-xl shadow-sm" />
         {isAuthenticated && (
           <>
             <Button
+              size="icon-lg"
               variant={isInterested ? 'secondary' : 'outline'}
               onClick={handleToggleInterest}
               aria-pressed={isInterested}
@@ -124,6 +129,7 @@ export function SystemEventActions({
               />
             </Button>
             <Button
+              size="icon-lg"
               variant="outline"
               onClick={handleToggleFavorite}
               aria-pressed={favorited}
@@ -135,7 +141,12 @@ export function SystemEventActions({
             </Button>
           </>
         )}
-        <Button variant="outline" onClick={handleShare} className="rounded-xl shadow-sm">
+        <Button
+          size="icon-lg"
+          variant="outline"
+          onClick={handleShare}
+          className="rounded-xl shadow-sm"
+        >
           <Share2 className="h-5 w-5" />
         </Button>
       </div>

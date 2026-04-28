@@ -33,7 +33,26 @@
     "send": "Odeslat",
     "searchAddress": "Hledat adresu...",
     "searchCity": "Hledat město...",
-    "noCitiesFound": "Žádná města nenalezena"
+    "noCitiesFound": "Žádná města nenalezena",
+    "rich": {
+      "bold": "Tučné",
+      "italic": "Kurzíva",
+      "strike": "Přeškrtnuté",
+      "heading2": "Nadpis",
+      "heading3": "Podnadpis",
+      "bulletList": "Odrážkový seznam",
+      "orderedList": "Číslovaný seznam",
+      "blockquote": "Citát",
+      "link": "Odkaz",
+      "linkDialogTitle": "Přidat odkaz",
+      "linkPlaceholder": "https://example.com",
+      "linkSave": "Uložit",
+      "linkRemove": "Odebrat odkaz",
+      "linkCancel": "Zrušit",
+      "linkInvalid": "Použijte URL s http nebo https",
+      "charactersUsed": "{used} / {max}",
+      "charactersOverflow": "Dosaženo maxima"
+    }
   },
   "nav": {
     "home": "Domů",

@@ -22,11 +22,21 @@ import {
 import { LanguageMultiSelect } from '@/components/ui/language-multi-select';
 import { Loader2, X, ChevronsUpDown, Check, MapPin, Link2 } from 'lucide-react';
 import { CityPicker } from '@/components/ui/city-picker';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
+import { useRichEditorLabels } from '@/components/ui/use-rich-editor-labels';
 import { createGroup, uploadGroupCover, isSlugAvailable } from '@/lib/actions/groups';
 import { toast } from 'sonner';
 import { COUNTRIES } from '@/lib/constants';
 import { cn, countryCodeToFlag, toSlug, isValidSlug } from '@/lib/utils';
+import { extractPlainText } from '@/lib/rich-text/extract-plain';
+import { richTextHasContent } from '@/lib/rich-text/validate';
+import type { RichTextDoc } from '@/lib/rich-text/types';
 import type { Interest, InterestCategory, City } from '@/types/database';
+
+const EMPTY_DESCRIPTION_DOC: RichTextDoc = {
+  type: 'doc',
+  content: [{ type: 'paragraph' }],
+};
 
 interface CreateGroupFormProps {
   interests: Interest[];
@@ -48,6 +58,8 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
   const [interestsPopoverOpen, setInterestsPopoverOpen] = useState(false);
   const [languages, setLanguages] = useState<string[]>([]);
   const [languagesPopoverOpen, setLanguagesPopoverOpen] = useState(false);
+  const [descriptionDoc, setDescriptionDoc] = useState<RichTextDoc>(EMPTY_DESCRIPTION_DOC);
+  const editorLabels = useRichEditorLabels();
 
   function getInterestLabel(interest: Interest): string {
     return interest.translations[locale] || interest.translations['en'] || interest.slug;
@@ -88,7 +100,14 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
 
     const form = new FormData(e.currentTarget);
     const name = form.get('name') as string;
-    const description = form.get('description') as string;
+
+    // Same contract as the create-event form. We only forward the
+    // rich body when the user wrote anything visible; otherwise the
+    // server keeps both columns at their defaults.
+    const hasRichDescription = richTextHasContent(descriptionDoc);
+    const description = hasRichDescription
+      ? extractPlainText(descriptionDoc).slice(0, 4000)
+      : '';
 
     if (!name.trim()) {
       toast.error('Name is required');
@@ -116,6 +135,7 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
       name,
       slug: normalizedSlug,
       description,
+      description_json: hasRichDescription ? descriptionDoc : undefined,
       languages,
       country: country || null,
       city: selectedCity?.name || null,
@@ -123,7 +143,7 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
       interest_ids: selectedInterests,
     });
 
-    if (result.error) {
+    if ('error' in result) {
       toast.error(result.error);
       setIsLoading(false);
       return;
@@ -197,11 +217,12 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">{t('description')}</Label>
-            <textarea
-              id="description"
-              name="description"
-              rows={4}
-              className="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            <RichTextEditor
+              ariaLabel={t('description')}
+              value={descriptionDoc}
+              onChange={setDescriptionDoc}
+              labels={editorLabels}
+              maxLength={4000}
             />
           </div>
           <div className="space-y-2">

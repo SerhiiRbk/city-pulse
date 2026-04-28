@@ -33,7 +33,26 @@
     "send": "Senden",
     "searchAddress": "Adresse suchen...",
     "searchCity": "Stadt suchen...",
-    "noCitiesFound": "Keine Städte gefunden"
+    "noCitiesFound": "Keine Städte gefunden",
+    "rich": {
+      "bold": "Fett",
+      "italic": "Kursiv",
+      "strike": "Durchgestrichen",
+      "heading2": "Überschrift",
+      "heading3": "Unterüberschrift",
+      "bulletList": "Aufzählungsliste",
+      "orderedList": "Nummerierte Liste",
+      "blockquote": "Zitat",
+      "link": "Link",
+      "linkDialogTitle": "Link hinzufügen",
+      "linkPlaceholder": "https://example.com",
+      "linkSave": "Speichern",
+      "linkRemove": "Link entfernen",
+      "linkCancel": "Abbrechen",
+      "linkInvalid": "Verwende eine http- oder https-URL",
+      "charactersUsed": "{used} / {max}",
+      "charactersOverflow": "Maximale Länge erreicht"
+    }
   },
   "nav": {
     "home": "Startseite",

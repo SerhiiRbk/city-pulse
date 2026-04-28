@@ -106,6 +106,11 @@ export function EventActions({
   }
 
   const btnSize = compact ? 'sm' : 'lg';
+  // Icon-only buttons should be square — `size="lg"` makes them 52×40 px
+  // rectangles via `has-[>svg]:px-4`, which both wastes horizontal room in a
+  // narrow sidebar (1/3 of the grid) and visually clips the icons next to
+  // the primary "I'll go" button.
+  const iconBtnSize = compact ? 'icon-sm' : 'icon-lg';
 
   const { label, icon, variant } = (() => {
     if (status === 'going') {
@@ -160,7 +165,7 @@ export function EventActions({
           </Button>
           {canShowInterest && (
             <Button
-              size={btnSize}
+              size={iconBtnSize}
               variant={isInterested ? 'secondary' : 'outline'}
               onClick={handleToggleInterest}
               aria-pressed={isInterested}
@@ -172,13 +177,23 @@ export function EventActions({
               />
             </Button>
           )}
-          <Button size={btnSize} variant="outline" onClick={handleToggleFavorite} className={compact ? 'rounded-lg' : 'rounded-xl shadow-sm'}>
+          <Button
+            size={iconBtnSize}
+            variant="outline"
+            onClick={handleToggleFavorite}
+            className={compact ? 'rounded-lg' : 'rounded-xl shadow-sm'}
+          >
             <Heart className={`${compact ? 'h-4 w-4' : 'h-5 w-5'} ${favorited ? 'fill-red-500 text-red-500' : ''}`} />
           </Button>
         </>
       )}
       {!compact && (
-        <Button size="lg" variant="outline" onClick={handleShare} className="rounded-xl shadow-sm">
+        <Button
+          size="icon-lg"
+          variant="outline"
+          onClick={handleShare}
+          className="rounded-xl shadow-sm"
+        >
           <Share2 className="h-5 w-5" />
         </Button>
       )}

@@ -69,6 +69,15 @@ export interface Event {
   id: string;
   title: string;
   description: string;
+  /**
+   * Rich-text description as a TipTap / ProseMirror JSON document.
+   * NULL for legacy events that predate migration 046 — the renderer
+   * falls back to `description` (plain text, linkified) in that case.
+   * New writes always populate this column; the BEFORE-trigger keeps
+   * `description` in sync as the plain-text mirror used by previews,
+   * OG snippets, and search.
+   */
+  description_json: Json | null;
   photos: string[];
   languages: string[];
   is_blocked: boolean;
@@ -133,6 +142,15 @@ export interface Group {
   name: string;
   slug: string | null;
   description: string;
+  /**
+   * Rich-text description as a TipTap / ProseMirror JSON document.
+   * NULL for legacy groups that predate migration 046 — the renderer
+   * falls back to `description` (plain text, linkified) in that case.
+   * New writes always populate this column; the BEFORE-trigger keeps
+   * `description` in sync as the plain-text mirror used by previews,
+   * OG snippets, and search.
+   */
+  description_json: Json | null;
   cover_url: string | null;
   languages: string[];
   is_blocked: boolean;
@@ -156,6 +174,14 @@ export interface GroupPost {
   type: GroupPostType;
   title: string;
   content: string;
+  /**
+   * Rich-text body as a TipTap / ProseMirror JSON document. NULL for
+   * legacy posts that predate migration 045 — the renderer falls back
+   * to `content` (plain text) in that case. New writes always populate
+   * this column; the trigger keeps `content` in sync as the plain-text
+   * mirror used by previews and SEO.
+   */
+  content_json: Json | null;
   published_at: string;
   created_at: string;
   updated_at: string;

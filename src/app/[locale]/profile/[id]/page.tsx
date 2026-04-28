@@ -19,6 +19,7 @@ import { RequestChatButton } from '@/components/messages/request-chat-button';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { FollowButton } from '@/components/social/follow-button';
 import { ProfileTabs } from '@/components/profile/profile-tabs';
+import { LinkifiedText } from '@/components/ui/linkified-text';
 import { getProfileReputation, getProfileStats, getUserBadges, isFollowing } from '@/lib/actions/social';
 import { ReputationBadge } from '@/components/profile/reputation-badge';
 import {
@@ -211,8 +212,8 @@ export default async function ProfilePage({ params }: Props) {
 
             {/* Bio inline */}
             {profile.bio && (
-              <p className="max-w-lg text-center text-sm leading-relaxed text-muted-foreground md:text-left">
-                {profile.bio}
+              <p className="max-w-lg whitespace-pre-wrap text-center text-sm leading-relaxed text-muted-foreground md:text-left">
+                <LinkifiedText text={profile.bio} />
               </p>
             )}
 

@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { canEditGroup } from '@/lib/actions/groups';
 import { createNotification } from '@/lib/actions/notifications';
 import { nanoid } from 'nanoid';
-import type { GroupPost, GroupPostComment, GroupPostMedia } from '@/types/database';
+import type { GroupPost, GroupPostComment, GroupPostMedia, Json } from '@/types/database';
 import { isValidSlug, toSlug } from '@/lib/utils';
 import {
   createGroupPostSchema,
@@ -15,6 +15,14 @@ import {
   type UpdateGroupPostInput,
 } from '@/lib/validations/group-posts';
 import { prettyZodError } from '@/lib/validations/common';
+import {
+  parseAndValidateRichTextDoc,
+  RichTextValidationError,
+} from '@/lib/rich-text/validate';
+import { extractPlainText } from '@/lib/rich-text/extract-plain';
+import type { RichTextDoc } from '@/lib/rich-text/types';
+
+const MAX_CONTENT_PLAIN_LENGTH = 4000;
 
 const MAX_POST_IMAGES = 6;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
@@ -306,6 +314,22 @@ export async function getGroupPostComments(postId: string): Promise<GroupPostCom
   }));
 }
 
+function validateBodyOrError(rawJson: unknown): { doc: RichTextDoc; plain: string } | { error: string } {
+  let doc: RichTextDoc;
+  try {
+    doc = parseAndValidateRichTextDoc(rawJson);
+  } catch (err) {
+    if (err instanceof RichTextValidationError) return { error: err.message };
+    return { error: 'Invalid post body' };
+  }
+
+  const plain = extractPlainText(doc).slice(0, MAX_CONTENT_PLAIN_LENGTH);
+  if (plain.trim().length === 0) {
+    return { error: 'Content is required' };
+  }
+  return { doc, plain };
+}
+
 export async function createGroupPost(data: CreateGroupPostInput) {
   const parsed = createGroupPostSchema.safeParse(data);
   if (!parsed.success) return { error: prettyZodError(parsed.error) };
@@ -318,8 +342,10 @@ export async function createGroupPost(data: CreateGroupPostInput) {
   const allowed = await canEditGroup(input.groupId);
   if (!allowed) return { error: 'No permission to post in this group' };
 
+  const body = validateBodyOrError(input.contentJson);
+  if ('error' in body) return body;
+
   const title = input.title;
-  const content = input.content;
 
   let eventId: string | null = input.eventId || null;
 
@@ -361,7 +387,12 @@ export async function createGroupPost(data: CreateGroupPostInput) {
       event_id: eventId,
       type: input.type,
       title,
-      content,
+      // `content` is also auto-derived by the BEFORE-trigger from
+      // `content_json`. We still write our own plain-text projection
+      // so the row is valid even if the trigger were ever disabled,
+      // and to keep the value identical to what the client computed.
+      content: body.plain,
+      content_json: body.doc as unknown as Json,
     })
     .select(`
       *,
@@ -396,14 +427,17 @@ export async function updateGroupPost(postId: string, data: UpdateGroupPostInput
   const allowed = await canEditGroup(post.group_id);
   if (!allowed) return { error: 'No permission to edit this post' };
 
+  const body = validateBodyOrError(parsed.data.contentJson);
+  if ('error' in body) return body;
+
   const title = parsed.data.title;
-  const content = parsed.data.content;
 
   const { data: updatedPost, error } = await supabase
     .from('group_posts')
     .update({
       title,
-      content,
+      content: body.plain,
+      content_json: body.doc as unknown as Json,
       updated_at: new Date().toISOString(),
     })
     .eq('id', postId)
