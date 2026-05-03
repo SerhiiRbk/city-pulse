@@ -62,6 +62,7 @@ export default async function GroupsPage({
     city: filters.city,
     interests: interestIds.length > 0 ? interestIds : undefined,
     languages: languageCodes.length > 0 ? languageCodes : undefined,
+    q: filters.q,
     limit: 24,
   });
 

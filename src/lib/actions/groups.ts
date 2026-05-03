@@ -375,6 +375,11 @@ export async function getGroups(
     city_id?: string;
     interests?: string[];
     languages?: string[];
+    /**
+     * Free-text query, applied to `groups.search_tsv` (name +
+     * description + city). Empty / undefined skips the filter.
+     */
+    q?: string;
     limit?: number;
     offset?: number;
   } = {},
@@ -413,6 +418,13 @@ export async function getGroups(
 
   if (filters.languages && filters.languages.length > 0) {
     query = query.overlaps('languages', filters.languages);
+  }
+
+  if (filters.q && filters.q.trim().length > 0) {
+    query = query.textSearch('search_tsv', filters.q.trim(), {
+      type: 'websearch',
+      config: 'simple',
+    });
   }
 
   const { data } = await query.range(offset, offset + limit - 1);

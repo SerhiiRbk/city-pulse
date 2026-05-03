@@ -27,6 +27,7 @@ import { useState } from 'react';
 import { cn, countryCodeToFlag } from '@/lib/utils';
 import { COUNTRIES, LANGUAGES } from '@/lib/constants';
 import { CityPicker } from '@/components/ui/city-picker';
+import { SAFETY_TAGS, type SafetyTag } from '@/types/database';
 import type { Interest, InterestCategory, City } from '@/types/database';
 
 interface EventsFiltersProps {
@@ -43,6 +44,9 @@ interface EventsFiltersProps {
     is_free?: string;
     is_online?: string;
     when?: string;
+    q?: string;
+    /** Comma-separated list of safety_tag slugs from the URL. */
+    safety?: string;
   };
 }
 
@@ -85,6 +89,7 @@ function getDateRange(when: string): { from: string; to?: string } {
 
 export function EventsFilters({ interests, categories, currentFilters }: EventsFiltersProps) {
   const t = useTranslations('events.filters');
+  const tSafety = useTranslations('events.safety');
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -94,12 +99,18 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [rangeFrom, setRangeFrom] = useState(currentFilters.when === 'range' ? (currentFilters.date_from || '') : '');
   const [rangeTo, setRangeTo] = useState(currentFilters.when === 'range' ? (currentFilters.date_to || '') : '');
+  const [searchQuery, setSearchQuery] = useState(currentFilters.q ?? '');
 
   const selectedCategories = currentFilters.category
     ? currentFilters.category.split(',').filter(Boolean)
     : [];
   const selectedLanguages = currentFilters.language
     ? currentFilters.language.split(',').filter(Boolean)
+    : [];
+  const selectedSafetyTags: SafetyTag[] = currentFilters.safety
+    ? (currentFilters.safety
+        .split(',')
+        .filter((tag): tag is SafetyTag => (SAFETY_TAGS as readonly string[]).includes(tag)))
     : [];
 
   function getInterestLabel(interest: Interest): string {
@@ -129,6 +140,13 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
       ? selectedCategories.filter((c) => c !== id)
       : [...selectedCategories, id];
     applyFilter('category', next.length > 0 ? next.join(',') : undefined);
+  }
+
+  function toggleSafetyTag(tag: SafetyTag) {
+    const next = selectedSafetyTags.includes(tag)
+      ? selectedSafetyTags.filter((t) => t !== tag)
+      : [...selectedSafetyTags, tag];
+    applyFilter('safety', next.length > 0 ? next.join(',') : undefined);
   }
 
   function getLanguageLabel(code: string) {
@@ -178,6 +196,11 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
     });
   }
 
+  function applyTextSearch() {
+    const trimmed = searchQuery.trim();
+    applyFilter('q', trimmed.length > 0 ? trimmed : undefined);
+  }
+
   const hasFilters = Object.values(currentFilters).some(Boolean);
 
   const uncategorizedCatId = categories.find((c) => c.slug === 'other')?.id;
@@ -220,6 +243,39 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
 
   return (
     <div className="space-y-3 sm:space-y-4">
+      <div className="relative">
+        <Search className="text-muted-foreground pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+        <Input
+          type="search"
+          inputMode="search"
+          enterKeyHint="search"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              applyTextSearch();
+            }
+          }}
+          onBlur={applyTextSearch}
+          placeholder={t('searchPlaceholder')}
+          aria-label={t('searchPlaceholder')}
+          className="bg-background/95 h-10 rounded-xl pl-9 pr-9 text-sm shadow-sm sm:h-11"
+        />
+        {searchQuery.length > 0 && (
+          <button
+            type="button"
+            onClick={() => {
+              setSearchQuery('');
+              applyFilter('q', undefined);
+            }}
+            aria-label={t('clearSearch')}
+            className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
       <div className="-mx-1 overflow-x-auto px-1 pb-1">
         <div className="flex min-w-max gap-2">
         {[
@@ -246,6 +302,35 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
             </button>
           );
         })}
+        </div>
+      </div>
+
+      {/*
+       * Safety chips: comma-separated `safety` URL param. Treated as
+       * AND-filter (event must have ALL selected tags). Vocabulary
+       * mirrors `SAFETY_TAGS` in @/types/database.
+       */}
+      <div className="-mx-1 overflow-x-auto px-1">
+        <div className="flex min-w-max gap-2">
+          {SAFETY_TAGS.map((tag) => {
+            const active = selectedSafetyTags.includes(tag);
+            return (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => toggleSafetyTag(tag)}
+                className={cn(
+                  'shrink-0 rounded-full border px-3 py-1 text-[12px] font-medium shadow-sm transition-colors sm:text-[13px]',
+                  active
+                    ? 'border-primary/30 bg-primary text-primary-foreground'
+                    : 'border-border/70 bg-background/90 text-foreground hover:bg-muted/70',
+                )}
+                aria-pressed={active}
+              >
+                {tSafety(`tag.${tag}`)}
+              </button>
+            );
+          })}
         </div>
       </div>
 

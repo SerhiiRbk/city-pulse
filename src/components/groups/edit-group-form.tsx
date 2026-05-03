@@ -200,7 +200,7 @@ export function EditGroupForm({
         interest_ids: selectedInterests,
       });
 
-      if (result.error) {
+      if ('error' in result) {
         toast.error(result.error);
         setIsLoading(false);
         return;

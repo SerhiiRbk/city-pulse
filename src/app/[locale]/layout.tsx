@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/sonner';
 import { HeaderAuthSlot } from '@/components/layout/header-slot';
+import { OnboardingGuard } from '@/components/auth/onboarding-guard';
 import { Footer } from '@/components/layout/footer';
 import { routing } from '@/i18n/routing';
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from '@/lib/constants';
@@ -90,6 +91,9 @@ export default async function LocaleLayout({
                   }
                 >
                   <HeaderAuthSlot />
+                </Suspense>
+                <Suspense fallback={null}>
+                  <OnboardingGuard />
                 </Suspense>
                 <main className="flex-1">
                   <Suspense fallback={null}>{children}</Suspense>

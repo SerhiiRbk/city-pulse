@@ -312,6 +312,19 @@ export async function getEvents(filters: {
    * city listings can do so without losing access to community gatherings.
    */
   is_system?: boolean;
+  /**
+   * Free-text query. Matched against `events.search_tsv` via the
+   * Postgres `@@` operator, so it covers title, description, and
+   * city. We use the 'simple' tsconfig (multilingual, no stemming)
+   * with prefix matching ("foo:*"), so partial words match too.
+   */
+  q?: string;
+  /**
+   * Filter to events whose `safety_tags` array contains ALL of the
+   * provided values. Used by the "show me only sober / women-only"
+   * style chips in the events filter bar.
+   */
+  safety_tags?: string[];
   limit?: number;
   offset?: number;
   /**
@@ -361,6 +374,24 @@ export async function getEvents(filters: {
   if (filters.is_free !== undefined) query = query.eq('is_free', filters.is_free);
   if (filters.is_online !== undefined) query = query.eq('is_online', filters.is_online);
   if (filters.is_system !== undefined) query = query.eq('is_system', filters.is_system);
+  if (filters.safety_tags && filters.safety_tags.length > 0) {
+    // `contains` -> `safety_tags @> ARRAY[...]` so we keep an event
+    // only if it advertises EVERY requested tag. The GIN index on
+    // safety_tags makes this O(log n).
+    query = query.contains('safety_tags', filters.safety_tags);
+  }
+  if (filters.q && filters.q.trim().length > 0) {
+    // We rely on the GIN index on `search_tsv`; supabase-js exposes
+    // textSearch with the matching `simple` config. Prefix matching
+    // is achieved by the Postgres helper but supabase-js doesn't let
+    // us call our function directly, so we lean on its built-in
+    // `websearch` type which handles partial words and quoted
+    // phrases with reasonable defaults.
+    query = query.textSearch('search_tsv', filters.q.trim(), {
+      type: 'websearch',
+      config: 'simple',
+    });
+  }
 
   const sort: EventSort = filters.sort ?? 'soon';
   switch (sort) {
@@ -555,17 +586,26 @@ export async function getUserAttendance(eventId: string): Promise<{
   status: AttendanceStatus;
   going: boolean;
   favorited: boolean;
+  isVisible: boolean;
+  /**
+   * True iff the cron has prompted this user for re-confirmation
+   * and they have not yet confirmed. Drives the banner CTA on the
+   * event detail page.
+   */
+  needsReconfirm: boolean;
 }> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { status: 'none', going: false, favorited: false };
+  if (!user) {
+    return { status: 'none', going: false, favorited: false, isVisible: true, needsReconfirm: false };
+  }
 
   const [{ data: attendance }, { data: favorite }] = await Promise.all([
     supabase
       .from('event_attendees')
-      .select('status')
+      .select('status, is_visible, reconfirm_sent_at, confirmed')
       .eq('event_id', eventId)
       .eq('user_id', user.id)
       .single(),
@@ -583,7 +623,72 @@ export async function getUserAttendance(eventId: string): Promise<{
     status,
     going: status === 'going',
     favorited: !!favorite,
+    isVisible: attendance?.is_visible ?? true,
+    needsReconfirm:
+      status === 'going' &&
+      !!attendance?.reconfirm_sent_at &&
+      !attendance?.confirmed,
   };
+}
+
+/**
+ * Re-confirm the current user's `going` RSVP.
+ *
+ * The 24h cron pings users with a `rsvp_reconfirm_24h` notification.
+ * Tapping the inline CTA on the event detail page calls this action,
+ * which flips `confirmed = true, confirmed_at = now()`. Confirmed
+ * rows are immune to the auto-release pass; everyone else has their
+ * RSVP cancelled so the waitlist can promote.
+ */
+export async function reconfirmAttendance(
+  eventId: string,
+): Promise<{ error?: string; confirmed?: boolean }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const { data, error } = await supabase
+    .from('event_attendees')
+    .update({ confirmed: true, confirmed_at: new Date().toISOString() })
+    .eq('event_id', eventId)
+    .eq('user_id', user.id)
+    .eq('status', 'going')
+    .select('confirmed')
+    .single();
+
+  if (error) return { error: error.message };
+  return { confirmed: !!data?.confirmed };
+}
+
+/**
+ * Toggle whether the current user's RSVP is shown in the public roster.
+ * Hidden RSVPs still consume capacity (they remain in the counts), so
+ * this is purely a display-level privacy switch — useful for sensitive
+ * events (mental health, dating, women-only spaces) where attendance
+ * itself can be private.
+ */
+export async function setRsvpVisibility(
+  eventId: string,
+  isVisible: boolean,
+): Promise<{ error?: string; isVisible?: boolean }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: 'Not authenticated' };
+
+  const { data, error } = await supabase
+    .from('event_attendees')
+    .update({ is_visible: isVisible })
+    .eq('event_id', eventId)
+    .eq('user_id', user.id)
+    .select('is_visible')
+    .single();
+
+  if (error) return { error: error.message };
+  return { isVisible: data?.is_visible ?? isVisible };
 }
 
 export async function getUserEventStatuses(eventIds: string[]): Promise<{
@@ -638,11 +743,15 @@ export async function getUserEventStatuses(eventIds: string[]): Promise<{
 
 export async function getEventAttendees(eventId: string) {
   const supabase = await createClient();
+  // Public roster: hide rows that opted into private RSVP.
+  // Counts elsewhere (going_count etc.) still reflect those rows;
+  // only the avatar/name list is filtered.
   const { data } = await supabase
     .from('event_attendees')
     .select('user_id, status, profiles(display_name, avatar_url)')
     .eq('event_id', eventId)
-    .eq('status', 'going');
+    .eq('status', 'going')
+    .eq('is_visible', true);
   return data || [];
 }
 

@@ -202,6 +202,8 @@
     "title": "Akce",
     "noEvents": "Žádné akce nenalezeny",
     "filters": {
+      "searchPlaceholder": "Hledat akce, místa, témata…",
+      "clearSearch": "Vymazat",
       "country": "Země",
       "city": "Město",
       "language": "Jazyk",
@@ -552,6 +554,29 @@
       "noModerators": "Zatím nebyli přidáni žádní moderátoři",
       "moderatorAdded": "Moderátor přidán",
       "moderatorRemoved": "Moderátor odebrán"
+    },
+    "safety": {
+      "inputLabel": "Cílová skupina",
+      "inputHint": "Pomozte nováčkům vědět, co očekávat — vyberte štítky, které platí.",
+      "rsvpVisibilityLabel": "Zobrazovat mě ve veřejném seznamu účastníků",
+      "rsvpVisibilityHelper": "Když je vypnuto, vaše jméno a avatar zůstávají soukromé. Vaše RSVP se i tak započítává do počtu účastníků.",
+      "rsvpHidden": "Účastníte se v soukromí",
+      "rsvpHiddenSaved": "RSVP označeno jako soukromé",
+      "rsvpVisibleSaved": "RSVP označeno jako veřejné",
+      "filterTitle": "Pro koho",
+      "tag": {
+        "women_only": "Jen pro ženy",
+        "adults_only": "18+",
+        "lgbtq_friendly": "LGBTQ+ friendly",
+        "sober": "Bez alkoholu",
+        "beginner_friendly": "Pro začátečníky"
+      }
+    },
+    "reconfirm": {
+      "title": "Půjdete zítra?",
+      "body": "Pokud nepotvrdíte, uvolníme místo pro čekací listinu. Stačí jeden klik.",
+      "cta": "Ano, jdu",
+      "confirmed": "Hotovo — místo je vaše"
     }
   },
   "groups": {
@@ -569,6 +594,8 @@
     "cueWelcoming": "Přátelská komunita",
     "cueGrowing": "Rostoucí komunita",
     "filters": {
+      "searchPlaceholder": "Hledat skupiny, témata, místa…",
+      "clearSearch": "Vymazat hledání",
       "country": "Země",
       "city": "Město",
       "language": "Jazyk",
@@ -980,6 +1007,22 @@
     "copyright": "© {year} City-Pulse. Všechna práva vyhrazena."
   },
   "admin": {
+    "funnel": {
+      "topByViews": "Nejlepší události podle zhlédnutí (30 dní)",
+      "topByViewsHelper": "Porovnejte dosah (zhlédnutí) s konverzí (RSVP) a účastí — najdete tak stránky, které potřebují silnější CTA nebo připomínku.",
+      "event": "Událost",
+      "views30d": "Zhlédnutí 30d",
+      "viewsHint": "Unikátní denní zhlédnutí (bez započtení obnovy stránky).",
+      "uniqueViewers": "{count, plural, one {# divák} few {# diváci} many {# diváků} other {# diváků}}",
+      "rsvps": "RSVP",
+      "attended": "Přišli",
+      "noShow": "{count, plural, one {# nepřišel} few {# nepřišli} many {# nepřišlo} other {# nepřišlo}}",
+      "rsvpRate": "RSVP %",
+      "rsvpRateHint": "Podíl unikátních diváků, kteří klikli „Jdu“.",
+      "attendedRate": "Účast %",
+      "attendedRateHint": "Podíl RSVP označených jako „přišli“.",
+      "empty": "Žádné publikované události — trychtýř se vyplní po prvních zhlédnutích."
+    },
     "systemEvents": {
       "dashboard": {
         "eyebrow": "Redakce",
@@ -1109,6 +1152,93 @@
             "description": "Čtení, autogramiáda a krátké Q&A s autorem."
           }
         }
+      }
+    }
+  },
+  "onboarding": {
+    "title": "Vítejte v City-Pulse",
+    "titleNamed": "Vítej, {name}!",
+    "subtitle": "Nastavme feed podle vašeho města, zájmů a jazyků — zabere to méně než minutu.",
+    "cityCountryLabel": "Vaše město",
+    "countryPlaceholder": "Vyberte zemi",
+    "cityPlaceholder": "Najděte město",
+    "cityHelper": "Akce a skupiny v tomto městě budou priority. Můžete změnit kdykoli v profilu.",
+    "cityRequired": "Vyberte zemi a město pro pokračování.",
+    "interestsHelper": "Vyberte {min}–{max} zájmů — přesnější výběr = lepší doporučení.",
+    "interestsMin": "Vyberte alespoň {min} zájmy.",
+    "uncategorized": "Další",
+    "languagesHelper": "V jakých jazycích se cítíte na akcích pohodlně? Vyberte všechny.",
+    "languagesMin": "Vyberte alespoň jeden jazyk.",
+    "finish": "Začít",
+    "done": "Hotovo — vítejte!"
+  },
+  "friends": {
+    "goingCue": "{count, plural, one {# známý jde} few {# známých jde} many {# známých jde} other {# známých jde}}",
+    "interestedCue": "{count, plural, one {# známého zaujalo} few {# známých zaujalo} many {# známých zaujalo} other {# známých zaujalo}}",
+    "noFollowingYet": "Sledujte organizátory, abyste viděli, kam kdo jde."
+  },
+  "safety": {
+    "tagWomenOnly": "Pouze pro ženy",
+    "tagAdults": "18+",
+    "tagFamily": "Vhodné pro rodiny",
+    "tagBeginners": "Vítáni začátečníci",
+    "tagSober": "Bez alkoholu",
+    "rsvpVisibilityLabel": "Viditelnost RSVP",
+    "rsvpVisibilityPublic": "Všichni vidí, že jdu",
+    "rsvpVisibilityPrivate": "Vidí to jen organizátor",
+    "rsvpVisibilityHelper": "Soukromé RSVP se počítají do účastníků, ale neobjeví se ve veřejném seznamu."
+  },
+  "digest": {
+    "subjectLine": "{city}: {count} nových akcí tento týden",
+    "preheader": "Vybráno podle lidí, které sledujete, a vašich zájmů.",
+    "intro": "Ahoj {name}, tady je co se chystá.",
+    "ctaUnsubscribe": "Nastavení e-mailů",
+    "settingTitle": "Týdenní souhrn",
+    "settingDescription": "Dostávejte personalizovaný e-mail každé pondělí s akcemi podle vašich zájmů.",
+    "settingToggle": "Odebírat týdenní souhrn"
+  },
+  "recurring": {
+    "frequencyLabel": "Opakování",
+    "helper": "Vytvoříme samostatnou událost pro každý termín (kapacita, RSVP i recenze se počítají pro každý termín zvlášť).",
+    "noneLabel": "Neopakuje se",
+    "weeklyLabel": "Každý týden",
+    "everyTwoWeeksLabel": "Každé 2 týdny",
+    "monthlyLabel": "Každý měsíc",
+    "untilLabel": "Do",
+    "occurrencesLabel": "Opakování",
+    "editScopeTitle": "Použít změny na",
+    "editScopeThis": "Pouze tuto událost",
+    "editScopeFuture": "Tuto a budoucí",
+    "editScopeAll": "Všechny v sérii",
+    "seriesBadge": "Série"
+  },
+  "unsubscribe": {
+    "successTitle": "Odhlášeno",
+    "successBody": "Týdenní souhrn vám už nepošleme. Znovu se můžete přihlásit kdykoli v nastavení.",
+    "errorTitle": "Odkaz se nepodařilo zpracovat",
+    "errorBody": "Odkaz mohl vypršet nebo už byl použit. Pro úpravu nastavení se prosím přihlaste.",
+    "emailLine": "Aktualizováno pro {email}",
+    "manageCta": "Nastavení",
+    "homeCta": "Zpět na události"
+  },
+  "settings": {
+    "email": {
+      "title": "Nastavení e-mailů",
+      "subtitle": "Vyberte si, jaké zprávy vám posíláme. Můžete to kdykoli změnit.",
+      "cardTitle": "Oznámení",
+      "emailLabel": "Adresát: {email}",
+      "digestLabel": "Týdenní souhrn akcí",
+      "digestHelper": "Krátký osobní e-mail každé pondělí s akcemi podle vašeho města, zájmů a jazyků.",
+      "toastSubscribed": "Přihlášeno k odběru souhrnu",
+      "toastUnsubscribed": "Souhrn vám už nepošleme",
+      "push": {
+        "label": "Push-oznámení v prohlížeči",
+        "helper": "Okamžité upozornění na potvrzení RSVP, odpovědi a připomínky — i když je karta zavřená.",
+        "unsupportedHelper": "Váš prohlížeč push nepodporuje nebo nejsou pro toto prostředí nastaveny.",
+        "permissionDenied": "Povolení k oznámením je zablokováno. Povolte je v nastavení webu.",
+        "subscribeError": "Push se nepodařilo zapnout. Zkuste to znovu.",
+        "subscribeSuccess": "Push-oznámení zapnuto",
+        "unsubscribeSuccess": "Push-oznámení vypnuto"
       }
     }
   }

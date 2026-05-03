@@ -1,10 +1,14 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { getEvent, getUserAttendance, getEventAttendees, getEventRoster, getComments, canEditEvent } from '@/lib/actions/events';
+import { recordEventView } from '@/lib/actions/event-funnel';
 import { getGroupPostByEventId } from '@/lib/actions/group-posts';
 import { Button } from '@/components/ui/button';
 import { getUser } from '@/lib/actions/auth';
 import { EventActions } from '@/components/events/event-actions';
+import { RsvpVisibilityToggle } from '@/components/events/rsvp-visibility-toggle';
+import { ReconfirmBanner } from '@/components/events/reconfirm-banner';
+import { SafetyTagBadges } from '@/components/events/safety-tag-badges';
 import { SystemEventActions } from '@/components/events/system-event-actions';
 import { SystemEventMeetups } from '@/components/events/system-event-meetups';
 import { getMeetupCountForSystemEvent } from '@/lib/actions/meetups';
@@ -28,6 +32,9 @@ import { EventPhotoGallery } from '@/components/events/event-photo-gallery';
 import { generateEventJsonLd } from '@/lib/json-ld';
 import { RichTextView } from '@/components/ui/rich-text-view';
 import type { RichTextDoc } from '@/lib/rich-text/types';
+import { getFriendsGoing } from '@/lib/actions/friends-going';
+import { FriendsGoingCue } from '@/components/events/friends-going-cue';
+import { isFeatureEnabled } from '@/lib/feature-flags';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Locale } from '@/i18n/config';
@@ -59,17 +66,35 @@ export default async function EventDetailPage({ params }: Props) {
 
   const t = await getTranslations('events.detail');
   const tProfile = await getTranslations('profile');
+  const tRecurring = await getTranslations('recurring');
   const event = await getEvent(id);
 
   if (!event) notFound();
+
+  // Fire-and-forget: record a de-duped view in the funnel. The
+  // helper swallows errors so analytics flakiness can't break the
+  // page render.
+  void recordEventView(id);
 
   const user = await getUser();
   const isAuthenticated = !!user;
   const isOrganizer = user?.id === event.organizer_id;
   const canEdit = isAuthenticated ? await canEditEvent(id) : false;
-  const { going, favorited, status: attendanceStatus } = isAuthenticated
+  const {
+    going,
+    favorited,
+    status: attendanceStatus,
+    isVisible: rsvpIsVisible,
+    needsReconfirm,
+  } = isAuthenticated
     ? await getUserAttendance(id)
-    : { going: false, favorited: false, status: 'none' as const };
+    : {
+        going: false,
+        favorited: false,
+        status: 'none' as const,
+        isVisible: true,
+        needsReconfirm: false,
+      };
   const attendees = await getEventAttendees(id);
   const comments = await getComments(id);
   const recap = event.group_id ? await getGroupPostByEventId(id) : null;
@@ -86,6 +111,11 @@ export default async function EventDetailPage({ params }: Props) {
 
   const isPastEvent = new Date(event.starts_at).getTime() < nowMs();
   const canManageAttendance = canEdit && isPastEvent;
+  // Friends-going cue (gated by `friends_going` flag).
+  const friendsGoing =
+    user && (await isFeatureEnabled('friends_going', user.id))
+      ? await getFriendsGoing(id, 6)
+      : [];
   const roster = canManageAttendance ? await getEventRoster(id) : [];
   const rosterEntries: RosterEntry[] = roster.map((row) => {
     const profile = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
@@ -168,7 +198,17 @@ export default async function EventDetailPage({ params }: Props) {
               {languageLabels.map((language: string) => (
                 <Badge key={language} variant="outline">{language}</Badge>
               ))}
+              {event.series_id && (
+                <Badge variant="secondary" className="bg-primary/5 text-primary">
+                  {event.series_position
+                    ? `${tRecurring('seriesBadge')} · ${event.series_position}`
+                    : tRecurring('seriesBadge')}
+                </Badge>
+              )}
             </div>
+            {event.safety_tags && event.safety_tags.length > 0 && (
+              <SafetyTagBadges tags={event.safety_tags} className="mb-3" />
+            )}
             <h1 className="text-2xl font-bold tracking-tight sm:text-4xl">{event.title}</h1>
 
             {event.status === 'cancelled' && (
@@ -215,6 +255,9 @@ export default async function EventDetailPage({ params }: Props) {
                 </span>
               </div>
             </div>
+            {friendsGoing.length > 0 && (
+              <FriendsGoingCue friends={friendsGoing} variant="detail" className="mt-3" />
+            )}
           </div>
 
           <Separator />
@@ -388,6 +431,15 @@ export default async function EventDetailPage({ params }: Props) {
                     isAuthenticated={isAuthenticated}
                     isFull={isFull}
                   />
+                  {isAuthenticated && (attendanceStatus === 'going' || attendanceStatus === 'waitlist') && (
+                    <RsvpVisibilityToggle
+                      eventId={id}
+                      initialIsVisible={rsvpIsVisible}
+                    />
+                  )}
+                  {isAuthenticated && needsReconfirm && (
+                    <ReconfirmBanner eventId={id} initiallyOpen />
+                  )}
                   <div className="flex flex-col gap-2 sm:flex-row">
                     <ShareButton title={event.title} className="flex-1 rounded-xl" />
                     <AddToCalendarButton

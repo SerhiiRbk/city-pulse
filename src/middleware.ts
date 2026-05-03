@@ -22,6 +22,11 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.redirect(resolveUrl);
   }
 
+  // Make the current pathname readable by Server Components via
+  // `headers()`, which lets the OnboardingGuard component decide
+  // whether to redirect without an extra DB roundtrip.
+  request.headers.set('x-pathname', pathname);
+
   const intlResponse = intlMiddleware(request);
 
   const supabaseResponse = await updateSession(request);
@@ -33,6 +38,7 @@ export default async function middleware(request: NextRequest) {
     intlResponse.cookies.set(cookie.name, cookie.value);
   });
 
+  intlResponse.headers.set('x-pathname', pathname);
   return intlResponse;
 }
 

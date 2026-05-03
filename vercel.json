@@ -11,6 +11,18 @@
     {
       "path": "/api/cron/event-reminders",
       "schedule": "30 * * * *"
+    },
+    {
+      "path": "/api/cron/rsvp-reconfirm",
+      "schedule": "45 * * * *"
+    },
+    {
+      "path": "/api/cron/rsvp-auto-release",
+      "schedule": "55 * * * *"
+    },
+    {
+      "path": "/api/cron/weekly-digest",
+      "schedule": "0 8 * * 1"
     }
   ]
 }

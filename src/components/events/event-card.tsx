@@ -16,6 +16,9 @@ import {
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { COUNTRIES, LANGUAGES } from '@/lib/constants';
+import { FriendsGoingCue } from '@/components/events/friends-going-cue';
+import type { FriendGoing } from '@/lib/actions/friends-going';
+import { SafetyTagBadges } from '@/components/events/safety-tag-badges';
 
 interface EventCardProps {
   event: {
@@ -40,12 +43,19 @@ interface EventCardProps {
     languages?: string[];
     category_slug: string | null;
     category_translations: Record<string, string> | null;
+    safety_tags?: string[] | null;
   };
   isGoing?: boolean;
   isWaitlisted?: boolean;
   isInterested?: boolean;
   isFavorited?: boolean;
   isAuthenticated?: boolean;
+  /**
+   * People the viewer follows who are going / interested in this
+   * event. Pre-resolved by the parent so the card stays a pure
+   * presentational client component (no fetching at render time).
+   */
+  friendsGoing?: FriendGoing[];
 }
 
 export function EventCard({
@@ -55,6 +65,7 @@ export function EventCard({
   isInterested: initialInterested,
   isFavorited: initialFav,
   isAuthenticated,
+  friendsGoing,
 }: EventCardProps) {
   const t = useTranslations('events.card');
   const tDetail = useTranslations('events.detail');
@@ -317,8 +328,8 @@ export function EventCard({
               )}
             </span>
           </div>
-          {languageLabels.length > 0 && (
-            <div className="mb-3 flex flex-wrap gap-1.5">
+          {(languageLabels.length > 0 || (event.safety_tags && event.safety_tags.length > 0)) && (
+            <div className="mb-3 flex flex-wrap items-center gap-1.5">
               {languageLabels.map((language) => (
                 <Badge
                   key={language}
@@ -328,11 +339,16 @@ export function EventCard({
                   {language}
                 </Badge>
               ))}
+              <SafetyTagBadges tags={event.safety_tags} compact max={3} />
             </div>
           )}
           {/* <p className="mb-4 text-sm text-muted-foreground">
             {goingCount > 0 ? t('alreadyIn', { count: goingCount }) : t('firstToJoin')}
           </p> */}
+
+          {friendsGoing && friendsGoing.length > 0 && (
+            <FriendsGoingCue friends={friendsGoing} variant="card" className="mb-2" />
+          )}
 
           {/*
            * Bottom CTA: community events use the going/waitlist join button;

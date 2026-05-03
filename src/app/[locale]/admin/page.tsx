@@ -1,10 +1,12 @@
-import { setRequestLocale } from 'next-intl/server';
+import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { getDashboardStats } from '@/lib/actions/analytics';
+import { listEventFunnels } from '@/lib/actions/event-funnel';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Link } from '@/i18n/navigation';
 import { Users, CalendarDays, Layers, TrendingUp, Flag, MapPin } from 'lucide-react';
+import { EventFunnelCard } from '@/components/admin/event-funnel-card';
 
 export default async function AdminDashboardPage({
   params,
@@ -16,6 +18,11 @@ export default async function AdminDashboardPage({
 
   const stats = await getDashboardStats();
   if (!stats) return <p>Access denied</p>;
+
+  // Top 10 events by 30d views — surfaces both viral hits *and*
+  // viral hits that aren't converting (low view→RSVP rate).
+  const funnelRows = await listEventFunnels({ status: 'published', limit: 10 });
+  const tFunnel = await getTranslations('admin.funnel');
 
   const cards = [
     { title: 'Total Users', value: stats.totalUsers, icon: Users, color: 'text-blue-500' },
@@ -110,6 +117,12 @@ export default async function AdminDashboardPage({
           </CardContent>
         </Card>
       </div>
+
+      <EventFunnelCard
+        rows={funnelRows}
+        title={tFunnel('topByViews')}
+        subtitle={tFunnel('topByViewsHelper')}
+      />
 
       {/* Pending Reports */}
       {stats.pendingReports.length > 0 && (

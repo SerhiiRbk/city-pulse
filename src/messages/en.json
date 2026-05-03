@@ -202,6 +202,8 @@
     "title": "Events",
     "noEvents": "No events found",
     "filters": {
+      "searchPlaceholder": "Search events, places, themes…",
+      "clearSearch": "Clear search",
       "country": "Country",
       "city": "City",
       "language": "Language",
@@ -552,6 +554,29 @@
       "noModerators": "No moderators added yet",
       "moderatorAdded": "Moderator added",
       "moderatorRemoved": "Moderator removed"
+    },
+    "safety": {
+      "inputLabel": "Audience guardrails",
+      "inputHint": "Help newcomers know what to expect — pick any tags that apply.",
+      "rsvpVisibilityLabel": "Show me on the public attendee list",
+      "rsvpVisibilityHelper": "When off, your name and avatar stay private. Your RSVP still counts toward the headcount.",
+      "rsvpHidden": "You're attending privately",
+      "rsvpHiddenSaved": "RSVP made private",
+      "rsvpVisibleSaved": "RSVP made public",
+      "filterTitle": "Audience",
+      "tag": {
+        "women_only": "Women only",
+        "adults_only": "18+",
+        "lgbtq_friendly": "LGBTQ+ friendly",
+        "sober": "Alcohol-free",
+        "beginner_friendly": "Beginner friendly"
+      }
+    },
+    "reconfirm": {
+      "title": "Still planning to come tomorrow?",
+      "body": "We free up your spot for the waitlist if we don't hear back. One tap is enough.",
+      "cta": "Yes, I'm in",
+      "confirmed": "Thanks — your spot is locked in"
     }
   },
   "groups": {
@@ -569,6 +594,8 @@
     "cueWelcoming": "Welcoming community",
     "cueGrowing": "Growing community",
     "filters": {
+      "searchPlaceholder": "Search groups, themes, places…",
+      "clearSearch": "Clear search",
       "country": "Country",
       "city": "City",
       "language": "Language",
@@ -980,6 +1007,22 @@
     "copyright": "© {year} City-Pulse. All rights reserved."
   },
   "admin": {
+    "funnel": {
+      "topByViews": "Top events by 30-day views",
+      "topByViewsHelper": "Compare reach (views) against conversion (RSVPs) and follow-through (attended) to spot pages that need a stronger CTA or reminder.",
+      "event": "Event",
+      "views30d": "Views 30d",
+      "viewsHint": "Distinct daily views (refresh-spam de-duped).",
+      "uniqueViewers": "{count, plural, one {# viewer} other {# viewers}}",
+      "rsvps": "RSVPs",
+      "attended": "Attended",
+      "noShow": "{count, plural, one {# no-show} other {# no-shows}}",
+      "rsvpRate": "RSVP %",
+      "rsvpRateHint": "Share of unique viewers who clicked Going.",
+      "attendedRate": "Show-up %",
+      "attendedRateHint": "Share of RSVPs who were marked attended.",
+      "empty": "No published events yet — funnel will populate after first views land."
+    },
     "systemEvents": {
       "dashboard": {
         "eyebrow": "Editorial",
@@ -1109,6 +1152,93 @@
             "description": "Reading + signing + short Q&A with the author."
           }
         }
+      }
+    }
+  },
+  "onboarding": {
+    "title": "Welcome to City-Pulse",
+    "titleNamed": "Welcome, {name}!",
+    "subtitle": "Let's tune the feed to your city, your interests, and your languages — takes under a minute.",
+    "cityCountryLabel": "Your city",
+    "countryPlaceholder": "Pick a country",
+    "cityPlaceholder": "Search city",
+    "cityHelper": "We'll surface events and groups in this city first. You can change it later in your profile.",
+    "cityRequired": "Pick a country and a city to continue.",
+    "interestsHelper": "Pick {min} to {max} interests — the more accurate, the better the recommendations.",
+    "interestsMin": "Pick at least {min} interests.",
+    "uncategorized": "More",
+    "languagesHelper": "Which languages do you speak comfortably at events? Pick all that apply.",
+    "languagesMin": "Pick at least one language.",
+    "finish": "Start exploring",
+    "done": "All set — welcome aboard!"
+  },
+  "friends": {
+    "goingCue": "{count, plural, one {# person you follow is going} other {# people you follow are going}}",
+    "interestedCue": "{count, plural, one {# person you follow is interested} other {# people you follow are interested}}",
+    "noFollowingYet": "Follow a few organizers to see who's going to what."
+  },
+  "safety": {
+    "tagWomenOnly": "Women only",
+    "tagAdults": "18+",
+    "tagFamily": "Family-friendly",
+    "tagBeginners": "Beginners welcome",
+    "tagSober": "Alcohol-free",
+    "rsvpVisibilityLabel": "RSVP visibility",
+    "rsvpVisibilityPublic": "Anyone can see I'm going",
+    "rsvpVisibilityPrivate": "Only the organizer can see I'm going",
+    "rsvpVisibilityHelper": "Private RSVPs still count toward the event's headcount but never appear in the public roster."
+  },
+  "digest": {
+    "subjectLine": "{city}: {count} new events this week",
+    "preheader": "Hand-picked from the people you follow and your interests.",
+    "intro": "Hi {name}, here's what's coming up.",
+    "ctaUnsubscribe": "Manage email preferences",
+    "settingTitle": "Weekly digest",
+    "settingDescription": "Get a personalised email every Monday morning with events that match your interests.",
+    "settingToggle": "Subscribe to weekly digest"
+  },
+  "recurring": {
+    "frequencyLabel": "Repeats",
+    "helper": "We'll create one event per occurrence (capacity, RSVPs, and reviews are tracked per date).",
+    "noneLabel": "Does not repeat",
+    "weeklyLabel": "Weekly",
+    "everyTwoWeeksLabel": "Every 2 weeks",
+    "monthlyLabel": "Monthly",
+    "untilLabel": "Until",
+    "occurrencesLabel": "Occurrences",
+    "editScopeTitle": "Apply changes to",
+    "editScopeThis": "Only this occurrence",
+    "editScopeFuture": "This and future",
+    "editScopeAll": "All occurrences",
+    "seriesBadge": "Series"
+  },
+  "unsubscribe": {
+    "successTitle": "You're unsubscribed",
+    "successBody": "You won't receive the weekly digest anymore. You can resubscribe any time from your email preferences.",
+    "errorTitle": "We couldn't process that link",
+    "errorBody": "The unsubscribe link may have expired or been used already. Sign in to manage your preferences.",
+    "emailLine": "Updated for {email}",
+    "manageCta": "Manage preferences",
+    "homeCta": "Back to events"
+  },
+  "settings": {
+    "email": {
+      "title": "Email preferences",
+      "subtitle": "Choose which messages we send you. You can change these any time.",
+      "cardTitle": "Notifications",
+      "emailLabel": "Sending to: {email}",
+      "digestLabel": "Weekly events digest",
+      "digestHelper": "A short, personalised email every Monday with events matching your city, interests, and languages.",
+      "toastSubscribed": "Subscribed to the weekly digest",
+      "toastUnsubscribed": "You won't receive the digest anymore",
+      "push": {
+        "label": "Browser push notifications",
+        "helper": "Get instant alerts for RSVP confirmations, replies, and event reminders — even when the tab is closed.",
+        "unsupportedHelper": "Your browser doesn't support push notifications, or push isn't configured for this deployment.",
+        "permissionDenied": "Notification permission was blocked. Enable it from your browser's site settings.",
+        "subscribeError": "Couldn't enable push notifications. Try again in a moment.",
+        "subscribeSuccess": "Push notifications enabled",
+        "unsubscribeSuccess": "Push notifications disabled"
       }
     }
   }

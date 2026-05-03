@@ -2,6 +2,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getEvents, getUserEventStatuses } from '@/lib/actions/events';
 import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { getUser } from '@/lib/actions/auth';
+import { getFriendsGoingBulk } from '@/lib/actions/friends-going';
+import { isFeatureEnabled } from '@/lib/feature-flags';
 import { EventCard } from '@/components/events/event-card';
 import { EventsFilters } from '@/components/events/events-filters';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -67,6 +69,9 @@ export default async function EventsPage({
   const languageCodes = filters.language
     ? filters.language.split(',').filter(Boolean)
     : [];
+  const safetyTags = filters.safety
+    ? filters.safety.split(',').filter(Boolean)
+    : [];
 
   // Build map link that preserves the handful of filters relevant to the map
   // view (category + free-only). Date range is not forwarded because the map
@@ -104,6 +109,8 @@ export default async function EventsPage({
     is_free: filters.is_free === 'true' ? true : filters.is_free === 'false' ? false : undefined,
     is_online: filters.is_online === 'true' ? true : filters.is_online === 'false' ? false : undefined,
     is_system: isSystemFilter,
+    q: filters.q,
+    safety_tags: safetyTags.length > 0 ? safetyTags : undefined,
     limit: 24,
     sort,
     include_past: includePast,
@@ -128,6 +135,14 @@ export default async function EventsPage({
         interestedSet: new Set<string>(),
         favoritedSet: new Set<string>(),
       };
+
+  // Friends-going lookup is gated by the `friends_going` flag so we
+  // can roll it out city by city. Skip the bulk query for anonymous
+  // viewers — they have no follow graph to compare against.
+  const friendsGoingByEvent =
+    user && (await isFeatureEnabled('friends_going', user.id))
+      ? await getFriendsGoingBulk(events.map((e) => e.id))
+      : {};
 
   return (
     <div>
@@ -356,6 +371,7 @@ export default async function EventsPage({
                 isInterested={interestedSet.has(event.id)}
                 isFavorited={favoritedSet.has(event.id)}
                 isAuthenticated={!!user}
+                friendsGoing={friendsGoingByEvent[event.id]}
               />
             ))}
           </div>

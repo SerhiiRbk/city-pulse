@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Popover,
   PopoverContent,
@@ -37,6 +38,7 @@ interface GroupsFiltersProps {
     country?: string;
     interest?: string;
     language?: string;
+    q?: string;
   };
 }
 
@@ -48,6 +50,7 @@ export function GroupsFilters({ interests, categories, currentFilters }: GroupsF
   const [interestsOpen, setInterestsOpen] = useState(false);
   const [languagesOpen, setLanguagesOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
+  const [searchQuery, setSearchQuery] = useState(currentFilters.q || '');
 
   const selectedInterestIds = currentFilters.interest
     ? currentFilters.interest.split(',').filter(Boolean)
@@ -109,7 +112,13 @@ export function GroupsFilters({ interests, categories, currentFilters }: GroupsF
 
   function clearFilters() {
     setSelectedCity(null);
+    setSearchQuery('');
     router.push(pathname);
+  }
+
+  function applyTextSearch(value: string) {
+    const trimmed = value.trim();
+    applyFilters({ q: trimmed.length > 0 ? trimmed : undefined });
   }
 
   function handleSearch() {
@@ -146,6 +155,39 @@ export function GroupsFilters({ interests, categories, currentFilters }: GroupsF
 
   return (
     <div className="space-y-3 sm:space-y-4">
+      <div className="relative">
+        <Search className="text-muted-foreground pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+        <Input
+          type="search"
+          inputMode="search"
+          enterKeyHint="search"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              applyTextSearch(searchQuery);
+            }
+          }}
+          onBlur={(e) => applyTextSearch(e.target.value)}
+          placeholder={t('searchPlaceholder')}
+          aria-label={t('searchPlaceholder')}
+          className="bg-background/95 h-10 rounded-xl pl-9 pr-9 text-sm shadow-sm sm:h-11"
+        />
+        {searchQuery.length > 0 && (
+          <button
+            type="button"
+            onClick={() => {
+              setSearchQuery('');
+              applyFilters({ q: undefined });
+            }}
+            aria-label={t('clearSearch')}
+            className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
         <div>
           <Select

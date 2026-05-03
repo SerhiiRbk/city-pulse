@@ -14,6 +14,7 @@ import {
   Award,
   Landmark,
   BarChart3,
+  ToggleLeft,
 } from 'lucide-react';
 import { buildNoIndexMetadata } from '@/lib/seo';
 
@@ -55,6 +56,7 @@ export default async function AdminLayout({
     { href: '/admin/reports', icon: Flag, label: 'Reports' },
     { href: '/admin/badges', icon: Award, label: 'Badges' },
     { href: '/admin/system-events', icon: Landmark, label: 'City Events' },
+    { href: '/admin/feature-flags', icon: ToggleLeft, label: 'Feature flags' },
   ];
 
   return (

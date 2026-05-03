@@ -42,8 +42,9 @@ import { COUNTRIES } from '@/lib/constants';
 import { extractPlainText } from '@/lib/rich-text/extract-plain';
 import { plainTextToRichTextDoc } from '@/lib/rich-text/from-plain';
 import { richTextHasContent } from '@/lib/rich-text/validate';
+import { SafetyTagsInput } from '@/components/events/safety-tags-input';
 import type { RichTextDoc } from '@/lib/rich-text/types';
-import type { Event, Interest, InterestCategory, City } from '@/types/database';
+import type { Event, Interest, InterestCategory, City, SafetyTag } from '@/types/database';
 
 /**
  * Loads the editor with whatever the row currently has:
@@ -80,6 +81,7 @@ interface EditEventFormProps {
 export function EditEventForm({ event, interests, categories, moderators: initialModerators = [], initialCity }: EditEventFormProps) {
   const t = useTranslations('events.create');
   const tEdit = useTranslations('events.edit');
+  const tSafety = useTranslations('events.safety');
   const locale = useLocale();
   const router = useRouter();
 
@@ -91,6 +93,9 @@ export function EditEventForm({ event, interests, categories, moderators: initia
   const [isOnline, setIsOnline] = useState(event.is_online);
   const [isFree, setIsFree] = useState(event.is_free);
   const [isPrivate, setIsPrivate] = useState(event.is_private);
+  const [safetyTags, setSafetyTags] = useState<SafetyTag[]>(
+    Array.isArray(event.safety_tags) ? (event.safety_tags as SafetyTag[]) : [],
+  );
   const [descriptionDoc, setDescriptionDoc] = useState<RichTextDoc>(() => loadDescriptionDoc(event));
   const editorLabels = useRichEditorLabels();
   const [selectedCategory, setSelectedCategory] = useState(event.category_id || '');
@@ -283,6 +288,7 @@ export function EditEventForm({ event, interests, categories, moderators: initia
         photos.length > 0
           ? [photos[coverIndex], ...photos.filter((_, i) => i !== coverIndex)]
           : [],
+      safety_tags: safetyTags,
     };
 
     const result = await updateEvent(event.id, data);
@@ -495,6 +501,11 @@ export function EditEventForm({ event, interests, categories, moderators: initia
               <p className="text-muted-foreground text-xs">{t('privateHint')}</p>
             </div>
             <Switch id="is_private" checked={isPrivate} onCheckedChange={setIsPrivate} />
+          </div>
+          <div className="space-y-2">
+            <Label>{tSafety('inputLabel')}</Label>
+            <p className="text-muted-foreground text-xs">{tSafety('inputHint')}</p>
+            <SafetyTagsInput value={safetyTags} onChange={setSafetyTags} />
           </div>
         </CardContent>
       </Card>

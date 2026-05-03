@@ -1,9 +1,11 @@
 import { z } from 'zod/v4';
 import { COUNTRIES, LANGUAGES, MAX_EVENT_PHOTOS } from '@/lib/constants';
+import { SAFETY_TAGS } from '@/types/database';
 import { isoDateSchema, urlSchema, uuidSchema } from './common';
 
 const countryCodes = COUNTRIES.map((c) => c.code) as [string, ...string[]];
 const languageCodes = LANGUAGES.map((l) => l.code) as [string, ...string[]];
+const safetyTagValues = SAFETY_TAGS as readonly [string, ...string[]];
 
 const currencySchema = z
   .string()
@@ -52,6 +54,12 @@ const baseEventFields = {
   is_private: z.boolean().default(false),
   photos: z.array(urlSchema).max(MAX_EVENT_PHOTOS, `Up to ${MAX_EVENT_PHOTOS} photos`).default([]),
   group_id: uuidSchema.nullable().optional(),
+  /**
+   * Audience guardrails (e.g. women_only, sober). Validated against
+   * the controlled vocabulary defined in `SAFETY_TAGS`. The DB also
+   * enforces the same set via a CHECK constraint (migration 050).
+   */
+  safety_tags: z.array(z.enum(safetyTagValues)).max(SAFETY_TAGS.length).default([]),
 };
 
 export const createEventSchema = z
