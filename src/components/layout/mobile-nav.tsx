@@ -21,6 +21,7 @@ import {
   LogOut,
   Landmark,
   Newspaper,
+  CalendarCheck,
 } from 'lucide-react';
 import type { Profile } from '@/types/database';
 
@@ -117,6 +118,12 @@ export function MobileNav({ user }: MobileNavProps) {
                 <Link href={`/profile/${user.id}`} className="flex items-center gap-3">
                   <User className="h-5 w-5" />
                   {t('profile')}
+                </Link>
+              </Button>
+              <Button variant="ghost" className="justify-start" asChild onClick={close}>
+                <Link href="/events/my" className="flex items-center gap-3">
+                  <CalendarCheck className="h-5 w-5" />
+                  {t('myEvents')}
                 </Link>
               </Button>
               <Button variant="ghost" className="justify-start" asChild onClick={close}>

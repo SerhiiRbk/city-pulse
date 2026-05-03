@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
@@ -19,6 +20,14 @@ export default async function EditEventPage({
   const { locale, id } = await params;
   setRequestLocale(locale);
 
+  return (
+    <Suspense fallback={null}>
+      <EditEventContent locale={locale} id={id} />
+    </Suspense>
+  );
+}
+
+async function EditEventContent({ locale, id }: { locale: string; id: string }) {
   const user = await getUser();
   if (!user) redirect(`/${locale}/login`);
 

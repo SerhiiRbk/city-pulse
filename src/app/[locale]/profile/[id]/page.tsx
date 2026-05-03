@@ -19,7 +19,9 @@ import { RequestChatButton } from '@/components/messages/request-chat-button';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { FollowButton } from '@/components/social/follow-button';
 import { ProfileTabs } from '@/components/profile/profile-tabs';
-import { getProfileStats, getUserBadges, isFollowing } from '@/lib/actions/social';
+import { LinkifiedText } from '@/components/ui/linkified-text';
+import { getProfileReputation, getProfileStats, getUserBadges, isFollowing } from '@/lib/actions/social';
+import { ReputationBadge } from '@/components/profile/reputation-badge';
 import {
   getProfileFavoriteEvents,
   getProfileGoingEvents,
@@ -72,9 +74,10 @@ export default async function ProfilePage({ params }: Props) {
   const currentUser = await getUser();
   const isOwnProfile = currentUser?.id === profile.id;
 
-  const [stats, badges, following, userPhotos, allInterests] = await Promise.all([
+  const [stats, badges, reputation, following, userPhotos, allInterests] = await Promise.all([
     getProfileStats(id),
     getUserBadges(id),
+    getProfileReputation(id),
     currentUser && !isOwnProfile ? isFollowing(id) : Promise.resolve(false),
     getUserPhotos(id),
     getInterests(),
@@ -107,9 +110,14 @@ export default async function ProfilePage({ params }: Props) {
     ...pastEvents,
     ...createdEvents,
   ].map((e) => e.id);
-  const { goingSet, favoritedSet } = currentUser
+  const { goingSet, waitlistSet, interestedSet, favoritedSet } = currentUser
     ? await getUserEventStatuses([...new Set(allEventIds)])
-    : { goingSet: new Set<string>(), favoritedSet: new Set<string>() };
+    : {
+        goingSet: new Set<string>(),
+        waitlistSet: new Set<string>(),
+        interestedSet: new Set<string>(),
+        favoritedSet: new Set<string>(),
+      };
 
   const initials = profile.display_name
     .split(' ')
@@ -177,9 +185,18 @@ export default async function ProfilePage({ params }: Props) {
           {/* Identity + meta */}
           <div className="flex min-w-0 flex-1 flex-col items-center gap-2.5 md:items-start md:gap-3">
             <div>
-              <h1 className="text-center text-xl font-bold tracking-tight md:text-left md:text-3xl">
-                {profile.display_name}
-              </h1>
+              <div className="flex flex-wrap items-center justify-center gap-2 md:justify-start">
+                <h1 className="text-center text-xl font-bold tracking-tight md:text-left md:text-3xl">
+                  {profile.display_name}
+                </h1>
+                <ReputationBadge
+                  tier={reputation.tier}
+                  reliabilityScore={reputation.reliability_score}
+                  attendanceRate={reputation.attendance_rate}
+                  attendedCount={reputation.attended_count}
+                  noShowCount={reputation.no_show_count}
+                />
+              </div>
               <div className="mt-1.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-muted-foreground md:justify-start">
                 {!profile.hide_age && profile.age && (
                   <span>{t('yearsOld', { age: profile.age })}</span>
@@ -195,8 +212,8 @@ export default async function ProfilePage({ params }: Props) {
 
             {/* Bio inline */}
             {profile.bio && (
-              <p className="max-w-lg text-center text-sm leading-relaxed text-muted-foreground md:text-left">
-                {profile.bio}
+              <p className="max-w-lg whitespace-pre-wrap text-center text-sm leading-relaxed text-muted-foreground md:text-left">
+                <LinkifiedText text={profile.bio} />
               </p>
             )}
 
@@ -363,6 +380,7 @@ export default async function ProfilePage({ params }: Props) {
         subscribedGroups={isOwnProfile ? subscribedGroups : undefined}
         managedGroups={managedGroups}
         goingEventIds={Array.from(goingSet)}
+        waitlistedEventIds={Array.from(waitlistSet)}
         favoritedEventIds={Array.from(favoritedSet)}
       />
     </div>

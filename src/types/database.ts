@@ -35,6 +35,12 @@ export interface Profile {
   hide_events: boolean;
   is_blocked: boolean;
   role: 'user' | 'admin' | 'moderator';
+  /**
+   * Timestamp when the user finished the post-signup onboarding
+   * wizard (city + interests + languages). NULL means the wizard
+   * has not been completed; the layout redirects new users to it.
+   */
+  onboarded_at: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -69,6 +75,15 @@ export interface Event {
   id: string;
   title: string;
   description: string;
+  /**
+   * Rich-text description as a TipTap / ProseMirror JSON document.
+   * NULL for legacy events that predate migration 046 — the renderer
+   * falls back to `description` (plain text, linkified) in that case.
+   * New writes always populate this column; the BEFORE-trigger keeps
+   * `description` in sync as the plain-text mirror used by previews,
+   * OG snippets, and search.
+   */
+  description_json: Json | null;
   photos: string[];
   languages: string[];
   is_blocked: boolean;
@@ -94,9 +109,35 @@ export interface Event {
   source_url: string | null;
   status: EventStatus;
   organizer_is_blocked?: boolean;
+  /**
+   * Controlled-vocabulary audience guardrails.
+   * See migration 050 for the allowed values.
+   */
+  safety_tags: SafetyTag[];
+  /**
+   * Set when this event is one occurrence of a recurring series.
+   * NULL for stand-alone events. See migration 055 for the
+   * `event_series` parent row and `series_position`.
+   */
+  series_id: string | null;
+  series_position: number | null;
   created_at: string;
   updated_at: string;
 }
+
+/**
+ * Controlled vocabulary for event-level audience guardrails.
+ * Keep this list in sync with the CHECK constraint defined in
+ * migration 050_rsvp_privacy_safety_tags.sql.
+ */
+export const SAFETY_TAGS = [
+  'women_only',
+  'adults_only',
+  'lgbtq_friendly',
+  'sober',
+  'beginner_friendly',
+] as const;
+export type SafetyTag = (typeof SAFETY_TAGS)[number];
 
 export interface EventAttendee {
   event_id: string;
@@ -104,6 +145,17 @@ export interface EventAttendee {
   status: AttendeeStatus;
   confirmed: boolean;
   confirmed_at: string | null;
+  /**
+   * When false, this attendance row is hidden from public rosters
+   * (avatar/name not exposed). Counts still reflect the row.
+   */
+  is_visible: boolean;
+  /**
+   * When the 24h reconfirm prompt was last sent. NULL means we have
+   * not asked yet. The pair (`reconfirm_sent_at`, `confirmed_at`)
+   * decides whether the user still needs to act.
+   */
+  reconfirm_sent_at: string | null;
   created_at: string;
 }
 
@@ -133,6 +185,15 @@ export interface Group {
   name: string;
   slug: string | null;
   description: string;
+  /**
+   * Rich-text description as a TipTap / ProseMirror JSON document.
+   * NULL for legacy groups that predate migration 046 — the renderer
+   * falls back to `description` (plain text, linkified) in that case.
+   * New writes always populate this column; the BEFORE-trigger keeps
+   * `description` in sync as the plain-text mirror used by previews,
+   * OG snippets, and search.
+   */
+  description_json: Json | null;
   cover_url: string | null;
   languages: string[];
   is_blocked: boolean;
@@ -156,6 +217,14 @@ export interface GroupPost {
   type: GroupPostType;
   title: string;
   content: string;
+  /**
+   * Rich-text body as a TipTap / ProseMirror JSON document. NULL for
+   * legacy posts that predate migration 045 — the renderer falls back
+   * to `content` (plain text) in that case. New writes always populate
+   * this column; the trigger keeps `content` in sync as the plain-text
+   * mirror used by previews and SEO.
+   */
+  content_json: Json | null;
   published_at: string;
   created_at: string;
   updated_at: string;

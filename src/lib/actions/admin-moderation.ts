@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { locales } from '@/i18n/config';
 import { createClient } from '@/lib/supabase/server';
 import { getViewerContext } from '@/lib/server/viewer-context';
@@ -51,6 +51,8 @@ export async function setUserBlocked(userId: string, blocked: boolean) {
     '/calendar',
     '/city-events',
   ]);
+  updateTag('landing:events');
+  updateTag('landing:groups');
 
   return { success: true };
 }
@@ -76,6 +78,7 @@ export async function setEventBlocked(eventId: string, blocked: boolean) {
     '/calendar',
     '/city-events',
   ]);
+  updateTag('landing:events');
 
   return { success: true };
 }
@@ -99,6 +102,7 @@ export async function setGroupBlocked(groupId: string, blocked: boolean) {
     `/groups/${groupId}`,
     '/groups',
   ]);
+  updateTag('landing:groups');
 
   return { success: true };
 }

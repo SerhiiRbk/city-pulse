@@ -23,13 +23,36 @@
     "copied": "Zkopírováno!",
     "copyLink": "Kopírovat odkaz",
     "linkCopied": "Odkaz zkopírován!",
+    "showQrCode": "Zobrazit QR kód",
+    "downloadQr": "Stáhnout PNG",
+    "qrDialogTitle": "Naskenujte pro otevření",
+    "qrDialogHelp": "Namiřte na kód kamerou a otevřete stránku na jiném zařízení, nebo si obrázek uložte pro leták.",
     "follow": "Sledovat",
     "following": "Sledujete",
     "user": "Uživatel",
     "send": "Odeslat",
     "searchAddress": "Hledat adresu...",
     "searchCity": "Hledat město...",
-    "noCitiesFound": "Žádná města nenalezena"
+    "noCitiesFound": "Žádná města nenalezena",
+    "rich": {
+      "bold": "Tučné",
+      "italic": "Kurzíva",
+      "strike": "Přeškrtnuté",
+      "heading2": "Nadpis",
+      "heading3": "Podnadpis",
+      "bulletList": "Odrážkový seznam",
+      "orderedList": "Číslovaný seznam",
+      "blockquote": "Citát",
+      "link": "Odkaz",
+      "linkDialogTitle": "Přidat odkaz",
+      "linkPlaceholder": "https://example.com",
+      "linkSave": "Uložit",
+      "linkRemove": "Odebrat odkaz",
+      "linkCancel": "Zrušit",
+      "linkInvalid": "Použijte URL s http nebo https",
+      "charactersUsed": "{used} / {max}",
+      "charactersOverflow": "Dosaženo maxima"
+    }
   },
   "nav": {
     "home": "Domů",
@@ -46,7 +69,8 @@
     "createGroup": "Vytvořit skupinu",
     "cityEvents": "Městské akce",
     "feed": "Feed",
-    "admin": "Admin"
+    "admin": "Admin",
+    "myEvents": "Moje akce"
   },
   "landing": {
     "hero": {
@@ -178,6 +202,8 @@
     "title": "Akce",
     "noEvents": "Žádné akce nenalezeny",
     "filters": {
+      "searchPlaceholder": "Hledat akce, místa, témata…",
+      "clearSearch": "Vymazat",
       "country": "Země",
       "city": "Město",
       "language": "Jazyk",
@@ -214,11 +240,17 @@
       "going": "Jdete",
       "notGoing": "Zrušit účast",
       "join": "Půjdu",
+      "joinWaitlist": "Do čekací listiny",
+      "onWaitlist": "Na čekací listině",
+      "interested": "Zajímá mě",
+      "markInterested": "Označit jako zajímavé",
       "favorite": "Do oblíbených",
       "unfavorite": "Odebrat z oblíbených",
       "share": "Sdílet",
       "attendees": "{count, plural, one {# účastník} few {# účastníci} other {# účastníků}}",
       "cuePopular": "Oblíbené mezi místními",
+      "cueAfisha": "Redakční výběr",
+      "badgeAfisha": "Afisha",
       "cueEasy": "Snadné se přidat",
       "startingSoon": "Začíná brzy",
       "inHours": "Za {count} h",
@@ -252,6 +284,9 @@
       "removedFromFavorites": "Odebráno z oblíbených",
       "registeredForEvent": "Jste přihlášeni na akci!",
       "cancelledAttendance": "Účast zrušena",
+      "addedToWaitlist": "Přidáno na čekací listinu — přesuneme vás, jakmile se uvolní místo",
+      "markedInterested": "Označeno jako zajímavé",
+      "unmarkedInterested": "Již nezajímá",
       "breadcrumbs": "Akce",
       "popularCue": "Oblíbená společenská akce",
       "soloCue": "Snadné připojení, i když jdete sami",
@@ -267,6 +302,8 @@
       "goingCount": "{count, plural, one {# účastník jde} few {# účastníci jdou} other {# účastníků jde}}",
       "spotsLeft": "{count, plural, one {# místo zbývá} few {# místa zbývají} other {# míst zbývá}}",
       "noSpotsLeft": "Žádná volná místa",
+      "waitlistCount": "{count, plural, one {# na čekací listině} few {# na čekací listině} other {# na čekací listině}}",
+      "interestedCount": "{count, plural, one {# má zájem} few {# mají zájem} other {# má zájem}}",
       "reviewsCount": "{rating} ({count, plural, one {# recenze} few {# recenze} other {# recenzí}})",
       "moreAttendees": "+{count} dalších účastníků",
       "noComments": "Zatím žádné komentáře.",
@@ -283,7 +320,65 @@
       "recapCreateHint": "Sdílejte ve skupinovém feedu, jak akce proběhla, co bylo nejzajímavější a jaké z ní plynou závěry.",
       "recapPendingHint": "Organizátoři zatím shrnutí akce nezveřejnili.",
       "viewRecap": "Zobrazit shrnutí",
-      "writeRecap": "Napsat shrnutí"
+      "writeRecap": "Napsat shrnutí",
+      "addToCalendar": "Přidat do kalendáře",
+      "addToGoogle": "Google Calendar",
+      "addToApple": "Apple / Outlook",
+      "downloadIcs": "Stáhnout .ics",
+      "systemEditorialTitle": "Městská událost",
+      "systemEditorialSubtitle": "Tuto akci nepořádáme — jen vám pomáháme, abyste ji nezmeškali.",
+      "goWithGroupNew": "Jdeme ve skupině",
+      "goWithGroupExisting": "Přidat se ke skupině"
+    },
+    "systemActions": {
+      "interested": "Máte zájem",
+      "markInterested": "Mám zájem"
+    },
+    "meetup": {
+      "sectionLabel": "Jdeme spolu",
+      "sectionTitleEmpty": "Buďte první, kdo zorganizuje sraz",
+      "sectionTitleWithCount": "{count, plural, one {# skupina jde} few {# skupiny jdou} other {# skupin jde}}",
+      "sectionDescription": "Plánujte s lidmi z City-Pulse — sraz u vchodu, drink před akcí, společná cesta.",
+      "ctaLogin": "Přihlaste se, abyste mohli zorganizovat sraz",
+      "spotsLeft": "{count, plural, one {zbývá # místo} few {zbývají # místa} other {zbývá # míst}}",
+      "full": "Plno",
+      "private": "Soukromé",
+      "goingCount": "{count, plural, one {# jde} few {# jdou} other {# jde}}",
+      "defaultTitle": "Jdeme na „{event}“ spolu",
+      "cta": "Zorganizovat sraz",
+      "dialogTitle": "Naplánovat sraz",
+      "dialogDescription": "Otevřete ho pro ostatní, kteří jdou na „{event}“. Datum a místo se přebírá z plakátu.",
+      "fieldTitle": "Název skupiny",
+      "fieldTitlePlaceholder": "Po práci",
+      "fieldTitleHint": "Řekněte, koho zvete.",
+      "fieldPitch": "Popis (volitelné)",
+      "fieldPitchPlaceholder": "Sejdeme se u hlavního vchodu 30 minut před začátkem.",
+      "fieldMeetingPoint": "Místo srazu (volitelné)",
+      "fieldMeetingPointPlaceholder": "Hlavní vchod · 18:30",
+      "fieldCap": "Maximum účastníků",
+      "fieldCapPlaceholder": "8",
+      "fieldPrivate": "Privátní odkaz",
+      "fieldPrivateHint": "Sraz uvidí jen ti, kdo mají odkaz.",
+      "cancel": "Zrušit",
+      "submit": "Vytvořit",
+      "createSuccess": "Sraz vytvořen",
+      "createError": "Sraz se nepodařilo vytvořit"
+    },
+    "attendance": {
+      "title": "Evidence účasti",
+      "empty": "Na tuto akci se nikdo nepřihlásil.",
+      "markAttended": "Přišel",
+      "markNoShow": "Nepřišel",
+      "statusGoing": "Přihlášen — zatím neoznačen",
+      "statusWaitlist": "Byl na čekací listině",
+      "statusAttended": "Označen jako přítomný",
+      "statusNoShow": "Označen jako nepřítomný",
+      "markedAttended": "Označen jako přítomný",
+      "markedNoShow": "Označen jako nepřítomný",
+      "reverted": "Označení odebráno",
+      "summaryAttended": "{count} přítomno",
+      "summaryNoShow": "{count} nepřišlo",
+      "summaryUnmarked": "{count} čeká"
     },
     "page": {
       "heroBadge": "Najděte svou další akci, ke které je snadné se přidat",
@@ -292,6 +387,7 @@
       "trust2": "Procházky, deskovky, jazykové kluby",
       "trust3": "Seznamte se s lidmi ještě před příchodem",
       "createCta": "Vytvořit akci",
+      "myEventsCta": "Moje akce",
       "sideLabel": "Nejlepší pro nová spojení",
       "sideItem1Title": "Menší skupiny",
       "sideItem1Body": "Menší tlak, snadnější první rozhovory.",
@@ -303,7 +399,124 @@
       "resultsTitle": "{count, plural, one {# akce, která stojí za to} few {# akce, které stojí za to} other {# akcí, které stojí za to}}",
       "noResultsTitle": "Zatím žádné odpovídající akce",
       "sectionBody": "Hledejte přívětivé formáty, opakující se komunity a akce, kde je snadné rychle zapadnout.",
-      "emptyDescription": "Zkuste upravit filtry nebo se vraťte později"
+      "emptyDescription": "Zkuste upravit filtry nebo se vraťte později",
+      "sort": {
+        "label": "Řazení",
+        "soon": "Nejdříve",
+        "popular": "Populární"
+      },
+      "showPast": "Zobrazit minulé",
+      "hidePast": "Skrýt minulé",
+      "source": {
+        "all": "Vše",
+        "community": "Komunita",
+        "afisha": "Afisha"
+      }
+    },
+    "myEvents": {
+      "heroBadge": "Vaše centrum organizátora",
+      "title": "Moje akce",
+      "subtitle": "Vše, co pořádáte nebo moderujete, na jednom místě — včetně minulých akcí pro shrnutí a reflexi.",
+      "createCta": "Vytvořit akci",
+      "backToEvents": "Procházet všechny akce",
+      "upcomingLabel": "Nadcházející",
+      "upcomingTitle": "{count, plural, one {# nadcházející akce} few {# nadcházející akce} other {# nadcházejících akcí}}",
+      "noUpcoming": "Žádné nadcházející akce. Naplánujte něco nového a spojte svou komunitu.",
+      "pastLabel": "Minulé",
+      "pastTitle": "{count, plural, one {# minulá akce} few {# minulé akce} other {# minulých akcí}}",
+      "draftsLabel": "Koncepty",
+      "draftsTitle": "{count, plural, one {# koncept} few {# koncepty} other {# konceptů}}",
+      "draftsDescription": "Vidíte je jen vy. Publikujte je, až budete připraveni pozvat lidi.",
+      "savedLabel": "V kalendáři",
+      "savedTitle": "{count, plural, one {# uložená městská akce} few {# uložené městské akce} other {# uložených městských akcí}}",
+      "savedDescription": "Akce z plakátu, které jste si označili jako zajímavé. Najdete je vedle vlastních akcí.",
+      "emptyTitle": "Zatím jste žádné akce nepořádali",
+      "emptyDescription": "Jakmile vytvoříte nebo budete moderovat akci, zobrazí se zde pro snadnou správu.",
+      "stats": {
+        "upcoming": "Nadcházející",
+        "past": "Minulé",
+        "drafts": "Koncepty",
+        "rsvps": "Celkem RSVP"
+      },
+      "status": {
+        "draft": "Koncept — vidíte jen vy",
+        "cancelled": "Zrušeno",
+        "completed": "Dokončeno",
+        "past": "Už proběhlo",
+        "blocked": "Zablokováno moderací"
+      },
+      "card": {
+        "edit": "Upravit",
+        "publish": "Publikovat",
+        "publishSuccess": "Akce publikována",
+        "cancel": "Zrušit",
+        "cancelConfirmTitle": "Zrušit tuto akci?",
+        "cancelConfirmDescription": "Akci nelze vrátit zpět. Všichni účastníci dostanou oznámení.",
+        "cancelDismiss": "Ponechat",
+        "cancelConfirm": "Ano, zrušit",
+        "cancelSuccess": "Akce zrušena",
+        "markComplete": "Označit jako dokončené",
+        "completeSuccess": "Akce označena jako dokončená",
+        "duplicate": "Duplikovat",
+        "duplicateSuccess": "Vytvořen koncept-duplikát",
+        "viewRecap": "Shrnutí",
+        "roster": "{count, plural, =0 {Žádné RSVP} one {1 RSVP} few {# RSVP} other {# RSVP}}",
+        "rsvps": "{count, plural, one {# přijde} few {# přijdou} other {# přijde}}"
+      },
+      "subscribe": {
+        "title": "Přihlásit do kalendáře",
+        "description": "Každá akce, kterou pořádáte nebo na kterou jdete, se automaticky objeví v Google Calendaru, Apple Calendaru nebo Outlooku.",
+        "googleCta": "Přidat do Google Calendaru",
+        "icsCta": "Kopírovat odkaz",
+        "icsCopied": "Odkaz zkopírován",
+        "downloadCta": "Stáhnout .ics",
+        "regenerateCta": "Obnovit odkaz",
+        "regenerateConfirm": "Všechny dříve přihlášené kalendáře přestanou fungovat. Pokračovat?",
+        "regenerated": "Odkaz obnoven"
+      }
+    },
+    "map": {
+      "pageTitle": "Mapa akcí",
+      "pageSubtitle": "Podívejte se, co se děje kolem vás — oddalte pro širší oblast, přibližte pro detaily na úrovni ulice.",
+      "heroBadge": "Akce v okolí",
+      "viewList": "Seznam",
+      "viewMap": "Mapa",
+      "loading": "Aktualizujeme…",
+      "empty": "V této oblasti zatím nejsou žádné akce",
+      "emptyHint": "Zkuste oddálit mapu nebo rozšířit rozsah dat.",
+      "openEvent": "Otevřít akci",
+      "andOthers": "+ {count} dalších na tomto místě",
+      "rangeLabel": "Časové období",
+      "range": {
+        "today": "Dnes",
+        "tomorrow": "Zítra",
+        "weekend": "O víkendu",
+        "week": "Příštích 7 dní",
+        "2weeks": "Příští 2 týdny"
+      },
+      "locate": "Najdi mě",
+      "youAreHere": "Jste zde",
+      "geoDenied": "Přístup k poloze zamítnut. Povolte jej v nastavení prohlížeče.",
+      "geoFailed": "Nepodařilo se zjistit vaši polohu. Zkuste to znovu.",
+      "geoUnsupported": "Váš prohlížeč nepodporuje geolokaci.",
+      "showFreeOnly": "Jen zdarma",
+      "categoryFilter": "{count, plural, one {# kategorie} few {# kategorie} other {# kategorií}}",
+      "removeFilter": "Odstranit filtr: {name}",
+      "removeCategoryFilter": "Zrušit filtr kategorií",
+      "sidebarCount": "{count, plural, one {# událost na mapě} few {# události na mapě} other {# událostí na mapě}}",
+      "sidebarEmpty": "Žádné události na mapě",
+      "sidebarHint": "Najeďte na kartu pro zvýraznění na mapě.",
+      "sidebarTitle": "Události na mapě",
+      "pickCategories": "Kategorie",
+      "searchCategory": "Najít kategorii…",
+      "noCategory": "Žádné kategorie",
+      "clearAll": "Vymazat vše",
+      "legendTitle": "Kategorie na mapě",
+      "legendShowMore": "dalších {count}",
+      "legendCollapse": "Sbalit",
+      "shareLink": "Sdílet tento pohled",
+      "linkCopied": "Odkaz zkopírován",
+      "linkCopyFailed": "Odkaz se nepodařilo zkopírovat"
     },
     "create": {
       "title": "Vytvořit akci",
@@ -341,6 +554,29 @@
       "noModerators": "Zatím nebyli přidáni žádní moderátoři",
       "moderatorAdded": "Moderátor přidán",
       "moderatorRemoved": "Moderátor odebrán"
+    },
+    "safety": {
+      "inputLabel": "Cílová skupina",
+      "inputHint": "Pomozte nováčkům vědět, co očekávat — vyberte štítky, které platí.",
+      "rsvpVisibilityLabel": "Zobrazovat mě ve veřejném seznamu účastníků",
+      "rsvpVisibilityHelper": "Když je vypnuto, vaše jméno a avatar zůstávají soukromé. Vaše RSVP se i tak započítává do počtu účastníků.",
+      "rsvpHidden": "Účastníte se v soukromí",
+      "rsvpHiddenSaved": "RSVP označeno jako soukromé",
+      "rsvpVisibleSaved": "RSVP označeno jako veřejné",
+      "filterTitle": "Pro koho",
+      "tag": {
+        "women_only": "Jen pro ženy",
+        "adults_only": "18+",
+        "lgbtq_friendly": "LGBTQ+ friendly",
+        "sober": "Bez alkoholu",
+        "beginner_friendly": "Pro začátečníky"
+      }
+    },
+    "reconfirm": {
+      "title": "Půjdete zítra?",
+      "body": "Pokud nepotvrdíte, uvolníme místo pro čekací listinu. Stačí jeden klik.",
+      "cta": "Ano, jdu",
+      "confirmed": "Hotovo — místo je vaše"
     }
   },
   "groups": {
@@ -358,6 +594,8 @@
     "cueWelcoming": "Přátelská komunita",
     "cueGrowing": "Rostoucí komunita",
     "filters": {
+      "searchPlaceholder": "Hledat skupiny, témata, místa…",
+      "clearSearch": "Vymazat hledání",
       "country": "Země",
       "city": "Město",
       "language": "Jazyk",
@@ -383,9 +621,9 @@
     "detail": {
       "creator": "Vytvořil",
       "membersList": "Členové",
-      "eventsTitle": "Nadcházející akce",
+      "eventsTitle": "Nadcházející",
       "noEvents": "Žádné nadcházející akce",
-      "pastEventsTitle": "Minulé akce",
+      "pastEventsTitle": "Minulé",
       "noPastEvents": "Žádné minulé akce",
       "photosTitle": "Fotoalba",
       "noPhotos": "Zatím žádná alba",
@@ -429,6 +667,11 @@
       "communityCueActive": "Aktivní a přívětivá skupina",
       "communityCueStarter": "Skvělé místo, kde začít poznávat nové lidi",
       "directLink": "Přímý odkaz",
+      "copyLink": "Zkopírovat odkaz",
+      "linkCopied": "Odkaz zkopírován",
+      "linkCopyError": "Nepodařilo se zkopírovat odkaz",
+      "eventsInCity": "Akce v okolí",
+      "nextEvent": "Nejbližší akce",
       "eventsCount": "{count, plural, one {# akce} few {# akce} other {# akcí}}",
       "eventsLabel": "Akce",
       "reply": "Odpovědět",
@@ -630,6 +873,19 @@
     "breadcrumbs": "Komunita",
     "yearsOld": "{age} let",
     "followers": "Sledující",
+    "reputation": {
+      "reliability": "Spolehlivost",
+      "attendanceRate": "Účast",
+      "attended": "Přítomen",
+      "noShow": "Nepřišel",
+      "tier": {
+        "newcomer": "Nováček",
+        "regular": "Pravidelný",
+        "trusted": "Spolehlivý",
+        "elite": "Elita"
+      },
+      "tierDescription": "{tier, select, newcomer {Teprve začíná — několik návštěv pomůže vybudovat reputaci.} regular {Chodí na akce s solidní historií.} trusted {Spolehlivě se účastní a dodržuje plány.} elite {Velmi aktivní, pravidelně se účastní — pilíř komunity.} other {Aktivní člen komunity.}}"
+    },
     "connectionStyle": "Styl navazování kontaktu",
     "connectionOpen": "Otevřený poznávání nových lidí a společným plánům.",
     "connectionReserved": "Raději se nejprve seznamuje přes skupiny a akce.",
@@ -638,6 +894,7 @@
   },
   "calendar": {
     "title": "Kalendář",
+    "eyebrow": "Váš měsíc na první pohled",
     "myEvents": "Moje akce",
     "allEvents": "Všechny akce",
     "exportGoogle": "Export do Google Kalendáře",
@@ -648,11 +905,27 @@
     "monthOverview": "Přehled měsíce",
     "noEventsDay": "Na tento den zatím nejsou žádné akce.",
     "online": "Online",
-    "free": "Zdarma"
+    "free": "Zdarma",
+    "today": "Dnes",
+    "prevMonth": "Předchozí měsíc",
+    "nextMonth": "Další měsíc",
+    "selectPrompt": "Vyberte den, abyste viděli, co se v něm děje.",
+    "moreEvents": "+{count} dalších",
+    "eventsCount": "{count, plural, one {# akce} few {# akce} other {# akcí}}",
+    "morning": "Ráno",
+    "afternoon": "Odpoledne",
+    "evening": "Večer",
+    "stats": {
+      "thisMonth": "Akcí tento měsíc",
+      "today": "Dnes",
+      "mine": "Ve vašem seznamu"
+    }
   },
   "messages": {
     "title": "Zprávy",
     "noMessages": "Zatím žádné zprávy",
+    "noMessagesDescription": "Pozdrav někoho z akce, na které jsi byl/a, nebo napiš organizátorovi skupiny a přidej se na další sraz.",
+    "findGroupsCta": "Procházet skupiny",
     "newMessage": "Nová zpráva",
     "typeMessage": "Napište zprávu...",
     "send": "Odeslat",
@@ -732,5 +1005,241 @@
     "about": "O City-Pulse",
     "contact": "Kontaktujte nás",
     "copyright": "© {year} City-Pulse. Všechna práva vyhrazena."
+  },
+  "admin": {
+    "funnel": {
+      "topByViews": "Nejlepší události podle zhlédnutí (30 dní)",
+      "topByViewsHelper": "Porovnejte dosah (zhlédnutí) s konverzí (RSVP) a účastí — najdete tak stránky, které potřebují silnější CTA nebo připomínku.",
+      "event": "Událost",
+      "views30d": "Zhlédnutí 30d",
+      "viewsHint": "Unikátní denní zhlédnutí (bez započtení obnovy stránky).",
+      "uniqueViewers": "{count, plural, one {# divák} few {# diváci} many {# diváků} other {# diváků}}",
+      "rsvps": "RSVP",
+      "attended": "Přišli",
+      "noShow": "{count, plural, one {# nepřišel} few {# nepřišli} many {# nepřišlo} other {# nepřišlo}}",
+      "rsvpRate": "RSVP %",
+      "rsvpRateHint": "Podíl unikátních diváků, kteří klikli „Jdu“.",
+      "attendedRate": "Účast %",
+      "attendedRateHint": "Podíl RSVP označených jako „přišli“.",
+      "empty": "Žádné publikované události — trychtýř se vyplní po prvních zhlédnutích."
+    },
+    "systemEvents": {
+      "dashboard": {
+        "eyebrow": "Redakce",
+        "title": "Afisha · publikační plán",
+        "subtitle": "Plánujte, připravujte a publikujte kurátorské městské akce.",
+        "openCalendar": "Kalendář",
+        "openTemplates": "Šablony",
+        "newDraft": "Nový koncept",
+        "pipelineTitle": "Pipeline podle měst",
+        "pipelineEmpty": "Zatím nic — začněte konceptem.",
+        "inFlightTitle": "V práci",
+        "inFlightEmpty": "Koncepty a materiály v revizi se objeví tady."
+      },
+      "composer": {
+        "titleNew": "Nová městská akce",
+        "titleEdit": "Úprava akce",
+        "subtitle": "Vytvořte, zkontrolujte a publikujte kurátorský záznam.",
+        "backToDashboard": "Zpět na přehled",
+        "viewLive": "Otevřít na webu",
+        "sourceTitle": "Import ze zdroje",
+        "sourceUrlPlaceholder": "Vložte URL partnera (stránka akce, místo konání…)",
+        "importButton": "Vyplnit z URL",
+        "sourceHint": "Stáhneme název, popis a obrázek. Konečnou verzi máte vždy v ruce vy.",
+        "basicsTitle": "Základ",
+        "titleLabel": "Název",
+        "titlePlaceholder": "Veřejný název — konkrétní a srozumitelný.",
+        "pitchLabel": "Anonce",
+        "pitchPlaceholder": "Jedna věta, která vysvětluje, proč to stojí za to.",
+        "pitchHint": "{length, plural, one {# znak} few {# znaky} other {# znaků}}",
+        "descriptionLabel": "Popis",
+        "descriptionPlaceholder": "Co to je? Proč přijít?",
+        "coverLabel": "URL obrázku",
+        "coverPlaceholder": "https://",
+        "whenTitle": "Kdy",
+        "startsAtLabel": "Začátek",
+        "durationLabel": "Délka (minuty)",
+        "whereTitle": "Kde",
+        "cityLabel": "Město",
+        "cityPlaceholder": "Praha",
+        "addressLabel": "Adresa",
+        "addressPlaceholder": "Ulice a číslo",
+        "curationTitle": "Kurátorská část",
+        "categoryLabel": "Kategorie",
+        "categoryPlaceholder": "Vyberte kategorii",
+        "partnerNameLabel": "Partner / místo",
+        "partnerNamePlaceholder": "Goethe-Institut",
+        "partnerUrlLabel": "URL partnera",
+        "freeLabel": "Vstup zdarma",
+        "freeHint": "Vypněte pro zadání ceny a měny.",
+        "priceLabel": "Cena",
+        "currencyLabel": "Měna",
+        "actionsTitle": "Publikování",
+        "currentStatusLabel": "Stav",
+        "saveDraftButton": "Uložit koncept",
+        "sendToReviewButton": "Poslat na revizi",
+        "publishButton": "Publikovat",
+        "publishBlockedHint": "Nejprve odstraňte zvýrazněné problémy.",
+        "publishGatesFailed": "Některé kontroly neprošly — viz panel výše.",
+        "importError": {
+          "invalid_url": "Tohle nevypadá jako URL.",
+          "invalid_protocol": "Podporujeme jen http(s) odkazy.",
+          "private_address": "Privátní adresy nejsou povoleny.",
+          "fetch_failed": "Nepodařilo se načíst stránku."
+        },
+        "status": {
+          "draft": "Koncept",
+          "review": "V revizi",
+          "scheduled": "Naplánováno",
+          "published": "Publikováno"
+        }
+      },
+      "gates": {
+        "panelTitle": "Kontrola kvality",
+        "summary": "{errors, plural, =0 {ok} other {chyb: #}}{warnings, plural, =0 {} other { · varování: #}}",
+        "allClear": "Všechny kontroly prošly — můžete publikovat.",
+        "titleShort": "Název musí mít aspoň 6 znaků.",
+        "noCity": "Vyberte město.",
+        "noCategory": "Vyberte kategorii.",
+        "descriptionShort": "Popis je krátký ({current}/{min} znaků).",
+        "pitchMissing": "Doplňte anonci.",
+        "pitchShort": "Anonce je krátká ({current}/{min} znaků).",
+        "pitchLong": "Anonce je dlouhá ({current}/{max} znaků).",
+        "coverMissing": "Přidejte obrázek — bez něj akce hůř upoutá pozornost.",
+        "dateMissing": "Doplňte datum začátku.",
+        "dateInvalid": "Datum nevypadá platně.",
+        "datePast": "Začátek je v minulosti.",
+        "dateClose": "Do začátku zbývá méně než {min} dní — chce to dřívější přípravu.",
+        "possibleDuplicate": "{count, plural, one {nalezena # možná duplicita} few {nalezeny # možné duplicity} other {nalezeno # možných duplicit}} — před publikací zkontrolujte.",
+        "noPartner": "Partner není uveden."
+      },
+      "calendar": {
+        "title": "Redakční kalendář",
+        "subtitle": "Přetáhněte koncept na jiný den a změňte datum.",
+        "back": "Zpět na přehled",
+        "prevMonth": "Zpět",
+        "nextMonth": "Vpřed",
+        "saving": "Ukládám…"
+      },
+      "templates": {
+        "title": "Šablony",
+        "subtitle": "Startovní kostra — finální verze je vždy na vás.",
+        "back": "Zpět na přehled",
+        "useTemplate": "Použít šablonu",
+        "items": {
+          "openAirConcert": {
+            "label": "Open-air koncert",
+            "description": "Hudební večer pod širým nebem s headlinerem a předskokanem."
+          },
+          "farmersMarket": {
+            "label": "Farmářský trh",
+            "description": "Půldenní trh lokálních producentů — opakující se víkendový slot."
+          },
+          "galleryOpening": {
+            "label": "Vernisáž",
+            "description": "Zahájení výstavy s autorem a krátkou kurátorskou prohlídkou."
+          },
+          "filmFestival": {
+            "label": "Festivalová projekce",
+            "description": "Tematická projekce s úvodem a Q&A po titulcích."
+          },
+          "streetFoodFair": {
+            "label": "Street food jarmark",
+            "description": "Pouliční food court s různými stánkaři — rodinný formát."
+          },
+          "bookLaunch": {
+            "label": "Křest knihy",
+            "description": "Čtení, autogramiáda a krátké Q&A s autorem."
+          }
+        }
+      }
+    }
+  },
+  "onboarding": {
+    "title": "Vítejte v City-Pulse",
+    "titleNamed": "Vítej, {name}!",
+    "subtitle": "Nastavme feed podle vašeho města, zájmů a jazyků — zabere to méně než minutu.",
+    "cityCountryLabel": "Vaše město",
+    "countryPlaceholder": "Vyberte zemi",
+    "cityPlaceholder": "Najděte město",
+    "cityHelper": "Akce a skupiny v tomto městě budou priority. Můžete změnit kdykoli v profilu.",
+    "cityRequired": "Vyberte zemi a město pro pokračování.",
+    "interestsHelper": "Vyberte {min}–{max} zájmů — přesnější výběr = lepší doporučení.",
+    "interestsMin": "Vyberte alespoň {min} zájmy.",
+    "uncategorized": "Další",
+    "languagesHelper": "V jakých jazycích se cítíte na akcích pohodlně? Vyberte všechny.",
+    "languagesMin": "Vyberte alespoň jeden jazyk.",
+    "finish": "Začít",
+    "done": "Hotovo — vítejte!"
+  },
+  "friends": {
+    "goingCue": "{count, plural, one {# známý jde} few {# známých jde} many {# známých jde} other {# známých jde}}",
+    "interestedCue": "{count, plural, one {# známého zaujalo} few {# známých zaujalo} many {# známých zaujalo} other {# známých zaujalo}}",
+    "noFollowingYet": "Sledujte organizátory, abyste viděli, kam kdo jde."
+  },
+  "safety": {
+    "tagWomenOnly": "Pouze pro ženy",
+    "tagAdults": "18+",
+    "tagFamily": "Vhodné pro rodiny",
+    "tagBeginners": "Vítáni začátečníci",
+    "tagSober": "Bez alkoholu",
+    "rsvpVisibilityLabel": "Viditelnost RSVP",
+    "rsvpVisibilityPublic": "Všichni vidí, že jdu",
+    "rsvpVisibilityPrivate": "Vidí to jen organizátor",
+    "rsvpVisibilityHelper": "Soukromé RSVP se počítají do účastníků, ale neobjeví se ve veřejném seznamu."
+  },
+  "digest": {
+    "subjectLine": "{city}: {count} nových akcí tento týden",
+    "preheader": "Vybráno podle lidí, které sledujete, a vašich zájmů.",
+    "intro": "Ahoj {name}, tady je co se chystá.",
+    "ctaUnsubscribe": "Nastavení e-mailů",
+    "settingTitle": "Týdenní souhrn",
+    "settingDescription": "Dostávejte personalizovaný e-mail každé pondělí s akcemi podle vašich zájmů.",
+    "settingToggle": "Odebírat týdenní souhrn"
+  },
+  "recurring": {
+    "frequencyLabel": "Opakování",
+    "helper": "Vytvoříme samostatnou událost pro každý termín (kapacita, RSVP i recenze se počítají pro každý termín zvlášť).",
+    "noneLabel": "Neopakuje se",
+    "weeklyLabel": "Každý týden",
+    "everyTwoWeeksLabel": "Každé 2 týdny",
+    "monthlyLabel": "Každý měsíc",
+    "untilLabel": "Do",
+    "occurrencesLabel": "Opakování",
+    "editScopeTitle": "Použít změny na",
+    "editScopeThis": "Pouze tuto událost",
+    "editScopeFuture": "Tuto a budoucí",
+    "editScopeAll": "Všechny v sérii",
+    "seriesBadge": "Série"
+  },
+  "unsubscribe": {
+    "successTitle": "Odhlášeno",
+    "successBody": "Týdenní souhrn vám už nepošleme. Znovu se můžete přihlásit kdykoli v nastavení.",
+    "errorTitle": "Odkaz se nepodařilo zpracovat",
+    "errorBody": "Odkaz mohl vypršet nebo už byl použit. Pro úpravu nastavení se prosím přihlaste.",
+    "emailLine": "Aktualizováno pro {email}",
+    "manageCta": "Nastavení",
+    "homeCta": "Zpět na události"
+  },
+  "settings": {
+    "email": {
+      "title": "Nastavení e-mailů",
+      "subtitle": "Vyberte si, jaké zprávy vám posíláme. Můžete to kdykoli změnit.",
+      "cardTitle": "Oznámení",
+      "emailLabel": "Adresát: {email}",
+      "digestLabel": "Týdenní souhrn akcí",
+      "digestHelper": "Krátký osobní e-mail každé pondělí s akcemi podle vašeho města, zájmů a jazyků.",
+      "toastSubscribed": "Přihlášeno k odběru souhrnu",
+      "toastUnsubscribed": "Souhrn vám už nepošleme",
+      "push": {
+        "label": "Push-oznámení v prohlížeči",
+        "helper": "Okamžité upozornění na potvrzení RSVP, odpovědi a připomínky — i když je karta zavřená.",
+        "unsupportedHelper": "Váš prohlížeč push nepodporuje nebo nejsou pro toto prostředí nastaveny.",
+        "permissionDenied": "Povolení k oznámením je zablokováno. Povolte je v nastavení webu.",
+        "subscribeError": "Push se nepodařilo zapnout. Zkuste to znovu.",
+        "subscribeSuccess": "Push-oznámení zapnuto",
+        "unsubscribeSuccess": "Push-oznámení vypnuto"
+      }
+    }
   }
 }

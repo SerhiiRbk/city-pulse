@@ -23,13 +23,36 @@
     "copied": "Скопировано!",
     "copyLink": "Скопировать ссылку",
     "linkCopied": "Ссылка скопирована!",
+    "showQrCode": "Показать QR-код",
+    "downloadQr": "Скачать PNG",
+    "qrDialogTitle": "Отсканируйте для перехода",
+    "qrDialogHelp": "Наведите камеру на код, чтобы открыть страницу на другом устройстве, или сохраните изображение для флаера.",
     "follow": "Подписаться",
     "following": "Вы подписаны",
     "user": "Пользователь",
     "send": "Отправить",
     "searchAddress": "Найти адрес...",
     "searchCity": "Найти город...",
-    "noCitiesFound": "Города не найдены"
+    "noCitiesFound": "Города не найдены",
+    "rich": {
+      "bold": "Жирный",
+      "italic": "Курсив",
+      "strike": "Зачёркнутый",
+      "heading2": "Заголовок",
+      "heading3": "Подзаголовок",
+      "bulletList": "Маркированный список",
+      "orderedList": "Нумерованный список",
+      "blockquote": "Цитата",
+      "link": "Ссылка",
+      "linkDialogTitle": "Добавить ссылку",
+      "linkPlaceholder": "https://example.com",
+      "linkSave": "Сохранить",
+      "linkRemove": "Удалить ссылку",
+      "linkCancel": "Отмена",
+      "linkInvalid": "Используйте URL с http или https",
+      "charactersUsed": "{used} / {max}",
+      "charactersOverflow": "Достигнут максимум"
+    }
   },
   "nav": {
     "home": "Главная",
@@ -46,7 +69,8 @@
     "createGroup": "Создать группу",
     "cityEvents": "Афиша",
     "feed": "Лента",
-    "admin": "Админ"
+    "admin": "Админ",
+    "myEvents": "Мои мероприятия"
   },
   "landing": {
     "hero": {
@@ -178,6 +202,8 @@
     "title": "Мероприятия",
     "noEvents": "Мероприятия не найдены",
     "filters": {
+      "searchPlaceholder": "Поиск по событиям, местам, темам…",
+      "clearSearch": "Очистить",
       "country": "Страна",
       "city": "Город",
       "language": "Язык",
@@ -214,11 +240,17 @@
       "going": "Вы идёте",
       "notGoing": "Отменить участие",
       "join": "Пойду",
+      "joinWaitlist": "В лист ожидания",
+      "onWaitlist": "В листе ожидания",
+      "interested": "Интересно",
+      "markInterested": "Отметить интересным",
       "favorite": "В избранное",
       "unfavorite": "Убрать из избранного",
       "share": "Поделиться",
       "attendees": "{count, plural, one {# участник} few {# участника} other {# участников}}",
       "cuePopular": "Популярно среди местных",
+      "cueAfisha": "Кураторская подборка",
+      "badgeAfisha": "Афиша",
       "cueEasy": "Легко присоединиться",
       "startingSoon": "Скоро начнётся",
       "inHours": "Через {count} ч",
@@ -252,6 +284,9 @@
       "removedFromFavorites": "Удалено из избранного",
       "registeredForEvent": "Вы записались на мероприятие!",
       "cancelledAttendance": "Участие отменено",
+      "addedToWaitlist": "Вы в листе ожидания — мы переведём вас, когда освободится место",
+      "markedInterested": "Отмечено как интересное",
+      "unmarkedInterested": "Больше не интересно",
       "breadcrumbs": "Мероприятия",
       "popularCue": "Популярное мероприятие для знакомств и общения",
       "soloCue": "Легко присоединиться, даже если вы идёте один",
@@ -267,6 +302,8 @@
       "goingCount": "{count, plural, one {# участник идёт} few {# участника идут} other {# участников идут}}",
       "spotsLeft": "{count, plural, one {# место осталось} few {# места осталось} other {# мест осталось}}",
       "noSpotsLeft": "Свободных мест нет",
+      "waitlistCount": "{count, plural, one {# в листе ожидания} few {# в листе ожидания} other {# в листе ожидания}}",
+      "interestedCount": "{count, plural, one {# интересуется} few {# интересуются} other {# интересуются}}",
       "reviewsCount": "{rating} ({count, plural, one {# отзыв} few {# отзыва} other {# отзывов}})",
       "moreAttendees": "Ещё +{count} участников",
       "noComments": "Комментариев пока нет.",
@@ -283,7 +320,65 @@
       "recapCreateHint": "Опубликуйте в ленте группы, как прошло мероприятие, что запомнилось и какие были итоги.",
       "recapPendingHint": "Организаторы ещё не опубликовали отчёт о мероприятии.",
       "viewRecap": "Открыть отчёт",
-      "writeRecap": "Написать отчёт"
+      "writeRecap": "Написать отчёт",
+      "addToCalendar": "Добавить в календарь",
+      "addToGoogle": "Google Calendar",
+      "addToApple": "Apple / Outlook",
+      "downloadIcs": "Скачать .ics",
+      "systemEditorialTitle": "Городское событие",
+      "systemEditorialSubtitle": "Мы не организуем это мероприятие — просто помогаем не пропустить его.",
+      "goWithGroupNew": "Иду компанией",
+      "goWithGroupExisting": "Присоединиться к компании"
+    },
+    "systemActions": {
+      "interested": "Вы заинтересованы",
+      "markInterested": "В календарь"
+    },
+    "meetup": {
+      "sectionLabel": "Идём вместе",
+      "sectionTitleEmpty": "Создайте первую компанию",
+      "sectionTitleWithCount": "{count, plural, one {# компания идёт} few {# компании идут} many {# компаний идут} other {# компаний идут}}",
+      "sectionDescription": "Соберите своих или познакомьтесь с теми, кто тоже идёт — встреча у входа, кофе до начала, дорога вместе.",
+      "ctaLogin": "Войдите, чтобы создать встречу",
+      "spotsLeft": "{count, plural, one {ещё # место} few {ещё # места} many {ещё # мест} other {ещё # мест}}",
+      "full": "Мест нет",
+      "private": "По ссылке",
+      "goingCount": "{count, plural, one {# идёт} few {# идут} many {# идут} other {# идут}}",
+      "defaultTitle": "Идём на «{event}» вместе",
+      "cta": "Создать встречу",
+      "dialogTitle": "Запланировать встречу",
+      "dialogDescription": "Откройте её для тех, кто тоже идёт на «{event}». Дата и место наследуются из афиши.",
+      "fieldTitle": "Название группы",
+      "fieldTitlePlaceholder": "Идём после работы",
+      "fieldTitleHint": "Расскажите, кого зовёте.",
+      "fieldPitch": "Описание (необязательно)",
+      "fieldPitchPlaceholder": "Встречаемся у главного входа за 30 минут до начала.",
+      "fieldMeetingPoint": "Место встречи (необязательно)",
+      "fieldMeetingPointPlaceholder": "Главный вход · 18:30",
+      "fieldCap": "Лимит участников",
+      "fieldCapPlaceholder": "8",
+      "fieldPrivate": "Приватная ссылка",
+      "fieldPrivateHint": "Встречу увидят только те, у кого есть ссылка.",
+      "cancel": "Отмена",
+      "submit": "Создать",
+      "createSuccess": "Встреча создана",
+      "createError": "Не удалось создать встречу"
+    },
+    "attendance": {
+      "title": "Отметка посещения",
+      "empty": "На это событие никто не записался.",
+      "markAttended": "Пришёл",
+      "markNoShow": "Не пришёл",
+      "statusGoing": "Записан — ещё не отмечен",
+      "statusWaitlist": "Был в листе ожидания",
+      "statusAttended": "Отмечен как пришедший",
+      "statusNoShow": "Отмечен как не пришедший",
+      "markedAttended": "Отмечен как пришедший",
+      "markedNoShow": "Отмечен как не пришедший",
+      "reverted": "Отметка снята",
+      "summaryAttended": "{count} пришли",
+      "summaryNoShow": "{count} не пришли",
+      "summaryUnmarked": "{count} ожидают"
     },
     "page": {
       "heroBadge": "Найдите следующее мероприятие, к которому легко присоединиться",
@@ -292,6 +387,7 @@
       "trust2": "Прогулки, настолки, языковые клубы",
       "trust3": "Познакомьтесь с людьми ещё до встречи",
       "createCta": "Создать мероприятие",
+      "myEventsCta": "Мои мероприятия",
       "sideLabel": "Лучше всего для новых знакомств",
       "sideItem1Title": "Небольшие встречи",
       "sideItem1Body": "Меньше давления, легче начать первый разговор.",
@@ -303,7 +399,124 @@
       "resultsTitle": "{count, plural, one {# мероприятие, куда стоит пойти} few {# мероприятия, куда стоит пойти} other {# мероприятий, куда стоит пойти}}",
       "noResultsTitle": "Подходящих мероприятий пока нет",
       "sectionBody": "Выбирайте форматы, где проще почувствовать себя своим: с понятной атмосферой, регулярностью и живым общением.",
-      "emptyDescription": "Попробуйте изменить фильтры или загляните позже"
+      "emptyDescription": "Попробуйте изменить фильтры или загляните позже",
+      "sort": {
+        "label": "Сортировка",
+        "soon": "Скоро",
+        "popular": "Популярные"
+      },
+      "showPast": "Показать прошедшие",
+      "hidePast": "Скрыть прошедшие",
+      "source": {
+        "all": "Все",
+        "community": "Сообщество",
+        "afisha": "Афиша"
+      }
+    },
+    "myEvents": {
+      "heroBadge": "Ваш центр организатора",
+      "title": "Мои мероприятия",
+      "subtitle": "Все мероприятия, которые вы организуете или модерируете — включая прошедшие, чтобы можно было подвести итоги.",
+      "createCta": "Создать мероприятие",
+      "backToEvents": "Все мероприятия",
+      "upcomingLabel": "Предстоящие",
+      "upcomingTitle": "{count, plural, one {# предстоящее мероприятие} few {# предстоящих мероприятия} other {# предстоящих мероприятий}}",
+      "noUpcoming": "Предстоящих мероприятий нет. Запланируйте новое и соберите своё сообщество.",
+      "pastLabel": "Прошедшие",
+      "pastTitle": "{count, plural, one {# прошедшее мероприятие} few {# прошедших мероприятия} other {# прошедших мероприятий}}",
+      "draftsLabel": "Черновики",
+      "draftsTitle": "{count, plural, one {# черновик} few {# черновика} other {# черновиков}}",
+      "draftsDescription": "Их видите только вы. Опубликуйте, когда будете готовы пригласить людей.",
+      "savedLabel": "В календаре",
+      "savedTitle": "{count, plural, one {# событие из афиши} few {# события из афиши} many {# событий из афиши} other {# событий из афиши}}",
+      "savedDescription": "События из афиши, которые вы отметили как интересные. Они рядом с вашими собственными мероприятиями.",
+      "emptyTitle": "Вы ещё не организовывали мероприятий",
+      "emptyDescription": "Как только вы создадите мероприятие или станете его модератором, оно появится здесь.",
+      "stats": {
+        "upcoming": "Предстоящих",
+        "past": "Прошедших",
+        "drafts": "Черновиков",
+        "rsvps": "Всего RSVP"
+      },
+      "status": {
+        "draft": "Черновик — видно только вам",
+        "cancelled": "Отменено",
+        "completed": "Завершено",
+        "past": "Уже прошло",
+        "blocked": "Заблокировано модерацией"
+      },
+      "card": {
+        "edit": "Редактировать",
+        "publish": "Опубликовать",
+        "publishSuccess": "Мероприятие опубликовано",
+        "cancel": "Отменить",
+        "cancelConfirmTitle": "Отменить это мероприятие?",
+        "cancelConfirmDescription": "Действие необратимо. Всем участникам придёт уведомление.",
+        "cancelDismiss": "Оставить",
+        "cancelConfirm": "Да, отменить",
+        "cancelSuccess": "Мероприятие отменено",
+        "markComplete": "Отметить завершённым",
+        "completeSuccess": "Мероприятие отмечено завершённым",
+        "duplicate": "Дублировать",
+        "duplicateSuccess": "Создан дубль-черновик",
+        "viewRecap": "Итоги",
+        "roster": "{count, plural, =0 {Нет RSVP} one {1 RSVP} few {# RSVP} other {# RSVP}}",
+        "rsvps": "{count, plural, one {# идёт} few {# идут} other {# идут}}"
+      },
+      "subscribe": {
+        "title": "Подписка в календарь",
+        "description": "Подпишитесь — и каждое мероприятие, которое вы организуете или на которое идёте, появится в Google Calendar, Apple Calendar или Outlook автоматически.",
+        "googleCta": "Добавить в Google Calendar",
+        "icsCta": "Скопировать ссылку",
+        "icsCopied": "Ссылка скопирована",
+        "downloadCta": "Скачать .ics",
+        "regenerateCta": "Перевыпустить",
+        "regenerateConfirm": "Все ранее настроенные подписки перестанут работать. Продолжить?",
+        "regenerated": "Ссылка обновлена"
+      }
+    },
+    "map": {
+      "pageTitle": "Карта событий",
+      "pageSubtitle": "Посмотрите, что происходит рядом — отдалите карту, чтобы увидеть соседние районы, приблизьте для деталей на уровне улицы.",
+      "heroBadge": "События рядом",
+      "viewList": "Список",
+      "viewMap": "Карта",
+      "loading": "Обновляем…",
+      "empty": "В этой области пока нет событий",
+      "emptyHint": "Попробуйте отдалить карту или расширить диапазон дат.",
+      "openEvent": "Открыть событие",
+      "andOthers": "+ ещё {count} в этом месте",
+      "rangeLabel": "Диапазон дат",
+      "range": {
+        "today": "Сегодня",
+        "tomorrow": "Завтра",
+        "weekend": "В эти выходные",
+        "week": "Ближайшие 7 дней",
+        "2weeks": "Ближайшие 2 недели"
+      },
+      "locate": "Найти меня",
+      "youAreHere": "Вы здесь",
+      "geoDenied": "Доступ к геолокации запрещён. Разрешите его в настройках браузера.",
+      "geoFailed": "Не удалось определить ваше местоположение. Попробуйте ещё раз.",
+      "geoUnsupported": "Ваш браузер не поддерживает геолокацию.",
+      "showFreeOnly": "Только бесплатные",
+      "categoryFilter": "{count, plural, one {# категория} few {# категории} other {# категорий}}",
+      "removeFilter": "Убрать фильтр: {name}",
+      "removeCategoryFilter": "Сбросить фильтр по категориям",
+      "sidebarCount": "{count, plural, one {# событие} few {# события} many {# событий} other {# события}} на карте",
+      "sidebarEmpty": "Нет событий на карте",
+      "sidebarHint": "Наведите на карточку, чтобы подсветить её на карте.",
+      "sidebarTitle": "События на карте",
+      "pickCategories": "Категории",
+      "searchCategory": "Найти категорию…",
+      "noCategory": "Категории не найдены",
+      "clearAll": "Очистить всё",
+      "legendTitle": "Категории на карте",
+      "legendShowMore": "ещё {count}",
+      "legendCollapse": "Свернуть",
+      "shareLink": "Поделиться видом",
+      "linkCopied": "Ссылка скопирована",
+      "linkCopyFailed": "Не удалось скопировать ссылку"
     },
     "create": {
       "title": "Создать мероприятие",
@@ -341,6 +554,29 @@
       "noModerators": "Модераторы ещё не добавлены",
       "moderatorAdded": "Модератор добавлен",
       "moderatorRemoved": "Модератор удалён"
+    },
+    "safety": {
+      "inputLabel": "Метки аудитории",
+      "inputHint": "Помогите новичкам понять, чего ожидать — выберите подходящие теги.",
+      "rsvpVisibilityLabel": "Показывать меня в списке участников",
+      "rsvpVisibilityHelper": "Если выключено, имя и аватар остаются приватными. Ваш RSVP всё равно учитывается в общем количестве участников.",
+      "rsvpHidden": "Вы идёте приватно",
+      "rsvpHiddenSaved": "Участие сделано приватным",
+      "rsvpVisibleSaved": "Участие сделано публичным",
+      "filterTitle": "Аудитория",
+      "tag": {
+        "women_only": "Только для женщин",
+        "adults_only": "18+",
+        "lgbtq_friendly": "LGBTQ+ friendly",
+        "sober": "Без алкоголя",
+        "beginner_friendly": "Для новичков"
+      }
+    },
+    "reconfirm": {
+      "title": "Идёте завтра?",
+      "body": "Если не подтвердите, освободим место для тех, кто в листе ожидания. Один клик — и всё.",
+      "cta": "Да, иду",
+      "confirmed": "Готово — место за вами"
     }
   },
   "groups": {
@@ -358,6 +594,8 @@
     "cueWelcoming": "Дружелюбное сообщество",
     "cueGrowing": "Растущее сообщество",
     "filters": {
+      "searchPlaceholder": "Поиск групп, тем, мест…",
+      "clearSearch": "Очистить поиск",
       "country": "Страна",
       "city": "Город",
       "language": "Язык",
@@ -383,9 +621,9 @@
     "detail": {
       "creator": "Создатель",
       "membersList": "Участники",
-      "eventsTitle": "Предстоящие мероприятия",
+      "eventsTitle": "Предстоящие",
       "noEvents": "Нет предстоящих мероприятий",
-      "pastEventsTitle": "Прошедшие мероприятия",
+      "pastEventsTitle": "Прошедшие",
       "noPastEvents": "Нет прошедших мероприятий",
       "photosTitle": "Фотоальбомы",
       "noPhotos": "Альбомов пока нет",
@@ -429,6 +667,11 @@
       "communityCueActive": "Активная и дружелюбная группа",
       "communityCueStarter": "Хорошее место, чтобы начать знакомиться",
       "directLink": "Прямая ссылка",
+      "copyLink": "Скопировать ссылку",
+      "linkCopied": "Ссылка скопирована",
+      "linkCopyError": "Не удалось скопировать ссылку",
+      "eventsInCity": "События рядом",
+      "nextEvent": "Ближайшее событие",
       "eventsCount": "{count, plural, one {# мероприятие} few {# мероприятия} other {# мероприятий}}",
       "eventsLabel": "Мероприятия",
       "reply": "Ответить",
@@ -630,6 +873,19 @@
     "breadcrumbs": "Сообщество",
     "yearsOld": "{age} лет",
     "followers": "Подписчики",
+    "reputation": {
+      "reliability": "Надёжность",
+      "attendanceRate": "Доля посещений",
+      "attended": "Пришёл",
+      "noShow": "Не пришёл",
+      "tier": {
+        "newcomer": "Новичок",
+        "regular": "Участник",
+        "trusted": "Надёжный",
+        "elite": "Лидер"
+      },
+      "tierDescription": "{tier, select, newcomer {Только начинает — несколько посещений помогут заработать репутацию.} regular {Регулярно ходит на события с хорошей историей.} trusted {Стабильно посещает и доводит планы до конца.} elite {Очень активен, стабильно посещает и — опора сообщества.} other {Активный участник сообщества.}}"
+    },
     "connectionStyle": "Стиль общения",
     "connectionOpen": "Открыт к новым знакомствам и совместным планам.",
     "connectionReserved": "Предпочитает сначала знакомиться через группы и события.",
@@ -638,6 +894,7 @@
   },
   "calendar": {
     "title": "Календарь",
+    "eyebrow": "Ваш месяц одним взглядом",
     "myEvents": "Мои события",
     "allEvents": "Все события",
     "exportGoogle": "Экспорт в Google Календарь",
@@ -648,11 +905,27 @@
     "monthOverview": "Обзор месяца",
     "noEventsDay": "На этот день пока нет событий.",
     "online": "Онлайн",
-    "free": "Бесплатно"
+    "free": "Бесплатно",
+    "today": "Сегодня",
+    "prevMonth": "Предыдущий месяц",
+    "nextMonth": "Следующий месяц",
+    "selectPrompt": "Выберите день, чтобы увидеть, что в нём происходит.",
+    "moreEvents": "+{count} ещё",
+    "eventsCount": "{count, plural, one {# событие} few {# события} other {# событий}}",
+    "morning": "Утро",
+    "afternoon": "День",
+    "evening": "Вечер",
+    "stats": {
+      "thisMonth": "Событий в этом месяце",
+      "today": "Сегодня",
+      "mine": "В вашем списке"
+    }
   },
   "messages": {
     "title": "Сообщения",
     "noMessages": "Сообщений пока нет",
+    "noMessagesDescription": "Напишите кому-то с прошедшего события или свяжитесь с организатором группы, чтобы попасть на следующую встречу.",
+    "findGroupsCta": "Смотреть группы",
     "newMessage": "Новое сообщение",
     "typeMessage": "Введите сообщение...",
     "send": "Отправить",
@@ -732,5 +1005,241 @@
     "about": "О City-Pulse",
     "contact": "Связаться с нами",
     "copyright": "© {year} City-Pulse. Все права защищены."
+  },
+  "admin": {
+    "funnel": {
+      "topByViews": "Топ событий по просмотрам за 30 дней",
+      "topByViewsHelper": "Сравните охват (просмотры) с конверсией в RSVP и явкой — это покажет, где нужна более сильная кнопка действия или напоминание.",
+      "event": "Событие",
+      "views30d": "Просмотров 30д",
+      "viewsHint": "Уникальные дневные просмотры (без накруток на обновлении).",
+      "uniqueViewers": "{count, plural, one {# зритель} few {# зрителя} many {# зрителей} other {# зрителя}}",
+      "rsvps": "RSVP",
+      "attended": "Пришли",
+      "noShow": "{count, plural, one {# не пришёл} few {# не пришли} many {# не пришли} other {# не пришли}}",
+      "rsvpRate": "RSVP %",
+      "rsvpRateHint": "Доля уникальных зрителей, нажавших «Иду».",
+      "attendedRate": "Явка %",
+      "attendedRateHint": "Доля RSVP, отмеченных как «пришли».",
+      "empty": "Опубликованных событий пока нет — воронка появится после первых просмотров."
+    },
+    "systemEvents": {
+      "dashboard": {
+        "eyebrow": "Редакция",
+        "title": "Афиша · план публикаций",
+        "subtitle": "Планируйте, готовьте и публикуйте кураторские городские события.",
+        "openCalendar": "Календарь",
+        "openTemplates": "Шаблоны",
+        "newDraft": "Новый черновик",
+        "pipelineTitle": "Воронка по городам",
+        "pipelineEmpty": "Пока ничего не запланировано — начните с черновика.",
+        "inFlightTitle": "В работе",
+        "inFlightEmpty": "Черновики и материалы на ревью появятся здесь."
+      },
+      "composer": {
+        "titleNew": "Новое городское событие",
+        "titleEdit": "Редактирование события",
+        "subtitle": "Соберите, проверьте и опубликуйте кураторскую запись.",
+        "backToDashboard": "К дашборду",
+        "viewLive": "На сайте",
+        "sourceTitle": "Импорт из источника",
+        "sourceUrlPlaceholder": "Вставьте URL партнёра (страница события, площадки и т. п.)",
+        "importButton": "Заполнить по URL",
+        "sourceHint": "Подтянем заголовок, описание и обложку. Финальный текст всегда за вами.",
+        "basicsTitle": "Основное",
+        "titleLabel": "Заголовок",
+        "titlePlaceholder": "Публичное название — конкретное и информативное.",
+        "pitchLabel": "Анонс",
+        "pitchPlaceholder": "Одно предложение, которое объясняет, почему это интересно.",
+        "pitchHint": "{length, plural, one {# символ} few {# символа} many {# символов} other {# символов}}",
+        "descriptionLabel": "Описание",
+        "descriptionPlaceholder": "Что это? Почему стоит прийти?",
+        "coverLabel": "URL обложки",
+        "coverPlaceholder": "https://",
+        "whenTitle": "Когда",
+        "startsAtLabel": "Начало",
+        "durationLabel": "Длительность (минуты)",
+        "whereTitle": "Где",
+        "cityLabel": "Город",
+        "cityPlaceholder": "Praha",
+        "addressLabel": "Адрес",
+        "addressPlaceholder": "Улица и номер",
+        "curationTitle": "Кураторская часть",
+        "categoryLabel": "Категория",
+        "categoryPlaceholder": "Выберите категорию",
+        "partnerNameLabel": "Партнёр / площадка",
+        "partnerNamePlaceholder": "Goethe-Institut",
+        "partnerUrlLabel": "URL партнёра",
+        "freeLabel": "Бесплатный вход",
+        "freeHint": "Выключите, чтобы указать цену и валюту.",
+        "priceLabel": "Цена",
+        "currencyLabel": "Валюта",
+        "actionsTitle": "Публикация",
+        "currentStatusLabel": "Статус",
+        "saveDraftButton": "Сохранить черновик",
+        "sendToReviewButton": "Отправить на ревью",
+        "publishButton": "Опубликовать",
+        "publishBlockedHint": "Исправьте подсвеченные проблемы перед публикацией.",
+        "publishGatesFailed": "Часть проверок не пройдена — посмотрите панель выше.",
+        "importError": {
+          "invalid_url": "Это не похоже на URL.",
+          "invalid_protocol": "Поддерживаются только http(s) ссылки.",
+          "private_address": "Приватные адреса не разрешены.",
+          "fetch_failed": "Не удалось загрузить страницу."
+        },
+        "status": {
+          "draft": "Черновик",
+          "review": "Ревью",
+          "scheduled": "Запланировано",
+          "published": "Опубликовано"
+        }
+      },
+      "gates": {
+        "panelTitle": "Контроль качества",
+        "summary": "{errors, plural, =0 {готово} other {ошибок: #}}{warnings, plural, =0 {} other { · предупреждений: #}}",
+        "allClear": "Все проверки пройдены — можно публиковать.",
+        "titleShort": "В заголовке должно быть минимум 6 символов.",
+        "noCity": "Выберите город.",
+        "noCategory": "Выберите категорию.",
+        "descriptionShort": "Описание короткое ({current}/{min} символов).",
+        "pitchMissing": "Добавьте анонс.",
+        "pitchShort": "Анонс короткий ({current}/{min} символов).",
+        "pitchLong": "Анонс слишком длинный ({current}/{max} символов).",
+        "coverMissing": "Добавьте обложку — без неё событие хуже привлекает внимание.",
+        "dateMissing": "Укажите дату начала.",
+        "dateInvalid": "Дата выглядит некорректно.",
+        "datePast": "Дата начала уже в прошлом.",
+        "dateClose": "До начала меньше {min} дней — лучше планировать заранее.",
+        "possibleDuplicate": "{count, plural, one {найдено возможный дубль} few {найдено # возможных дубля} many {найдено # возможных дублей} other {найдено # возможных дублей}} — проверьте перед публикацией.",
+        "noPartner": "Партнёр не указан."
+      },
+      "calendar": {
+        "title": "Редакторский календарь",
+        "subtitle": "Перетащите черновик на новый день, чтобы изменить дату.",
+        "back": "К дашборду",
+        "prevMonth": "Назад",
+        "nextMonth": "Вперёд",
+        "saving": "Сохраняем…"
+      },
+      "templates": {
+        "title": "Шаблоны",
+        "subtitle": "Стартовая точка — финальную версию доведёте перед публикацией.",
+        "back": "К дашборду",
+        "useTemplate": "Использовать шаблон",
+        "items": {
+          "openAirConcert": {
+            "label": "Концерт open-air",
+            "description": "Вечер музыки на открытом воздухе с одним хедлайнером и разогревом."
+          },
+          "farmersMarket": {
+            "label": "Фермерский рынок",
+            "description": "Рынок локальных производителей на полдня — повторяющийся слот по выходным."
+          },
+          "galleryOpening": {
+            "label": "Открытие выставки",
+            "description": "Вернисаж с присутствием художника и короткой кураторской экскурсией."
+          },
+          "filmFestival": {
+            "label": "Фестивальный показ",
+            "description": "Тематический показ с интро и Q&A после титров."
+          },
+          "streetFoodFair": {
+            "label": "Ярмарка стритфуда",
+            "description": "Уличный фудкорт с разными участниками — формат для всей семьи."
+          },
+          "bookLaunch": {
+            "label": "Презентация книги",
+            "description": "Чтения, автограф-сессия и короткие Q&A с автором."
+          }
+        }
+      }
+    }
+  },
+  "onboarding": {
+    "title": "Добро пожаловать в City-Pulse",
+    "titleNamed": "Привет, {name}!",
+    "subtitle": "Настроим ленту под ваш город, интересы и языки — займёт меньше минуты.",
+    "cityCountryLabel": "Ваш город",
+    "countryPlaceholder": "Выберите страну",
+    "cityPlaceholder": "Найти город",
+    "cityHelper": "Будем показывать события и группы из этого города в первую очередь. Изменить можно позже в профиле.",
+    "cityRequired": "Выберите страну и город, чтобы продолжить.",
+    "interestsHelper": "Выберите от {min} до {max} интересов — чем точнее, тем лучше рекомендации.",
+    "interestsMin": "Выберите минимум {min} интересов.",
+    "uncategorized": "Ещё",
+    "languagesHelper": "На каких языках вам комфортно общаться на событиях? Можно несколько.",
+    "languagesMin": "Выберите хотя бы один язык.",
+    "finish": "Начать",
+    "done": "Готово — добро пожаловать!"
+  },
+  "friends": {
+    "goingCue": "{count, plural, one {# знакомый идёт} few {# знакомых идут} many {# знакомых идут} other {# знакомых идут}}",
+    "interestedCue": "{count, plural, one {# знакомому интересно} few {# знакомым интересно} many {# знакомым интересно} other {# знакомым интересно}}",
+    "noFollowingYet": "Подпишитесь на организаторов, чтобы видеть, кто куда идёт."
+  },
+  "safety": {
+    "tagWomenOnly": "Только для женщин",
+    "tagAdults": "18+",
+    "tagFamily": "Подходит для семьи",
+    "tagBeginners": "Можно новичкам",
+    "tagSober": "Без алкоголя",
+    "rsvpVisibilityLabel": "Видимость RSVP",
+    "rsvpVisibilityPublic": "Все видят, что я иду",
+    "rsvpVisibilityPrivate": "Только организатор видит, что я иду",
+    "rsvpVisibilityHelper": "Приватные RSVP учитываются в количестве участников, но не показываются в публичном списке."
+  },
+  "digest": {
+    "subjectLine": "{city}: {count} новых событий на этой неделе",
+    "preheader": "Подобрано по вашим подпискам и интересам.",
+    "intro": "Привет, {name}, вот что предстоит.",
+    "ctaUnsubscribe": "Настройки рассылки",
+    "settingTitle": "Еженедельный дайджест",
+    "settingDescription": "Получайте персональное письмо каждый понедельник с событиями по вашим интересам.",
+    "settingToggle": "Подписаться на еженедельный дайджест"
+  },
+  "recurring": {
+    "frequencyLabel": "Повторение",
+    "helper": "Мы создадим отдельное событие на каждую дату (лимит мест, RSVP и отзывы считаются по каждой дате отдельно).",
+    "noneLabel": "Не повторяется",
+    "weeklyLabel": "Каждую неделю",
+    "everyTwoWeeksLabel": "Каждые 2 недели",
+    "monthlyLabel": "Каждый месяц",
+    "untilLabel": "До",
+    "occurrencesLabel": "Повторений",
+    "editScopeTitle": "Применить изменения к",
+    "editScopeThis": "Только к этому событию",
+    "editScopeFuture": "К этому и будущим",
+    "editScopeAll": "Ко всем событиям серии",
+    "seriesBadge": "Серия"
+  },
+  "unsubscribe": {
+    "successTitle": "Вы отписаны",
+    "successBody": "Еженедельные письма больше приходить не будут. Подписаться снова можно в настройках.",
+    "errorTitle": "Не получилось обработать ссылку",
+    "errorBody": "Возможно, ссылка устарела или уже использована. Войдите, чтобы управлять настройками.",
+    "emailLine": "Изменения сохранены для {email}",
+    "manageCta": "Настройки",
+    "homeCta": "К событиям"
+  },
+  "settings": {
+    "email": {
+      "title": "Настройки писем",
+      "subtitle": "Выберите, какие письма вы хотите получать. Изменить можно в любой момент.",
+      "cardTitle": "Уведомления",
+      "emailLabel": "Адрес: {email}",
+      "digestLabel": "Еженедельный дайджест",
+      "digestHelper": "Короткое персональное письмо каждый понедельник с событиями по вашему городу, интересам и языкам.",
+      "toastSubscribed": "Вы подписаны на дайджест",
+      "toastUnsubscribed": "Дайджест больше не будет приходить",
+      "push": {
+        "label": "Push-уведомления в браузере",
+        "helper": "Мгновенные уведомления о подтверждении RSVP, ответах и напоминаниях — даже когда вкладка закрыта.",
+        "unsupportedHelper": "Ваш браузер не поддерживает push-уведомления или они не настроены для этой среды.",
+        "permissionDenied": "Разрешение на уведомления заблокировано. Включите его в настройках сайта.",
+        "subscribeError": "Не удалось включить push. Попробуйте ещё раз.",
+        "subscribeSuccess": "Push-уведомления включены",
+        "unsubscribeSuccess": "Push-уведомления выключены"
+      }
+    }
   }
 }

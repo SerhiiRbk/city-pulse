@@ -4,8 +4,25 @@ import { createClient } from '@/lib/supabase/server';
 import { canEditGroup } from '@/lib/actions/groups';
 import { createNotification } from '@/lib/actions/notifications';
 import { nanoid } from 'nanoid';
-import type { GroupPost, GroupPostComment, GroupPostMedia, GroupPostType } from '@/types/database';
+import type { GroupPost, GroupPostComment, GroupPostMedia, Json } from '@/types/database';
 import { isValidSlug, toSlug } from '@/lib/utils';
+import {
+  createGroupPostSchema,
+  groupPostCommentSchema,
+  updateGroupPostSchema,
+  type CreateGroupPostInput,
+  type GroupPostCommentInput,
+  type UpdateGroupPostInput,
+} from '@/lib/validations/group-posts';
+import { prettyZodError } from '@/lib/validations/common';
+import {
+  parseAndValidateRichTextDoc,
+  RichTextValidationError,
+} from '@/lib/rich-text/validate';
+import { extractPlainText } from '@/lib/rich-text/extract-plain';
+import type { RichTextDoc } from '@/lib/rich-text/types';
+
+const MAX_CONTENT_PLAIN_LENGTH = 4000;
 
 const MAX_POST_IMAGES = 6;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
@@ -297,27 +314,42 @@ export async function getGroupPostComments(postId: string): Promise<GroupPostCom
   }));
 }
 
-export async function createGroupPost(data: {
-  groupId: string;
-  type: GroupPostType;
-  title: string;
-  content: string;
-  eventId?: string | null;
-}) {
+function validateBodyOrError(rawJson: unknown): { doc: RichTextDoc; plain: string } | { error: string } {
+  let doc: RichTextDoc;
+  try {
+    doc = parseAndValidateRichTextDoc(rawJson);
+  } catch (err) {
+    if (err instanceof RichTextValidationError) return { error: err.message };
+    return { error: 'Invalid post body' };
+  }
+
+  const plain = extractPlainText(doc).slice(0, MAX_CONTENT_PLAIN_LENGTH);
+  if (plain.trim().length === 0) {
+    return { error: 'Content is required' };
+  }
+  return { doc, plain };
+}
+
+export async function createGroupPost(data: CreateGroupPostInput) {
+  const parsed = createGroupPostSchema.safeParse(data);
+  if (!parsed.success) return { error: prettyZodError(parsed.error) };
+  const input = parsed.data;
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
 
-  const allowed = await canEditGroup(data.groupId);
+  const allowed = await canEditGroup(input.groupId);
   if (!allowed) return { error: 'No permission to post in this group' };
 
-  const title = data.title.trim();
-  const content = data.content.trim();
-  if (!title || !content) return { error: 'Title and content are required' };
+  const body = validateBodyOrError(input.contentJson);
+  if ('error' in body) return body;
 
-  let eventId: string | null = data.eventId || null;
+  const title = input.title;
 
-  if (data.type === 'event_recap') {
+  let eventId: string | null = input.eventId || null;
+
+  if (input.type === 'event_recap') {
     if (!eventId) return { error: 'Event is required for a recap' };
 
     const { data: event } = await supabase
@@ -326,7 +358,7 @@ export async function createGroupPost(data: {
       .eq('id', eventId)
       .single();
 
-    if (!event || event.group_id !== data.groupId) {
+    if (!event || event.group_id !== input.groupId) {
       return { error: 'This event does not belong to the group' };
     }
 
@@ -349,13 +381,18 @@ export async function createGroupPost(data: {
   const { data: post, error } = await supabase
     .from('group_posts')
     .insert({
-      group_id: data.groupId,
-      slug: await generateUniquePostSlug(supabase, data.groupId, title),
+      group_id: input.groupId,
+      slug: await generateUniquePostSlug(supabase, input.groupId, title),
       author_id: user.id,
       event_id: eventId,
-      type: data.type,
+      type: input.type,
       title,
-      content,
+      // `content` is also auto-derived by the BEFORE-trigger from
+      // `content_json`. We still write our own plain-text projection
+      // so the row is valid even if the trigger were ever disabled,
+      // and to keep the value identical to what the client computed.
+      content: body.plain,
+      content_json: body.doc as unknown as Json,
     })
     .select(`
       *,
@@ -369,7 +406,10 @@ export async function createGroupPost(data: {
   return { success: true, post: normalizeGroupPost(post) };
 }
 
-export async function updateGroupPost(postId: string, data: { title: string; content: string }) {
+export async function updateGroupPost(postId: string, data: UpdateGroupPostInput) {
+  const parsed = updateGroupPostSchema.safeParse(data);
+  if (!parsed.success) return { error: prettyZodError(parsed.error) };
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -387,15 +427,17 @@ export async function updateGroupPost(postId: string, data: { title: string; con
   const allowed = await canEditGroup(post.group_id);
   if (!allowed) return { error: 'No permission to edit this post' };
 
-  const title = data.title.trim();
-  const content = data.content.trim();
-  if (!title || !content) return { error: 'Title and content are required' };
+  const body = validateBodyOrError(parsed.data.contentJson);
+  if ('error' in body) return body;
+
+  const title = parsed.data.title;
 
   const { data: updatedPost, error } = await supabase
     .from('group_posts')
     .update({
       title,
-      content,
+      content: body.plain,
+      content_json: body.doc as unknown as Json,
       updated_at: new Date().toISOString(),
     })
     .eq('id', postId)
@@ -424,14 +466,22 @@ export async function addGroupPostComment(
   parentId?: string,
   options?: { quotedText?: string; quotedAuthorName?: string; replyToId?: string },
 ) {
+  const parsed = groupPostCommentSchema.safeParse({
+    content,
+    parentId,
+    replyToId: options?.replyToId,
+    quotedText: options?.quotedText,
+    quotedAuthorName: options?.quotedAuthorName,
+  } satisfies GroupPostCommentInput);
+  if (!parsed.success) return { error: prettyZodError(parsed.error) };
+
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
 
-  const text = content.trim();
-  if (!text) return { error: 'Comment is required' };
+  const text = parsed.data.content;
 
   const { data: post } = await supabase
     .from('group_posts')
@@ -478,11 +528,11 @@ export async function addGroupPostComment(
       post_id: postId,
       user_id: user.id,
       content: text,
-      parent_id: parentId || null,
+      parent_id: parsed.data.parentId || null,
       is_approved: autoApprove,
-      quoted_text: options?.quotedText || null,
-      quoted_author_name: options?.quotedAuthorName || null,
-      reply_to_id: options?.replyToId || null,
+      quoted_text: parsed.data.quotedText || null,
+      quoted_author_name: parsed.data.quotedAuthorName || null,
+      reply_to_id: parsed.data.replyToId || null,
     })
     .select('*, profiles:user_id(id, display_name, avatar_url)')
     .single();

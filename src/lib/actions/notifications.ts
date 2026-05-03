@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { sendPushToUser } from '@/lib/push/web-push';
 
 export async function getNotifications(limit = 20) {
   const supabase = await createClient();
@@ -70,5 +71,20 @@ export async function createNotification(params: {
     data: params.data || {},
   });
   if (error) return { error: error.message };
+
+  // Best-effort push fan-out. We swallow the result so push
+  // failures (no VAPID keys, expired subscriptions, network blips)
+  // never break the in-app notification path. The helper itself
+  // already prunes 404/410 subscriptions, so we don't need to
+  // chain bookkeeping here.
+  const eventId =
+    typeof params.data?.event_id === 'string' ? (params.data.event_id as string) : null;
+  void sendPushToUser(params.userId, {
+    title: params.title,
+    body: params.body || '',
+    url: eventId ? `/events/${eventId}` : '/notifications',
+    tag: params.type,
+  }).catch(() => undefined);
+
   return { success: true };
 }

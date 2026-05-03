@@ -23,13 +23,36 @@
     "copied": "Kopiert!",
     "copyLink": "Link kopieren",
     "linkCopied": "Link kopiert!",
+    "showQrCode": "QR-Code anzeigen",
+    "downloadQr": "PNG herunterladen",
+    "qrDialogTitle": "Zum Öffnen scannen",
+    "qrDialogHelp": "Richte die Kamera auf den Code, um die Seite auf einem anderen Gerät zu öffnen oder speichere das Bild für einen Flyer.",
     "follow": "Folgen",
     "following": "Du folgst",
     "user": "Benutzer",
     "send": "Senden",
     "searchAddress": "Adresse suchen...",
     "searchCity": "Stadt suchen...",
-    "noCitiesFound": "Keine Städte gefunden"
+    "noCitiesFound": "Keine Städte gefunden",
+    "rich": {
+      "bold": "Fett",
+      "italic": "Kursiv",
+      "strike": "Durchgestrichen",
+      "heading2": "Überschrift",
+      "heading3": "Unterüberschrift",
+      "bulletList": "Aufzählungsliste",
+      "orderedList": "Nummerierte Liste",
+      "blockquote": "Zitat",
+      "link": "Link",
+      "linkDialogTitle": "Link hinzufügen",
+      "linkPlaceholder": "https://example.com",
+      "linkSave": "Speichern",
+      "linkRemove": "Link entfernen",
+      "linkCancel": "Abbrechen",
+      "linkInvalid": "Verwende eine http- oder https-URL",
+      "charactersUsed": "{used} / {max}",
+      "charactersOverflow": "Maximale Länge erreicht"
+    }
   },
   "nav": {
     "home": "Startseite",
@@ -46,7 +69,8 @@
     "createGroup": "Gruppe erstellen",
     "cityEvents": "Stadtevents",
     "feed": "Feed",
-    "admin": "Admin"
+    "admin": "Admin",
+    "myEvents": "Meine Veranstaltungen"
   },
   "landing": {
     "hero": {
@@ -178,6 +202,8 @@
     "title": "Veranstaltungen",
     "noEvents": "Keine Veranstaltungen gefunden",
     "filters": {
+      "searchPlaceholder": "Events, Orte, Themen suchen…",
+      "clearSearch": "Löschen",
       "country": "Land",
       "city": "Stadt",
       "language": "Sprache",
@@ -214,11 +240,17 @@
       "going": "Du gehst",
       "notGoing": "Teilnahme absagen",
       "join": "Ich gehe",
+      "joinWaitlist": "Auf Warteliste",
+      "onWaitlist": "Auf der Warteliste",
+      "interested": "Interessiert",
+      "markInterested": "Als interessant markieren",
       "favorite": "Zu Favoriten",
       "unfavorite": "Aus Favoriten entfernen",
       "share": "Teilen",
       "attendees": "{count, plural, one {# Teilnehmer} other {# Teilnehmer}}",
       "cuePopular": "Beliebt bei Einheimischen",
+      "cueAfisha": "Redaktionsauswahl",
+      "badgeAfisha": "Afisha",
       "cueEasy": "Leicht beizutreten",
       "startingSoon": "Beginnt bald",
       "inHours": "In {count} Std.",
@@ -252,6 +284,9 @@
       "removedFromFavorites": "Aus Favoriten entfernt",
       "registeredForEvent": "Du bist angemeldet!",
       "cancelledAttendance": "Teilnahme abgesagt",
+      "addedToWaitlist": "Auf die Warteliste gesetzt — du rückst nach, sobald ein Platz frei wird",
+      "markedInterested": "Als interessant markiert",
+      "unmarkedInterested": "Nicht mehr interessiert",
       "breadcrumbs": "Veranstaltungen",
       "popularCue": "Beliebte Veranstaltung zum Kennenlernen und Austauschen",
       "soloCue": "Leicht beizutreten, auch wenn du allein kommst",
@@ -267,6 +302,8 @@
       "goingCount": "{count, plural, one {# Zusage} other {# Zusagen}}",
       "spotsLeft": "{count, plural, one {# Platz frei} other {# Plätze frei}}",
       "noSpotsLeft": "Keine Plätze frei",
+      "waitlistCount": "{count, plural, one {# auf Warteliste} other {# auf Warteliste}}",
+      "interestedCount": "{count, plural, one {# interessiert} other {# interessiert}}",
       "reviewsCount": "{rating} ({count, plural, one {# Bewertung} other {# Bewertungen}})",
       "moreAttendees": "+{count} weitere Teilnehmende",
       "noComments": "Noch keine Kommentare.",
@@ -283,7 +320,65 @@
       "recapCreateHint": "Teile im Gruppenfeed, wie die Veranstaltung gelaufen ist, was besonders war und welche Erkenntnisse es gab.",
       "recapPendingHint": "Die Organisatoren haben noch keinen Rückblick veröffentlicht.",
       "viewRecap": "Rückblick ansehen",
-      "writeRecap": "Rückblick schreiben"
+      "writeRecap": "Rückblick schreiben",
+      "addToCalendar": "Zum Kalender hinzufügen",
+      "addToGoogle": "Google Calendar",
+      "addToApple": "Apple / Outlook",
+      "downloadIcs": ".ics herunterladen",
+      "systemEditorialTitle": "Stadt-Veranstaltung",
+      "systemEditorialSubtitle": "Wir veranstalten dieses Event nicht — wir helfen dir nur, es nicht zu verpassen.",
+      "goWithGroupNew": "Gemeinsam hingehen",
+      "goWithGroupExisting": "Einer Gruppe beitreten"
+    },
+    "systemActions": {
+      "interested": "Du hast Interesse",
+      "markInterested": "Interesse merken"
+    },
+    "meetup": {
+      "sectionLabel": "Gemeinsam hingehen",
+      "sectionTitleEmpty": "Sei der erste, der ein Treffen plant",
+      "sectionTitleWithCount": "{count, plural, one {# Gruppe geht hin} other {# Gruppen gehen hin}}",
+      "sectionDescription": "Plane mit Leuten von City-Pulse — Treffen am Eingang, Drink davor, gemeinsame Anfahrt.",
+      "ctaLogin": "Melde dich an, um ein Treffen zu starten",
+      "spotsLeft": "{count, plural, one {noch # Platz frei} other {noch # Plätze frei}}",
+      "full": "Voll",
+      "private": "Privat",
+      "goingCount": "{count, plural, one {# geht hin} other {# gehen hin}}",
+      "defaultTitle": "Gemeinsam zu „{event}“",
+      "cta": "Treffen starten",
+      "dialogTitle": "Treffen planen",
+      "dialogDescription": "Öffne es für andere von City-Pulse, die zu „{event}“ gehen. Datum und Ort werden aus dem Listing übernommen.",
+      "fieldTitle": "Gruppenname",
+      "fieldTitlePlaceholder": "Nach-Feierabend-Crew",
+      "fieldTitleHint": "Sag, wen du einlädst.",
+      "fieldPitch": "Beschreibung (optional)",
+      "fieldPitchPlaceholder": "Wir treffen uns 30 Minuten vor Beginn am Haupteingang.",
+      "fieldMeetingPoint": "Treffpunkt (optional)",
+      "fieldMeetingPointPlaceholder": "Haupteingang · 18:30",
+      "fieldCap": "Gruppen-Limit",
+      "fieldCapPlaceholder": "8",
+      "fieldPrivate": "Privater Link",
+      "fieldPrivateHint": "Nur Personen mit dem Link sehen das Treffen.",
+      "cancel": "Abbrechen",
+      "submit": "Erstellen",
+      "createSuccess": "Treffen erstellt",
+      "createError": "Treffen konnte nicht erstellt werden"
+    },
+    "attendance": {
+      "title": "Anwesenheitsliste",
+      "empty": "Für diese Veranstaltung gibt es keine Anmeldungen.",
+      "markAttended": "Da",
+      "markNoShow": "Fehlte",
+      "statusGoing": "Angemeldet — noch nicht markiert",
+      "statusWaitlist": "War auf der Warteliste",
+      "statusAttended": "Als anwesend markiert",
+      "statusNoShow": "Als abwesend markiert",
+      "markedAttended": "Als anwesend markiert",
+      "markedNoShow": "Als abwesend markiert",
+      "reverted": "Markierung entfernt",
+      "summaryAttended": "{count} anwesend",
+      "summaryNoShow": "{count} abwesend",
+      "summaryUnmarked": "{count} offen"
     },
     "page": {
       "heroBadge": "Finde deine nächste Veranstaltung, bei der der Einstieg leichtfällt",
@@ -292,6 +387,7 @@
       "trust2": "Spaziergänge, Brettspiele, Sprachclubs",
       "trust3": "Menschen kennenlernen, bevor du kommst",
       "createCta": "Veranstaltung erstellen",
+      "myEventsCta": "Meine Veranstaltungen",
       "sideLabel": "Am besten für neue Verbindungen",
       "sideItem1Title": "Kleine Gruppen",
       "sideItem1Body": "Weniger Druck, einfachere erste Gespräche.",
@@ -303,7 +399,124 @@
       "resultsTitle": "{count, plural, one {# Veranstaltung, die sich lohnt} other {# Veranstaltungen, die sich lohnen}}",
       "noResultsTitle": "Noch keine passenden Veranstaltungen",
       "sectionBody": "Achte auf einladende Formate, wiederkehrende Communities und Events, bei denen man schnell Anschluss findet.",
-      "emptyDescription": "Passe deine Filter an oder schau später noch einmal vorbei"
+      "emptyDescription": "Passe deine Filter an oder schau später noch einmal vorbei",
+      "sort": {
+        "label": "Sortierung",
+        "soon": "Demnächst",
+        "popular": "Beliebt"
+      },
+      "showPast": "Vergangene anzeigen",
+      "hidePast": "Vergangene ausblenden",
+      "source": {
+        "all": "Alle",
+        "community": "Community",
+        "afisha": "Afisha"
+      }
+    },
+    "myEvents": {
+      "heroBadge": "Dein Organisator-Hub",
+      "title": "Meine Veranstaltungen",
+      "subtitle": "Alles, was du organisierst oder moderierst — auch vergangene Veranstaltungen für Rückblick und Reflexion.",
+      "createCta": "Veranstaltung erstellen",
+      "backToEvents": "Alle Veranstaltungen",
+      "upcomingLabel": "Bevorstehend",
+      "upcomingTitle": "{count, plural, one {# bevorstehende Veranstaltung} other {# bevorstehende Veranstaltungen}}",
+      "noUpcoming": "Keine bevorstehenden Veranstaltungen. Plane etwas Neues und bring deine Community zusammen.",
+      "pastLabel": "Vergangen",
+      "pastTitle": "{count, plural, one {# vergangene Veranstaltung} other {# vergangene Veranstaltungen}}",
+      "draftsLabel": "Entwürfe",
+      "draftsTitle": "{count, plural, one {# Entwurf} other {# Entwürfe}}",
+      "draftsDescription": "Nur du siehst sie. Veröffentliche sie, sobald du bereit bist, Gäste einzuladen.",
+      "savedLabel": "Im Kalender",
+      "savedTitle": "{count, plural, one {# gespeicherte Stadt-Veranstaltung} other {# gespeicherte Stadt-Veranstaltungen}}",
+      "savedDescription": "Redaktionelle Veranstaltungen, die du dir gemerkt hast — direkt neben deinen eigenen.",
+      "emptyTitle": "Du hast noch keine Veranstaltungen organisiert",
+      "emptyDescription": "Sobald du Veranstaltungen erstellst oder moderierst, erscheinen sie hier zur einfachen Verwaltung.",
+      "stats": {
+        "upcoming": "Bevorstehend",
+        "past": "Vergangen",
+        "drafts": "Entwürfe",
+        "rsvps": "RSVPs gesamt"
+      },
+      "status": {
+        "draft": "Entwurf — nur du siehst ihn",
+        "cancelled": "Abgesagt",
+        "completed": "Abgeschlossen",
+        "past": "Bereits stattgefunden",
+        "blocked": "Von der Moderation blockiert"
+      },
+      "card": {
+        "edit": "Bearbeiten",
+        "publish": "Veröffentlichen",
+        "publishSuccess": "Veranstaltung veröffentlicht",
+        "cancel": "Absagen",
+        "cancelConfirmTitle": "Diese Veranstaltung absagen?",
+        "cancelConfirmDescription": "Die Aktion kann nicht rückgängig gemacht werden. Alle Teilnehmer werden benachrichtigt.",
+        "cancelDismiss": "Behalten",
+        "cancelConfirm": "Ja, absagen",
+        "cancelSuccess": "Veranstaltung abgesagt",
+        "markComplete": "Als abgeschlossen markieren",
+        "completeSuccess": "Als abgeschlossen markiert",
+        "duplicate": "Duplizieren",
+        "duplicateSuccess": "Entwurf-Kopie erstellt",
+        "viewRecap": "Rückblick",
+        "roster": "{count, plural, =0 {Keine RSVPs} one {1 RSVP} other {# RSVPs}}",
+        "rsvps": "{count, plural, one {# kommt} other {# kommen}}"
+      },
+      "subscribe": {
+        "title": "In Kalender abonnieren",
+        "description": "Abonniere einmal — und jede Veranstaltung, die du organisierst oder besuchst, erscheint automatisch in Google Calendar, Apple Calendar oder Outlook.",
+        "googleCta": "Zu Google Calendar hinzufügen",
+        "icsCta": "Abo-Link kopieren",
+        "icsCopied": "Link kopiert",
+        "downloadCta": ".ics herunterladen",
+        "regenerateCta": "Link erneuern",
+        "regenerateConfirm": "Alle bisher abonnierten Kalender funktionieren danach nicht mehr. Fortfahren?",
+        "regenerated": "Link erneuert"
+      }
+    },
+    "map": {
+      "pageTitle": "Veranstaltungskarte",
+      "pageSubtitle": "Sieh, was in deiner Nähe passiert — zoome heraus für weitere Gebiete, zoome hinein für Straßen-Details.",
+      "heroBadge": "Veranstaltungen in deiner Nähe",
+      "viewList": "Liste",
+      "viewMap": "Karte",
+      "loading": "Aktualisieren…",
+      "empty": "In diesem Bereich gibt es noch keine Veranstaltungen",
+      "emptyHint": "Zoome heraus oder erweitere den Datumsbereich.",
+      "openEvent": "Veranstaltung öffnen",
+      "andOthers": "+ {count} weitere an diesem Ort",
+      "rangeLabel": "Zeitraum",
+      "range": {
+        "today": "Heute",
+        "tomorrow": "Morgen",
+        "weekend": "Am Wochenende",
+        "week": "Nächste 7 Tage",
+        "2weeks": "Nächste 2 Wochen"
+      },
+      "locate": "Mich finden",
+      "youAreHere": "Du bist hier",
+      "geoDenied": "Standortzugriff verweigert. Erlaube ihn in den Browser-Einstellungen.",
+      "geoFailed": "Dein Standort konnte nicht ermittelt werden. Bitte erneut versuchen.",
+      "geoUnsupported": "Dein Browser unterstützt keine Standortermittlung.",
+      "showFreeOnly": "Nur kostenlos",
+      "categoryFilter": "{count, plural, one {# Kategorie} other {# Kategorien}}",
+      "removeFilter": "Filter entfernen: {name}",
+      "removeCategoryFilter": "Kategorienfilter zurücksetzen",
+      "sidebarCount": "{count, plural, one {# Event auf der Karte} other {# Events auf der Karte}}",
+      "sidebarEmpty": "Keine Events auf der Karte",
+      "sidebarHint": "Fahre über eine Karte, um sie auf der Karte hervorzuheben.",
+      "sidebarTitle": "Events auf der Karte",
+      "pickCategories": "Kategorien",
+      "searchCategory": "Kategorie suchen…",
+      "noCategory": "Keine Kategorien gefunden",
+      "clearAll": "Alle löschen",
+      "legendTitle": "Kategorien auf der Karte",
+      "legendShowMore": "+{count} weitere",
+      "legendCollapse": "Weniger anzeigen",
+      "shareLink": "Ansicht teilen",
+      "linkCopied": "Link in die Zwischenablage kopiert",
+      "linkCopyFailed": "Link konnte nicht kopiert werden"
     },
     "create": {
       "title": "Veranstaltung erstellen",
@@ -341,6 +554,29 @@
       "noModerators": "Noch keine Moderatoren hinzugefügt",
       "moderatorAdded": "Moderator hinzugefügt",
       "moderatorRemoved": "Moderator entfernt"
+    },
+    "safety": {
+      "inputLabel": "Zielgruppen-Hinweise",
+      "inputHint": "Hilf Neulingen zu wissen, was sie erwartet — wähle passende Tags aus.",
+      "rsvpVisibilityLabel": "Mich auf der öffentlichen Teilnehmerliste anzeigen",
+      "rsvpVisibilityHelper": "Wenn deaktiviert, bleiben Name und Avatar privat. Dein RSVP zählt trotzdem für die Teilnehmerzahl.",
+      "rsvpHidden": "Du nimmst privat teil",
+      "rsvpHiddenSaved": "RSVP auf privat gestellt",
+      "rsvpVisibleSaved": "RSVP auf öffentlich gestellt",
+      "filterTitle": "Für wen",
+      "tag": {
+        "women_only": "Nur für Frauen",
+        "adults_only": "18+",
+        "lgbtq_friendly": "LGBTQ+ friendly",
+        "sober": "Alkoholfrei",
+        "beginner_friendly": "Anfänger willkommen"
+      }
+    },
+    "reconfirm": {
+      "title": "Kommst du morgen?",
+      "body": "Ohne Bestätigung geben wir deinen Platz an die Warteliste weiter. Ein Klick reicht.",
+      "cta": "Ja, ich komme",
+      "confirmed": "Erledigt — dein Platz ist sicher"
     }
   },
   "groups": {
@@ -358,6 +594,8 @@
     "cueWelcoming": "Einladende Community",
     "cueGrowing": "Wachsende Community",
     "filters": {
+      "searchPlaceholder": "Gruppen, Themen, Orte suchen…",
+      "clearSearch": "Suche zurücksetzen",
       "country": "Land",
       "city": "Stadt",
       "language": "Sprache",
@@ -383,9 +621,9 @@
     "detail": {
       "creator": "Erstellt von",
       "membersList": "Mitglieder",
-      "eventsTitle": "Kommende Veranstaltungen",
+      "eventsTitle": "Kommende",
       "noEvents": "Keine kommenden Veranstaltungen",
-      "pastEventsTitle": "Vergangene Veranstaltungen",
+      "pastEventsTitle": "Vergangene",
       "noPastEvents": "Keine vergangenen Veranstaltungen",
       "photosTitle": "Fotoalben",
       "noPhotos": "Noch keine Alben",
@@ -429,6 +667,11 @@
       "communityCueActive": "Aktive und einladende Gruppe",
       "communityCueStarter": "Ein guter Ort, um neue Leute kennenzulernen",
       "directLink": "Direktlink",
+      "copyLink": "Link kopieren",
+      "linkCopied": "Link kopiert",
+      "linkCopyError": "Link konnte nicht kopiert werden",
+      "eventsInCity": "Events in der Nähe",
+      "nextEvent": "Nächstes Event",
       "eventsCount": "{count, plural, one {# Veranstaltung} other {# Veranstaltungen}}",
       "eventsLabel": "Veranstaltungen",
       "reply": "Antworten",
@@ -630,6 +873,19 @@
     "breadcrumbs": "Community",
     "yearsOld": "{age} Jahre",
     "followers": "Follower",
+    "reputation": {
+      "reliability": "Zuverlässigkeit",
+      "attendanceRate": "Teilnahmequote",
+      "attended": "Anwesend",
+      "noShow": "Nicht erschienen",
+      "tier": {
+        "newcomer": "Neuling",
+        "regular": "Stammgast",
+        "trusted": "Zuverlässig",
+        "elite": "Top-Mitglied"
+      },
+      "tierDescription": "{tier, select, newcomer {Gerade erst dabei — ein paar Teilnahmen helfen, eine Reputation aufzubauen.} regular {Nimmt regelmäßig teil mit solider Bilanz.} trusted {Zuverlässig anwesend und setzt Pläne um.} elite {Sehr aktiv, immer dabei — eine Säule der Community.} other {Aktives Community-Mitglied.}}"
+    },
     "connectionStyle": "Art der Kontaktaufnahme",
     "connectionOpen": "Offen dafür, neue Leute kennenzulernen und gemeinsam etwas zu unternehmen.",
     "connectionReserved": "Lernt neue Leute lieber zuerst über Gruppen und Events kennen.",
@@ -638,6 +894,7 @@
   },
   "calendar": {
     "title": "Kalender",
+    "eyebrow": "Dein Monat auf einen Blick",
     "myEvents": "Meine Veranstaltungen",
     "allEvents": "Alle Veranstaltungen",
     "exportGoogle": "In Google Kalender exportieren",
@@ -648,11 +905,27 @@
     "monthOverview": "Monatsübersicht",
     "noEventsDay": "Für diesen Tag gibt es noch keine Events.",
     "online": "Online",
-    "free": "Kostenlos"
+    "free": "Kostenlos",
+    "today": "Heute",
+    "prevMonth": "Vorheriger Monat",
+    "nextMonth": "Nächster Monat",
+    "selectPrompt": "Tippe auf einen Tag, um zu sehen, was an diesem Tag los ist.",
+    "moreEvents": "+{count} weitere",
+    "eventsCount": "{count, plural, one {# Veranstaltung} other {# Veranstaltungen}}",
+    "morning": "Vormittag",
+    "afternoon": "Nachmittag",
+    "evening": "Abend",
+    "stats": {
+      "thisMonth": "Events diesen Monat",
+      "today": "Heute",
+      "mine": "Auf deiner Liste"
+    }
   },
   "messages": {
     "title": "Nachrichten",
     "noMessages": "Noch keine Nachrichten",
+    "noMessagesDescription": "Schreib jemandem nach einem Event, auf dem du warst, oder kontaktiere eine Gruppe, um beim nächsten Treffen dabei zu sein.",
+    "findGroupsCta": "Gruppen durchsuchen",
     "newMessage": "Neue Nachricht",
     "typeMessage": "Nachricht eingeben...",
     "send": "Senden",
@@ -732,5 +1005,241 @@
     "about": "Über City-Pulse",
     "contact": "Kontakt",
     "copyright": "© {year} City-Pulse. Alle Rechte vorbehalten."
+  },
+  "admin": {
+    "funnel": {
+      "topByViews": "Top-Events nach Aufrufen (30 Tage)",
+      "topByViewsHelper": "Vergleiche Reichweite (Aufrufe) mit Conversion (RSVPs) und Teilnahme, um Seiten zu finden, die einen stärkeren CTA oder eine Erinnerung brauchen.",
+      "event": "Event",
+      "views30d": "Aufrufe 30T",
+      "viewsHint": "Eindeutige Tagesaufrufe (Refresh-Spam ausgeschlossen).",
+      "uniqueViewers": "{count, plural, one {# Zuschauer} other {# Zuschauer}}",
+      "rsvps": "RSVPs",
+      "attended": "Anwesend",
+      "noShow": "{count, plural, one {# nicht erschienen} other {# nicht erschienen}}",
+      "rsvpRate": "RSVP %",
+      "rsvpRateHint": "Anteil eindeutiger Zuschauer, die „Ich komme“ geklickt haben.",
+      "attendedRate": "Anwesenheit %",
+      "attendedRateHint": "Anteil der RSVPs, die als anwesend markiert wurden.",
+      "empty": "Noch keine veröffentlichten Events — der Funnel füllt sich nach den ersten Aufrufen."
+    },
+    "systemEvents": {
+      "dashboard": {
+        "eyebrow": "Redaktion",
+        "title": "Afisha · Veröffentlichungsplan",
+        "subtitle": "Plane, kuratiere und veröffentliche redaktionelle Stadt-Veranstaltungen.",
+        "openCalendar": "Kalender",
+        "openTemplates": "Vorlagen",
+        "newDraft": "Neuer Entwurf",
+        "pipelineTitle": "Pipeline nach Städten",
+        "pipelineEmpty": "Noch nichts geplant — fang mit einem Entwurf an.",
+        "inFlightTitle": "In Arbeit",
+        "inFlightEmpty": "Entwürfe und Reviews tauchen hier auf."
+      },
+      "composer": {
+        "titleNew": "Neue Stadt-Veranstaltung",
+        "titleEdit": "Veranstaltung bearbeiten",
+        "subtitle": "Anlegen, prüfen und veröffentlichen — alles an einem Ort.",
+        "backToDashboard": "Zurück zum Dashboard",
+        "viewLive": "Im Frontend ansehen",
+        "sourceTitle": "Aus Quelle importieren",
+        "sourceUrlPlaceholder": "Partner-URL einfügen (Veranstaltungsseite, Location…)",
+        "importButton": "Aus URL füllen",
+        "sourceHint": "Wir holen Titel, Beschreibung und Cover. Die finale Fassung schreibst immer du.",
+        "basicsTitle": "Basics",
+        "titleLabel": "Titel",
+        "titlePlaceholder": "Öffentlicher Titel — konkret und aussagekräftig.",
+        "pitchLabel": "Pitch",
+        "pitchPlaceholder": "Ein Satz, warum man hingehen sollte.",
+        "pitchHint": "{length, plural, one {# Zeichen} other {# Zeichen}}",
+        "descriptionLabel": "Beschreibung",
+        "descriptionPlaceholder": "Was ist es? Warum lohnt es sich?",
+        "coverLabel": "Cover-URL",
+        "coverPlaceholder": "https://",
+        "whenTitle": "Wann",
+        "startsAtLabel": "Beginn",
+        "durationLabel": "Dauer (Minuten)",
+        "whereTitle": "Wo",
+        "cityLabel": "Stadt",
+        "cityPlaceholder": "Berlin",
+        "addressLabel": "Adresse",
+        "addressPlaceholder": "Straße und Nummer",
+        "curationTitle": "Kuration",
+        "categoryLabel": "Kategorie",
+        "categoryPlaceholder": "Kategorie wählen",
+        "partnerNameLabel": "Partner / Location",
+        "partnerNamePlaceholder": "Goethe-Institut",
+        "partnerUrlLabel": "Partner-URL",
+        "freeLabel": "Eintritt frei",
+        "freeHint": "Deaktivieren, um Preis und Währung anzugeben.",
+        "priceLabel": "Preis",
+        "currencyLabel": "Währung",
+        "actionsTitle": "Veröffentlichung",
+        "currentStatusLabel": "Status",
+        "saveDraftButton": "Entwurf speichern",
+        "sendToReviewButton": "Zur Review",
+        "publishButton": "Veröffentlichen",
+        "publishBlockedHint": "Behebe die markierten Punkte vor der Veröffentlichung.",
+        "publishGatesFailed": "Einige Prüfungen sind fehlgeschlagen — siehe Panel oben.",
+        "importError": {
+          "invalid_url": "Das sieht nicht nach einer URL aus.",
+          "invalid_protocol": "Nur http(s) wird unterstützt.",
+          "private_address": "Private Adressen sind nicht erlaubt.",
+          "fetch_failed": "Seite konnte nicht geladen werden."
+        },
+        "status": {
+          "draft": "Entwurf",
+          "review": "Review",
+          "scheduled": "Geplant",
+          "published": "Veröffentlicht"
+        }
+      },
+      "gates": {
+        "panelTitle": "Qualitätsprüfung",
+        "summary": "{errors, plural, =0 {alles ok} other {# Fehler}}{warnings, plural, =0 {} other { · # Hinweise}}",
+        "allClear": "Alle Prüfungen bestanden — bereit zum Veröffentlichen.",
+        "titleShort": "Titel braucht mindestens 6 Zeichen.",
+        "noCity": "Stadt auswählen.",
+        "noCategory": "Kategorie auswählen.",
+        "descriptionShort": "Beschreibung ist kurz ({current}/{min} Zeichen).",
+        "pitchMissing": "Pitch fehlt.",
+        "pitchShort": "Pitch ist kurz ({current}/{min} Zeichen).",
+        "pitchLong": "Pitch ist zu lang ({current}/{max} Zeichen).",
+        "coverMissing": "Cover hinzufügen — ohne Bild zieht die Veranstaltung weniger Aufmerksamkeit.",
+        "dateMissing": "Startdatum angeben.",
+        "dateInvalid": "Das Datum sieht nicht gültig aus.",
+        "datePast": "Beginn liegt in der Vergangenheit.",
+        "dateClose": "Weniger als {min} Tage bis zum Start — besser früher planen.",
+        "possibleDuplicate": "{count, plural, one {# mögliches Duplikat gefunden} other {# mögliche Duplikate gefunden}} — vor dem Veröffentlichen prüfen.",
+        "noPartner": "Kein Partner angegeben."
+      },
+      "calendar": {
+        "title": "Redaktionskalender",
+        "subtitle": "Zieh einen Entwurf auf einen anderen Tag, um neu zu planen.",
+        "back": "Zurück zum Dashboard",
+        "prevMonth": "Zurück",
+        "nextMonth": "Vor",
+        "saving": "Speichere…"
+      },
+      "templates": {
+        "title": "Vorlagen",
+        "subtitle": "Startgerüst — die Endfassung gehört immer dir.",
+        "back": "Zurück zum Dashboard",
+        "useTemplate": "Vorlage verwenden",
+        "items": {
+          "openAirConcert": {
+            "label": "Open-Air-Konzert",
+            "description": "Konzertabend unter freiem Himmel mit Headliner und Vorband."
+          },
+          "farmersMarket": {
+            "label": "Bauernmarkt",
+            "description": "Halbtägiger Markt regionaler Produzenten — wiederkehrender Wochenend-Slot."
+          },
+          "galleryOpening": {
+            "label": "Vernissage",
+            "description": "Ausstellungseröffnung mit Künstler:in und kurzer Führung."
+          },
+          "filmFestival": {
+            "label": "Festival-Vorführung",
+            "description": "Themen-Screening mit Intro und Q&A nach dem Abspann."
+          },
+          "streetFoodFair": {
+            "label": "Streetfood-Markt",
+            "description": "Streetfood-Court mit verschiedenen Anbietern — familienfreundlich."
+          },
+          "bookLaunch": {
+            "label": "Buchvorstellung",
+            "description": "Lesung, Signierstunde und kurzes Q&A mit der Autorin oder dem Autor."
+          }
+        }
+      }
+    }
+  },
+  "onboarding": {
+    "title": "Willkommen bei City-Pulse",
+    "titleNamed": "Willkommen, {name}!",
+    "subtitle": "Lass uns deinen Feed an deine Stadt, Interessen und Sprachen anpassen — unter einer Minute.",
+    "cityCountryLabel": "Deine Stadt",
+    "countryPlaceholder": "Land wählen",
+    "cityPlaceholder": "Stadt suchen",
+    "cityHelper": "Wir zeigen dir zuerst Events und Gruppen aus dieser Stadt. Später im Profil änderbar.",
+    "cityRequired": "Wähle ein Land und eine Stadt zum Fortfahren.",
+    "interestsHelper": "Wähle {min}–{max} Interessen — je genauer, desto besser die Empfehlungen.",
+    "interestsMin": "Wähle mindestens {min} Interessen.",
+    "uncategorized": "Mehr",
+    "languagesHelper": "Welche Sprachen nutzt du auf Events bequem? Mehrere möglich.",
+    "languagesMin": "Wähle mindestens eine Sprache.",
+    "finish": "Loslegen",
+    "done": "Fertig — willkommen!"
+  },
+  "friends": {
+    "goingCue": "{count, plural, one {# Bekannte:r geht} other {# Bekannte gehen}}",
+    "interestedCue": "{count, plural, one {# Bekannte:r interessiert} other {# Bekannte interessiert}}",
+    "noFollowingYet": "Folge ein paar Organisator:innen, um zu sehen, wer wohin geht."
+  },
+  "safety": {
+    "tagWomenOnly": "Nur für Frauen",
+    "tagAdults": "18+",
+    "tagFamily": "Familienfreundlich",
+    "tagBeginners": "Anfänger willkommen",
+    "tagSober": "Alkoholfrei",
+    "rsvpVisibilityLabel": "RSVP-Sichtbarkeit",
+    "rsvpVisibilityPublic": "Alle sehen, dass ich teilnehme",
+    "rsvpVisibilityPrivate": "Nur die Organisator:innen sehen es",
+    "rsvpVisibilityHelper": "Private RSVPs zählen zur Teilnehmerzahl, erscheinen aber nicht in der öffentlichen Liste."
+  },
+  "digest": {
+    "subjectLine": "{city}: {count} neue Events diese Woche",
+    "preheader": "Handverlesen nach deinen Abos und Interessen.",
+    "intro": "Hi {name}, das steht an.",
+    "ctaUnsubscribe": "E-Mail-Einstellungen",
+    "settingTitle": "Wochen-Digest",
+    "settingDescription": "Erhalte jeden Montag eine personalisierte E-Mail mit passenden Events.",
+    "settingToggle": "Wochen-Digest abonnieren"
+  },
+  "recurring": {
+    "frequencyLabel": "Wiederholung",
+    "helper": "Wir legen für jeden Termin ein eigenes Event an (Kapazität, RSVPs und Bewertungen zählen pro Termin separat).",
+    "noneLabel": "Wiederholt sich nicht",
+    "weeklyLabel": "Wöchentlich",
+    "everyTwoWeeksLabel": "Alle 2 Wochen",
+    "monthlyLabel": "Monatlich",
+    "untilLabel": "Bis",
+    "occurrencesLabel": "Wiederholungen",
+    "editScopeTitle": "Änderungen anwenden auf",
+    "editScopeThis": "Nur diesen Termin",
+    "editScopeFuture": "Diesen und zukünftige",
+    "editScopeAll": "Alle Termine der Serie",
+    "seriesBadge": "Serie"
+  },
+  "unsubscribe": {
+    "successTitle": "Du bist abgemeldet",
+    "successBody": "Du erhältst keinen wöchentlichen Newsletter mehr. Du kannst dich jederzeit in den Einstellungen wieder anmelden.",
+    "errorTitle": "Wir konnten den Link nicht verarbeiten",
+    "errorBody": "Der Abmeldelink ist möglicherweise abgelaufen oder wurde bereits verwendet. Melde dich an, um deine Einstellungen zu verwalten.",
+    "emailLine": "Aktualisiert für {email}",
+    "manageCta": "Einstellungen",
+    "homeCta": "Zu den Events"
+  },
+  "settings": {
+    "email": {
+      "title": "E-Mail-Einstellungen",
+      "subtitle": "Wähle, welche Nachrichten wir dir schicken. Du kannst das jederzeit ändern.",
+      "cardTitle": "Benachrichtigungen",
+      "emailLabel": "Versand an: {email}",
+      "digestLabel": "Wöchentlicher Event-Newsletter",
+      "digestHelper": "Eine kurze, personalisierte E-Mail jeden Montag mit Events nach deiner Stadt, Interessen und Sprachen.",
+      "toastSubscribed": "Newsletter abonniert",
+      "toastUnsubscribed": "Du erhältst den Newsletter nicht mehr",
+      "push": {
+        "label": "Browser-Benachrichtigungen",
+        "helper": "Sofortige Hinweise auf RSVP-Bestätigungen, Antworten und Erinnerungen — auch wenn der Tab geschlossen ist.",
+        "unsupportedHelper": "Dein Browser unterstützt keine Push-Benachrichtigungen, oder Push ist für diese Umgebung nicht konfiguriert.",
+        "permissionDenied": "Benachrichtigungs-Berechtigung wurde blockiert. Aktiviere sie in den Browser-Einstellungen.",
+        "subscribeError": "Push konnte nicht aktiviert werden. Bitte erneut versuchen.",
+        "subscribeSuccess": "Push-Benachrichtigungen aktiviert",
+        "unsubscribeSuccess": "Push-Benachrichtigungen deaktiviert"
+      }
+    }
   }
 }

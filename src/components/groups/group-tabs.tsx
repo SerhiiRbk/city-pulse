@@ -1,6 +1,7 @@
 'use client';
 
-import { type ComponentProps, useState, useCallback } from 'react';
+import { type ComponentProps, useState, useCallback, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { EventCard } from '@/components/events/event-card';
@@ -10,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { LinkifiedText } from '@/components/ui/linkified-text';
 import { Calendar, Check, CornerDownRight, History, Image as ImageIcon, MessageCircle, MessageSquareQuote, Reply, Send, Trash2, Users, Plus, FolderOpen, X } from 'lucide-react';
 import { addGroupComment, deleteGroupComment, approveGroupComment } from '@/lib/actions/groups';
 import { createAlbum } from '@/lib/actions/albums';
@@ -63,6 +65,7 @@ interface GroupTabsProps {
   isAuthenticated: boolean;
   currentUserId?: string;
   goingEventIds?: string[];
+  waitlistedEventIds?: string[];
   favoritedEventIds?: string[];
   initialTab?: string;
   initialRecapEventId?: string;
@@ -81,15 +84,45 @@ export function GroupTabs({
   isAuthenticated,
   currentUserId,
   goingEventIds = [],
+  waitlistedEventIds = [],
   favoritedEventIds = [],
   initialTab = 'upcoming',
   initialRecapEventId,
 }: GroupTabsProps) {
   const t = useTranslations('groups.detail');
   const goingSet = new Set(goingEventIds);
+  const waitlistSet = new Set(waitlistedEventIds);
   const favSet = new Set(favoritedEventIds);
   const locale = useLocale();
   const router = useRouter();
+  // Drive the active tab off the URL so that in-page links like
+  // `<Link href="?tab=members">` actually switch the tab on soft navigation.
+  // `defaultValue` on Radix `Tabs` is read once on mount; subsequent renders
+  // (which is what a client-side navigation produces here) ignore it.
+  const searchParams = useSearchParams();
+  const allowedTabs = useMemo(
+    () => new Set(['upcoming', 'past', 'photos', 'posts', 'members', 'comments']),
+    [],
+  );
+  const tabFromUrl = searchParams.get('tab') ?? '';
+  const activeTab = allowedTabs.has(tabFromUrl) ? tabFromUrl : (initialTab ?? 'upcoming');
+
+  const handleTabChange = useCallback(
+    (value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      // `upcoming` is the default — drop the param so the URL stays clean.
+      if (value === 'upcoming') {
+        params.delete('tab');
+      } else {
+        params.set('tab', value);
+      }
+      const query = params.toString();
+      router.replace(query ? `/groups/${groupId}?${query}` : `/groups/${groupId}`, {
+        scroll: false,
+      });
+    },
+    [groupId, router, searchParams],
+  );
   const [comments, setComments] = useState<GroupComment[]>(initialComments);
   const [albums, setAlbums] = useState(initialAlbums);
   const [commentText, setCommentText] = useState('');
@@ -225,36 +258,82 @@ export function GroupTabs({
   }
 
   return (
-    <Tabs defaultValue={initialTab}>
-      <TabsList variant="line" className="h-auto w-full flex-nowrap justify-start gap-1 overflow-x-auto rounded-2xl border border-border/50 bg-card p-1 shadow-sm scrollbar-none">
-        <TabsTrigger value="upcoming" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
+    <Tabs value={activeTab} onValueChange={handleTabChange}>
+      {/*
+        Layout notes for this tab strip:
+
+        1. The Tabs primitive forces TabsList to h-9 via cva's
+           `group-data-[orientation=horizontal]/tabs:h-9` default. A plain
+           `h-auto` from the consumer is treated by tailwind-merge as a
+           different rule (different variant prefix), so we override at the
+           same variant scope (`group-data-[orientation=horizontal]/tabs:h-auto`).
+
+        2. The list uses `flex-wrap` instead of horizontal scroll: with six
+           localized labels (and very long Cyrillic ones) the strip would
+           otherwise overflow and clip the last items. Wrapping keeps every
+           tab reachable without a scroll.
+
+        3. The line-variant's active indicator lives at
+           `after:bottom-[-9px]`, i.e. *outside* the trigger. That works for
+           a single row but visually breaks when triggers wrap (the bar
+           would float in the inter-row gap). We override it back inside
+           the trigger with `after:bottom-1` (4px above the bottom edge), at
+           the same variant scope so tailwind-merge picks our value.
+
+        4. The line-variant adds an asymmetric `pb-2`; we override with
+           `pb-3` so top/bottom padding is symmetric and Cyrillic
+           descenders don't crowd the indicator.
+      */}
+      <TabsList
+        variant="line"
+        className="w-full flex-wrap justify-start gap-1 rounded-2xl border border-border/50 bg-card p-1.5 shadow-sm group-data-[orientation=horizontal]/tabs:h-auto"
+      >
+        <TabsTrigger
+          value="upcoming"
+          className="relative h-12 gap-1.5 px-2.5 py-3 group-data-[variant=line]/tabs-list:pb-3 group-data-[orientation=horizontal]/tabs:after:bottom-1"
+        >
           <Calendar className="h-4 w-4" />
-          <span className="whitespace-nowrap text-xs sm:text-sm">{t('eventsTitle')}</span>
+          <span className="whitespace-nowrap text-xs leading-none sm:text-sm">{t('eventsTitle')}</span>
           <CountBadge count={upcomingEvents.length} active />
         </TabsTrigger>
-        <TabsTrigger value="past" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
+        <TabsTrigger
+          value="past"
+          className="relative h-12 gap-1.5 px-2.5 py-3 group-data-[variant=line]/tabs-list:pb-3 group-data-[orientation=horizontal]/tabs:after:bottom-1"
+        >
           <History className="h-4 w-4" />
-          <span className="whitespace-nowrap text-xs sm:text-sm">{t('pastEventsTitle')}</span>
+          <span className="whitespace-nowrap text-xs leading-none sm:text-sm">{t('pastEventsTitle')}</span>
           <CountBadge count={pastEvents.length} />
         </TabsTrigger>
-        <TabsTrigger value="photos" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
+        <TabsTrigger
+          value="photos"
+          className="relative h-12 gap-1.5 px-2.5 py-3 group-data-[variant=line]/tabs-list:pb-3 group-data-[orientation=horizontal]/tabs:after:bottom-1"
+        >
           <ImageIcon className="h-4 w-4" />
-          <span className="whitespace-nowrap text-xs sm:text-sm">{t('photosTitle')}</span>
+          <span className="whitespace-nowrap text-xs leading-none sm:text-sm">{t('photosTitle')}</span>
           <CountBadge count={albums.length} />
         </TabsTrigger>
-        <TabsTrigger value="posts" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
+        <TabsTrigger
+          value="posts"
+          className="relative h-12 gap-1.5 px-2.5 py-3 group-data-[variant=line]/tabs-list:pb-3 group-data-[orientation=horizontal]/tabs:after:bottom-1"
+        >
           <MessageCircle className="h-4 w-4" />
-          <span className="whitespace-nowrap text-xs sm:text-sm">{t('postsTitle')}</span>
+          <span className="whitespace-nowrap text-xs leading-none sm:text-sm">{t('postsTitle')}</span>
           <CountBadge count={posts.length} />
         </TabsTrigger>
-        <TabsTrigger value="members" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
+        <TabsTrigger
+          value="members"
+          className="relative h-12 gap-1.5 px-2.5 py-3 group-data-[variant=line]/tabs-list:pb-3 group-data-[orientation=horizontal]/tabs:after:bottom-1"
+        >
           <Users className="h-4 w-4" />
-          <span className="whitespace-nowrap text-xs sm:text-sm">{t('membersList')}</span>
+          <span className="whitespace-nowrap text-xs leading-none sm:text-sm">{t('membersList')}</span>
           <CountBadge count={members.length} />
         </TabsTrigger>
-        <TabsTrigger value="comments" className="relative h-11 shrink-0 gap-1.5 px-3 py-2.5">
+        <TabsTrigger
+          value="comments"
+          className="relative h-12 gap-1.5 px-2.5 py-3 group-data-[variant=line]/tabs-list:pb-3 group-data-[orientation=horizontal]/tabs:after:bottom-1"
+        >
           <MessageCircle className="h-4 w-4" />
-          <span className="whitespace-nowrap text-xs sm:text-sm">{t('commentsTitle')}</span>
+          <span className="whitespace-nowrap text-xs leading-none sm:text-sm">{t('commentsTitle')}</span>
           <CountBadge count={topLevelComments.length} />
         </TabsTrigger>
       </TabsList>
@@ -268,7 +347,7 @@ export function GroupTabs({
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {upcomingEvents.map((event) => (
-              <EventCard key={event.id} event={event} isGoing={goingSet.has(event.id)} isFavorited={favSet.has(event.id)} isAuthenticated={isAuthenticated} />
+              <EventCard key={event.id} event={event} isGoing={goingSet.has(event.id)} isWaitlisted={waitlistSet.has(event.id)} isFavorited={favSet.has(event.id)} isAuthenticated={isAuthenticated} />
             ))}
           </div>
         )}
@@ -283,7 +362,7 @@ export function GroupTabs({
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {pastEvents.map((event) => (
-              <EventCard key={event.id} event={event} isGoing={goingSet.has(event.id)} isFavorited={favSet.has(event.id)} isAuthenticated={isAuthenticated} />
+              <EventCard key={event.id} event={event} isGoing={goingSet.has(event.id)} isWaitlisted={waitlistSet.has(event.id)} isFavorited={favSet.has(event.id)} isAuthenticated={isAuthenticated} />
             ))}
           </div>
         )}
@@ -620,7 +699,7 @@ function GroupCommentItem({
               </span>
             )}
             <p className="text-xs text-muted-foreground italic line-clamp-3">
-              {comment.quoted_text}
+              <LinkifiedText text={comment.quoted_text} />
             </p>
           </div>
         )}
@@ -633,7 +712,7 @@ function GroupCommentItem({
         )}
 
         <p className="text-muted-foreground mt-1 whitespace-pre-wrap text-sm leading-relaxed">
-          {comment.content}
+          <LinkifiedText text={comment.content} />
         </p>
       </div>
     </div>

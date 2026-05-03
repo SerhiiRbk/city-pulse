@@ -32,11 +32,13 @@ export async function getProfileGoingEvents(userId: string) {
   if (!att || att.length === 0) return [];
 
   const ids = att.map((a) => a.event_id);
+  const nowIso = new Date().toISOString();
   const { data } = await supabase
     .from('events_with_counts')
     .select('*')
     .in('id', ids)
-    .gte('starts_at', new Date().toISOString())
+    // Currently in-progress events stay in the "Going" bucket until they end.
+    .gte('ends_at', nowIso)
     .eq('status', 'published')
     .eq('is_blocked', false)
     .eq('organizer_is_blocked', false)
@@ -54,13 +56,15 @@ export async function getProfilePastEvents(userId: string) {
   if (!att || att.length === 0) return [];
 
   const ids = att.map((a) => a.event_id);
+  const nowIso = new Date().toISOString();
   const { data } = await supabase
     .from('events_with_counts')
     .select('*')
     .in('id', ids)
     .eq('is_blocked', false)
     .eq('organizer_is_blocked', false)
-    .lt('starts_at', new Date().toISOString())
+    // Past = events whose end time is in the past.
+    .lt('ends_at', nowIso)
     .order('starts_at', { ascending: false });
   return data || [];
 }
@@ -112,6 +116,40 @@ export async function getProfileCreatedEvents(userId: string) {
   const { data: extra } = await extraQuery;
 
   return [...(organized || []), ...(extra || [])];
+}
+
+/**
+ * Returns upcoming system events the user marked as `interested`.
+ *
+ * Used by the personal "В календаре" section on /events/my — system events
+ * cannot be RSVP'd to, so an "interested" row is the user's only commitment
+ * signal and forms a personal city-events agenda. Past events are intentionally
+ * excluded since the section is forward-looking.
+ */
+export async function getProfileInterestedSystemEvents(userId: string) {
+  const supabase = await createClient();
+  const { data: rows } = await supabase
+    .from('event_attendees')
+    .select('event_id')
+    .eq('user_id', userId)
+    .eq('status', 'interested');
+
+  if (!rows || rows.length === 0) return [];
+
+  const ids = rows.map((r) => r.event_id);
+  const nowIso = new Date().toISOString();
+
+  const { data } = await supabase
+    .from('events_with_counts')
+    .select('*')
+    .in('id', ids)
+    .eq('is_system', true)
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
+    .gte('ends_at', nowIso)
+    .order('starts_at', { ascending: true });
+
+  return data || [];
 }
 
 export async function getProfileSubscribedGroups(userId: string) {

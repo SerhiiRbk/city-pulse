@@ -17,11 +17,14 @@ import { getGroupAlbums } from '@/lib/actions/albums';
 import { getUserEventStatuses } from '@/lib/actions/events';
 import { GroupActions } from '@/components/groups/group-actions';
 import { GroupTabs } from '@/components/groups/group-tabs';
+import { CopyDirectLink } from '@/components/groups/copy-direct-link';
+import { RichTextView } from '@/components/ui/rich-text-view';
+import type { RichTextDoc } from '@/lib/rich-text/types';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Users, Calendar, Pencil, MapPin, CalendarPlus, Link2 } from 'lucide-react';
+import { Users, Calendar, Pencil, MapPin, CalendarPlus, ArrowRight, ChevronRight } from 'lucide-react';
 import { GroupHeroActions } from '@/components/groups/group-hero-actions';
-import { COUNTRIES, LANGUAGES } from '@/lib/constants';
+import { COUNTRIES, LANGUAGES, SITE_URL } from '@/lib/constants';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Locale } from '@/i18n/config';
@@ -71,7 +74,16 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
   const allEventIds = [...upcomingEvents, ...pastEvents].map((event: GroupEvent) => event.id);
   const [status, canEdit, eventStatuses] = isAuthenticated
     ? await Promise.all([getUserGroupStatus(id), canEditGroup(id), getUserEventStatuses(allEventIds)])
-    : [{ isMember: false, isSubscribed: false, role: null }, false, { goingSet: new Set<string>(), favoritedSet: new Set<string>() }];
+    : [
+        { isMember: false, isSubscribed: false, role: null },
+        false,
+        {
+          goingSet: new Set<string>(),
+          waitlistSet: new Set<string>(),
+          interestedSet: new Set<string>(),
+          favoritedSet: new Set<string>(),
+        },
+      ];
   const groupGalleryImages = canEdit ? await getGroupGalleryImages(id) : [];
   const t = await getTranslations('groups');
   const tDetail = await getTranslations('groups.detail');
@@ -150,25 +162,40 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
         </div>
       </div>
 
-      <div className="container mx-auto grid grid-cols-1 gap-6 px-4 py-6 sm:py-8 lg:grid-cols-[260px_1fr_260px]">
+      <div className="container mx-auto grid grid-cols-1 gap-6 px-4 py-6 sm:py-8 lg:grid-cols-[260px_1fr_280px]">
         <div className="order-0 col-span-full flex items-center gap-2 text-sm text-muted-foreground">
           <Link href="/groups" className="transition-colors hover:text-foreground">{tDetail('breadcrumbs')}</Link>
           <span>/</span>
           <span className="truncate">{group.name}</span>
         </div>
 
-        {/* LEFT sidebar — About */}
+        {/* LEFT sidebar — Info-only.
+
+            The community vibe + cue and location are already in the hero
+            (the pill row + subtitle), so we deliberately do NOT repeat
+            them here. This panel is a scannable reference card focused on
+            things that live nowhere else: description, languages,
+            interests, and the shareable direct link.
+        */}
         <aside className="order-2 lg:order-1 lg:sticky lg:top-24 lg:self-start">
           <div className="divide-y divide-border/50 overflow-hidden rounded-3xl border border-border/50 bg-card shadow-sm">
-            <div className="bg-primary/5 px-5 py-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{tDetail('communityVibe')}</p>
-              <p className="mt-2 text-sm text-foreground">{communityCue}</p>
-            </div>
-            {locationLabel && (
-              <div className="flex items-center gap-2.5 px-5 py-4">
+            {group.city && (
+              <Link
+                href={{
+                  pathname: '/city-events',
+                  query: { city: group.city },
+                }}
+                className="group flex items-center gap-2.5 px-5 py-4 transition-colors hover:bg-muted/40"
+              >
                 <MapPin className="text-primary h-4 w-4 shrink-0" />
-                <span className="text-sm">{locationLabel}</span>
-              </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                    {tDetail('eventsInCity')}
+                  </p>
+                  <p className="truncate text-sm">{locationLabel}</p>
+                </div>
+                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/60 transition-transform group-hover:translate-x-0.5" />
+              </Link>
             )}
 
             {languageLabels.length > 0 && (
@@ -190,24 +217,21 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
             )}
 
             {group.slug && (
-              <div className="flex items-center gap-2.5 px-5 py-3">
-                <Link2 className="h-4 w-4 shrink-0 text-muted-foreground" />
-                <div className="min-w-0">
-                  <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{tDetail('directLink')}</p>
-                  <p className="truncate font-mono text-xs text-muted-foreground">
-                    /groups/{group.country ? group.country.toLowerCase() : 'global'}/{group.slug}
-                  </p>
-                </div>
-              </div>
+              <CopyDirectLink
+                origin={SITE_URL}
+                path={`/groups/${group.country ? group.country.toLowerCase() : 'global'}/${group.slug}`}
+              />
             )}
 
             {/* Description */}
-            {group.description && (
+            {(group.description_json || (group.description && group.description.trim())) && (
               <div className="px-5 py-4">
                 <p className="text-muted-foreground text-xs font-medium uppercase tracking-wider">{tDetail('description')}</p>
-                <p className="text-foreground mt-1.5 whitespace-pre-wrap text-sm leading-relaxed">
-                  {group.description}
-                </p>
+                <RichTextView
+                  doc={group.description_json as RichTextDoc | null}
+                  fallbackText={group.description}
+                  className="text-foreground mt-1.5 break-words text-sm leading-relaxed"
+                />
               </div>
             )}
 
@@ -246,13 +270,20 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
             isAuthenticated={isAuthenticated}
             currentUserId={user?.id}
             goingEventIds={Array.from(eventStatuses.goingSet)}
+            waitlistedEventIds={Array.from(eventStatuses.waitlistSet)}
             favoritedEventIds={Array.from(eventStatuses.favoritedSet)}
             initialTab={initialTab}
             initialRecapEventId={initialRecapEventId}
           />
         </div>
 
-        {/* RIGHT sidebar — Creator, Stats, Actions */}
+        {/* RIGHT sidebar — action-oriented.
+
+            Replaced the previous stats grid (member/event counts that
+            duplicate the hero pills) with social-proof affordances: an
+            avatar stack of recent members and a teaser for the next
+            upcoming event. The actions block stays at the bottom.
+        */}
         <aside className="order-1 lg:order-3 lg:sticky lg:top-24 lg:self-start">
           <div className="divide-y divide-border/50 overflow-hidden rounded-3xl border border-border/50 bg-card shadow-sm">
             {/* Creator */}
@@ -272,19 +303,75 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
               </Link>
             )}
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 gap-px bg-border/50">
-              <div className="flex flex-col items-center bg-card py-3.5">
-                <Users className="text-primary mb-1 h-4 w-4" />
-                <span className="text-foreground text-sm font-bold">{group.member_count}</span>
-                <span className="text-muted-foreground text-xs">{tDetail('membersList')}</span>
-              </div>
-              <div className="flex flex-col items-center bg-card py-3.5">
-                <Calendar className="text-primary mb-1 h-4 w-4" />
-                <span className="text-foreground text-sm font-bold">{group.event_count}</span>
-                <span className="text-muted-foreground text-xs">{tDetail('eventsLabel')}</span>
-              </div>
-            </div>
+            {/* Members avatar stack — replaces the old stats grid.
+
+                Shows up to 5 member avatars with a "+N" pill for the rest,
+                and the whole row deep-links into the Members tab. Empty
+                groups are skipped: showing an empty stack adds no
+                information. */}
+            {members.length > 0 && (
+              <Link
+                href={{ pathname: `/groups/${id}`, query: { tab: 'members' } }}
+                className="group flex items-center gap-3 px-5 py-4 transition-colors hover:bg-muted/40"
+              >
+                <div className="flex -space-x-2">
+                  {members.slice(0, 5).map((member) => (
+                    <Avatar
+                      key={member.user_id}
+                      className="h-7 w-7 ring-2 ring-card"
+                    >
+                      <AvatarImage src={member.profiles?.avatar_url || undefined} />
+                      <AvatarFallback className="text-[10px]">
+                        {member.profiles?.display_name?.[0] || '?'}
+                      </AvatarFallback>
+                    </Avatar>
+                  ))}
+                  {members.length > 5 && (
+                    <span className="flex h-7 min-w-7 items-center justify-center rounded-full bg-muted px-1.5 text-[10px] font-semibold ring-2 ring-card">
+                      +{members.length - 5}
+                    </span>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-muted-foreground text-xs uppercase tracking-wider">
+                    {tDetail('communityVibe')}
+                  </p>
+                  <p className="text-foreground text-sm font-medium">
+                    {t('members', { count: group.member_count })}
+                  </p>
+                </div>
+                <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground/60 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            )}
+
+            {/* Next event teaser — only the very next upcoming event,
+                with a date pill so the visitor can decide instantly
+                whether to drill in. Clicking opens the event page; the
+                whole row is the click target. */}
+            {upcomingEvents[0] && (
+              <Link
+                href={`/events/${upcomingEvents[0].id}`}
+                className="group block px-5 py-4 transition-colors hover:bg-muted/40"
+              >
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Calendar className="h-3.5 w-3.5 shrink-0 text-primary" />
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.16em]">
+                    {tDetail('nextEvent')}
+                  </span>
+                </div>
+                <p className="mt-1.5 line-clamp-2 text-sm font-semibold text-foreground">
+                  {upcomingEvents[0].title}
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {new Date(upcomingEvents[0].starts_at).toLocaleDateString(locale, {
+                    day: 'numeric',
+                    month: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </p>
+              </Link>
+            )}
 
             {/* Actions */}
             <div className="space-y-2 px-5 py-4">

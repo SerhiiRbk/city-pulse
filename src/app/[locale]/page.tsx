@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
@@ -6,18 +6,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   ArrowRight, MapPin, Users, CalendarDays, Heart, Globe, Shield,
-  CalendarPlus, Bell, UsersRound, Sparkles, MessageCircle, Coffee, Languages,
+  CalendarPlus, Bell, UsersRound, Sparkles,
 } from 'lucide-react';
-import { getUser } from '@/lib/actions/auth';
-import { getTopGroups } from '@/lib/actions/landing';
-import { getEvents, getUserEventStatuses } from '@/lib/actions/events';
+import {
+  getCachedLandingEvents,
+  getCachedLandingTopGroups,
+} from '@/lib/actions/landing-cached';
 import { EventCard } from '@/components/events/event-card';
 import { GroupCard } from '@/components/groups/group-card';
+import { HeroAuthCTA } from '@/components/landing/hero-auth-cta';
+import { LandingStats } from '@/components/landing/landing-stats';
+import { TonightInCity } from '@/components/landing/tonight-in-city';
 import { generateOrganizationJsonLd } from '@/lib/json-ld';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
-
-export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
   params,
@@ -44,17 +46,11 @@ export default async function HomePage({
   setRequestLocale(locale);
 
   const t = await getTranslations('landing');
-  const tNav = await getTranslations('nav');
-  const user = await getUser();
 
   const [events, topGroups] = await Promise.all([
-    getEvents({ limit: 24 }),
-    getTopGroups(4),
+    getCachedLandingEvents(24),
+    getCachedLandingTopGroups(4),
   ]);
-
-  const { goingSet, favoritedSet } = user
-    ? await getUserEventStatuses(events.map((event) => event.id))
-    : { goingSet: new Set<string>(), favoritedSet: new Set<string>() };
 
   const featureCards = [
     { icon: MapPin, title: t('features.localEvents'), desc: t('features.localEventsDesc') },
@@ -72,13 +68,6 @@ export default async function HomePage({
     { step: '02', icon: Globe, title: t('howItWorks.step2Title'), desc: t('howItWorks.step2Desc') },
     { step: '03', icon: Bell, title: t('howItWorks.step3Title'), desc: t('howItWorks.step3Desc') },
     { step: '04', icon: UsersRound, title: t('howItWorks.step4Title'), desc: t('howItWorks.step4Desc') },
-  ];
-
-  const quickFormats = [
-    { icon: Coffee, label: t('marketing.quickFormat1'), body: t('marketing.quickFormat1Body') },
-    { icon: Languages, label: t('marketing.quickFormat2'), body: t('marketing.quickFormat2Body') },
-    { icon: UsersRound, label: t('marketing.quickFormat3'), body: t('marketing.quickFormat3Body') },
-    { icon: MapPin, label: t('marketing.quickFormat4'), body: t('marketing.quickFormat4Body') },
   ];
 
   const trustPoints = [
@@ -135,61 +124,24 @@ export default async function HomePage({
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
-                {!user && (
-                  <Button size="lg" variant="outline" asChild className="h-12 rounded-full border-white/30 bg-white/10 px-8 text-base text-white backdrop-blur-sm hover:bg-white/20 hover:text-white">
-                    <Link href="/register">{tNav('register')}</Link>
-                  </Button>
-                )}
+                <Suspense fallback={null}>
+                  <HeroAuthCTA />
+                </Suspense>
               </div>
             </div>
 
             <div className="lg:justify-self-end">
-              <div className="rounded-[2rem] border border-white/15 bg-white/10 p-4 shadow-2xl backdrop-blur-md">
-                <div className="rounded-[1.5rem] border border-white/10 bg-slate-950/60 p-5 text-white">
-                  <p className="text-xs uppercase tracking-[0.2em] text-white/55">{t('marketing.tonightLabel')}</p>
-                  <h2 className="mt-3 text-2xl font-bold">{t('marketing.quickTitle')}</h2>
-                  <div className="mt-5 space-y-3">
-                    {quickFormats.map(({ icon: Icon, label, body }) => (
-                      <div
-                        key={label}
-                        className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
-                      >
-                        <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10">
-                          <Icon className="h-4 w-4" />
-                        </span>
-                        <div className="min-w-0">
-                          <p className="font-medium text-white">{label}</p>
-                          <p className="text-sm text-white/60">{body}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-5 flex items-center gap-2 text-sm text-white/65">
-                    <MessageCircle className="h-4 w-4" />
-                    {t('marketing.quickMeta')}
-                  </div>
-                </div>
-              </div>
+              <Suspense fallback={null}>
+                <TonightInCity locale={locale} />
+              </Suspense>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="border-b bg-card">
-        <div className="container mx-auto grid grid-cols-2 gap-4 px-4 py-10 sm:grid-cols-4">
-          {[
-            { value: '500+', label: t('marketing.statsEvents') },
-            { value: '120+', label: t('marketing.statsGroups') },
-            { value: '3,000+', label: t('marketing.statsMembers') },
-            { value: '15+', label: t('marketing.statsCities') },
-          ].map(({ value, label }) => (
-            <div key={label} className="text-center">
-              <p className="text-3xl font-bold tracking-tight">{value}</p>
-              <p className="mt-1 text-sm text-muted-foreground">{label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <Suspense fallback={null}>
+        <LandingStats locale={locale} />
+      </Suspense>
 
       {/* Features */}
       <section className="container mx-auto px-4 pt-24 pb-14">
@@ -224,10 +176,7 @@ export default async function HomePage({
           <EventSection
             title={t('sections.topEvents')}
             events={events}
-            isAuthenticated={!!user}
             viewAllLabel={t('sections.viewAllEvents')}
-            goingSet={goingSet}
-            favoritedSet={favoritedSet}
           />
         </div>
       )}
@@ -333,21 +282,16 @@ export default async function HomePage({
   );
 }
 
+type LandingEvent = Awaited<ReturnType<typeof getCachedLandingEvents>>[number];
+
 function EventSection({
   title,
   events,
-  isAuthenticated,
   viewAllLabel,
-  goingSet,
-  favoritedSet,
 }: {
   title: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  events: any[];
-  isAuthenticated: boolean;
+  events: LandingEvent[];
   viewAllLabel: string;
-  goingSet: Set<string>;
-  favoritedSet: Set<string>;
 }) {
   return (
     <section className="py-14">
@@ -363,13 +307,7 @@ function EventSection({
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
-            <EventCard
-              key={event.id}
-              event={event}
-              isGoing={goingSet.has(event.id)}
-              isFavorited={favoritedSet.has(event.id)}
-              isAuthenticated={isAuthenticated}
-            />
+            <EventCard key={event.id} event={event} />
           ))}
         </div>
       </div>

@@ -6,6 +6,8 @@ import { canEditGroup, getGroup } from '@/lib/actions/groups';
 import { getGroupPostComments, getGroupPostInGroup } from '@/lib/actions/group-posts';
 import { GroupPostMediaGallery } from '@/components/groups/group-post-media-gallery';
 import { GroupPostComments } from '@/components/groups/group-post-comments';
+import { RichTextView } from '@/components/ui/rich-text-view';
+import type { RichTextDoc } from '@/lib/rich-text/types';
 import { ShareButton } from '@/components/ui/share-button';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -177,9 +179,10 @@ export default async function GroupPostDetailPage({ params }: Props) {
 
           <div className="rounded-[2rem] border border-border/50 bg-card p-5 shadow-sm sm:p-6">
             <h2 className="mb-4 text-lg font-semibold">{t('postBodyTitle')}</h2>
-            <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap text-sm leading-7 text-muted-foreground">
-              {post.content}
-            </div>
+            <RichTextView
+              doc={post.content_json as RichTextDoc | null}
+              fallbackText={post.content}
+            />
           </div>
 
           <div className="rounded-[2rem] border border-border/50 bg-card p-5 shadow-sm sm:p-6">

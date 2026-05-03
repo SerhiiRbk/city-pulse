@@ -1,10 +1,17 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { getEvent, getUserAttendance, getEventAttendees, getComments, canEditEvent } from '@/lib/actions/events';
+import { getEvent, getUserAttendance, getEventAttendees, getEventRoster, getComments, canEditEvent } from '@/lib/actions/events';
+import { recordEventView } from '@/lib/actions/event-funnel';
 import { getGroupPostByEventId } from '@/lib/actions/group-posts';
 import { Button } from '@/components/ui/button';
 import { getUser } from '@/lib/actions/auth';
 import { EventActions } from '@/components/events/event-actions';
+import { RsvpVisibilityToggle } from '@/components/events/rsvp-visibility-toggle';
+import { ReconfirmBanner } from '@/components/events/reconfirm-banner';
+import { SafetyTagBadges } from '@/components/events/safety-tag-badges';
+import { SystemEventActions } from '@/components/events/system-event-actions';
+import { SystemEventMeetups } from '@/components/events/system-event-meetups';
+import { getMeetupCountForSystemEvent } from '@/lib/actions/meetups';
 import { EventComments } from '@/components/events/event-comments';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -12,15 +19,22 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Link } from '@/i18n/navigation';
 import { MapPin, Calendar, Clock, Users, Globe, Star, Lock, Pencil } from 'lucide-react';
-import { formatDate, formatDuration } from '@/lib/utils';
+import { formatDate, formatDuration, nowMs } from '@/lib/utils';
 import { SITE_NAME, COUNTRIES, LANGUAGES } from '@/lib/constants';
 import { EventMap } from '@/components/maps/event-map';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { ShareButton } from '@/components/ui/share-button';
+import { AddToCalendarButton } from '@/components/events/add-to-calendar';
 import { EventManagement } from '@/components/events/event-management';
+import { AttendanceRoster, type RosterEntry } from '@/components/events/attendance-roster';
 import { EventReviewForm } from '@/components/events/event-review-form';
 import { EventPhotoGallery } from '@/components/events/event-photo-gallery';
 import { generateEventJsonLd } from '@/lib/json-ld';
+import { RichTextView } from '@/components/ui/rich-text-view';
+import type { RichTextDoc } from '@/lib/rich-text/types';
+import { getFriendsGoing } from '@/lib/actions/friends-going';
+import { FriendsGoingCue } from '@/components/events/friends-going-cue';
+import { isFeatureEnabled } from '@/lib/feature-flags';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Locale } from '@/i18n/config';
@@ -52,22 +66,66 @@ export default async function EventDetailPage({ params }: Props) {
 
   const t = await getTranslations('events.detail');
   const tProfile = await getTranslations('profile');
+  const tRecurring = await getTranslations('recurring');
   const event = await getEvent(id);
 
   if (!event) notFound();
+
+  // Fire-and-forget: record a de-duped view in the funnel. The
+  // helper swallows errors so analytics flakiness can't break the
+  // page render.
+  void recordEventView(id);
 
   const user = await getUser();
   const isAuthenticated = !!user;
   const isOrganizer = user?.id === event.organizer_id;
   const canEdit = isAuthenticated ? await canEditEvent(id) : false;
-  const { going, favorited } = isAuthenticated
+  const {
+    going,
+    favorited,
+    status: attendanceStatus,
+    isVisible: rsvpIsVisible,
+    needsReconfirm,
+  } = isAuthenticated
     ? await getUserAttendance(id)
-    : { going: false, favorited: false };
+    : {
+        going: false,
+        favorited: false,
+        status: 'none' as const,
+        isVisible: true,
+        needsReconfirm: false,
+      };
   const attendees = await getEventAttendees(id);
   const comments = await getComments(id);
   const recap = event.group_id ? await getGroupPostByEventId(id) : null;
 
+  const isSystemEvent = !!event.is_system;
   const spotsLeft = event.max_attendees ? event.max_attendees - (event.going_count || 0) : null;
+  const isFull = event.max_attendees != null && (spotsLeft ?? 0) <= 0;
+  const waitlistCount = event.waitlist_count ?? 0;
+  const interestedCount = event.interested_count ?? 0;
+  // For system events we surface a "Going with a group" CTA in the sidebar;
+  // the count drives the pill so users can tell at a glance whether
+  // someone has already started a meetup.
+  const meetupCount = isSystemEvent ? await getMeetupCountForSystemEvent(id) : 0;
+
+  const isPastEvent = new Date(event.starts_at).getTime() < nowMs();
+  const canManageAttendance = canEdit && isPastEvent;
+  // Friends-going cue (gated by `friends_going` flag).
+  const friendsGoing =
+    user && (await isFeatureEnabled('friends_going', user.id))
+      ? await getFriendsGoing(id, 6)
+      : [];
+  const roster = canManageAttendance ? await getEventRoster(id) : [];
+  const rosterEntries: RosterEntry[] = roster.map((row) => {
+    const profile = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
+    return {
+      user_id: row.user_id,
+      status: row.status as RosterEntry['status'],
+      display_name: profile?.display_name || 'User',
+      avatar_url: profile?.avatar_url ?? null,
+    };
+  });
   const categoryLabel = event.category_translations?.[locale] || event.category_translations?.['en'] || '';
   const orgInitials = (event.organizer_name || 'U')
     .split(' ')
@@ -132,11 +190,25 @@ export default async function EventDetailPage({ params }: Props) {
                 </Badge>
               )}
               {event.is_free && <Badge className="bg-success text-success-foreground">{t('free')}</Badge>}
-              <Badge className="bg-primary/10 text-primary hover:bg-primary/10">{comfortCue}</Badge>
+              {isSystemEvent ? (
+                <Badge variant="secondary">{t('systemBadge')}</Badge>
+              ) : (
+                <Badge className="bg-primary/10 text-primary hover:bg-primary/10">{comfortCue}</Badge>
+              )}
               {languageLabels.map((language: string) => (
                 <Badge key={language} variant="outline">{language}</Badge>
               ))}
+              {event.series_id && (
+                <Badge variant="secondary" className="bg-primary/5 text-primary">
+                  {event.series_position
+                    ? `${tRecurring('seriesBadge')} · ${event.series_position}`
+                    : tRecurring('seriesBadge')}
+                </Badge>
+              )}
             </div>
+            {event.safety_tags && event.safety_tags.length > 0 && (
+              <SafetyTagBadges tags={event.safety_tags} className="mb-3" />
+            )}
             <h1 className="text-2xl font-bold tracking-tight sm:text-4xl">{event.title}</h1>
 
             {event.status === 'cancelled' && (
@@ -167,25 +239,58 @@ export default async function EventDetailPage({ params }: Props) {
           <div className="rounded-2xl border border-border/50 bg-muted/30 p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm font-semibold">{t('easyJoinTitle')}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{easyJoinCopy}</p>
+                <p className="text-sm font-semibold">
+                  {isSystemEvent ? t('systemEditorialTitle') : t('easyJoinTitle')}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {isSystemEvent ? t('systemEditorialSubtitle') : easyJoinCopy}
+                </p>
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Users className="h-4 w-4" />
-                <span>{t('goingCount', { count: event.going_count || 0 })}</span>
+                <span>
+                  {isSystemEvent
+                    ? t('interestedCount', { count: interestedCount })
+                    : t('goingCount', { count: event.going_count || 0 })}
+                </span>
               </div>
             </div>
+            {friendsGoing.length > 0 && (
+              <FriendsGoingCue friends={friendsGoing} variant="detail" className="mt-3" />
+            )}
           </div>
 
           <Separator />
 
           {/* Description */}
-          <div>
-            <h2 className="mb-2 font-semibold">{t('description')}</h2>
-            <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap">
-              {event.description}
+          {(event.description_json || (event.description && event.description.trim())) && (
+            <div>
+              <h2 className="mb-2 font-semibold">{t('description')}</h2>
+              <RichTextView
+                doc={event.description_json as RichTextDoc | null}
+                fallbackText={event.description}
+                className="text-sm leading-7 text-foreground/90"
+              />
             </div>
-          </div>
+          )}
+
+          {/*
+           * "Идём вместе" — meetup hub. Only rendered for system events;
+           * community events already are the meetup, so a recursive shelf
+           * here would be confusing.
+           */}
+          {isSystemEvent && (
+            <SystemEventMeetups
+              parentEvent={{
+                id: event.id,
+                title: event.title,
+                starts_at: event.starts_at,
+                city: event.city,
+                address: event.address,
+              }}
+              isAuthenticated={isAuthenticated}
+            />
+          )}
 
           {event.group_id && event.status === 'completed' && (
             <div className="rounded-[2rem] border border-border/50 bg-card shadow-sm">
@@ -271,7 +376,11 @@ export default async function EventDetailPage({ params }: Props) {
             canModerate={canEdit}
           />
 
-          {event.status === 'completed' && isAuthenticated && going && (
+          {canManageAttendance && (
+            <AttendanceRoster eventId={id} initialEntries={rosterEntries} />
+          )}
+
+          {event.status === 'completed' && isAuthenticated && going && !isSystemEvent && (
             <EventReviewForm eventId={id} />
           )}
 
@@ -286,13 +395,69 @@ export default async function EventDetailPage({ params }: Props) {
         <div className="space-y-4 sm:space-y-6 lg:sticky lg:top-24 lg:self-start">
           <Card className="rounded-2xl border-border/50 shadow-sm">
             <CardContent className="space-y-5 pt-5 sm:space-y-6 sm:pt-6">
-              <EventActions
-                eventId={id}
-                initialGoing={going}
-                initialFavorited={favorited}
-                isAuthenticated={isAuthenticated}
-              />
-              <ShareButton title={event.title} className="w-full rounded-xl" />
+              {isSystemEvent ? (
+                /*
+                 * System events (Афиша) don't carry RSVP — render a tailored
+                 * action bar (Save to calendar / Interested / Favorite / Share).
+                 * The "Going with a group" CTA will be wired in Block B4 once
+                 * the meetup model migration lands.
+                 */
+                <SystemEventActions
+                  event={{
+                    id: event.id,
+                    title: event.title,
+                    description: event.description,
+                    address: event.address,
+                    city: event.city,
+                    starts_at: event.starts_at,
+                    duration_minutes: event.duration_minutes,
+                    is_online: event.is_online,
+                  }}
+                  initialStatus={attendanceStatus}
+                  initialFavorited={favorited}
+                  isAuthenticated={isAuthenticated}
+                  meetupCta={{
+                    label: t(meetupCount > 0 ? 'goWithGroupExisting' : 'goWithGroupNew'),
+                    href: '#meetups',
+                    count: meetupCount,
+                  }}
+                />
+              ) : (
+                <>
+                  <EventActions
+                    eventId={id}
+                    initialStatus={attendanceStatus}
+                    initialFavorited={favorited}
+                    isAuthenticated={isAuthenticated}
+                    isFull={isFull}
+                  />
+                  {isAuthenticated && (attendanceStatus === 'going' || attendanceStatus === 'waitlist') && (
+                    <RsvpVisibilityToggle
+                      eventId={id}
+                      initialIsVisible={rsvpIsVisible}
+                    />
+                  )}
+                  {isAuthenticated && needsReconfirm && (
+                    <ReconfirmBanner eventId={id} initiallyOpen />
+                  )}
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <ShareButton title={event.title} className="flex-1 rounded-xl" />
+                    <AddToCalendarButton
+                      event={{
+                        id: event.id,
+                        title: event.title,
+                        description: event.description,
+                        address: event.address,
+                        city: event.city,
+                        starts_at: event.starts_at,
+                        duration_minutes: event.duration_minutes,
+                        is_online: event.is_online,
+                      }}
+                      className="flex-1 rounded-xl"
+                    />
+                  </div>
+                </>
+              )}
 
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
@@ -335,11 +500,32 @@ export default async function EventDetailPage({ params }: Props) {
                 <div className="flex items-center gap-3">
                   <Users className="text-muted-foreground h-5 w-5 shrink-0" />
                   <div>
-                    <p className="text-sm">{t('goingCount', { count: event.going_count || 0 })}</p>
-                    {spotsLeft !== null && (
-                      <p className="text-muted-foreground text-xs">
-                        {spotsLeft > 0 ? t('spotsLeft', { count: spotsLeft }) : t('noSpotsLeft')}
-                      </p>
+                    {/*
+                     * Counter for community events shows "X going" + spots/waitlist;
+                     * system events have no attendance ownership, so we surface the
+                     * "interested" count as the headline number instead.
+                     */}
+                    {isSystemEvent ? (
+                      <p className="text-sm">{t('interestedCount', { count: interestedCount })}</p>
+                    ) : (
+                      <>
+                        <p className="text-sm">{t('goingCount', { count: event.going_count || 0 })}</p>
+                        {spotsLeft !== null && (
+                          <p className="text-muted-foreground text-xs">
+                            {spotsLeft > 0 ? t('spotsLeft', { count: spotsLeft }) : t('noSpotsLeft')}
+                          </p>
+                        )}
+                        {waitlistCount > 0 && (
+                          <p className="text-muted-foreground text-xs">
+                            {t('waitlistCount', { count: waitlistCount })}
+                          </p>
+                        )}
+                        {interestedCount > 0 && (
+                          <p className="text-muted-foreground text-xs">
+                            {t('interestedCount', { count: interestedCount })}
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
@@ -403,9 +589,10 @@ export default async function EventDetailPage({ params }: Props) {
           </div>
           <EventActions
             eventId={id}
-            initialGoing={going}
+            initialStatus={attendanceStatus}
             initialFavorited={favorited}
             isAuthenticated={isAuthenticated}
+            isFull={isFull}
             compact
           />
         </div>

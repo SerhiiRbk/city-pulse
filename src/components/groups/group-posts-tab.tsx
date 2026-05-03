@@ -8,7 +8,9 @@ import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
+import { RichTextView } from '@/components/ui/rich-text-view';
+import { useRichEditorLabels } from '@/components/ui/use-rich-editor-labels';
 import {
   addGroupPostImageUrl,
   addGroupPostMediaFromAlbumItem,
@@ -19,7 +21,10 @@ import {
   uploadGroupPostImage,
 } from '@/lib/actions/group-posts';
 import { GroupPostMediaGallery } from '@/components/groups/group-post-media-gallery';
-import type { GroupPostMedia, GroupPostType } from '@/types/database';
+import type { GroupPostMedia, GroupPostType, Json } from '@/types/database';
+import type { RichTextDoc } from '@/lib/rich-text/types';
+import { plainTextToRichTextDoc } from '@/lib/rich-text/from-plain';
+import { extractPlainText } from '@/lib/rich-text/extract-plain';
 import {
   CalendarDays,
   ChevronDown,
@@ -70,6 +75,7 @@ interface GroupPostItem {
   type: GroupPostType;
   title: string;
   content: string;
+  content_json: Json | null;
   published_at: string;
   profiles?: PostAuthor | null;
   events?: PostEvent | null;
@@ -102,7 +108,7 @@ type PendingMedia =
 
 interface PostComposerSubmitPayload {
   title: string;
-  content: string;
+  contentJson: RichTextDoc;
   type: GroupPostType;
   eventId?: string;
   pendingMedia: PendingMedia[];
@@ -111,7 +117,7 @@ interface PostComposerSubmitPayload {
 interface PostComposerProps {
   mode: 'create' | 'edit';
   initialTitle: string;
-  initialContent: string;
+  initialContent: RichTextDoc;
   initialType: GroupPostType;
   initialEventId?: string;
   linkedEvent?: PostEvent | null;
@@ -127,6 +133,15 @@ interface PostComposerProps {
   onSubmit: (payload: PostComposerSubmitPayload) => Promise<boolean>;
   onCancel?: () => void;
   onRemoveExistingMedia?: (mediaId: string) => Promise<void>;
+}
+
+const EMPTY_DOC: RichTextDoc = { type: 'doc', content: [{ type: 'paragraph' }] };
+
+function toRichTextDoc(post: Pick<GroupPostItem, 'content_json' | 'content'>): RichTextDoc {
+  if (post.content_json && typeof post.content_json === 'object' && !Array.isArray(post.content_json)) {
+    return post.content_json as unknown as RichTextDoc;
+  }
+  return plainTextToRichTextDoc(post.content);
 }
 
 function formatDate(dateStr: string, locale: string) {
@@ -179,8 +194,18 @@ function PostComposer({
   const t = useTranslations('groups.detail');
   const locale = useLocale();
   const [title, setTitle] = useState(initialTitle);
-  const [content, setContent] = useState(initialContent);
+  const [content, setContent] = useState<RichTextDoc>(initialContent);
   const [type, setType] = useState<GroupPostType>(initialType);
+  // Rich-text labels live in the shared `common.rich` namespace
+  // (used by every editor surface — group posts, event/group
+  // descriptions). The hook handles the `{used} / {max}` template
+  // unwrapping so next-intl doesn't try to interpolate placeholders
+  // it can't resolve at call time.
+  const editorLabels = useRichEditorLabels();
+
+  const contentPlainLength = useMemo(() => extractPlainText(content).length, [content]);
+  const isContentEmpty = contentPlainLength === 0;
+  const isContentOverflow = contentPlainLength > 4000;
   const [selectedEventId, setSelectedEventId] = useState(initialEventId || '');
   const [pendingMedia, setPendingMedia] = useState<PendingMedia[]>([]);
   const [showUrlInput, setShowUrlInput] = useState(false);
@@ -325,7 +350,7 @@ function PostComposer({
   }
 
   async function handleSubmit() {
-    if (!title.trim() || !content.trim()) return;
+    if (!title.trim() || isContentEmpty || isContentOverflow) return;
     if (type === 'event_recap' && !selectedEventId && !linkedEvent) {
       toast.error(t('postSelectEventRequired'));
       return;
@@ -333,7 +358,7 @@ function PostComposer({
 
     const success = await onSubmit({
       title: title.trim(),
-      content: content.trim(),
+      contentJson: content,
       type,
       eventId: type === 'event_recap' ? (selectedEventId || initialEventId) : undefined,
       pendingMedia,
@@ -343,7 +368,7 @@ function PostComposer({
 
     if (mode === 'create') {
       setTitle('');
-      setContent('');
+      setContent(EMPTY_DOC);
       setType('update');
       setSelectedEventId('');
       resetPendingMedia();
@@ -423,12 +448,14 @@ function PostComposer({
         className="h-11 rounded-xl"
       />
 
-      <Textarea
+      <RichTextEditor
         value={content}
-        onChange={(event) => setContent(event.target.value)}
+        onChange={setContent}
         placeholder={type === 'event_recap' ? t('postContentRecapPlaceholder') : t('postContentPlaceholder')}
         maxLength={4000}
-        className="min-h-[160px] resize-y rounded-2xl"
+        disabled={loading}
+        ariaLabel={t('postBodyTitle')}
+        labels={editorLabels}
       />
 
       {selectedEvent && (
@@ -600,7 +627,7 @@ function PostComposer({
         <Button
           type="button"
           onClick={() => void handleSubmit()}
-          disabled={loading || !title.trim() || !content.trim() || (type === 'event_recap' && !selectedEventId && !linkedEvent)}
+          disabled={loading || !title.trim() || isContentEmpty || isContentOverflow || (type === 'event_recap' && !selectedEventId && !linkedEvent)}
           className="rounded-xl"
         >
           {loading ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : <Send className="mr-1.5 h-4 w-4" />}
@@ -671,28 +698,26 @@ export function GroupPostsTab({
         groupId,
         type: payload.type,
         title: payload.title,
-        content: payload.content,
+        contentJson: payload.contentJson,
         eventId: payload.type === 'event_recap' ? payload.eventId : undefined,
       });
 
-      if (result.error) {
+      if ('error' in result) {
         toast.error(result.error);
         return false;
       }
 
-      if (result.post) {
-        const createdPost = result.post as GroupPostItem;
-        const { addedMedia, errors } = await processPendingMedia(createdPost.id, payload.pendingMedia);
-        setPosts((prev) => [{
-          ...createdPost,
-          media: addedMedia,
-        }, ...prev]);
+      const createdPost = result.post as GroupPostItem;
+      const { addedMedia, errors } = await processPendingMedia(createdPost.id, payload.pendingMedia);
+      setPosts((prev) => [{
+        ...createdPost,
+        media: addedMedia,
+      }, ...prev]);
 
-        if (errors > 0) {
-          toast.success(t('postPublishedWithMediaWarning', { count: errors }));
-        } else {
-          toast.success(payload.type === 'event_recap' ? t('recapPublished') : t('postPublished'));
-        }
+      if (errors > 0) {
+        toast.success(t('postPublishedWithMediaWarning', { count: errors }));
+      } else {
+        toast.success(payload.type === 'event_recap' ? t('recapPublished') : t('postPublished'));
       }
 
       return true;
@@ -709,10 +734,10 @@ export function GroupPostsTab({
     try {
       const result = await updateGroupPost(post.id, {
         title: payload.title,
-        content: payload.content,
+        contentJson: payload.contentJson,
       });
 
-      if (result.error) {
+      if ('error' in result) {
         toast.error(result.error);
         return false;
       }
@@ -782,7 +807,7 @@ export function GroupPostsTab({
           <PostComposer
             mode="create"
             initialTitle=""
-            initialContent=""
+            initialContent={EMPTY_DOC}
             initialType={initialRecapEventId ? 'event_recap' : 'update'}
             initialEventId={initialRecapEventId}
             pastEvents={pastEvents}
@@ -874,7 +899,7 @@ export function GroupPostsTab({
                     key={post.id}
                     mode="edit"
                     initialTitle={post.title}
-                    initialContent={post.content}
+                    initialContent={toRichTextDoc(post)}
                     initialType={post.type}
                     initialEventId={post.event_id || undefined}
                     linkedEvent={post.events}
@@ -901,9 +926,11 @@ export function GroupPostsTab({
                         {t('openPost')}
                       </Link>
                     </div>
-                    <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-muted-foreground">
-                      {post.content}
-                    </p>
+                    <RichTextView
+                      doc={toRichTextDoc(post)}
+                      fallbackText={post.content}
+                      className="mt-3"
+                    />
 
                     {post.media && post.media.length > 0 && (
                       <div className="mt-4">

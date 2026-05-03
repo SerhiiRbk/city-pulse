@@ -24,12 +24,25 @@ import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2, UsersRound,
 import { LocationPicker } from '@/components/maps/location-picker';
 import { CityPicker } from '@/components/ui/city-picker';
 import { LanguageMultiSelect } from '@/components/ui/language-multi-select';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
+import { useRichEditorLabels } from '@/components/ui/use-rich-editor-labels';
 import { createEvent, uploadEventPhoto } from '@/lib/actions/events';
+import { createSeriesFromEvent } from '@/lib/actions/event-series';
+import { RecurrenceInput, type RecurrenceState } from '@/components/events/recurrence-input';
 import { resolveCity } from '@/lib/actions/cities';
 import { toast } from 'sonner';
 import { cn, countryCodeToFlag } from '@/lib/utils';
 import { COUNTRIES } from '@/lib/constants';
-import type { Interest, InterestCategory, City } from '@/types/database';
+import { extractPlainText } from '@/lib/rich-text/extract-plain';
+import { richTextHasContent } from '@/lib/rich-text/validate';
+import { SafetyTagsInput } from '@/components/events/safety-tags-input';
+import type { RichTextDoc } from '@/lib/rich-text/types';
+import type { Interest, InterestCategory, City, SafetyTag } from '@/types/database';
+
+const EMPTY_DESCRIPTION_DOC: RichTextDoc = {
+  type: 'doc',
+  content: [{ type: 'paragraph' }],
+};
 
 interface ManageableGroup {
   id: string;
@@ -55,6 +68,7 @@ interface CreateEventFormProps {
 
 export function CreateEventForm({ interests, categories, groups = [], defaultGroupId, profileDefaults }: CreateEventFormProps) {
   const t = useTranslations('events.create');
+  const tSafety = useTranslations('events.safety');
   const locale = useLocale();
   const router = useRouter();
 
@@ -78,6 +92,10 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
   const [isOnline, setIsOnline] = useState(false);
   const [isFree, setIsFree] = useState(true);
   const [isPrivate, setIsPrivate] = useState(false);
+  const [safetyTags, setSafetyTags] = useState<SafetyTag[]>([]);
+  const [recurrence, setRecurrence] = useState<RecurrenceState>({ frequency: 'none' });
+  const [descriptionDoc, setDescriptionDoc] = useState<RichTextDoc>(EMPTY_DESCRIPTION_DOC);
+  const editorLabels = useRichEditorLabels();
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [interestsPopoverOpen, setInterestsPopoverOpen] = useState(false);
@@ -181,9 +199,20 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
     const finalCountry = (eventCountry && eventCountry !== '__none' ? eventCountry : undefined) || undefined;
     const finalCityName = eventCity?.name || location.city || undefined;
 
+    // Send the rich body when the user wrote anything; otherwise
+    // leave both fields untouched on the server side. We always
+    // forward the plain-text projection too so legacy consumers
+    // (cards, OG snippets, search) keep getting a usable string
+    // even before the trigger redrives `description` from JSON.
+    const hasRichDescription = richTextHasContent(descriptionDoc);
+    const descriptionPlain = hasRichDescription
+      ? extractPlainText(descriptionDoc).slice(0, 4000)
+      : '';
+
     const data = {
       title: form.get('title') as string,
-      description: form.get('description') as string,
+      description: descriptionPlain,
+      description_json: hasRichDescription ? descriptionDoc : undefined,
       languages,
       category_id: primaryCategory,
       starts_at: `${form.get('date')}T${form.get('time')}`,
@@ -204,6 +233,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
         ? [photos[coverIndex], ...photos.filter((_, i) => i !== coverIndex)]
         : [],
       group_id: selectedGroupId !== '__personal' ? selectedGroupId : null,
+      safety_tags: safetyTags,
     };
 
     if (!data.title || !data.starts_at || !primaryCategory) {
@@ -220,8 +250,23 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
       return;
     }
 
+    // If the organiser opted into a recurring series, expand it
+    // server-side. Failures here are non-fatal — the seed event is
+    // already saved, so we surface a warning and keep going.
+    const newEventId = result.event?.id;
+    if (newEventId && recurrence.frequency !== 'none' && recurrence.count >= 2) {
+      const seriesResult = await createSeriesFromEvent({
+        eventId: newEventId,
+        frequency: recurrence.frequency,
+        count: recurrence.count,
+      });
+      if ('error' in seriesResult) {
+        toast.warning(seriesResult.error);
+      }
+    }
+
     toast.success('Event created!');
-    router.push(`/events/${result.event?.id}`);
+    router.push(`/events/${newEventId}`);
   }
 
   return (
@@ -272,11 +317,12 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">{t('description')}</Label>
-            <textarea
-              id="description"
-              name="description"
-              rows={4}
-              className="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            <RichTextEditor
+              ariaLabel={t('description')}
+              value={descriptionDoc}
+              onChange={setDescriptionDoc}
+              labels={editorLabels}
+              maxLength={4000}
             />
           </div>
           <div className="space-y-2">
@@ -376,6 +422,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
               <Input id="duration" name="duration" type="number" defaultValue={60} min={15} step={15} />
             </div>
           </div>
+          <RecurrenceInput value={recurrence} onChange={setRecurrence} />
         </CardContent>
       </Card>
 
@@ -412,6 +459,11 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
               <p className="text-muted-foreground text-xs">{t('privateHint')}</p>
             </div>
             <Switch id="is_private" checked={isPrivate} onCheckedChange={setIsPrivate} />
+          </div>
+          <div className="space-y-2">
+            <Label>{tSafety('inputLabel')}</Label>
+            <p className="text-muted-foreground text-xs">{tSafety('inputHint')}</p>
+            <SafetyTagsInput value={safetyTags} onChange={setSafetyTags} />
           </div>
         </CardContent>
       </Card>

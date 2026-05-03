@@ -19,6 +19,7 @@ interface ProfileTabsProps {
   subscribedGroups?: any[];
   managedGroups: any[];
   goingEventIds?: string[];
+  waitlistedEventIds?: string[];
   favoritedEventIds?: string[];
 }
 
@@ -33,10 +34,12 @@ export function ProfileTabs({
   subscribedGroups = [],
   managedGroups,
   goingEventIds = [],
+  waitlistedEventIds = [],
   favoritedEventIds = [],
 }: ProfileTabsProps) {
   const t = useTranslations('profile.tabs');
   const goingSet = new Set(goingEventIds);
+  const waitlistSet = new Set(waitlistedEventIds);
   const favSet = new Set(favoritedEventIds);
 
   const ownerTabs = [
@@ -73,6 +76,7 @@ export function ProfileTabs({
             key={event.id}
             event={event}
             isGoing={goingSet.has(event.id)}
+            isWaitlisted={waitlistSet.has(event.id)}
             isFavorited={favSet.has(event.id)}
             isAuthenticated={isAuthenticated}
           />

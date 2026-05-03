@@ -148,3 +148,30 @@
     }
   }
 }
+
+/* TipTap rich-text editor: empty-state placeholder rendered via the
+ * `Placeholder` extension. The extension marks the first empty paragraph
+ * with `is-editor-empty`, and we project the placeholder text via a
+ * `data-placeholder` attribute. */
+.rich-text-editor-content .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--muted-foreground);
+  pointer-events: none;
+  height: 0;
+  float: left;
+}
+
+/* Tone down the auto-applied prose link styles inside the editor so they
+ * match the rest of the UI (the LinkifiedText / RichTextView treatment). */
+.rich-text-editor-content a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.rich-text-editor-content blockquote {
+  border-left: 2px solid color-mix(in oklab, var(--primary) 30%, transparent);
+  padding-left: 1rem;
+  font-style: italic;
+  color: var(--muted-foreground);
+}

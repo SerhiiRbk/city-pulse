@@ -23,13 +23,36 @@
     "copied": "Скопійовано!",
     "copyLink": "Скопіювати посилання",
     "linkCopied": "Посилання скопійовано!",
+    "showQrCode": "Показати QR-код",
+    "downloadQr": "Завантажити PNG",
+    "qrDialogTitle": "Скануйте, щоб відкрити",
+    "qrDialogHelp": "Наведіть камеру на код, щоб відкрити сторінку на іншому пристрої, або збережіть зображення для флаєра.",
     "follow": "Підписатися",
     "following": "Ви підписані",
     "user": "Користувач",
     "send": "Надіслати",
     "searchAddress": "Знайти адресу...",
     "searchCity": "Знайти місто...",
-    "noCitiesFound": "Міст не знайдено"
+    "noCitiesFound": "Міст не знайдено",
+    "rich": {
+      "bold": "Жирний",
+      "italic": "Курсив",
+      "strike": "Закреслений",
+      "heading2": "Заголовок",
+      "heading3": "Підзаголовок",
+      "bulletList": "Маркований список",
+      "orderedList": "Нумерований список",
+      "blockquote": "Цитата",
+      "link": "Посилання",
+      "linkDialogTitle": "Додати посилання",
+      "linkPlaceholder": "https://example.com",
+      "linkSave": "Зберегти",
+      "linkRemove": "Видалити посилання",
+      "linkCancel": "Скасувати",
+      "linkInvalid": "Використовуйте URL з http або https",
+      "charactersUsed": "{used} / {max}",
+      "charactersOverflow": "Досягнуто максимуму"
+    }
   },
   "nav": {
     "home": "Головна",
@@ -46,7 +69,8 @@
     "createGroup": "Створити групу",
     "cityEvents": "Афіша",
     "feed": "Стрічка",
-    "admin": "Адмін"
+    "admin": "Адмін",
+    "myEvents": "Мої заходи"
   },
   "landing": {
     "hero": {
@@ -178,6 +202,8 @@
     "title": "Заходи",
     "noEvents": "Заходів не знайдено",
     "filters": {
+      "searchPlaceholder": "Пошук подій, місць, тем…",
+      "clearSearch": "Очистити",
       "country": "Країна",
       "city": "Місто",
       "language": "Мова",
@@ -214,11 +240,17 @@
       "going": "Ви йдете",
       "notGoing": "Скасувати участь",
       "join": "Піду",
+      "joinWaitlist": "У список очікування",
+      "onWaitlist": "У списку очікування",
+      "interested": "Цікаво",
+      "markInterested": "Позначити як цікаве",
       "favorite": "До обраного",
       "unfavorite": "Прибрати з обраного",
       "share": "Поділитися",
       "attendees": "{count, plural, one {# учасник} few {# учасники} other {# учасників}}",
       "cuePopular": "Популярно серед місцевих",
+      "cueAfisha": "Відбір редакції",
+      "badgeAfisha": "Афіша",
       "cueEasy": "Легко приєднатися",
       "startingSoon": "Скоро почнеться",
       "inHours": "Через {count} год",
@@ -252,6 +284,9 @@
       "removedFromFavorites": "Видалено з обраного",
       "registeredForEvent": "Ви записалися на захід!",
       "cancelledAttendance": "Участь скасовано",
+      "addedToWaitlist": "Додано до списку очікування — вас переведуть, коли звільниться місце",
+      "markedInterested": "Позначено як цікаве",
+      "unmarkedInterested": "Більше не цікаво",
       "breadcrumbs": "Події",
       "popularCue": "Популярний захід для знайомств і спілкування",
       "soloCue": "Легко долучитися, навіть якщо ви йдете самі",
@@ -267,6 +302,8 @@
       "goingCount": "{count, plural, one {# учасник йде} few {# учасники йдуть} other {# учасників йдуть}}",
       "spotsLeft": "{count, plural, one {# місце залишилось} few {# місця залишилось} other {# місць залишилось}}",
       "noSpotsLeft": "Вільних місць немає",
+      "waitlistCount": "{count, plural, one {# у списку очікування} few {# у списку очікування} other {# у списку очікування}}",
+      "interestedCount": "{count, plural, one {# цікавиться} few {# цікавляться} other {# цікавляться}}",
       "reviewsCount": "{rating} ({count, plural, one {# відгук} few {# відгуки} other {# відгуків}})",
       "moreAttendees": "Ще +{count} учасників",
       "noComments": "Коментарів поки немає.",
@@ -283,7 +320,65 @@
       "recapCreateHint": "Опублікуйте у стрічці групи, як пройшов захід, що запам'яталося та які висновки.",
       "recapPendingHint": "Організатори ще не опублікували звіт про захід.",
       "viewRecap": "Відкрити звіт",
-      "writeRecap": "Написати звіт"
+      "writeRecap": "Написати звіт",
+      "addToCalendar": "Додати в календар",
+      "addToGoogle": "Google Calendar",
+      "addToApple": "Apple / Outlook",
+      "downloadIcs": "Завантажити .ics",
+      "systemEditorialTitle": "Подія міста",
+      "systemEditorialSubtitle": "Ми не організовуємо цю подію — просто допомагаємо не пропустити її.",
+      "goWithGroupNew": "Ідемо компанією",
+      "goWithGroupExisting": "Долучитися до компанії"
+    },
+    "systemActions": {
+      "interested": "Вам цікаво",
+      "markInterested": "У календар"
+    },
+    "meetup": {
+      "sectionLabel": "Ідемо разом",
+      "sectionTitleEmpty": "Створіть першу зустріч",
+      "sectionTitleWithCount": "{count, plural, one {# компанія йде} few {# компанії йдуть} many {# компаній йдуть} other {# компаній йдуть}}",
+      "sectionDescription": "Зберіть своїх або познайомтеся з тими, хто також іде — зустріч біля входу, кава перед, дорога разом.",
+      "ctaLogin": "Увійдіть, щоб створити зустріч",
+      "spotsLeft": "{count, plural, one {ще # місце} few {ще # місця} many {ще # місць} other {ще # місць}}",
+      "full": "Місць немає",
+      "private": "За посиланням",
+      "goingCount": "{count, plural, one {# іде} few {# йдуть} many {# йдуть} other {# йдуть}}",
+      "defaultTitle": "Ідемо на «{event}» разом",
+      "cta": "Створити зустріч",
+      "dialogTitle": "Запланувати зустріч",
+      "dialogDescription": "Відкрийте її для тих, хто також іде на «{event}». Дату й місце успадковано з афіші.",
+      "fieldTitle": "Назва групи",
+      "fieldTitlePlaceholder": "Ідемо після роботи",
+      "fieldTitleHint": "Розкажіть, кого запрошуєте.",
+      "fieldPitch": "Опис (необов'язково)",
+      "fieldPitchPlaceholder": "Зустрічаємось біля головного входу за 30 хвилин до початку.",
+      "fieldMeetingPoint": "Місце зустрічі (необов'язково)",
+      "fieldMeetingPointPlaceholder": "Головний вхід · 18:30",
+      "fieldCap": "Ліміт учасників",
+      "fieldCapPlaceholder": "8",
+      "fieldPrivate": "Приватне посилання",
+      "fieldPrivateHint": "Зустріч побачать лише ті, у кого є посилання.",
+      "cancel": "Скасувати",
+      "submit": "Створити",
+      "createSuccess": "Зустріч створено",
+      "createError": "Не вдалося створити зустріч"
+    },
+    "attendance": {
+      "title": "Відмітка присутності",
+      "empty": "На цю подію ніхто не записався.",
+      "markAttended": "Прийшов",
+      "markNoShow": "Не прийшов",
+      "statusGoing": "Записаний — ще не відмічений",
+      "statusWaitlist": "Був у списку очікування",
+      "statusAttended": "Відмічений як присутній",
+      "statusNoShow": "Відмічений як відсутній",
+      "markedAttended": "Відмічений як присутній",
+      "markedNoShow": "Відмічений як відсутній",
+      "reverted": "Відмітку знято",
+      "summaryAttended": "{count} прийшли",
+      "summaryNoShow": "{count} не прийшли",
+      "summaryUnmarked": "{count} очікує"
     },
     "page": {
       "heroBadge": "Знайдіть наступний захід, до якого легко приєднатися",
@@ -292,6 +387,7 @@
       "trust2": "Прогулянки, настілки, мовні клуби",
       "trust3": "Познайомтеся з людьми ще до зустрічі",
       "createCta": "Створити захід",
+      "myEventsCta": "Мої заходи",
       "sideLabel": "Найкраще для нових знайомств",
       "sideItem1Title": "Невеликі зустрічі",
       "sideItem1Body": "Менше тиску, легше почати першу розмову.",
@@ -303,7 +399,124 @@
       "resultsTitle": "{count, plural, one {# захід, куди варто піти} few {# заходи, куди варто піти} other {# заходів, куди варто піти}}",
       "noResultsTitle": "Відповідних заходів поки немає",
       "sectionBody": "Обирайте формати, де простіше відчути себе своїм: з чіткою атмосферою, регулярністю та живим спілкуванням.",
-      "emptyDescription": "Спробуйте змінити фільтри або поверніться пізніше"
+      "emptyDescription": "Спробуйте змінити фільтри або поверніться пізніше",
+      "sort": {
+        "label": "Сортування",
+        "soon": "Найближчі",
+        "popular": "Популярні"
+      },
+      "showPast": "Показати минулі",
+      "hidePast": "Приховати минулі",
+      "source": {
+        "all": "Усі",
+        "community": "Спільнота",
+        "afisha": "Афіша"
+      }
+    },
+    "myEvents": {
+      "heroBadge": "Ваш центр організатора",
+      "title": "Мої заходи",
+      "subtitle": "Усі заходи, які ви організовуєте або модеруєте — зокрема й минулі, щоб підбити підсумки.",
+      "createCta": "Створити захід",
+      "backToEvents": "Усі заходи",
+      "upcomingLabel": "Майбутні",
+      "upcomingTitle": "{count, plural, one {# майбутній захід} few {# майбутні заходи} other {# майбутніх заходів}}",
+      "noUpcoming": "Майбутніх заходів немає. Сплануйте новий і зберіть свою спільноту.",
+      "pastLabel": "Минулі",
+      "pastTitle": "{count, plural, one {# минулий захід} few {# минулі заходи} other {# минулих заходів}}",
+      "draftsLabel": "Чернетки",
+      "draftsTitle": "{count, plural, one {# чернетка} few {# чернетки} other {# чернеток}}",
+      "draftsDescription": "Бачите тільки ви. Опублікуйте, коли будете готові запросити людей.",
+      "savedLabel": "У календарі",
+      "savedTitle": "{count, plural, one {# подія з афіші} few {# події з афіші} many {# подій з афіші} other {# подій з афіші}}",
+      "savedDescription": "Події з афіші, які ви позначили як цікаві. Вони поряд із вашими власними заходами.",
+      "emptyTitle": "Ви ще не організовували заходів",
+      "emptyDescription": "Щойно ви створите захід або станете його модератором, він з'явиться тут.",
+      "stats": {
+        "upcoming": "Майбутніх",
+        "past": "Минулих",
+        "drafts": "Чернеток",
+        "rsvps": "Усього RSVP"
+      },
+      "status": {
+        "draft": "Чернетка — бачите тільки ви",
+        "cancelled": "Скасовано",
+        "completed": "Завершено",
+        "past": "Уже відбувся",
+        "blocked": "Заблоковано модерацією"
+      },
+      "card": {
+        "edit": "Редагувати",
+        "publish": "Опублікувати",
+        "publishSuccess": "Захід опубліковано",
+        "cancel": "Скасувати",
+        "cancelConfirmTitle": "Скасувати цей захід?",
+        "cancelConfirmDescription": "Дію не можна скасувати. Усі учасники отримають сповіщення.",
+        "cancelDismiss": "Залишити",
+        "cancelConfirm": "Так, скасувати",
+        "cancelSuccess": "Захід скасовано",
+        "markComplete": "Позначити завершеним",
+        "completeSuccess": "Захід позначено завершеним",
+        "duplicate": "Дублювати",
+        "duplicateSuccess": "Створено чернетку-копію",
+        "viewRecap": "Підсумок",
+        "roster": "{count, plural, =0 {Немає RSVP} one {1 RSVP} few {# RSVP} other {# RSVP}}",
+        "rsvps": "{count, plural, one {# іде} few {# ідуть} other {# ідуть}}"
+      },
+      "subscribe": {
+        "title": "Підписка в календар",
+        "description": "Підпишіться — і всі заходи, які ви організовуєте або на які йдете, потраплятимуть у Google Calendar, Apple Calendar або Outlook автоматично.",
+        "googleCta": "Додати в Google Calendar",
+        "icsCta": "Скопіювати посилання",
+        "icsCopied": "Посилання скопійовано",
+        "downloadCta": "Завантажити .ics",
+        "regenerateCta": "Перевипустити",
+        "regenerateConfirm": "Усі попередні підписки перестануть працювати. Продовжити?",
+        "regenerated": "Посилання оновлено"
+      }
+    },
+    "map": {
+      "pageTitle": "Мапа подій",
+      "pageSubtitle": "Подивіться, що відбувається поруч — віддаліть карту, щоб побачити сусідні райони, наблизьте для деталей на рівні вулиць.",
+      "heroBadge": "Події поруч",
+      "viewList": "Список",
+      "viewMap": "Мапа",
+      "loading": "Оновлюємо…",
+      "empty": "У цій області поки що немає подій",
+      "emptyHint": "Спробуйте віддалити карту або розширити діапазон дат.",
+      "openEvent": "Відкрити подію",
+      "andOthers": "+ ще {count} у цьому місці",
+      "rangeLabel": "Діапазон дат",
+      "range": {
+        "today": "Сьогодні",
+        "tomorrow": "Завтра",
+        "weekend": "На вихідних",
+        "week": "Найближчі 7 днів",
+        "2weeks": "Найближчі 2 тижні"
+      },
+      "locate": "Знайти мене",
+      "youAreHere": "Ви тут",
+      "geoDenied": "Доступ до геолокації заборонено. Дозвольте його в налаштуваннях браузера.",
+      "geoFailed": "Не вдалося визначити ваше місцезнаходження. Спробуйте ще раз.",
+      "geoUnsupported": "Ваш браузер не підтримує геолокацію.",
+      "showFreeOnly": "Лише безкоштовні",
+      "categoryFilter": "{count, plural, one {# категорія} few {# категорії} other {# категорій}}",
+      "removeFilter": "Прибрати фільтр: {name}",
+      "removeCategoryFilter": "Скинути фільтр за категоріями",
+      "sidebarCount": "{count, plural, one {# подія} few {# події} many {# подій} other {# події}} на мапі",
+      "sidebarEmpty": "Немає подій на мапі",
+      "sidebarHint": "Наведіть на картку, щоб підсвітити її на мапі.",
+      "sidebarTitle": "Події на мапі",
+      "pickCategories": "Категорії",
+      "searchCategory": "Знайти категорію…",
+      "noCategory": "Категорій не знайдено",
+      "clearAll": "Очистити все",
+      "legendTitle": "Категорії на мапі",
+      "legendShowMore": "ще {count}",
+      "legendCollapse": "Згорнути",
+      "shareLink": "Поділитися виглядом",
+      "linkCopied": "Посилання скопійовано",
+      "linkCopyFailed": "Не вдалося скопіювати посилання"
     },
     "create": {
       "title": "Створити захід",
@@ -341,6 +554,29 @@
       "noModerators": "Модераторів ще не додано",
       "moderatorAdded": "Модератора додано",
       "moderatorRemoved": "Модератора видалено"
+    },
+    "safety": {
+      "inputLabel": "Мітки аудиторії",
+      "inputHint": "Допоможіть новачкам зрозуміти, чого очікувати — виберіть теги, що пасують.",
+      "rsvpVisibilityLabel": "Показувати мене у списку учасників",
+      "rsvpVisibilityHelper": "Коли вимкнено, ім'я та аватар залишаються приватними. Ваш RSVP однаково враховується у загальній кількості.",
+      "rsvpHidden": "Ви йдете приватно",
+      "rsvpHiddenSaved": "Участь зроблено приватною",
+      "rsvpVisibleSaved": "Участь зроблено публічною",
+      "filterTitle": "Аудиторія",
+      "tag": {
+        "women_only": "Тільки для жінок",
+        "adults_only": "18+",
+        "lgbtq_friendly": "LGBTQ+ friendly",
+        "sober": "Без алкоголю",
+        "beginner_friendly": "Для початківців"
+      }
+    },
+    "reconfirm": {
+      "title": "Йдете завтра?",
+      "body": "Якщо не підтвердите, місце звільниться для черги. Один тап — і все.",
+      "cta": "Так, йду",
+      "confirmed": "Готово — місце за вами"
     }
   },
   "groups": {
@@ -358,6 +594,8 @@
     "cueWelcoming": "Привітна спільнота",
     "cueGrowing": "Спільнота зростає",
     "filters": {
+      "searchPlaceholder": "Шукати групи, теми, місця…",
+      "clearSearch": "Очистити пошук",
       "country": "Країна",
       "city": "Місто",
       "language": "Мова",
@@ -383,9 +621,9 @@
     "detail": {
       "creator": "Створив",
       "membersList": "Учасники",
-      "eventsTitle": "Найближчі заходи",
+      "eventsTitle": "Найближчі",
       "noEvents": "Немає найближчих заходів",
-      "pastEventsTitle": "Минулі заходи",
+      "pastEventsTitle": "Минулі",
       "noPastEvents": "Немає минулих заходів",
       "photosTitle": "Фотоальбоми",
       "noPhotos": "Альбомів поки немає",
@@ -429,6 +667,11 @@
       "communityCueActive": "Активна й привітна група",
       "communityCueStarter": "Чудове місце, щоб почати знайомитися",
       "directLink": "Пряме посилання",
+      "copyLink": "Скопіювати посилання",
+      "linkCopied": "Посилання скопійовано",
+      "linkCopyError": "Не вдалося скопіювати посилання",
+      "eventsInCity": "Події поруч",
+      "nextEvent": "Найближча подія",
       "eventsCount": "{count, plural, one {# захід} few {# заходи} other {# заходів}}",
       "eventsLabel": "Заходи",
       "reply": "Відповісти",
@@ -630,6 +873,19 @@
     "breadcrumbs": "Спільнота",
     "yearsOld": "{age} років",
     "followers": "Підписники",
+    "reputation": {
+      "reliability": "Надійність",
+      "attendanceRate": "Частка відвідувань",
+      "attended": "Прийшов",
+      "noShow": "Не прийшов",
+      "tier": {
+        "newcomer": "Новачок",
+        "regular": "Учасник",
+        "trusted": "Надійний",
+        "elite": "Лідер"
+      },
+      "tierDescription": "{tier, select, newcomer {Тільки починає — кілька відвідувань допоможуть заробити репутацію.} regular {Регулярно ходить на події з гарною історією.} trusted {Стабільно відвідує й доводить плани до кінця.} elite {Дуже активний, стабільно відвідує й — опора спільноти.} other {Активний учасник спільноти.}}"
+    },
     "connectionStyle": "Стиль спілкування",
     "connectionOpen": "Відкритий до нових знайомств і спільних планів.",
     "connectionReserved": "Надає перевагу спілкуванню спочатку через групи та події.",
@@ -638,6 +894,7 @@
   },
   "calendar": {
     "title": "Календар",
+    "eyebrow": "Ваш місяць одним поглядом",
     "myEvents": "Мої події",
     "allEvents": "Усі події",
     "exportGoogle": "Експорт у Google Календар",
@@ -648,11 +905,27 @@
     "monthOverview": "Огляд місяця",
     "noEventsDay": "На цей день подій поки немає.",
     "online": "Онлайн",
-    "free": "Безкоштовно"
+    "free": "Безкоштовно",
+    "today": "Сьогодні",
+    "prevMonth": "Попередній місяць",
+    "nextMonth": "Наступний місяць",
+    "selectPrompt": "Оберіть день, щоб побачити, що в ньому відбувається.",
+    "moreEvents": "+{count} ще",
+    "eventsCount": "{count, plural, one {# подія} few {# події} other {# подій}}",
+    "morning": "Ранок",
+    "afternoon": "День",
+    "evening": "Вечір",
+    "stats": {
+      "thisMonth": "Подій цього місяця",
+      "today": "Сьогодні",
+      "mine": "У вашому списку"
+    }
   },
   "messages": {
     "title": "Повідомлення",
     "noMessages": "Повідомлень поки немає",
+    "noMessagesDescription": "Напишіть комусь із події, на якій були, або зверніться до організатора групи, щоб потрапити на наступну зустріч.",
+    "findGroupsCta": "Переглянути групи",
     "newMessage": "Нове повідомлення",
     "typeMessage": "Введіть повідомлення...",
     "send": "Надіслати",
@@ -732,5 +1005,241 @@
     "about": "Про City-Pulse",
     "contact": "Зв'язатися з нами",
     "copyright": "© {year} City-Pulse. Усі права захищені."
+  },
+  "admin": {
+    "funnel": {
+      "topByViews": "Топ подій за переглядами 30 днів",
+      "topByViewsHelper": "Порівняйте охоплення (перегляди) з конверсією в RSVP та явкою — це покаже, де потрібен сильніший заклик до дії чи нагадування.",
+      "event": "Подія",
+      "views30d": "Перегляди 30д",
+      "viewsHint": "Унікальні денні перегляди (без накруток на оновленні).",
+      "uniqueViewers": "{count, plural, one {# глядач} few {# глядачі} many {# глядачів} other {# глядачів}}",
+      "rsvps": "RSVP",
+      "attended": "Прийшли",
+      "noShow": "{count, plural, one {# не прийшов} few {# не прийшли} many {# не прийшли} other {# не прийшли}}",
+      "rsvpRate": "RSVP %",
+      "rsvpRateHint": "Частка унікальних глядачів, які натиснули «Йду».",
+      "attendedRate": "Явка %",
+      "attendedRateHint": "Частка RSVP, позначених як «прийшли».",
+      "empty": "Опублікованих подій ще немає — воронка з'явиться після перших переглядів."
+    },
+    "systemEvents": {
+      "dashboard": {
+        "eyebrow": "Редакція",
+        "title": "Афіша · план публікацій",
+        "subtitle": "Плануйте, готуйте та публікуйте кураторські міські події.",
+        "openCalendar": "Календар",
+        "openTemplates": "Шаблони",
+        "newDraft": "Нова чернетка",
+        "pipelineTitle": "Воронка по містах",
+        "pipelineEmpty": "Поки нічого не заплановано — почніть із чернетки.",
+        "inFlightTitle": "У роботі",
+        "inFlightEmpty": "Чернетки та матеріали на ревʼю зʼявляться тут."
+      },
+      "composer": {
+        "titleNew": "Нова міська подія",
+        "titleEdit": "Редагування події",
+        "subtitle": "Створіть, перевірте та опублікуйте кураторський запис.",
+        "backToDashboard": "До дашборда",
+        "viewLive": "На сайті",
+        "sourceTitle": "Імпорт із джерела",
+        "sourceUrlPlaceholder": "Вставте URL партнера (сторінка події, майданчик тощо)",
+        "importButton": "Заповнити з URL",
+        "sourceHint": "Підтягнемо заголовок, опис і обкладинку. Фінальний текст завжди за вами.",
+        "basicsTitle": "Основне",
+        "titleLabel": "Заголовок",
+        "titlePlaceholder": "Публічна назва — конкретна та інформативна.",
+        "pitchLabel": "Анонс",
+        "pitchPlaceholder": "Одне речення, яке пояснює, чому це цікаво.",
+        "pitchHint": "{length, plural, one {# символ} few {# символи} many {# символів} other {# символів}}",
+        "descriptionLabel": "Опис",
+        "descriptionPlaceholder": "Що це? Чому варто прийти?",
+        "coverLabel": "URL обкладинки",
+        "coverPlaceholder": "https://",
+        "whenTitle": "Коли",
+        "startsAtLabel": "Початок",
+        "durationLabel": "Тривалість (хвилини)",
+        "whereTitle": "Де",
+        "cityLabel": "Місто",
+        "cityPlaceholder": "Praha",
+        "addressLabel": "Адреса",
+        "addressPlaceholder": "Вулиця і номер",
+        "curationTitle": "Кураторська частина",
+        "categoryLabel": "Категорія",
+        "categoryPlaceholder": "Виберіть категорію",
+        "partnerNameLabel": "Партнер / майданчик",
+        "partnerNamePlaceholder": "Goethe-Institut",
+        "partnerUrlLabel": "URL партнера",
+        "freeLabel": "Безкоштовний вхід",
+        "freeHint": "Вимкніть, щоб вказати ціну та валюту.",
+        "priceLabel": "Ціна",
+        "currencyLabel": "Валюта",
+        "actionsTitle": "Публікація",
+        "currentStatusLabel": "Статус",
+        "saveDraftButton": "Зберегти чернетку",
+        "sendToReviewButton": "На ревʼю",
+        "publishButton": "Опублікувати",
+        "publishBlockedHint": "Виправте підсвічені проблеми перед публікацією.",
+        "publishGatesFailed": "Частина перевірок не пройдена — подивіться панель вище.",
+        "importError": {
+          "invalid_url": "Це не схоже на URL.",
+          "invalid_protocol": "Підтримуються тільки http(s) посилання.",
+          "private_address": "Приватні адреси не дозволені.",
+          "fetch_failed": "Не вдалося завантажити сторінку."
+        },
+        "status": {
+          "draft": "Чернетка",
+          "review": "Ревʼю",
+          "scheduled": "Заплановано",
+          "published": "Опубліковано"
+        }
+      },
+      "gates": {
+        "panelTitle": "Контроль якості",
+        "summary": "{errors, plural, =0 {готово} other {помилок: #}}{warnings, plural, =0 {} other { · попереджень: #}}",
+        "allClear": "Усі перевірки пройдено — можна публікувати.",
+        "titleShort": "У заголовку має бути щонайменше 6 символів.",
+        "noCity": "Виберіть місто.",
+        "noCategory": "Виберіть категорію.",
+        "descriptionShort": "Опис короткий ({current}/{min} символів).",
+        "pitchMissing": "Додайте анонс.",
+        "pitchShort": "Анонс короткий ({current}/{min} символів).",
+        "pitchLong": "Анонс задовгий ({current}/{max} символів).",
+        "coverMissing": "Додайте обкладинку — без неї подія гірше привертає увагу.",
+        "dateMissing": "Вкажіть дату початку.",
+        "dateInvalid": "Дата виглядає некоректно.",
+        "datePast": "Дата початку вже у минулому.",
+        "dateClose": "До початку менше {min} днів — краще планувати раніше.",
+        "possibleDuplicate": "{count, plural, one {знайдено можливий дубль} few {знайдено # можливих дублі} many {знайдено # можливих дублів} other {знайдено # можливих дублів}} — перевірте перед публікацією.",
+        "noPartner": "Партнера не вказано."
+      },
+      "calendar": {
+        "title": "Редакторський календар",
+        "subtitle": "Перетягніть чернетку на новий день, щоб змінити дату.",
+        "back": "До дашборда",
+        "prevMonth": "Назад",
+        "nextMonth": "Вперед",
+        "saving": "Зберігаємо…"
+      },
+      "templates": {
+        "title": "Шаблони",
+        "subtitle": "Стартова точка — фінальну версію доведете перед публікацією.",
+        "back": "До дашборда",
+        "useTemplate": "Використати шаблон",
+        "items": {
+          "openAirConcert": {
+            "label": "Концерт open-air",
+            "description": "Вечір музики просто неба з одним хедлайнером і розігрівом."
+          },
+          "farmersMarket": {
+            "label": "Фермерський ринок",
+            "description": "Ринок локальних виробників на пів дня — повторюваний слот на вихідних."
+          },
+          "galleryOpening": {
+            "label": "Відкриття виставки",
+            "description": "Вернісаж із присутністю художника та короткою кураторською екскурсією."
+          },
+          "filmFestival": {
+            "label": "Фестивальний показ",
+            "description": "Тематичний показ із інтро та Q&A після титрів."
+          },
+          "streetFoodFair": {
+            "label": "Ярмарок стрітфуду",
+            "description": "Вуличний фудкорт з різними учасниками — формат для всієї родини."
+          },
+          "bookLaunch": {
+            "label": "Презентація книги",
+            "description": "Читання, автограф-сесія та короткі Q&A з автором."
+          }
+        }
+      }
+    }
+  },
+  "onboarding": {
+    "title": "Ласкаво просимо до City-Pulse",
+    "titleNamed": "Вітаємо, {name}!",
+    "subtitle": "Налаштуймо стрічку під ваше місто, інтереси й мови — менше хвилини.",
+    "cityCountryLabel": "Ваше місто",
+    "countryPlaceholder": "Оберіть країну",
+    "cityPlaceholder": "Знайти місто",
+    "cityHelper": "Покажемо події та спільноти цього міста першими. Змінити можна пізніше у профілі.",
+    "cityRequired": "Оберіть країну та місто, щоб продовжити.",
+    "interestsHelper": "Оберіть від {min} до {max} інтересів — точніше вибір, кращі рекомендації.",
+    "interestsMin": "Оберіть щонайменше {min} інтереси.",
+    "uncategorized": "Ще",
+    "languagesHelper": "Якими мовами вам комфортно спілкуватися на подіях? Можна кілька.",
+    "languagesMin": "Оберіть щонайменше одну мову.",
+    "finish": "Почати",
+    "done": "Готово — ласкаво просимо!"
+  },
+  "friends": {
+    "goingCue": "{count, plural, one {# знайомий іде} few {# знайомих ідуть} many {# знайомих ідуть} other {# знайомих ідуть}}",
+    "interestedCue": "{count, plural, one {# знайомому цікаво} few {# знайомим цікаво} many {# знайомим цікаво} other {# знайомим цікаво}}",
+    "noFollowingYet": "Підпишіться на організаторів, щоб бачити, хто куди йде."
+  },
+  "safety": {
+    "tagWomenOnly": "Лише для жінок",
+    "tagAdults": "18+",
+    "tagFamily": "Підходить для сімей",
+    "tagBeginners": "Можна початківцям",
+    "tagSober": "Без алкоголю",
+    "rsvpVisibilityLabel": "Видимість RSVP",
+    "rsvpVisibilityPublic": "Усі бачать, що я йду",
+    "rsvpVisibilityPrivate": "Лише організатор бачить, що я йду",
+    "rsvpVisibilityHelper": "Приватні RSVP рахуються у кількості учасників, але не з'являються у публічному списку."
+  },
+  "digest": {
+    "subjectLine": "{city}: {count} нових подій цього тижня",
+    "preheader": "Підібрано за вашими підписками та інтересами.",
+    "intro": "Привіт, {name}, ось що попереду.",
+    "ctaUnsubscribe": "Налаштування розсилки",
+    "settingTitle": "Щотижневий дайджест",
+    "settingDescription": "Отримуйте персональний лист щопонеділка з подіями за вашими інтересами.",
+    "settingToggle": "Підписатися на щотижневий дайджест"
+  },
+  "recurring": {
+    "frequencyLabel": "Повторення",
+    "helper": "Ми створимо окрему подію на кожну дату (ліміт місць, RSVP і відгуки рахуються для кожної дати окремо).",
+    "noneLabel": "Не повторюється",
+    "weeklyLabel": "Щотижня",
+    "everyTwoWeeksLabel": "Кожні 2 тижні",
+    "monthlyLabel": "Щомісяця",
+    "untilLabel": "До",
+    "occurrencesLabel": "Повторень",
+    "editScopeTitle": "Застосувати зміни до",
+    "editScopeThis": "Лише до цієї події",
+    "editScopeFuture": "До цієї та майбутніх",
+    "editScopeAll": "До всіх подій серії",
+    "seriesBadge": "Серія"
+  },
+  "unsubscribe": {
+    "successTitle": "Ви відписалися",
+    "successBody": "Щотижневий дайджест більше не надходитиме. Підписатися знову можна в налаштуваннях.",
+    "errorTitle": "Не вдалося обробити посилання",
+    "errorBody": "Можливо, посилання застаріло або вже використане. Увійдіть, щоб керувати налаштуваннями.",
+    "emailLine": "Оновлено для {email}",
+    "manageCta": "Налаштування",
+    "homeCta": "До подій"
+  },
+  "settings": {
+    "email": {
+      "title": "Налаштування листів",
+      "subtitle": "Виберіть, які повідомлення ми надсилаємо. Це можна змінити будь-коли.",
+      "cardTitle": "Сповіщення",
+      "emailLabel": "Адреса: {email}",
+      "digestLabel": "Щотижневий дайджест подій",
+      "digestHelper": "Короткий персональний лист щопонеділка з подіями за вашим містом, інтересами та мовами.",
+      "toastSubscribed": "Ви підписалися на дайджест",
+      "toastUnsubscribed": "Дайджест більше не надходитиме",
+      "push": {
+        "label": "Push-сповіщення у браузері",
+        "helper": "Миттєві сповіщення про підтвердження RSVP, відповіді та нагадування — навіть коли вкладка закрита.",
+        "unsupportedHelper": "Ваш браузер не підтримує push або їх не налаштовано для цього середовища.",
+        "permissionDenied": "Дозвіл на сповіщення заблоковано. Увімкніть його в налаштуваннях сайту.",
+        "subscribeError": "Не вдалося увімкнути push. Спробуйте ще раз.",
+        "subscribeSuccess": "Push-сповіщення увімкнено",
+        "unsubscribeSuccess": "Push-сповіщення вимкнено"
+      }
+    }
   }
 }

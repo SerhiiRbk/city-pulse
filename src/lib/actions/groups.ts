@@ -1,8 +1,61 @@
 'use server';
 
+import { updateTag } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { canViewBlockedOwnedResource, getViewerContext } from '@/lib/server/viewer-context';
 import { createNotification } from '@/lib/actions/notifications';
+import {
+  createGroupSchema,
+  groupCommentSchema,
+  updateGroupSchema,
+  type CreateGroupInput,
+  type GroupCommentInput,
+  type UpdateGroupInput,
+} from '@/lib/validations/groups';
+import { prettyZodError } from '@/lib/validations/common';
+import {
+  parseAndValidateRichTextDoc,
+  RichTextValidationError,
+} from '@/lib/rich-text/validate';
+import { extractPlainText } from '@/lib/rich-text/extract-plain';
+import type { Json } from '@/types/database';
+
+const MAX_DESCRIPTION_PLAIN_LENGTH = 4000;
+
+/**
+ * Normalises the optional rich-text description payload coming
+ * from group create/update actions. Mirrors the helper in
+ * `@/lib/actions/events.ts` (kept inline rather than exported to
+ * avoid a circular import between the two action modules).
+ *
+ * Inputs:
+ *   * `undefined` — caller didn't touch the description; leave both
+ *     `description` and `description_json` untouched on the row;
+ *   * `null` — caller explicitly wants to clear the rich body;
+ *   * any other value — must round-trip through
+ *     `parseAndValidateRichTextDoc` (server-side whitelist). On
+ *     success we return both the validated JSON doc and a clamped
+ *     plain-text projection so the trigger has a defensible mirror
+ *     to write into `description`.
+ */
+function normalizeDescriptionRichText(
+  raw: unknown,
+): { kind: 'untouched' } | { kind: 'cleared' } | { kind: 'set'; doc: Json; plain: string } | { error: string } {
+  if (raw === undefined) return { kind: 'untouched' };
+  if (raw === null) return { kind: 'cleared' };
+  try {
+    const doc = parseAndValidateRichTextDoc(raw);
+    const plain = extractPlainText(doc).slice(0, MAX_DESCRIPTION_PLAIN_LENGTH);
+    return { kind: 'set', doc: doc as unknown as Json, plain };
+  } catch (err) {
+    if (err instanceof RichTextValidationError) return { error: err.message };
+    return { error: 'Invalid description body' };
+  }
+}
+
+function revalidateLandingGroups() {
+  updateTag('landing:groups');
+}
 
 interface ManageableGroupRow {
   groups: {
@@ -61,20 +114,10 @@ export async function getGroupRaw(groupId: string) {
   return data;
 }
 
-export async function updateGroup(
-  groupId: string,
-  data: {
-    name?: string;
-    slug?: string | null;
-    description?: string;
-    cover_url?: string | null;
-    languages?: string[];
-    country?: string | null;
-    city?: string | null;
-    city_id?: string | null;
-    interest_ids?: string[];
-  }
-) {
+export async function updateGroup(groupId: string, data: UpdateGroupInput) {
+  const parsed = updateGroupSchema.safeParse(data);
+  if (!parsed.success) return { error: prettyZodError(parsed.error) };
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
@@ -82,9 +125,20 @@ export async function updateGroup(
   const allowed = await canEditGroup(groupId);
   if (!allowed) return { error: 'No permission to edit this group' };
 
-  const { interest_ids, ...groupData } = data;
+  const richBody = normalizeDescriptionRichText(parsed.data.description_json);
+  if ('error' in richBody) return richBody;
 
-  const { error } = await supabase.from('groups').update(groupData).eq('id', groupId);
+  const { interest_ids, description_json: _ignoredJson, ...groupData } = parsed.data;
+
+  const updatePayload: Record<string, unknown> = { ...groupData };
+  if (richBody.kind === 'set') {
+    updatePayload.description = richBody.plain;
+    updatePayload.description_json = richBody.doc;
+  } else if (richBody.kind === 'cleared') {
+    updatePayload.description_json = null;
+  }
+
+  const { error } = await supabase.from('groups').update(updatePayload).eq('id', groupId);
   if (error) return { error: error.message };
 
   if (interest_ids !== undefined) {
@@ -96,6 +150,7 @@ export async function updateGroup(
     }
   }
 
+  revalidateLandingGroups();
   return { success: true };
 }
 
@@ -204,26 +259,28 @@ export async function searchUsers(query: string) {
   return data || [];
 }
 
-export async function createGroup(data: {
-  name: string;
-  slug?: string | null;
-  description: string;
-  cover_url?: string;
-  languages?: string[];
-  country?: string | null;
-  city?: string | null;
-  city_id?: string | null;
-  interest_ids?: string[];
-}) {
+export async function createGroup(data: CreateGroupInput) {
+  const parsed = createGroupSchema.safeParse(data);
+  if (!parsed.success) return { error: prettyZodError(parsed.error) };
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
 
-  const { interest_ids, ...groupData } = data;
+  const richBody = normalizeDescriptionRichText(parsed.data.description_json);
+  if ('error' in richBody) return richBody;
+
+  const { interest_ids, description_json: _ignoredJson, ...groupData } = parsed.data;
+
+  const insertPayload: Record<string, unknown> = { ...groupData, created_by: user.id };
+  if (richBody.kind === 'set') {
+    insertPayload.description = richBody.plain;
+    insertPayload.description_json = richBody.doc;
+  }
 
   const { data: group, error } = await supabase
     .from('groups')
-    .insert({ ...groupData, created_by: user.id })
+    .insert(insertPayload)
     .select()
     .single();
 
@@ -241,6 +298,7 @@ export async function createGroup(data: {
     );
   }
 
+  revalidateLandingGroups();
   return { success: true, group };
 }
 
@@ -317,6 +375,11 @@ export async function getGroups(
     city_id?: string;
     interests?: string[];
     languages?: string[];
+    /**
+     * Free-text query, applied to `groups.search_tsv` (name +
+     * description + city). Empty / undefined skips the filter.
+     */
+    q?: string;
     limit?: number;
     offset?: number;
   } = {},
@@ -357,6 +420,13 @@ export async function getGroups(
     query = query.overlaps('languages', filters.languages);
   }
 
+  if (filters.q && filters.q.trim().length > 0) {
+    query = query.textSearch('search_tsv', filters.q.trim(), {
+      type: 'websearch',
+      config: 'simple',
+    });
+  }
+
   const { data } = await query.range(offset, offset + limit - 1);
 
   return data || [];
@@ -374,6 +444,7 @@ export async function getGroupMembers(groupId: string) {
 
 export async function getGroupEvents(groupId: string) {
   const supabase = await createClient();
+  const nowIso = new Date().toISOString();
   const { data } = await supabase
     .from('events_with_counts')
     .select('*')
@@ -381,13 +452,15 @@ export async function getGroupEvents(groupId: string) {
     .eq('status', 'published')
     .eq('is_blocked', false)
     .eq('organizer_is_blocked', false)
-    .gte('starts_at', new Date().toISOString())
+    // Keep ongoing group events in the upcoming list until they end.
+    .gte('ends_at', nowIso)
     .order('starts_at', { ascending: true });
   return data || [];
 }
 
 export async function getPastGroupEvents(groupId: string) {
   const supabase = await createClient();
+  const nowIso = new Date().toISOString();
   const { data } = await supabase
     .from('events_with_counts')
     .select('*')
@@ -395,7 +468,7 @@ export async function getPastGroupEvents(groupId: string) {
     .in('status', ['published', 'completed'])
     .eq('is_blocked', false)
     .eq('organizer_is_blocked', false)
-    .lt('starts_at', new Date().toISOString())
+    .lt('ends_at', nowIso)
     .order('starts_at', { ascending: false });
   return data || [];
 }
@@ -438,6 +511,15 @@ export async function addGroupComment(
   parentId?: string,
   options?: { quotedText?: string; quotedAuthorName?: string; replyToId?: string },
 ) {
+  const parsed = groupCommentSchema.safeParse({
+    content,
+    parentId,
+    replyToId: options?.replyToId,
+    quotedText: options?.quotedText,
+    quotedAuthorName: options?.quotedAuthorName,
+  } satisfies GroupCommentInput);
+  if (!parsed.success) return { error: prettyZodError(parsed.error) };
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
@@ -478,12 +560,12 @@ export async function addGroupComment(
     .insert({
       group_id: groupId,
       user_id: user.id,
-      content,
-      parent_id: parentId || null,
+      content: parsed.data.content,
+      parent_id: parsed.data.parentId || null,
       is_approved: autoApprove,
-      quoted_text: options?.quotedText || null,
-      quoted_author_name: options?.quotedAuthorName || null,
-      reply_to_id: options?.replyToId || null,
+      quoted_text: parsed.data.quotedText || null,
+      quoted_author_name: parsed.data.quotedAuthorName || null,
+      reply_to_id: parsed.data.replyToId || null,
     })
     .select('*, profiles(id, display_name, avatar_url)')
     .single();
@@ -491,7 +573,8 @@ export async function addGroupComment(
   if (error) return { error: error.message };
 
   const commenterName = data.profiles?.display_name || 'Someone';
-  const snippet = content.length > 80 ? content.slice(0, 77) + '...' : content;
+  const snippet =
+    parsed.data.content.length > 80 ? parsed.data.content.slice(0, 77) + '...' : parsed.data.content;
   const alreadyNotified = new Set<string>([user.id]);
 
   if (isReply && parentId) {

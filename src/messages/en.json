@@ -23,13 +23,36 @@
     "copied": "Copied!",
     "copyLink": "Copy link",
     "linkCopied": "Link copied!",
+    "showQrCode": "Show QR code",
+    "downloadQr": "Download PNG",
+    "qrDialogTitle": "Scan to open",
+    "qrDialogHelp": "Point a camera at the code to open the page on another device or save the image for a flyer.",
     "follow": "Follow",
     "following": "Following",
     "user": "User",
     "send": "Send",
     "searchAddress": "Search address...",
     "searchCity": "Search city...",
-    "noCitiesFound": "No cities found"
+    "noCitiesFound": "No cities found",
+    "rich": {
+      "bold": "Bold",
+      "italic": "Italic",
+      "strike": "Strikethrough",
+      "heading2": "Heading",
+      "heading3": "Subheading",
+      "bulletList": "Bulleted list",
+      "orderedList": "Numbered list",
+      "blockquote": "Quote",
+      "link": "Link",
+      "linkDialogTitle": "Add link",
+      "linkPlaceholder": "https://example.com",
+      "linkSave": "Save",
+      "linkRemove": "Remove link",
+      "linkCancel": "Cancel",
+      "linkInvalid": "Use an http or https URL",
+      "charactersUsed": "{used} / {max}",
+      "charactersOverflow": "Maximum length reached"
+    }
   },
   "nav": {
     "home": "Home",
@@ -46,7 +69,8 @@
     "createGroup": "Create group",
     "cityEvents": "City events",
     "feed": "Feed",
-    "admin": "Admin"
+    "admin": "Admin",
+    "myEvents": "My events"
   },
   "landing": {
     "hero": {
@@ -178,6 +202,8 @@
     "title": "Events",
     "noEvents": "No events found",
     "filters": {
+      "searchPlaceholder": "Search events, places, themes…",
+      "clearSearch": "Clear search",
       "country": "Country",
       "city": "City",
       "language": "Language",
@@ -214,12 +240,18 @@
       "going": "You're going",
       "notGoing": "Cancel attendance",
       "join": "I'll go",
+      "joinWaitlist": "Join waitlist",
+      "onWaitlist": "On waitlist",
+      "interested": "Interested",
+      "markInterested": "Mark as interested",
       "favorite": "Add to favorites",
       "unfavorite": "Remove from favorites",
       "share": "Share",
       "attendees": "{count, plural, one {# attendee} other {# attendees}}",
       "cuePopular": "Popular with locals",
       "cueEasy": "Easy to join",
+      "cueAfisha": "Curated by editors",
+      "badgeAfisha": "Afisha",
       "startingSoon": "Starting soon",
       "inHours": "In {count}h",
       "inDays": "In {count} days",
@@ -252,6 +284,9 @@
       "removedFromFavorites": "Removed from favorites",
       "registeredForEvent": "You're going to this event!",
       "cancelledAttendance": "Attendance cancelled",
+      "addedToWaitlist": "Added to waitlist — you'll be moved up when a spot opens",
+      "markedInterested": "Marked as interested",
+      "unmarkedInterested": "No longer interested",
       "breadcrumbs": "Events",
       "popularCue": "Popular social event",
       "soloCue": "Easy to join even if you come solo",
@@ -267,6 +302,8 @@
       "goingCount": "{count, plural, one {# going} other {# going}}",
       "spotsLeft": "{count, plural, one {# spot left} other {# spots left}}",
       "noSpotsLeft": "No spots left",
+      "waitlistCount": "{count, plural, one {# on waitlist} other {# on waitlist}}",
+      "interestedCount": "{count, plural, one {# interested} other {# interested}}",
       "reviewsCount": "{rating} ({count, plural, one {# review} other {# reviews}})",
       "moreAttendees": "+{count} more attendees",
       "noComments": "No comments yet.",
@@ -283,7 +320,65 @@
       "recapCreateHint": "Share what happened, key takeaways, and photos in the group feed.",
       "recapPendingHint": "The organizers have not published a recap yet.",
       "viewRecap": "View recap",
-      "writeRecap": "Write recap"
+      "writeRecap": "Write recap",
+      "addToCalendar": "Add to calendar",
+      "addToGoogle": "Google Calendar",
+      "addToApple": "Apple / Outlook",
+      "downloadIcs": "Download .ics",
+      "systemEditorialTitle": "City listing",
+      "systemEditorialSubtitle": "We don't host this event — we just keep it on your calendar so you don't miss it.",
+      "goWithGroupNew": "Go with a group",
+      "goWithGroupExisting": "Join a group going"
+    },
+    "systemActions": {
+      "interested": "You're interested",
+      "markInterested": "Mark interested"
+    },
+    "meetup": {
+      "sectionLabel": "Going together",
+      "sectionTitleEmpty": "Be the first to plan a meetup",
+      "sectionTitleWithCount": "{count, plural, one {# meetup} other {# meetups}} going",
+      "sectionDescription": "Plan with people from City-Pulse — meet at the entrance, grab a drink before, share a ride.",
+      "ctaLogin": "Log in to start a meetup",
+      "spotsLeft": "{count, plural, one {# spot left} other {# spots left}}",
+      "full": "Full",
+      "private": "Private",
+      "goingCount": "{count, plural, one {# going} other {# going}}",
+      "defaultTitle": "Going to {event} together",
+      "cta": "Start a meetup",
+      "dialogTitle": "Plan a meetup",
+      "dialogDescription": "Open this to friends from City-Pulse going to “{event}”. Date and place are inherited from the listing.",
+      "fieldTitle": "Group name",
+      "fieldTitlePlaceholder": "After-work crew",
+      "fieldTitleHint": "Tell people who's invited.",
+      "fieldPitch": "Pitch (optional)",
+      "fieldPitchPlaceholder": "We'll meet at the main entrance 30 minutes early.",
+      "fieldMeetingPoint": "Meeting point (optional)",
+      "fieldMeetingPointPlaceholder": "Main entrance · 18:30",
+      "fieldCap": "Group cap",
+      "fieldCapPlaceholder": "8",
+      "fieldPrivate": "Private link",
+      "fieldPrivateHint": "Only people with the link can see this meetup.",
+      "cancel": "Cancel",
+      "submit": "Create meetup",
+      "createSuccess": "Meetup created",
+      "createError": "Could not create meetup"
+    },
+    "attendance": {
+      "title": "Attendance check-in",
+      "empty": "Nobody RSVP'd to this event.",
+      "markAttended": "Attended",
+      "markNoShow": "No-show",
+      "statusGoing": "RSVPed — not marked yet",
+      "statusWaitlist": "Was on waitlist",
+      "statusAttended": "Marked as attended",
+      "statusNoShow": "Marked as no-show",
+      "markedAttended": "Marked as attended",
+      "markedNoShow": "Marked as no-show",
+      "reverted": "Mark removed",
+      "summaryAttended": "{count} attended",
+      "summaryNoShow": "{count} no-show",
+      "summaryUnmarked": "{count} pending"
     },
     "page": {
       "heroBadge": "Find your next easy-to-join plan",
@@ -292,6 +387,7 @@
       "trust2": "Walks, board games, language clubs",
       "trust3": "Meet people before you show up",
       "createCta": "Create event",
+      "myEventsCta": "My events",
       "sideLabel": "Best for new connections",
       "sideItem1Title": "Small-group outings",
       "sideItem1Body": "Less pressure, easier first conversations.",
@@ -303,7 +399,124 @@
       "resultsTitle": "{count, plural, one {# event worth joining} other {# events worth joining}}",
       "noResultsTitle": "No matching events yet",
       "sectionBody": "Look for welcoming formats, recurring communities, and events that already show signs of good social energy.",
-      "emptyDescription": "Try adjusting your filters or check back later"
+      "emptyDescription": "Try adjusting your filters or check back later",
+      "sort": {
+        "label": "Sort",
+        "soon": "Soonest",
+        "popular": "Popular"
+      },
+      "showPast": "Show past events",
+      "hidePast": "Hide past events",
+      "source": {
+        "all": "All",
+        "community": "Community",
+        "afisha": "Afisha"
+      }
+    },
+    "myEvents": {
+      "heroBadge": "Your hosting hub",
+      "title": "My events",
+      "subtitle": "Everything you organize or moderate, in one place — including past events for recap and reflection.",
+      "createCta": "Create event",
+      "backToEvents": "Browse all events",
+      "upcomingLabel": "Upcoming",
+      "upcomingTitle": "{count, plural, one {# upcoming event} other {# upcoming events}}",
+      "noUpcoming": "No upcoming events. Plan something new and bring your community together.",
+      "pastLabel": "Past",
+      "pastTitle": "{count, plural, one {# past event} other {# past events}}",
+      "draftsLabel": "Drafts",
+      "draftsTitle": "{count, plural, one {# draft} other {# drafts}}",
+      "draftsDescription": "Only you can see these. Publish when you're ready to invite people.",
+      "savedLabel": "On your calendar",
+      "savedTitle": "{count, plural, one {# city event saved} other {# city events saved}}",
+      "savedDescription": "Editorial picks from Afisha you marked as interested. They live alongside your own events.",
+      "emptyTitle": "You haven't organized any events yet",
+      "emptyDescription": "Once you create or moderate events, they'll show up here so you can manage them anytime.",
+      "stats": {
+        "upcoming": "Upcoming",
+        "past": "Past",
+        "drafts": "Drafts",
+        "rsvps": "Total RSVPs"
+      },
+      "status": {
+        "draft": "Draft — only visible to you",
+        "cancelled": "Cancelled",
+        "completed": "Completed",
+        "past": "Already happened",
+        "blocked": "Blocked by moderation"
+      },
+      "card": {
+        "edit": "Edit",
+        "publish": "Publish",
+        "publishSuccess": "Event published",
+        "cancel": "Cancel",
+        "cancelConfirmTitle": "Cancel this event?",
+        "cancelConfirmDescription": "This cannot be undone. All attendees will be notified.",
+        "cancelDismiss": "Keep event",
+        "cancelConfirm": "Yes, cancel",
+        "cancelSuccess": "Event cancelled",
+        "markComplete": "Mark complete",
+        "completeSuccess": "Event marked complete",
+        "duplicate": "Duplicate",
+        "duplicateSuccess": "Event duplicated as draft",
+        "viewRecap": "Recap",
+        "roster": "{count, plural, =0 {No RSVPs} one {1 RSVP} other {# RSVPs}}",
+        "rsvps": "{count, plural, one {1 going} other {# going}}"
+      },
+      "subscribe": {
+        "title": "Subscribe in your calendar",
+        "description": "Get every event you organize or RSVP to delivered to Google Calendar, Apple Calendar, or Outlook automatically.",
+        "googleCta": "Add to Google Calendar",
+        "icsCta": "Copy subscribe URL",
+        "icsCopied": "Subscribe URL copied",
+        "downloadCta": "Download .ics",
+        "regenerateCta": "Regenerate URL",
+        "regenerateConfirm": "Regenerating will invalidate the old URL on every calendar that uses it. Continue?",
+        "regenerated": "URL regenerated"
+      }
+    },
+    "map": {
+      "pageTitle": "Events map",
+      "pageSubtitle": "See what's happening around you — zoom out to discover nearby areas, zoom in for street-level details.",
+      "heroBadge": "Events nearby",
+      "viewList": "List",
+      "viewMap": "Map",
+      "loading": "Updating…",
+      "empty": "No events in this area",
+      "emptyHint": "Try zooming out or picking a wider date range.",
+      "openEvent": "Open event",
+      "andOthers": "+{count} more at this venue",
+      "rangeLabel": "Time range",
+      "range": {
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "weekend": "This weekend",
+        "week": "Next 7 days",
+        "2weeks": "Next 2 weeks"
+      },
+      "locate": "Find me",
+      "youAreHere": "You are here",
+      "geoDenied": "Location access denied. Enable it in your browser to use this feature.",
+      "geoFailed": "Could not determine your location. Please try again.",
+      "geoUnsupported": "Your browser does not support geolocation.",
+      "showFreeOnly": "Free only",
+      "categoryFilter": "{count, plural, one {# category} other {# categories}}",
+      "removeFilter": "Remove filter: {name}",
+      "removeCategoryFilter": "Clear category filter",
+      "sidebarCount": "{count, plural, one {# event in view} other {# events in view}}",
+      "sidebarEmpty": "No events in view",
+      "sidebarHint": "Hover a card to highlight it on the map.",
+      "sidebarTitle": "Events on the map",
+      "pickCategories": "Categories",
+      "searchCategory": "Search categories…",
+      "noCategory": "No categories found",
+      "clearAll": "Clear all",
+      "legendTitle": "Categories in view",
+      "legendShowMore": "+{count} more",
+      "legendCollapse": "Show less",
+      "shareLink": "Share this view",
+      "linkCopied": "Link copied to clipboard",
+      "linkCopyFailed": "Could not copy the link"
     },
     "create": {
       "title": "Create event",
@@ -341,6 +554,29 @@
       "noModerators": "No moderators added yet",
       "moderatorAdded": "Moderator added",
       "moderatorRemoved": "Moderator removed"
+    },
+    "safety": {
+      "inputLabel": "Audience guardrails",
+      "inputHint": "Help newcomers know what to expect — pick any tags that apply.",
+      "rsvpVisibilityLabel": "Show me on the public attendee list",
+      "rsvpVisibilityHelper": "When off, your name and avatar stay private. Your RSVP still counts toward the headcount.",
+      "rsvpHidden": "You're attending privately",
+      "rsvpHiddenSaved": "RSVP made private",
+      "rsvpVisibleSaved": "RSVP made public",
+      "filterTitle": "Audience",
+      "tag": {
+        "women_only": "Women only",
+        "adults_only": "18+",
+        "lgbtq_friendly": "LGBTQ+ friendly",
+        "sober": "Alcohol-free",
+        "beginner_friendly": "Beginner friendly"
+      }
+    },
+    "reconfirm": {
+      "title": "Still planning to come tomorrow?",
+      "body": "We free up your spot for the waitlist if we don't hear back. One tap is enough.",
+      "cta": "Yes, I'm in",
+      "confirmed": "Thanks — your spot is locked in"
     }
   },
   "groups": {
@@ -358,6 +594,8 @@
     "cueWelcoming": "Welcoming community",
     "cueGrowing": "Growing community",
     "filters": {
+      "searchPlaceholder": "Search groups, themes, places…",
+      "clearSearch": "Clear search",
       "country": "Country",
       "city": "City",
       "language": "Language",
@@ -383,9 +621,9 @@
     "detail": {
       "creator": "Created by",
       "membersList": "Members",
-      "eventsTitle": "Upcoming events",
+      "eventsTitle": "Upcoming",
       "noEvents": "No upcoming events",
-      "pastEventsTitle": "Past events",
+      "pastEventsTitle": "Past",
       "noPastEvents": "No past events",
       "photosTitle": "Photo albums",
       "noPhotos": "No albums yet",
@@ -429,6 +667,11 @@
       "communityCueActive": "Active and welcoming group",
       "communityCueStarter": "Great place to start meeting people",
       "directLink": "Direct link",
+      "copyLink": "Copy link",
+      "linkCopied": "Link copied",
+      "linkCopyError": "Failed to copy link",
+      "eventsInCity": "Events nearby",
+      "nextEvent": "Next event",
       "eventsCount": "{count, plural, one {# event} other {# events}}",
       "eventsLabel": "Events",
       "reply": "Reply",
@@ -630,6 +873,19 @@
     "breadcrumbs": "Community",
     "yearsOld": "{age} y.o.",
     "followers": "Followers",
+    "reputation": {
+      "reliability": "Reliability",
+      "attendanceRate": "Attendance rate",
+      "attended": "Attended",
+      "noShow": "No-shows",
+      "tier": {
+        "newcomer": "Newcomer",
+        "regular": "Regular",
+        "trusted": "Trusted",
+        "elite": "Elite"
+      },
+      "tierDescription": "{tier, select, newcomer {Just getting started — show up to a few events to build reputation.} regular {Shows up to events with a decent track record.} trusted {Reliably attends and follows through on plans.} elite {Highly active, consistently attends, and a pillar of the community.} other {Active community member.}}"
+    },
     "connectionStyle": "Connection style",
     "connectionOpen": "Open to meeting new people and joining plans.",
     "connectionReserved": "Prefers to connect through shared groups and events first.",
@@ -638,6 +894,7 @@
   },
   "calendar": {
     "title": "Calendar",
+    "eyebrow": "Your month at a glance",
     "myEvents": "My events",
     "allEvents": "All events",
     "exportGoogle": "Export to Google Calendar",
@@ -648,11 +905,27 @@
     "monthOverview": "Month overview",
     "noEventsDay": "No events on this day yet.",
     "online": "Online",
-    "free": "Free"
+    "free": "Free",
+    "today": "Today",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "selectPrompt": "Tap a day to see what's happening that day.",
+    "moreEvents": "+{count} more",
+    "eventsCount": "{count, plural, one {# event} other {# events}}",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening",
+    "stats": {
+      "thisMonth": "Events this month",
+      "today": "Today",
+      "mine": "On your list"
+    }
   },
   "messages": {
     "title": "Messages",
     "noMessages": "No messages yet",
+    "noMessagesDescription": "Say hi to someone from an event you went to, or reach out to a group organizer to join their next meetup.",
+    "findGroupsCta": "Browse groups",
     "newMessage": "New message",
     "typeMessage": "Type a message...",
     "send": "Send",
@@ -732,5 +1005,241 @@
     "about": "About City-Pulse",
     "contact": "Contact us",
     "copyright": "© {year} City-Pulse. All rights reserved."
+  },
+  "admin": {
+    "funnel": {
+      "topByViews": "Top events by 30-day views",
+      "topByViewsHelper": "Compare reach (views) against conversion (RSVPs) and follow-through (attended) to spot pages that need a stronger CTA or reminder.",
+      "event": "Event",
+      "views30d": "Views 30d",
+      "viewsHint": "Distinct daily views (refresh-spam de-duped).",
+      "uniqueViewers": "{count, plural, one {# viewer} other {# viewers}}",
+      "rsvps": "RSVPs",
+      "attended": "Attended",
+      "noShow": "{count, plural, one {# no-show} other {# no-shows}}",
+      "rsvpRate": "RSVP %",
+      "rsvpRateHint": "Share of unique viewers who clicked Going.",
+      "attendedRate": "Show-up %",
+      "attendedRateHint": "Share of RSVPs who were marked attended.",
+      "empty": "No published events yet — funnel will populate after first views land."
+    },
+    "systemEvents": {
+      "dashboard": {
+        "eyebrow": "Editorial",
+        "title": "Afisha pipeline",
+        "subtitle": "Plan, draft, and publish curated city events for the cities you cover.",
+        "openCalendar": "Calendar",
+        "openTemplates": "Templates",
+        "newDraft": "New draft",
+        "pipelineTitle": "Pipeline by city",
+        "pipelineEmpty": "Nothing in the pipeline yet — start a draft.",
+        "inFlightTitle": "In flight",
+        "inFlightEmpty": "Drafts and reviews will appear here."
+      },
+      "composer": {
+        "titleNew": "New city event",
+        "titleEdit": "Edit city event",
+        "subtitle": "Compose, review, and publish an editorial listing.",
+        "backToDashboard": "Back to dashboard",
+        "viewLive": "View live",
+        "sourceTitle": "Quick import",
+        "sourceUrlPlaceholder": "Paste partner URL (Facebook event, venue page…)",
+        "importButton": "Pre-fill from URL",
+        "sourceHint": "We'll pull title, description, and cover image. You stay in control of the final copy.",
+        "basicsTitle": "Basics",
+        "titleLabel": "Title",
+        "titlePlaceholder": "Public title — keep it specific.",
+        "pitchLabel": "Editorial pitch",
+        "pitchPlaceholder": "One sentence that tells someone scrolling why they should care.",
+        "pitchHint": "{length, plural, one {# character} other {# characters}}",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "What is this? Why is it worth showing up?",
+        "coverLabel": "Cover image URL",
+        "coverPlaceholder": "https://",
+        "whenTitle": "When",
+        "startsAtLabel": "Starts at",
+        "durationLabel": "Duration (minutes)",
+        "whereTitle": "Where",
+        "cityLabel": "City",
+        "cityPlaceholder": "Praha",
+        "addressLabel": "Address",
+        "addressPlaceholder": "Street + number",
+        "curationTitle": "Curation",
+        "categoryLabel": "Category",
+        "categoryPlaceholder": "Pick a category",
+        "partnerNameLabel": "Partner / venue",
+        "partnerNamePlaceholder": "Goethe-Institut",
+        "partnerUrlLabel": "Partner URL",
+        "freeLabel": "Free entry",
+        "freeHint": "Toggle off to capture price + currency.",
+        "priceLabel": "Price",
+        "currencyLabel": "Currency",
+        "actionsTitle": "Publish",
+        "currentStatusLabel": "Status",
+        "saveDraftButton": "Save draft",
+        "sendToReviewButton": "Send to review",
+        "publishButton": "Publish",
+        "publishBlockedHint": "Fix the highlighted issues before publishing.",
+        "publishGatesFailed": "Some quality gates failed — see the panel above.",
+        "importError": {
+          "invalid_url": "That doesn't look like a URL.",
+          "invalid_protocol": "Use http(s) URLs only.",
+          "private_address": "Private addresses aren't allowed.",
+          "fetch_failed": "We couldn't load that page."
+        },
+        "status": {
+          "draft": "Draft",
+          "review": "Review",
+          "scheduled": "Scheduled",
+          "published": "Published"
+        }
+      },
+      "gates": {
+        "panelTitle": "Quality gates",
+        "summary": "{errors, plural, =0 {ready} other {# errors}}{warnings, plural, =0 {} other { · # warnings}}",
+        "allClear": "All checks passed — ready to publish.",
+        "titleShort": "Title needs at least 6 characters.",
+        "noCity": "Pick a city.",
+        "noCategory": "Pick a category.",
+        "descriptionShort": "Description is short ({current}/{min} characters).",
+        "pitchMissing": "Add an editorial pitch.",
+        "pitchShort": "Pitch is short ({current}/{min} characters).",
+        "pitchLong": "Pitch is too long ({current}/{max} characters).",
+        "coverMissing": "Add a cover image — listings without one underperform.",
+        "dateMissing": "Pick a start date.",
+        "dateInvalid": "That date doesn't look right.",
+        "datePast": "Start date is in the past.",
+        "dateClose": "Less than {min} day until start — consider scheduling further out.",
+        "possibleDuplicate": "{count, plural, one {# possible duplicate found} other {# possible duplicates found}} — double-check before publishing.",
+        "noPartner": "No partner credited yet."
+      },
+      "calendar": {
+        "title": "Editorial calendar",
+        "subtitle": "Drag a draft to a new day to reschedule.",
+        "back": "Back to dashboard",
+        "prevMonth": "Previous",
+        "nextMonth": "Next",
+        "saving": "Saving…"
+      },
+      "templates": {
+        "title": "Templates",
+        "subtitle": "Pick a starting point — you'll customise everything before publishing.",
+        "back": "Back to dashboard",
+        "useTemplate": "Use this template",
+        "items": {
+          "openAirConcert": {
+            "label": "Open-air concert",
+            "description": "Outdoor music night with one headliner and one warm-up act."
+          },
+          "farmersMarket": {
+            "label": "Farmers market",
+            "description": "Half-day market with local producers — recurring weekend slot."
+          },
+          "galleryOpening": {
+            "label": "Gallery opening",
+            "description": "Vernissage with the artist present and short curator talk."
+          },
+          "filmFestival": {
+            "label": "Film festival night",
+            "description": "Themed screening with intro and Q&A after the credits."
+          },
+          "streetFoodFair": {
+            "label": "Street food fair",
+            "description": "Open-air food court — multiple vendors, family-friendly."
+          },
+          "bookLaunch": {
+            "label": "Book launch",
+            "description": "Reading + signing + short Q&A with the author."
+          }
+        }
+      }
+    }
+  },
+  "onboarding": {
+    "title": "Welcome to City-Pulse",
+    "titleNamed": "Welcome, {name}!",
+    "subtitle": "Let's tune the feed to your city, your interests, and your languages — takes under a minute.",
+    "cityCountryLabel": "Your city",
+    "countryPlaceholder": "Pick a country",
+    "cityPlaceholder": "Search city",
+    "cityHelper": "We'll surface events and groups in this city first. You can change it later in your profile.",
+    "cityRequired": "Pick a country and a city to continue.",
+    "interestsHelper": "Pick {min} to {max} interests — the more accurate, the better the recommendations.",
+    "interestsMin": "Pick at least {min} interests.",
+    "uncategorized": "More",
+    "languagesHelper": "Which languages do you speak comfortably at events? Pick all that apply.",
+    "languagesMin": "Pick at least one language.",
+    "finish": "Start exploring",
+    "done": "All set — welcome aboard!"
+  },
+  "friends": {
+    "goingCue": "{count, plural, one {# person you follow is going} other {# people you follow are going}}",
+    "interestedCue": "{count, plural, one {# person you follow is interested} other {# people you follow are interested}}",
+    "noFollowingYet": "Follow a few organizers to see who's going to what."
+  },
+  "safety": {
+    "tagWomenOnly": "Women only",
+    "tagAdults": "18+",
+    "tagFamily": "Family-friendly",
+    "tagBeginners": "Beginners welcome",
+    "tagSober": "Alcohol-free",
+    "rsvpVisibilityLabel": "RSVP visibility",
+    "rsvpVisibilityPublic": "Anyone can see I'm going",
+    "rsvpVisibilityPrivate": "Only the organizer can see I'm going",
+    "rsvpVisibilityHelper": "Private RSVPs still count toward the event's headcount but never appear in the public roster."
+  },
+  "digest": {
+    "subjectLine": "{city}: {count} new events this week",
+    "preheader": "Hand-picked from the people you follow and your interests.",
+    "intro": "Hi {name}, here's what's coming up.",
+    "ctaUnsubscribe": "Manage email preferences",
+    "settingTitle": "Weekly digest",
+    "settingDescription": "Get a personalised email every Monday morning with events that match your interests.",
+    "settingToggle": "Subscribe to weekly digest"
+  },
+  "recurring": {
+    "frequencyLabel": "Repeats",
+    "helper": "We'll create one event per occurrence (capacity, RSVPs, and reviews are tracked per date).",
+    "noneLabel": "Does not repeat",
+    "weeklyLabel": "Weekly",
+    "everyTwoWeeksLabel": "Every 2 weeks",
+    "monthlyLabel": "Monthly",
+    "untilLabel": "Until",
+    "occurrencesLabel": "Occurrences",
+    "editScopeTitle": "Apply changes to",
+    "editScopeThis": "Only this occurrence",
+    "editScopeFuture": "This and future",
+    "editScopeAll": "All occurrences",
+    "seriesBadge": "Series"
+  },
+  "unsubscribe": {
+    "successTitle": "You're unsubscribed",
+    "successBody": "You won't receive the weekly digest anymore. You can resubscribe any time from your email preferences.",
+    "errorTitle": "We couldn't process that link",
+    "errorBody": "The unsubscribe link may have expired or been used already. Sign in to manage your preferences.",
+    "emailLine": "Updated for {email}",
+    "manageCta": "Manage preferences",
+    "homeCta": "Back to events"
+  },
+  "settings": {
+    "email": {
+      "title": "Email preferences",
+      "subtitle": "Choose which messages we send you. You can change these any time.",
+      "cardTitle": "Notifications",
+      "emailLabel": "Sending to: {email}",
+      "digestLabel": "Weekly events digest",
+      "digestHelper": "A short, personalised email every Monday with events matching your city, interests, and languages.",
+      "toastSubscribed": "Subscribed to the weekly digest",
+      "toastUnsubscribed": "You won't receive the digest anymore",
+      "push": {
+        "label": "Browser push notifications",
+        "helper": "Get instant alerts for RSVP confirmations, replies, and event reminders — even when the tab is closed.",
+        "unsupportedHelper": "Your browser doesn't support push notifications, or push isn't configured for this deployment.",
+        "permissionDenied": "Notification permission was blocked. Enable it from your browser's site settings.",
+        "subscribeError": "Couldn't enable push notifications. Try again in a moment.",
+        "subscribeSuccess": "Push notifications enabled",
+        "unsubscribeSuccess": "Push notifications disabled"
+      }
+    }
   }
 }
