@@ -3,28 +3,11 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { ArrowRight, CalendarClock, MapPin } from 'lucide-react';
 import { getCachedLandingEvents } from '@/lib/actions/landing-cached';
+import { TonightTimeLabel } from '@/components/landing/tonight-time-label';
 
 type Props = {
   locale: string;
 };
-
-function formatWhen(locale: string, startsAt: string, nowMs: number): string {
-  const date = new Date(startsAt);
-  const diffMs = date.getTime() - nowMs;
-  const oneDay = 24 * 60 * 60 * 1000;
-
-  const time = new Intl.DateTimeFormat(locale, {
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(date);
-
-  if (diffMs < oneDay && date.getDate() === new Date(nowMs).getDate()) {
-    return time;
-  }
-
-  const weekday = new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(date);
-  return `${weekday} · ${time}`;
-}
 
 export async function TonightInCity({ locale }: Props) {
   const [events, t, tNav] = await Promise.all([
@@ -36,7 +19,6 @@ export async function TonightInCity({ locale }: Props) {
   // Fallback: show evergreen marketing panel when there's nothing upcoming
   if (events.length < 3) return <TonightFallback />;
 
-  const nowMs = Date.now();
   const shortlist = events.slice(0, 4);
 
   return (
@@ -79,7 +61,9 @@ export async function TonightInCity({ locale }: Props) {
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-medium text-white">{title}</p>
                     <p className="mt-0.5 flex items-center gap-2 text-xs text-white/60">
-                      {startsAt && <span>{formatWhen(locale, startsAt, nowMs)}</span>}
+                      {startsAt && (
+                        <TonightTimeLabel locale={locale} startsAt={startsAt} />
+                      )}
                       {city && (
                         <>
                           <span aria-hidden>·</span>
