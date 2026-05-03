@@ -52,13 +52,18 @@ export async function createSystemEvent(data: {
 
 export async function getSystemEvents(filters: {
   city?: string;
+  city_id?: string;
+  country?: string;
+  /** ISO date (YYYY-MM-DD) or full ISO timestamp. Filters `starts_at >= from`. */
+  date_from?: string;
+  /** ISO date (YYYY-MM-DD) or full ISO timestamp. Filters `starts_at <= to`. */
+  date_to?: string;
   limit?: number;
   offset?: number;
 } = {}) {
   const supabase = await createClient();
   const limit = filters.limit || 12;
   const offset = filters.offset || 0;
-  const now = new Date().toISOString();
 
   let query = supabase
     .from('events_with_counts')
@@ -67,12 +72,27 @@ export async function getSystemEvents(filters: {
     .eq('status', 'published')
     .eq('is_blocked', false)
     .eq('organizer_is_blocked', false)
-    // Keep ongoing system events visible until they end.
-    .gte('ends_at', now)
     .order('starts_at', { ascending: true })
     .range(offset, offset + limit - 1);
 
   if (filters.city) query = query.eq('city', filters.city);
+  if (filters.city_id) query = query.eq('city_id', filters.city_id);
+  if (filters.country) query = query.eq('country', filters.country);
+
+  // Date-range filters take precedence over the "ongoing & future" default.
+  // Plain YYYY-MM-DD strings are inflated to start/end of day so the user
+  // gets the inclusive window they expect (e.g. `from=2026-05-04` matches
+  // an event at 2026-05-04T20:00:00Z).
+  const expandFrom = (s: string) => (s.length === 10 ? `${s}T00:00:00Z` : s);
+  const expandTo = (s: string) => (s.length === 10 ? `${s}T23:59:59Z` : s);
+
+  if (filters.date_from || filters.date_to) {
+    if (filters.date_from) query = query.gte('starts_at', expandFrom(filters.date_from));
+    if (filters.date_to) query = query.lte('starts_at', expandTo(filters.date_to));
+  } else {
+    // No explicit window — keep ongoing events visible until they end.
+    query = query.gte('ends_at', new Date().toISOString());
+  }
 
   const { data } = await query;
   return data || [];

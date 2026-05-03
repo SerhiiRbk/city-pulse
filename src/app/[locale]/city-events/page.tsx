@@ -1,9 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { getSystemEvents } from '@/lib/actions/system-events';
+import { getCityById } from '@/lib/actions/cities';
 import { getUserEventStatuses } from '@/lib/actions/events';
 import { getUser } from '@/lib/actions/auth';
 import { EventCard } from '@/components/events/event-card';
+import { SystemEventsFilters } from '@/components/city-events/system-events-filters';
 import { Badge } from '@/components/ui/badge';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Landmark, Sparkles } from 'lucide-react';
@@ -30,7 +32,14 @@ export default async function CityEventsPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ city?: string }>;
+  searchParams: Promise<{
+    city?: string;
+    city_id?: string;
+    country?: string;
+    when?: string;
+    date_from?: string;
+    date_to?: string;
+  }>;
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -38,7 +47,18 @@ export default async function CityEventsPage({
   const filters = await searchParams;
   const t = await getTranslations('cityEvents');
   const user = await getUser();
-  const events = await getSystemEvents({ city: filters.city, limit: 24 });
+  const events = await getSystemEvents({
+    city: filters.city,
+    city_id: filters.city_id,
+    country: filters.country,
+    date_from: filters.date_from,
+    date_to: filters.date_to,
+    limit: 24,
+  });
+
+  // Pre-load the selected city object so the picker shows a localized
+  // label on first paint (otherwise it stays empty until user types).
+  const initialCity = filters.city_id ? await getCityById(filters.city_id) : null;
 
   const { goingSet, waitlistSet, interestedSet, favoritedSet } = user
     ? await getUserEventStatuses(events.map((e) => e.id))
@@ -93,6 +113,19 @@ export default async function CityEventsPage({
       </section>
 
       <div className="container mx-auto px-4 py-10 sm:py-12">
+        <div className="mb-6 sm:mb-8">
+          <SystemEventsFilters
+            currentFilters={{
+              city: filters.city,
+              city_id: filters.city_id,
+              country: filters.country,
+              when: filters.when,
+              date_from: filters.date_from,
+              date_to: filters.date_to,
+            }}
+            initialCity={initialCity}
+          />
+        </div>
         <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">{t('officialBadge')}</p>
