@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "City-Pulse",
+    "appName": "Localisio",
     "loading": "Načítání...",
     "error": "Něco se pokazilo",
     "save": "Uložit",
@@ -105,7 +105,7 @@
     },
     "cta": {
       "title": "Připraveni najít svou komunitu?",
-      "subtitle": "Přidejte se k City-Pulse a spojte se s lidmi, kteří sdílí vaše zájmy.",
+      "subtitle": "Přidejte se k Localisio a spojte se s lidmi, kteří sdílí vaše zájmy.",
       "button": "Začít"
     },
     "howItWorks": {
@@ -141,7 +141,7 @@
       "statsGroups": "Aktivní skupiny",
       "statsMembers": "Členové",
       "statsCities": "Města",
-      "whyTitle": "Proč City-Pulse?",
+      "whyTitle": "Proč Localisio?",
       "whySubtitle": "Vše, co potřebujete k nalezení svých lidí, pohodlnému zapojení a proměně společných zájmů ve skutečná setkání.",
       "contactBadge": "Vytvořeno pro opravdová spojení",
       "contactTitle": "Začněte jednou akcí. Najděte celou komunitu.",
@@ -338,7 +338,7 @@
       "sectionLabel": "Jdeme spolu",
       "sectionTitleEmpty": "Buďte první, kdo zorganizuje sraz",
       "sectionTitleWithCount": "{count, plural, one {# skupina jde} few {# skupiny jdou} other {# skupin jde}}",
-      "sectionDescription": "Plánujte s lidmi z City-Pulse — sraz u vchodu, drink před akcí, společná cesta.",
+      "sectionDescription": "Plánujte s lidmi z Localisio — sraz u vchodu, drink před akcí, společná cesta.",
       "ctaLogin": "Přihlaste se, abyste mohli zorganizovat sraz",
       "spotsLeft": "{count, plural, one {zbývá # místo} few {zbývají # místa} other {zbývá # míst}}",
       "full": "Plno",
@@ -991,7 +991,7 @@
     "submitted": "Hlášení odesláno. Děkujeme!"
   },
   "footer": {
-    "communityLabel": "Komunita City-Pulse",
+    "communityLabel": "Komunita Localisio",
     "communityTitle": "Poznávejte lidi skrze společné zájmy, ne přes křečovité seznamovací řeči.",
     "communityBody": "Objevujte místní skupiny, přívětivé akce a opakující se komunity pro procházky, hry, jazykové kluby a víkendové plány.",
     "exploreEvents": "Prozkoumat akce",
@@ -1002,9 +1002,9 @@
     "terms": "Podmínky použití",
     "privacy": "Zásady ochrany osobních údajů",
     "howItWorks": "Jak to funguje",
-    "about": "O City-Pulse",
+    "about": "O Localisio",
     "contact": "Kontaktujte nás",
-    "copyright": "© {year} City-Pulse. Všechna práva vyhrazena."
+    "copyright": "© {year} Localisio. Všechna práva vyhrazena."
   },
   "admin": {
     "funnel": {
@@ -1156,7 +1156,7 @@
     }
   },
   "onboarding": {
-    "title": "Vítejte v City-Pulse",
+    "title": "Vítejte v Localisio",
     "titleNamed": "Vítej, {name}!",
     "subtitle": "Nastavme feed podle vašeho města, zájmů a jazyků — zabere to méně než minutu.",
     "cityCountryLabel": "Vaše město",

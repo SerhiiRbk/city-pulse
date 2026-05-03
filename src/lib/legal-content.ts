@@ -16,14 +16,14 @@ type LegalDocument = {
 const termsEn: LegalDocument = {
   title: 'Terms & Conditions',
   description:
-    'These Terms & Conditions explain the rules for using City-Pulse, publishing events and groups, and interacting with other members of the community.',
+    'These Terms & Conditions explain the rules for using Localisio, publishing events and groups, and interacting with other members of the community.',
   lastUpdatedLabel: 'Last updated',
   effectiveDate: 'March 13, 2026',
   sections: [
     {
       title: '1. Acceptance of terms',
       paragraphs: [
-        'By creating an account or using City-Pulse, you agree to these Terms & Conditions and to our Privacy Policy.',
+        'By creating an account or using Localisio, you agree to these Terms & Conditions and to our Privacy Policy.',
         'If you do not agree with these terms, you should not use the platform.',
       ],
     },
@@ -51,7 +51,7 @@ const termsEn: LegalDocument = {
     {
       title: '5. Moderation and enforcement',
       paragraphs: [
-        'City-Pulse may review reports, block or remove content, suspend accounts, or limit access to features when necessary for safety, legal compliance, or platform integrity.',
+        'Localisio may review reports, block or remove content, suspend accounts, or limit access to features when necessary for safety, legal compliance, or platform integrity.',
         'Organizers and moderators are responsible for managing their communities and events in a lawful and fair way.',
       ],
     },
@@ -65,27 +65,27 @@ const termsEn: LegalDocument = {
     {
       title: '7. Intellectual property',
       paragraphs: [
-        'You keep ownership of the content you submit, but you grant City-Pulse a non-exclusive right to host, display, and process that content for operating the platform.',
+        'You keep ownership of the content you submit, but you grant Localisio a non-exclusive right to host, display, and process that content for operating the platform.',
         'You must not upload content that infringes another person’s intellectual property or privacy rights.',
       ],
     },
     {
       title: '8. Limitation of liability',
       paragraphs: [
-        'To the maximum extent permitted by law, City-Pulse is provided on an "as is" and "as available" basis without warranties of uninterrupted service.',
+        'To the maximum extent permitted by law, Localisio is provided on an "as is" and "as available" basis without warranties of uninterrupted service.',
         'We are not liable for indirect, incidental, special, or consequential damages resulting from your use of the platform or attendance at community events.',
       ],
     },
     {
       title: '9. Changes to these terms',
       paragraphs: [
-        'We may update these Terms & Conditions from time to time. Continued use of City-Pulse after updates means you accept the revised terms.',
+        'We may update these Terms & Conditions from time to time. Continued use of Localisio after updates means you accept the revised terms.',
       ],
     },
     {
       title: '10. Contact',
       paragraphs: [
-        'If you have questions about these terms, contact the City-Pulse team through the contact details available on the platform.',
+        'If you have questions about these terms, contact the Localisio team through the contact details available on the platform.',
       ],
     },
   ],
@@ -94,14 +94,14 @@ const termsEn: LegalDocument = {
 const termsRu: LegalDocument = {
   title: 'Условия использования',
   description:
-    'Эти условия использования описывают правила работы с City-Pulse, публикации мероприятий и групп, а также взаимодействия с другими участниками сообщества.',
+    'Эти условия использования описывают правила работы с Localisio, публикации мероприятий и групп, а также взаимодействия с другими участниками сообщества.',
   lastUpdatedLabel: 'Последнее обновление',
   effectiveDate: '13 марта 2026',
   sections: [
     {
       title: '1. Принятие условий',
       paragraphs: [
-        'Создавая аккаунт или используя City-Pulse, вы соглашаетесь с этими условиями использования и с нашей Политикой конфиденциальности.',
+        'Создавая аккаунт или используя Localisio, вы соглашаетесь с этими условиями использования и с нашей Политикой конфиденциальности.',
         'Если вы не согласны с этими условиями, пожалуйста, не используйте платформу.',
       ],
     },
@@ -129,7 +129,7 @@ const termsRu: LegalDocument = {
     {
       title: '5. Модерация и меры воздействия',
       paragraphs: [
-        'City-Pulse вправе рассматривать жалобы, ограничивать аккаунты, блокировать контент, группы и мероприятия, а также ограничивать функции платформы в целях безопасности, соблюдения закона и защиты сообщества.',
+        'Localisio вправе рассматривать жалобы, ограничивать аккаунты, блокировать контент, группы и мероприятия, а также ограничивать функции платформы в целях безопасности, соблюдения закона и защиты сообщества.',
         'Организаторы и модераторы несут ответственность за законное и добросовестное управление своими группами и мероприятиями.',
       ],
     },
@@ -143,27 +143,27 @@ const termsRu: LegalDocument = {
     {
       title: '7. Права на контент',
       paragraphs: [
-        'Вы сохраняете права на размещённый вами контент, но предоставляете City-Pulse неисключительное право хранить, отображать и обрабатывать его для работы платформы.',
+        'Вы сохраняете права на размещённый вами контент, но предоставляете Localisio неисключительное право хранить, отображать и обрабатывать его для работы платформы.',
         'Нельзя загружать контент, который нарушает авторские права, право на частную жизнь или иные права третьих лиц.',
       ],
     },
     {
       title: '8. Ограничение ответственности',
       paragraphs: [
-        'В максимально допустимой законом степени City-Pulse предоставляется по принципу "как есть" и "по мере доступности", без гарантий бесперебойной работы.',
+        'В максимально допустимой законом степени Localisio предоставляется по принципу "как есть" и "по мере доступности", без гарантий бесперебойной работы.',
         'Мы не несем ответственности за косвенные, случайные, специальные или последующие убытки, связанные с использованием платформы или участием в мероприятиях.',
       ],
     },
     {
       title: '9. Изменения условий',
       paragraphs: [
-        'Мы можем время от времени обновлять эти условия. Продолжение использования City-Pulse после публикации изменений означает согласие с новой редакцией.',
+        'Мы можем время от времени обновлять эти условия. Продолжение использования Localisio после публикации изменений означает согласие с новой редакцией.',
       ],
     },
     {
       title: '10. Контакты',
       paragraphs: [
-        'Если у вас есть вопросы по этим условиям, свяжитесь с командой City-Pulse через контактные данные, указанные на платформе.',
+        'Если у вас есть вопросы по этим условиям, свяжитесь с командой Localisio через контактные данные, указанные на платформе.',
       ],
     },
   ],
@@ -172,7 +172,7 @@ const termsRu: LegalDocument = {
 const privacyEn: LegalDocument = {
   title: 'Privacy Policy',
   description:
-    'This Privacy Policy explains what data City-Pulse collects, how we use it, and what rights you have in relation to your personal information.',
+    'This Privacy Policy explains what data Localisio collects, how we use it, and what rights you have in relation to your personal information.',
   lastUpdatedLabel: 'Last updated',
   effectiveDate: 'March 13, 2026',
   sections: [
@@ -233,13 +233,13 @@ const privacyEn: LegalDocument = {
     {
       title: '9. Changes to this policy',
       paragraphs: [
-        'We may update this Privacy Policy from time to time. Continued use of City-Pulse after changes means the updated policy applies.',
+        'We may update this Privacy Policy from time to time. Continued use of Localisio after changes means the updated policy applies.',
       ],
     },
     {
       title: '10. Contact',
       paragraphs: [
-        'If you have questions about privacy or your personal data, contact the City-Pulse team through the contact details available on the platform.',
+        'If you have questions about privacy or your personal data, contact the Localisio team through the contact details available on the platform.',
       ],
     },
   ],
@@ -248,7 +248,7 @@ const privacyEn: LegalDocument = {
 const privacyRu: LegalDocument = {
   title: 'Политика конфиденциальности',
   description:
-    'Эта политика конфиденциальности объясняет, какие данные собирает City-Pulse, как они используются и какие права у вас есть в отношении персональной информации.',
+    'Эта политика конфиденциальности объясняет, какие данные собирает Localisio, как они используются и какие права у вас есть в отношении персональной информации.',
   lastUpdatedLabel: 'Последнее обновление',
   effectiveDate: '13 марта 2026',
   sections: [
@@ -309,13 +309,13 @@ const privacyRu: LegalDocument = {
     {
       title: '9. Изменения политики',
       paragraphs: [
-        'Мы можем время от времени обновлять эту Политику конфиденциальности. Продолжение использования City-Pulse после изменений означает применение обновлённой версии.',
+        'Мы можем время от времени обновлять эту Политику конфиденциальности. Продолжение использования Localisio после изменений означает применение обновлённой версии.',
       ],
     },
     {
       title: '10. Контакты',
       paragraphs: [
-        'Если у вас есть вопросы о конфиденциальности или обработке ваших персональных данных, свяжитесь с командой City-Pulse через контактные данные, доступные на платформе.',
+        'Если у вас есть вопросы о конфиденциальности или обработке ваших персональных данных, свяжитесь с командой Localisio через контактные данные, доступные на платформе.',
       ],
     },
   ],

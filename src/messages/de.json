@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "City-Pulse",
+    "appName": "Localisio",
     "loading": "Wird geladen...",
     "error": "Etwas ist schiefgelaufen",
     "save": "Speichern",
@@ -105,7 +105,7 @@
     },
     "cta": {
       "title": "Bereit, Ihre Community zu finden?",
-      "subtitle": "Treten Sie City-Pulse bei und verbinden Sie sich mit Menschen, die Ihre Interessen teilen.",
+      "subtitle": "Treten Sie Localisio bei und verbinden Sie sich mit Menschen, die Ihre Interessen teilen.",
       "button": "Loslegen"
     },
     "howItWorks": {
@@ -141,7 +141,7 @@
       "statsGroups": "Aktive Gruppen",
       "statsMembers": "Mitglieder",
       "statsCities": "Städte",
-      "whyTitle": "Warum City-Pulse?",
+      "whyTitle": "Warum Localisio?",
       "whySubtitle": "Alles, was du brauchst, um deine Leute zu finden, dich beim Mitmachen wohlzufühlen und gemeinsame Interessen in echte Treffen zu verwandeln.",
       "contactBadge": "Für echte Verbindungen gemacht",
       "contactTitle": "Beginne mit einem Event. Finde eine ganze Community.",
@@ -338,7 +338,7 @@
       "sectionLabel": "Gemeinsam hingehen",
       "sectionTitleEmpty": "Sei der erste, der ein Treffen plant",
       "sectionTitleWithCount": "{count, plural, one {# Gruppe geht hin} other {# Gruppen gehen hin}}",
-      "sectionDescription": "Plane mit Leuten von City-Pulse — Treffen am Eingang, Drink davor, gemeinsame Anfahrt.",
+      "sectionDescription": "Plane mit Leuten von Localisio — Treffen am Eingang, Drink davor, gemeinsame Anfahrt.",
       "ctaLogin": "Melde dich an, um ein Treffen zu starten",
       "spotsLeft": "{count, plural, one {noch # Platz frei} other {noch # Plätze frei}}",
       "full": "Voll",
@@ -347,7 +347,7 @@
       "defaultTitle": "Gemeinsam zu „{event}“",
       "cta": "Treffen starten",
       "dialogTitle": "Treffen planen",
-      "dialogDescription": "Öffne es für andere von City-Pulse, die zu „{event}“ gehen. Datum und Ort werden aus dem Listing übernommen.",
+      "dialogDescription": "Öffne es für andere von Localisio, die zu „{event}“ gehen. Datum und Ort werden aus dem Listing übernommen.",
       "fieldTitle": "Gruppenname",
       "fieldTitlePlaceholder": "Nach-Feierabend-Crew",
       "fieldTitleHint": "Sag, wen du einlädst.",
@@ -991,7 +991,7 @@
     "submitted": "Meldung gesendet. Vielen Dank!"
   },
   "footer": {
-    "communityLabel": "City-Pulse Community",
+    "communityLabel": "Localisio Community",
     "communityTitle": "Menschen über gemeinsame Interessen kennenlernen statt über verkrampften Small Talk.",
     "communityBody": "Entdecke lokale Gruppen, einladende Events und wiederkehrende Communities für Spaziergänge, Spiele, Sprachclubs und Wochenendpläne.",
     "exploreEvents": "Events entdecken",
@@ -1002,9 +1002,9 @@
     "terms": "Nutzungsbedingungen",
     "privacy": "Datenschutzrichtlinie",
     "howItWorks": "So funktioniert's",
-    "about": "Über City-Pulse",
+    "about": "Über Localisio",
     "contact": "Kontakt",
-    "copyright": "© {year} City-Pulse. Alle Rechte vorbehalten."
+    "copyright": "© {year} Localisio. Alle Rechte vorbehalten."
   },
   "admin": {
     "funnel": {
@@ -1156,7 +1156,7 @@
     }
   },
   "onboarding": {
-    "title": "Willkommen bei City-Pulse",
+    "title": "Willkommen bei Localisio",
     "titleNamed": "Willkommen, {name}!",
     "subtitle": "Lass uns deinen Feed an deine Stadt, Interessen und Sprachen anpassen — unter einer Minute.",
     "cityCountryLabel": "Deine Stadt",

@@ -108,7 +108,7 @@ function buildVEvent(event: IcalEvent, baseUrl: string): string {
 
   const lines = [
     'BEGIN:VEVENT',
-    `UID:${event.id}@city-pulse`,
+    `UID:${event.id}@localisio`,
     `DTSTAMP:${formatIcsDate(new Date(event.updated_at || event.starts_at))}`,
     `DTSTART:${formatIcsDate(start)}`,
     `DTEND:${formatIcsDate(end)}`,
@@ -132,7 +132,7 @@ function wrapCalendar(
   const header = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//City-Pulse//EN',
+    'PRODID:-//Localisio//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
   ];
@@ -156,7 +156,7 @@ export async function generateICalEvent(eventId: string) {
 
   if (!event) return null;
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://city-pulse.app';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://localisio.com';
   const vevent = buildVEvent(event as IcalEvent, baseUrl);
   return wrapCalendar([vevent], { calName: event.title });
 }
@@ -177,7 +177,7 @@ export async function generateUserCalendarFeed(
   client?: SupabaseClient,
 ): Promise<string> {
   const supabase = client ?? (await createClient());
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://city-pulse.app';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://localisio.com';
 
   // Cap the window so subscribed feeds stay snappy: from 30 days ago
   // (recent recap visible) through ~2 years ahead.
@@ -229,9 +229,9 @@ export async function generateUserCalendarFeed(
   const vevents = all.map((event) => buildVEvent(event, baseUrl));
 
   return wrapCalendar(vevents, {
-    calName: displayName ? `${displayName} — City-Pulse` : 'City-Pulse',
+    calName: displayName ? `${displayName} — Localisio` : 'Localisio',
     calDescription:
-      'Events you organise or RSVP to on City-Pulse. Updates automatically.',
+      'Events you organise or RSVP to on Localisio. Updates automatically.',
   });
 }
 

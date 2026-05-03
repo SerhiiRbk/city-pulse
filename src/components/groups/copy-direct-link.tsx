@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 interface CopyDirectLinkProps {
   /** Path component, e.g. `/groups/cz/test-group`. */
   path: string;
-  /** Origin to prefix when writing to the clipboard, e.g. `https://citypulse.app`. */
+  /** Origin to prefix when writing to the clipboard, e.g. `https://localisio.com`. */
   origin: string;
 }
 

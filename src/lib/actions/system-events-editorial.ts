@@ -90,7 +90,7 @@ export async function fetchOpenGraphFromUrl(url: string): Promise<{
     const timeout = setTimeout(() => controller.abort(), 8_000);
     const res = await fetch(parsed.toString(), {
       signal: controller.signal,
-      headers: { 'user-agent': 'CityPulseBot/1.0 (+editorial fetch)' },
+      headers: { 'user-agent': 'LocalisioBot/1.0 (+editorial fetch)' },
     });
     clearTimeout(timeout);
 

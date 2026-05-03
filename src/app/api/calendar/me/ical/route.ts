@@ -10,7 +10,7 @@ import { generateUserCalendarFeed } from '@/lib/actions/calendar';
  * session.
  *
  * Subscribe URLs look like:
- *   webcal://city-pulse.app/api/calendar/me/ical?token=...
+ *   webcal://localisio.com/api/calendar/me/ical?token=...
  *
  * Cache headers are conservative: most calendar clients re-fetch every
  * few hours, but we still allow the CDN to cache for 5 minutes per
@@ -44,7 +44,7 @@ export async function GET(request: Request) {
     headers: {
       'Content-Type': 'text/calendar; charset=utf-8',
       'Cache-Control': 'private, max-age=300',
-      'Content-Disposition': 'inline; filename="city-pulse.ics"',
+      'Content-Disposition': 'inline; filename="localisio.ics"',
     },
   });
 }

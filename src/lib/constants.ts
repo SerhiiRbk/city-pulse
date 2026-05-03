@@ -1,6 +1,6 @@
-export const SITE_NAME = 'City-Pulse';
+export const SITE_NAME = 'Localisio';
 export const SITE_DESCRIPTION = 'Social platform for offline communities of expats and locals';
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://citypulse.app';
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://localisio.com';
 
 export const MAX_BIO_LENGTH = 500;
 export const MAX_MESSAGE_LENGTH = 500;

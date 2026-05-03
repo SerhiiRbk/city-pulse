@@ -29,5 +29,5 @@ export function getResend(): Resend | null {
  * still no-ops without `RESEND_API_KEY`.
  */
 export function getFromAddress(): string {
-  return process.env.EMAIL_FROM_DIGEST || 'City-Pulse <digest@city-pulse.app>';
+  return process.env.EMAIL_FROM_DIGEST || 'Localisio <digest@localisio.com>';
 }

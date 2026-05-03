@@ -54,7 +54,7 @@ export async function GET(request: Request) {
   }
 
   const supabase = createAdminClient();
-  const appBaseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://city-pulse.app').replace(/\/$/, '');
+  const appBaseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://localisio.com').replace(/\/$/, '');
   const sixDaysAgo = new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString();
   const now = new Date();
 

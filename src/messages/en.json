@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "City-Pulse",
+    "appName": "Localisio",
     "loading": "Loading...",
     "error": "Something went wrong",
     "save": "Save",
@@ -105,7 +105,7 @@
     },
     "cta": {
       "title": "Ready to find your community?",
-      "subtitle": "Join City-Pulse today and start connecting with people who share your interests.",
+      "subtitle": "Join Localisio today and start connecting with people who share your interests.",
       "button": "Get Started"
     },
     "howItWorks": {
@@ -141,7 +141,7 @@
       "statsGroups": "Active groups",
       "statsMembers": "Members",
       "statsCities": "Cities",
-      "whyTitle": "Why City-Pulse?",
+      "whyTitle": "Why Localisio?",
       "whySubtitle": "Everything you need to find your crowd, feel comfortable joining, and turn shared interests into real plans.",
       "contactBadge": "Built for real connections",
       "contactTitle": "Start with one event. Find a whole community.",
@@ -338,7 +338,7 @@
       "sectionLabel": "Going together",
       "sectionTitleEmpty": "Be the first to plan a meetup",
       "sectionTitleWithCount": "{count, plural, one {# meetup} other {# meetups}} going",
-      "sectionDescription": "Plan with people from City-Pulse — meet at the entrance, grab a drink before, share a ride.",
+      "sectionDescription": "Plan with people from Localisio — meet at the entrance, grab a drink before, share a ride.",
       "ctaLogin": "Log in to start a meetup",
       "spotsLeft": "{count, plural, one {# spot left} other {# spots left}}",
       "full": "Full",
@@ -347,7 +347,7 @@
       "defaultTitle": "Going to {event} together",
       "cta": "Start a meetup",
       "dialogTitle": "Plan a meetup",
-      "dialogDescription": "Open this to friends from City-Pulse going to “{event}”. Date and place are inherited from the listing.",
+      "dialogDescription": "Open this to friends from Localisio going to “{event}”. Date and place are inherited from the listing.",
       "fieldTitle": "Group name",
       "fieldTitlePlaceholder": "After-work crew",
       "fieldTitleHint": "Tell people who's invited.",
@@ -991,7 +991,7 @@
     "submitted": "Report submitted. Thank you!"
   },
   "footer": {
-    "communityLabel": "City-Pulse Community",
+    "communityLabel": "Localisio Community",
     "communityTitle": "Meet people around shared interests, not awkward small talk.",
     "communityBody": "Discover local groups, welcoming events, and recurring communities for walks, games, language clubs, and weekend plans.",
     "exploreEvents": "Explore events",
@@ -1002,9 +1002,9 @@
     "terms": "Terms & Conditions",
     "privacy": "Privacy Policy",
     "howItWorks": "How it works",
-    "about": "About City-Pulse",
+    "about": "About Localisio",
     "contact": "Contact us",
-    "copyright": "© {year} City-Pulse. All rights reserved."
+    "copyright": "© {year} Localisio. All rights reserved."
   },
   "admin": {
     "funnel": {
@@ -1156,7 +1156,7 @@
     }
   },
   "onboarding": {
-    "title": "Welcome to City-Pulse",
+    "title": "Welcome to Localisio",
     "titleNamed": "Welcome, {name}!",
     "subtitle": "Let's tune the feed to your city, your interests, and your languages — takes under a minute.",
     "cityCountryLabel": "Your city",

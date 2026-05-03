@@ -24,6 +24,7 @@ import {
   CalendarCheck,
 } from 'lucide-react';
 import type { Profile } from '@/types/database';
+import { SITE_NAME } from '@/lib/constants';
 
 interface MobileNavProps {
   user?: Profile | null;
@@ -51,7 +52,7 @@ export function MobileNav({ user }: MobileNavProps) {
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="w-80">
-        <SheetTitle className="text-lg font-bold">City-Pulse</SheetTitle>
+        <SheetTitle className="text-lg font-bold">{SITE_NAME}</SheetTitle>
 
         {user && (
           <div className="mt-4 flex items-center gap-3 px-2">

@@ -91,7 +91,7 @@ export function renderDigestHtml(opts: {
               <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,0.04);">
                 <tr>
                   <td style="padding:24px 28px;border-bottom:1px solid #ececec;">
-                    <div style="font-size:13px;color:#64748b;letter-spacing:0.04em;text-transform:uppercase;">City-Pulse</div>
+                    <div style="font-size:13px;color:#64748b;letter-spacing:0.04em;text-transform:uppercase;">Localisio</div>
                     <h1 style="margin:6px 0 0;font-size:22px;line-height:28px;color:#0f172a;">${escapeHtml(strings.subjectLine)}</h1>
                     <p style="margin:8px 0 0;font-size:14px;color:#64748b;">${escapeHtml(strings.intro)}</p>
                   </td>
@@ -106,7 +106,7 @@ export function renderDigestHtml(opts: {
                 <tr>
                   <td style="padding:24px 28px 28px;text-align:center;">
                     <a href="${appBaseUrl}/${locale}/events" style="display:inline-block;background:#0f172a;color:#ffffff;text-decoration:none;font-weight:600;padding:12px 24px;border-radius:9999px;">
-                      Open City-Pulse
+                      Open Localisio
                     </a>
                   </td>
                 </tr>

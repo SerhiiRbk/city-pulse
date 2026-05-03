@@ -84,7 +84,7 @@ export function CalendarSubscribeCard({ initialToken, origin }: Props) {
           </Button>
 
           <Button asChild variant="ghost" className="rounded-full">
-            <a href={subscribeUrl} download="city-pulse.ics">
+            <a href={subscribeUrl} download="localisio.ics">
               <Download className="mr-1.5 h-4 w-4" />
               {t('downloadCta')}
             </a>

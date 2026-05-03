@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Users, Calendar, Pencil, MapPin, CalendarPlus, ArrowRight, ChevronRight } from 'lucide-react';
 import { GroupHeroActions } from '@/components/groups/group-hero-actions';
-import { COUNTRIES, LANGUAGES, SITE_URL } from '@/lib/constants';
+import { COUNTRIES, LANGUAGES, SITE_NAME, SITE_URL } from '@/lib/constants';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Locale } from '@/i18n/config';
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildPageMetadata({
     locale: locale as Locale,
     path: `/groups/${group.id}`,
-    title: `${group.name} — City-Pulse`,
+    title: `${group.name} — ${SITE_NAME}`,
     description: group.description?.slice(0, 160) || group.name,
     image: group.cover_url,
   });

@@ -27,8 +27,8 @@
     fill="none"
   />
 
-  <!-- Text: City-Pulse -->
+  <!-- Text: Localisio -->
   <text x="104" y="42" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="800" fill="currentColor" letter-spacing="-0.5">
-    City<tspan fill="currentColor" opacity="0.5">-</tspan>Pulse
+    Localis<tspan fill="currentColor" opacity="0.5">i</tspan>o
   </text>
 </svg>

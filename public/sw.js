@@ -1,4 +1,4 @@
-// City-Pulse service worker — handles incoming push events and
+// Localisio service worker — handles incoming push events and
 // click-to-focus behaviour. Kept intentionally tiny: anything more
 // complex (background sync, offline cache) lives in a separate
 // worker so this one can be audited at a glance.
@@ -12,7 +12,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('push', (event) => {
-  let payload = { title: 'City-Pulse', body: '' };
+  let payload = { title: 'Localisio', body: '' };
   if (event.data) {
     try {
       payload = event.data.json();
@@ -21,7 +21,7 @@ self.addEventListener('push', (event) => {
     }
   }
 
-  const title = payload.title || 'City-Pulse';
+  const title = payload.title || 'Localisio';
   const options = {
     body: payload.body || '',
     icon: payload.icon || '/icon-192.png',

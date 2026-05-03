@@ -244,7 +244,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
 
     const result = await createEvent(data);
 
-    if (result.error) {
+    if ('error' in result) {
       toast.error(result.error);
       setIsLoading(false);
       return;
@@ -253,7 +253,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
     // If the organiser opted into a recurring series, expand it
     // server-side. Failures here are non-fatal — the seed event is
     // already saved, so we surface a warning and keep going.
-    const newEventId = result.event?.id;
+    const newEventId = result.event?.id as string | undefined;
     if (newEventId && recurrence.frequency !== 'none' && recurrence.count >= 2) {
       const seriesResult = await createSeriesFromEvent({
         eventId: newEventId,
