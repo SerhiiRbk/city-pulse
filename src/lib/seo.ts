@@ -33,6 +33,13 @@ export function buildPageMetadata(input: {
    * back to the file-based default OG image generated under `[locale]/`.
    */
   image?: string | null;
+  /**
+   * Optional richer alt text for the social preview image. Defaults to
+   * the page title. Supplying a sentence with venue/date/category lifts
+   * Google Image Search relevance and improves screen-reader UX in
+   * services that surface OG images (Slack, iMessage, Discord).
+   */
+  imageAlt?: string;
   type?: 'website' | 'article' | 'profile';
   /**
    * When provided, attaches a robots policy to the page metadata. Pass
@@ -53,7 +60,7 @@ export function buildPageMetadata(input: {
             url: input.image,
             width: 1200,
             height: 630,
-            alt: input.title,
+            alt: input.imageAlt ?? input.title,
           },
         ],
       }

@@ -49,6 +49,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/groups', meta: { lastModified: buildTimestamp, changeFrequency: 'hourly', priority: 0.8 } },
     { path: '/calendar', meta: { lastModified: buildTimestamp, changeFrequency: 'hourly', priority: 0.6 } },
     { path: '/city-events', meta: { lastModified: buildTimestamp, changeFrequency: 'hourly', priority: 0.8 } },
+    { path: '/about', meta: { lastModified: buildTimestamp, changeFrequency: 'monthly', priority: 0.6 } },
+    { path: '/help', meta: { lastModified: buildTimestamp, changeFrequency: 'monthly', priority: 0.6 } },
+    { path: '/contact', meta: { lastModified: buildTimestamp, changeFrequency: 'yearly', priority: 0.4 } },
     { path: '/terms', meta: { lastModified: buildTimestamp, changeFrequency: 'yearly', priority: 0.2 } },
     { path: '/privacy', meta: { lastModified: buildTimestamp, changeFrequency: 'yearly', priority: 0.2 } },
   ];

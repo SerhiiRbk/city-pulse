@@ -183,6 +183,27 @@ export function generateProfileJsonLd(profile: {
   };
 }
 
+/**
+ * Schema.org `FAQPage` — when matched by Google, the answers can render
+ * as expandable rich snippets directly under the SERP listing for the
+ * page. Pair with a clean heading-based markup so pages still ranks
+ * naturally even if the rich snippet is suppressed.
+ */
+export function generateFaqJsonLd(items: { question: string; answer: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+}
+
 export function generateArticleJsonLd(article: {
   id: string;
   title: string;

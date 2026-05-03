@@ -12,7 +12,14 @@ const nextConfig: NextConfig = {
         hostname: '*.supabase.co',
         pathname: '/storage/v1/object/public/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
+    // AVIF first, then WebP fallback. Saves ~50% bytes on hero photos
+    // and unlocks the Vercel Image Optimization edge cache.
+    formats: ['image/avif', 'image/webp'],
   },
 };
 

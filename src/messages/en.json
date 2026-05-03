@@ -1003,8 +1003,22 @@
     "privacy": "Privacy Policy",
     "howItWorks": "How it works",
     "about": "About Localisio",
+    "help": "Help & FAQ",
     "contact": "Contact us",
+    "cities": "Cities",
+    "categories": "Categories",
     "copyright": "© {year} Localisio. All rights reserved."
+  },
+  "contact": {
+    "title": "Contact us",
+    "subtitle": "Press, partnerships, product feedback, or just a hello — we read everything.",
+    "emailTitle": "Email",
+    "emailBody": "The fastest way to reach us. Include the URL of the page you are talking about so we can investigate.",
+    "faqTitle": "Help & FAQ",
+    "faqBody": "Most questions about registration, events, groups, and safety are already answered there.",
+    "faqCta": "Browse the FAQ",
+    "replyTimeTitle": "Reply time",
+    "replyTimeBody": "We try to reply within two business days. Press inquiries flagged as urgent get priority on the same day."
   },
   "admin": {
     "funnel": {

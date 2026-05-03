@@ -18,6 +18,7 @@ import { HeroAuthCTA } from '@/components/landing/hero-auth-cta';
 import { LandingStats } from '@/components/landing/landing-stats';
 import { TonightInCity } from '@/components/landing/tonight-in-city';
 import { generateOrganizationJsonLd, generateWebSiteJsonLd } from '@/lib/json-ld';
+import { HeroImage } from '@/components/ui/hero-image';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 
@@ -93,10 +94,7 @@ export default async function HomePage({
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-slate-950">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1800&q=80')" }}
-        />
+        <HeroImage src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1800&q=80" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.14),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.22),transparent_32%)]" />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/60 to-slate-950/92" />
 

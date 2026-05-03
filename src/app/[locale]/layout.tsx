@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { IBM_Plex_Sans, JetBrains_Mono } from 'next/font/google';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
@@ -24,6 +24,18 @@ const monoFont = JetBrains_Mono({
   variable: '--font-mono',
   subsets: ['latin', 'cyrillic'],
 });
+
+export const viewport: Viewport = {
+  // Color the mobile browser chrome to match the brand. Light vs. dark
+  // are auto-selected by the user agent based on the active OS theme.
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#a855f7' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
+  ],
+  colorScheme: 'light dark',
+  width: 'device-width',
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

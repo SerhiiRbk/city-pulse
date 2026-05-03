@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { CalendarPlus, List, Map as MapIcon, Sparkles } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
+import { HeroImage } from '@/components/ui/hero-image';
 import {
   DEFAULT_MAP_TIME_RANGE,
   isMapTimeRange,
@@ -159,14 +160,7 @@ async function MapHero({
 
   return (
     <section className="relative overflow-hidden bg-slate-950">
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1800&q=80')",
-        }}
-      />
+      <HeroImage src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1800&q=80" />
       <div
         aria-hidden
         className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.14),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.22),transparent_30%)]"

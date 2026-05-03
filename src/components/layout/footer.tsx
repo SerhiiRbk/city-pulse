@@ -5,6 +5,24 @@ import { Link } from '@/i18n/navigation';
 import { Separator } from '@/components/ui/separator';
 import { Logo } from '@/components/ui/logo';
 
+// City "hubs" linked from the footer give Google an extra crawl path
+// into long-tail inventory ("events in Praha", "expat groups in
+// Berlin"). Each entry maps a stable URL slug (the value stored in the
+// `city` text column on `system_events` and `events`) to the human
+// label rendered in the footer. We intentionally use native city names
+// so the URL is stable across all five UI locales and matches what
+// organizers type when they create events.
+const FOOTER_CITIES = [
+  { slug: 'Praha', label: 'Praha' },
+  { slug: 'Brno', label: 'Brno' },
+  { slug: 'Wien', label: 'Wien' },
+  { slug: 'Berlin', label: 'Berlin' },
+  { slug: 'München', label: 'München' },
+  { slug: 'Warszawa', label: 'Warszawa' },
+  { slug: 'Bratislava', label: 'Bratislava' },
+  { slug: 'Budapest', label: 'Budapest' },
+] as const;
+
 export function Footer() {
   const t = useTranslations('footer');
   const tNav = useTranslations('nav');
@@ -39,8 +57,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="lg:pr-8">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="lg:col-span-2 lg:pr-8">
             <div className="mb-4">
               <Logo size="md" />
             </div>
@@ -61,31 +79,41 @@ export function Footer() {
             <h4 className="mb-3 font-semibold">{t('about')}</h4>
             <ul className="text-muted-foreground space-y-2 text-sm">
               <li>
-                <Link href="/#how-it-works" className="hover:text-foreground transition-colors">
-                  {t('howItWorks')}
+                <Link href="/about" className="hover:text-foreground transition-colors">
+                  {t('about')}
                 </Link>
               </li>
               <li>
-                <Link href="/#contact" className="hover:text-foreground transition-colors">
+                <Link href="/help" className="hover:text-foreground transition-colors">
+                  {t('help')}
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-foreground transition-colors">
                   {t('contact')}
+                </Link>
+              </li>
+              <li>
+                <Link href="/#how-it-works" className="hover:text-foreground transition-colors">
+                  {t('howItWorks')}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="mb-3 font-semibold">{t('legal')}</h4>
+            <h4 className="mb-3 font-semibold">{t('cities')}</h4>
             <ul className="text-muted-foreground space-y-2 text-sm">
-              <li>
-                <Link href="/terms" className="hover:text-foreground transition-colors">
-                  {t('terms')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy" className="hover:text-foreground transition-colors">
-                  {t('privacy')}
-                </Link>
-              </li>
+              {FOOTER_CITIES.map((city) => (
+                <li key={city.slug}>
+                  <Link
+                    href={{ pathname: '/city-events', query: { city: city.slug } }}
+                    className="hover:text-foreground transition-colors"
+                  >
+                    {city.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -105,6 +133,16 @@ export function Footer() {
               <li>
                 <Link href="/calendar" className="hover:text-foreground transition-colors">
                   {tNav('calendar')}
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-foreground transition-colors">
+                  {t('terms')}
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="hover:text-foreground transition-colors">
+                  {t('privacy')}
                 </Link>
               </li>
             </ul>

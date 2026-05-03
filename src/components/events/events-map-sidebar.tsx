@@ -224,7 +224,7 @@ export function EventsMapSidebar({
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
                             src={event.photos[0]}
-                            alt=""
+                            alt={event.title}
                             className="h-full w-full rounded-lg object-cover"
                             loading="lazy"
                           />

@@ -43,12 +43,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const group = await getGroup(id);
   if (!group) return {};
 
+  const groupImageAlt = [group.name, group.city, group.country]
+    .filter(Boolean)
+    .join(' — ');
+
   return buildPageMetadata({
     locale: locale as Locale,
     path: `/groups/${group.id}`,
     title: group.name,
     description: group.description?.slice(0, 160) || group.name,
     image: group.cover_url,
+    imageAlt: groupImageAlt,
   });
 }
 

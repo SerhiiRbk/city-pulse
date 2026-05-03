@@ -55,12 +55,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // them out of search results too.
   const shouldIndex = !event.is_private && !event.is_blocked;
 
+  // Build a richer alt for the OG image so Google Image Search and
+  // chat preview surfaces (Slack, iMessage) get useful context beyond
+  // just the event title.
+  const cityForAlt = event.city || null;
+  const dateForAlt = (() => {
+    try {
+      return new Date(event.starts_at).toLocaleDateString(locale, {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
+    } catch {
+      return null;
+    }
+  })();
+  const imageAlt = [event.title, cityForAlt, dateForAlt].filter(Boolean).join(' — ');
+
   return buildPageMetadata({
     locale: locale as Locale,
     path: `/events/${event.id}`,
     title: event.title,
     description: event.description?.slice(0, 160) || event.title,
     image: event.photos?.[0] || null,
+    imageAlt,
     type: 'article',
     ...(shouldIndex
       ? {}

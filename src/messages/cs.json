@@ -1003,8 +1003,22 @@
     "privacy": "Zásady ochrany osobních údajů",
     "howItWorks": "Jak to funguje",
     "about": "O Localisio",
+    "help": "Nápověda a FAQ",
     "contact": "Kontaktujte nás",
+    "cities": "Města",
+    "categories": "Kategorie",
     "copyright": "© {year} Localisio. Všechna práva vyhrazena."
+  },
+  "contact": {
+    "title": "Kontaktujte nás",
+    "subtitle": "Tisk, partnerství, zpětná vazba k produktu nebo jen pozdrav — čteme všechno.",
+    "emailTitle": "E-mail",
+    "emailBody": "Nejrychlejší způsob, jak nás zastihnout. Připojte URL stránky, o které píšete — výrazně to urychlí řešení.",
+    "faqTitle": "Nápověda a FAQ",
+    "faqBody": "Většina dotazů o registraci, akcích, skupinách a bezpečnosti je už zodpovězena.",
+    "faqCta": "Procházet FAQ",
+    "replyTimeTitle": "Doba odpovědi",
+    "replyTimeBody": "Snažíme se odpovědět do dvou pracovních dnů. Naléhavé tiskové dotazy mají prioritu týž den."
   },
   "admin": {
     "funnel": {
