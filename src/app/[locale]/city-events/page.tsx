@@ -79,7 +79,7 @@ export default async function CityEventsPage({
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.14),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(245,158,11,0.18),transparent_30%)]" />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/60 to-slate-950/92" />
 
-        <div className="relative z-10 container mx-auto px-4 pt-14 pb-10 sm:pt-16 sm:pb-12 md:pt-20 md:pb-16">
+        <div className="relative z-10 container mx-auto px-4 pt-14 pb-24 sm:pt-20 sm:pb-32 md:pt-24">
           <div className="grid items-end gap-10 lg:grid-cols-[1.15fr_0.85fr]">
             <div>
               <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-white backdrop-blur-md sm:mb-4">
@@ -112,20 +112,26 @@ export default async function CityEventsPage({
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-10 sm:py-12">
-        <div className="mb-6 sm:mb-8">
-          <SystemEventsFilters
-            currentFilters={{
-              city: filters.city,
-              city_id: filters.city_id,
-              country: filters.country,
-              when: filters.when,
-              date_from: filters.date_from,
-              date_to: filters.date_to,
-            }}
-            initialCity={initialCity}
-          />
+      {/* Floating filter bar that overlaps the hero — matches /events and /groups */}
+      <div className="relative z-20 -mt-16 sm:-mt-20">
+        <div className="container mx-auto max-w-6xl px-4">
+          <div className="rounded-[1.75rem] border border-border/60 bg-background/95 p-3 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.35)] ring-1 ring-black/5 backdrop-blur-xl supports-[backdrop-filter]:bg-background/85 sm:p-4">
+            <SystemEventsFilters
+              currentFilters={{
+                city: filters.city,
+                city_id: filters.city_id,
+                country: filters.country,
+                when: filters.when,
+                date_from: filters.date_from,
+                date_to: filters.date_to,
+              }}
+              initialCity={initialCity}
+            />
+          </div>
         </div>
+      </div>
+
+      <section className="container mx-auto px-4 py-10 sm:py-12">
         <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">{t('officialBadge')}</p>
@@ -151,7 +157,7 @@ export default async function CityEventsPage({
             ))}
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }
