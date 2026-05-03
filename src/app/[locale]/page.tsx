@@ -17,7 +17,7 @@ import { GroupCard } from '@/components/groups/group-card';
 import { HeroAuthCTA } from '@/components/landing/hero-auth-cta';
 import { LandingStats } from '@/components/landing/landing-stats';
 import { TonightInCity } from '@/components/landing/tonight-in-city';
-import { generateOrganizationJsonLd } from '@/lib/json-ld';
+import { generateOrganizationJsonLd, generateWebSiteJsonLd } from '@/lib/json-ld';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 
@@ -61,7 +61,11 @@ export default async function HomePage({
     { icon: Shield, title: t('features.safety'), desc: t('features.safetyDesc') },
   ];
 
-  const orgJsonLd = generateOrganizationJsonLd();
+  const orgJsonLd = generateOrganizationJsonLd({ description: t('hero.subtitle') });
+  const websiteJsonLd = generateWebSiteJsonLd({
+    locale,
+    description: t('hero.subtitle'),
+  });
 
   const howItWorks = [
     { step: '01', icon: CalendarPlus, title: t('howItWorks.step1Title'), desc: t('howItWorks.step1Desc') },
@@ -81,6 +85,10 @@ export default async function HomePage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
       />
 
       {/* Hero */}

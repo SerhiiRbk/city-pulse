@@ -5,7 +5,6 @@ import { canEditGroup } from '@/lib/actions/groups';
 import { AlbumDetailClient } from '@/components/groups/album-detail-client';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
-import { SITE_NAME } from '@/lib/constants';
 import type { Locale } from '@/i18n/config';
 
 interface Props {
@@ -20,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildPageMetadata({
     locale: locale as Locale,
     path: `/groups/${id}/albums/${album.id}`,
-    title: `${album.title} — ${SITE_NAME}`,
+    title: album.title,
     description: album.description || album.title,
     image: album.cover_url,
   });

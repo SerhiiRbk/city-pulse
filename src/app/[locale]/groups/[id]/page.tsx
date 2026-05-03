@@ -24,9 +24,10 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Users, Calendar, Pencil, MapPin, CalendarPlus, ArrowRight, ChevronRight } from 'lucide-react';
 import { GroupHeroActions } from '@/components/groups/group-hero-actions';
-import { COUNTRIES, LANGUAGES, SITE_NAME, SITE_URL } from '@/lib/constants';
+import { COUNTRIES, LANGUAGES, SITE_URL } from '@/lib/constants';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
+import { generateBreadcrumbJsonLd, generateGroupJsonLd } from '@/lib/json-ld';
 import type { Locale } from '@/i18n/config';
 
 interface Props {
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildPageMetadata({
     locale: locale as Locale,
     path: `/groups/${group.id}`,
-    title: `${group.name} — ${SITE_NAME}`,
+    title: group.name,
     description: group.description?.slice(0, 160) || group.name,
     image: group.cover_url,
   });
@@ -110,8 +111,31 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
   const initialTab = allowedTabs.has(resolvedSearchParams?.tab || '') ? resolvedSearchParams?.tab : 'upcoming';
   const initialRecapEventId = resolvedSearchParams?.compose === 'recap' ? resolvedSearchParams?.event : undefined;
 
+  const groupJsonLd = generateGroupJsonLd({
+    id: group.id,
+    name: group.name,
+    description: group.description,
+    cover_url: group.cover_url,
+    city: group.city,
+    country: group.country,
+    member_count: group.member_count,
+    localePath: `/${locale}/groups/${group.id}`,
+  });
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+    { name: tDetail('breadcrumbs'), url: `/${locale}/groups` },
+    { name: group.name, url: `/${locale}/groups/${group.id}` },
+  ]);
+
   return (
     <div className="min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(groupJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <div className="relative h-56 sm:h-72 md:h-96">
         {group.cover_url ? (
           <img src={group.cover_url} alt={group.name} className="h-full w-full object-cover" />

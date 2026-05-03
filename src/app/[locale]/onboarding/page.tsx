@@ -3,7 +3,10 @@ import { redirect } from '@/i18n/navigation';
 import { getUser, getUserProfile } from '@/lib/actions/auth';
 import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { OnboardingWizard } from '@/components/auth/onboarding-wizard';
+import { buildNoIndexMetadata } from '@/lib/seo';
 import type { Locale } from '@/i18n/config';
+
+export const metadata = buildNoIndexMetadata('Onboarding');
 
 export default async function OnboardingPage({
   params,

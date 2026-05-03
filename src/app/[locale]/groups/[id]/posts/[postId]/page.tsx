@@ -13,8 +13,8 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, CalendarDays, Link2, Megaphone, Newspaper, Pencil } from 'lucide-react';
-import { SITE_NAME, SITE_URL } from '@/lib/constants';
-import { generateArticleJsonLd } from '@/lib/json-ld';
+import { SITE_URL } from '@/lib/constants';
+import { generateArticleJsonLd, generateBreadcrumbJsonLd } from '@/lib/json-ld';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Locale } from '@/i18n/config';
@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildPageMetadata({
     locale: locale as Locale,
     path: `/groups/${post.group_id}/posts/${postPath}`,
-    title: `${post.title} | ${SITE_NAME}`,
+    title: post.title,
     description: post.content?.slice(0, 160) || post.title,
     image: post.media?.[0]?.url || null,
     type: 'article',
@@ -92,12 +92,21 @@ export default async function GroupPostDetailPage({ params }: Props) {
     author_name: authorName,
     localePath: pagePath,
   });
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+    { name: t('breadcrumbs'), url: `/${locale}/groups` },
+    { name: group.name, url: `/${locale}/groups/${id}` },
+    { name: post.title, url: pagePath },
+  ]);
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-6 pb-28 sm:py-8 lg:pb-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground sm:mb-5">

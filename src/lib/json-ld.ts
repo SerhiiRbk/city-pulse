@@ -17,7 +17,7 @@ export function generateEventJsonLd(event: {
   currency?: string | null;
   photos?: string[];
   organizer_name?: string | null;
-  going_count?: number;
+  max_attendees?: number | null;
 }) {
   const startDate = new Date(event.starts_at);
   const endDate = new Date(startDate.getTime() + event.duration_minutes * 60 * 1000);
@@ -58,18 +58,107 @@ export function generateEventJsonLd(event: {
       : event.price
         ? { '@type': 'Offer', price: String(event.price), priceCurrency: event.currency || 'EUR', availability: 'https://schema.org/InStock' }
         : undefined,
-    ...(event.going_count ? { maximumAttendeeCapacity: event.going_count } : {}),
+    // schema.org `maximumAttendeeCapacity` is the venue/event capacity, not
+    // the current RSVP count. We emit it only when the organizer set a real
+    // ceiling (`max_attendees`). Otherwise we omit the field to keep the
+    // structured data semantically valid for Google rich results.
+    ...(event.max_attendees ? { maximumAttendeeCapacity: event.max_attendees } : {}),
   };
 }
 
-export function generateOrganizationJsonLd() {
+export function generateOrganizationJsonLd(input?: { description?: string }) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: SITE_NAME,
     url: SITE_URL,
-    description: 'Social platform for offline communities of expats and locals',
+    description:
+      input?.description ?? 'Social platform for offline communities of expats and locals',
     sameAs: [],
+  };
+}
+
+/**
+ * `WebSite` + `SearchAction` powers the Google sitelinks search box. The
+ * target URL must be a working `q=` endpoint — `/events?q=` is wired into
+ * Postgres FTS via `getEvents` / `events.search_tsv`.
+ */
+export function generateWebSiteJsonLd(input: { locale: string; description?: string }) {
+  const baseUrl = `${SITE_URL}/${input.locale}`;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    url: baseUrl,
+    description:
+      input.description ?? 'Social platform for offline communities of expats and locals',
+    inLanguage: input.locale,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${baseUrl}/events?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  };
+}
+
+export type BreadcrumbItem = {
+  name: string;
+  /** Absolute or path-relative URL. Path-relative gets prefixed with SITE_URL. */
+  url: string;
+};
+
+export function generateBreadcrumbJsonLd(items: BreadcrumbItem[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: item.url.startsWith('http') ? item.url : `${SITE_URL}${item.url}`,
+    })),
+  };
+}
+
+/**
+ * Treat user-managed groups as `Organization` with optional address. Avoids
+ * `Group` (which schema.org defines for AudienceType, not communities).
+ */
+export function generateGroupJsonLd(group: {
+  id: string;
+  name: string;
+  description?: string | null;
+  cover_url?: string | null;
+  city?: string | null;
+  country?: string | null;
+  member_count?: number | null;
+  localePath: string;
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: group.name,
+    description: group.description?.slice(0, 500) || undefined,
+    image: group.cover_url || undefined,
+    url: `${SITE_URL}${group.localePath}`,
+    ...(group.city
+      ? {
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: group.city,
+            addressCountry: group.country || undefined,
+          },
+        }
+      : {}),
+    ...(group.member_count
+      ? {
+          numberOfEmployees: undefined,
+          member: { '@type': 'OrganizationRole', numberOfItems: group.member_count },
+        }
+      : {}),
   };
 }
 

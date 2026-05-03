@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { defaultLocale, locales, type Locale } from '@/i18n/config';
-import { SITE_URL } from '@/lib/constants';
+import { SITE_NAME, SITE_URL } from '@/lib/constants';
 
 function normalizePath(path: string) {
   if (!path || path === '/') return '';
@@ -28,6 +28,10 @@ export function buildPageMetadata(input: {
   path: string;
   title: string;
   description: string;
+  /**
+   * Per-page social preview image (e.g. event cover). Pass `null`/omit to fall
+   * back to the file-based default OG image generated under `[locale]/`.
+   */
   image?: string | null;
   type?: 'website' | 'article' | 'profile';
   /**
@@ -38,6 +42,22 @@ export function buildPageMetadata(input: {
   robots?: Metadata['robots'];
 }): Metadata {
   const url = buildLocalizedUrl(input.locale, input.path);
+  // Only attach `images` when the caller has a real cover photo. If we
+  // emit `images: undefined`, Next still treats the field as overridden
+  // and skips the file-based default OG image — so we conditionally
+  // include the field instead.
+  const imageBlock = input.image
+    ? {
+        images: [
+          {
+            url: input.image,
+            width: 1200,
+            height: 630,
+            alt: input.title,
+          },
+        ],
+      }
+    : {};
 
   return {
     title: input.title,
@@ -47,8 +67,16 @@ export function buildPageMetadata(input: {
       title: input.title,
       description: input.description,
       url,
+      siteName: SITE_NAME,
+      locale: input.locale,
       type: input.type || 'website',
-      images: input.image ? [{ url: input.image }] : undefined,
+      ...imageBlock,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: input.title,
+      description: input.description,
+      ...imageBlock,
     },
     ...(input.robots ? { robots: input.robots } : {}),
   };

@@ -33,7 +33,7 @@ import {
 import { getUserEventStatuses } from '@/lib/actions/events';
 import { getUserPhotos } from '@/lib/actions/user-photos';
 import { ProfilePhotoGallery } from '@/components/profile/profile-photo-gallery';
-import { generateProfileJsonLd } from '@/lib/json-ld';
+import { generateBreadcrumbJsonLd, generateProfileJsonLd } from '@/lib/json-ld';
 import { COUNTRIES, SITE_NAME } from '@/lib/constants';
 import type { Metadata } from 'next';
 import { SocialIcon } from '@/components/ui/social-icons';
@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildPageMetadata({
     locale: locale as Locale,
     path: `/profile/${profile.id}`,
-    title: `${profile.display_name} | ${SITE_NAME}`,
+    title: profile.display_name,
     description: profile.bio || `${profile.display_name}'s profile on ${SITE_NAME}`,
     image: profile.avatar_url,
     type: 'profile',
@@ -127,6 +127,10 @@ export default async function ProfilePage({ params }: Props) {
     .slice(0, 2);
 
   const jsonLd = generateProfileJsonLd(profile);
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+    { name: t('breadcrumbs'), url: `/${locale}/groups` },
+    { name: profile.display_name, url: `/${locale}/profile/${profile.id}` },
+  ]);
 
   const countryObj = profile.country
     ? COUNTRIES.find((c) => c.code === profile.country)
@@ -363,6 +367,10 @@ export default async function ProfilePage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground sm:mb-5">
         <Link href="/groups" className="transition-colors hover:text-foreground">{t('breadcrumbs')}</Link>

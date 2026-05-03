@@ -1,22 +1,59 @@
 import type { MetadataRoute } from 'next';
 import { createClient } from '@/lib/supabase/server';
-import { locales } from '@/i18n/config';
+import { defaultLocale, locales } from '@/i18n/config';
 import { SITE_URL } from '@/lib/constants';
+
+type SitemapEntry = MetadataRoute.Sitemap[number];
+
+/** Build hreflang alternates for a path. Canonical entry uses the default locale. */
+function localeAlternates(path: string): NonNullable<SitemapEntry['alternates']> {
+  return {
+    languages: Object.fromEntries([
+      ...locales.map((locale) => [locale, `${SITE_URL}/${locale}${path}`]),
+      ['x-default', `${SITE_URL}/${defaultLocale}${path}`],
+    ]),
+  };
+}
+
+/**
+ * Push one sitemap entry per locale, all sharing the same hreflang alternates
+ * block so Google can group locale variants of the same logical URL.
+ */
+function pushLocalized(
+  entries: SitemapEntry[],
+  path: string,
+  meta: Pick<SitemapEntry, 'lastModified' | 'changeFrequency' | 'priority'>,
+) {
+  const alternates = localeAlternates(path);
+  for (const locale of locales) {
+    entries.push({
+      url: `${SITE_URL}/${locale}${path}`,
+      ...meta,
+      alternates,
+    });
+  }
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = await createClient();
-  const entries: MetadataRoute.Sitemap = [];
+  const entries: SitemapEntry[] = [];
+  // Single timestamp for static-content URLs so a fresh build doesn't
+  // claim every static page changed at "now". Search engines rely on
+  // `lastmod` to throttle recrawls; constant churn signals are noisy.
+  const buildTimestamp = new Date();
 
-  const staticPages = ['', '/events', '/groups', '/calendar', '/city-events'];
-  for (const page of staticPages) {
-    for (const locale of locales) {
-      entries.push({
-        url: `${SITE_URL}/${locale}${page}`,
-        lastModified: new Date(),
-        changeFrequency: page === '' ? 'daily' : 'hourly',
-        priority: page === '' ? 1.0 : 0.8,
-      });
-    }
+  const staticPages: { path: string; meta: Omit<SitemapEntry, 'url' | 'alternates'> }[] = [
+    { path: '', meta: { lastModified: buildTimestamp, changeFrequency: 'daily', priority: 1.0 } },
+    { path: '/events', meta: { lastModified: buildTimestamp, changeFrequency: 'hourly', priority: 0.9 } },
+    { path: '/events/map', meta: { lastModified: buildTimestamp, changeFrequency: 'hourly', priority: 0.7 } },
+    { path: '/groups', meta: { lastModified: buildTimestamp, changeFrequency: 'hourly', priority: 0.8 } },
+    { path: '/calendar', meta: { lastModified: buildTimestamp, changeFrequency: 'hourly', priority: 0.6 } },
+    { path: '/city-events', meta: { lastModified: buildTimestamp, changeFrequency: 'hourly', priority: 0.8 } },
+    { path: '/terms', meta: { lastModified: buildTimestamp, changeFrequency: 'yearly', priority: 0.2 } },
+    { path: '/privacy', meta: { lastModified: buildTimestamp, changeFrequency: 'yearly', priority: 0.2 } },
+  ];
+  for (const { path, meta } of staticPages) {
+    pushLocalized(entries, path, meta);
   }
 
   const { data: events } = await supabase
@@ -31,14 +68,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   if (events) {
     for (const event of events) {
-      for (const locale of locales) {
-        entries.push({
-          url: `${SITE_URL}/${locale}/events/${event.id}`,
-          lastModified: new Date(event.updated_at),
-          changeFrequency: 'weekly',
-          priority: 0.7,
-        });
-      }
+      pushLocalized(entries, `/events/${event.id}`, {
+        lastModified: new Date(event.updated_at),
+        changeFrequency: 'weekly',
+        priority: 0.7,
+      });
     }
   }
 
@@ -52,14 +86,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   if (groups) {
     for (const group of groups) {
-      for (const locale of locales) {
-        entries.push({
-          url: `${SITE_URL}/${locale}/groups/${group.id}`,
-          lastModified: new Date(group.updated_at),
-          changeFrequency: 'weekly',
-          priority: 0.6,
-        });
-      }
+      pushLocalized(entries, `/groups/${group.id}`, {
+        lastModified: new Date(group.updated_at),
+        changeFrequency: 'weekly',
+        priority: 0.6,
+      });
     }
   }
 
@@ -75,14 +106,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const post of posts) {
       if (!visibleGroupIds.has(post.group_id)) continue;
       const postPath = post.slug || post.id;
-      for (const locale of locales) {
-        entries.push({
-          url: `${SITE_URL}/${locale}/groups/${post.group_id}/posts/${postPath}`,
-          lastModified: new Date(post.updated_at),
-          changeFrequency: 'monthly',
-          priority: 0.6,
-        });
-      }
+      pushLocalized(entries, `/groups/${post.group_id}/posts/${postPath}`, {
+        lastModified: new Date(post.updated_at),
+        changeFrequency: 'monthly',
+        priority: 0.6,
+      });
     }
   }
 
@@ -96,14 +124,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   if (profiles) {
     for (const profile of profiles) {
-      for (const locale of locales) {
-        entries.push({
-          url: `${SITE_URL}/${locale}/profile/${profile.id}`,
-          lastModified: new Date(profile.updated_at),
-          changeFrequency: 'monthly',
-          priority: 0.5,
-        });
-      }
+      pushLocalized(entries, `/profile/${profile.id}`, {
+        lastModified: new Date(profile.updated_at),
+        changeFrequency: 'monthly',
+        priority: 0.5,
+      });
     }
   }
 

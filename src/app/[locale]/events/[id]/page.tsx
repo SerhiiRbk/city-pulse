@@ -20,7 +20,7 @@ import { Separator } from '@/components/ui/separator';
 import { Link } from '@/i18n/navigation';
 import { MapPin, Calendar, Clock, Users, Globe, Star, Lock, Pencil } from 'lucide-react';
 import { formatDate, formatDuration, nowMs } from '@/lib/utils';
-import { SITE_NAME, COUNTRIES, LANGUAGES } from '@/lib/constants';
+import { COUNTRIES, LANGUAGES } from '@/lib/constants';
 import { EventMap } from '@/components/maps/event-map';
 import { ReportDialog } from '@/components/reports/report-dialog';
 import { ShareButton } from '@/components/ui/share-button';
@@ -29,7 +29,7 @@ import { EventManagement } from '@/components/events/event-management';
 import { AttendanceRoster, type RosterEntry } from '@/components/events/attendance-roster';
 import { EventReviewForm } from '@/components/events/event-review-form';
 import { EventPhotoGallery } from '@/components/events/event-photo-gallery';
-import { generateEventJsonLd } from '@/lib/json-ld';
+import { generateBreadcrumbJsonLd, generateEventJsonLd } from '@/lib/json-ld';
 import { RichTextView } from '@/components/ui/rich-text-view';
 import type { RichTextDoc } from '@/lib/rich-text/types';
 import { getFriendsGoing } from '@/lib/actions/friends-going';
@@ -50,13 +50,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const event = await getEvent(id);
   if (!event) return { title: 'Not Found' };
 
+  // Private and blocked events are excluded from the sitemap, but a
+  // direct link can still leak via shares — so emit `noindex` to keep
+  // them out of search results too.
+  const shouldIndex = !event.is_private && !event.is_blocked;
+
   return buildPageMetadata({
     locale: locale as Locale,
     path: `/events/${event.id}`,
-    title: `${event.title} | ${SITE_NAME}`,
+    title: event.title,
     description: event.description?.slice(0, 160) || event.title,
     image: event.photos?.[0] || null,
     type: 'article',
+    ...(shouldIndex
+      ? {}
+      : {
+          robots: {
+            index: false,
+            follow: false,
+            googleBot: { index: false, follow: false, noimageindex: true },
+          },
+        }),
   });
 }
 
@@ -154,12 +168,20 @@ export default async function EventDetailPage({ params }: Props) {
   const easyJoinCopy = `${comfortCue}. ${event.is_online ? t('easyJoinOnline') : t('easyJoinOffline')}`;
 
   const jsonLd = generateEventJsonLd(event);
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+    { name: t('breadcrumbs'), url: `/${locale}/events` },
+    { name: event.title, url: `/${locale}/events/${id}` },
+  ]);
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-6 pb-28 sm:py-8 lg:pb-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground sm:mb-5">
         <Link href="/events" className="transition-colors hover:text-foreground">{t('breadcrumbs')}</Link>
