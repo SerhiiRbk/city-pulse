@@ -46,7 +46,7 @@ export function Logo({ className, size = 'md', showText = true }: LogoProps) {
 
       {showText && (
         <span className={cn('font-extrabold tracking-tight', s.text)}>
-          City<span className="text-primary">-</span>Pulse
+          Localis<span className="text-primary">i</span>o
         </span>
       )}
     </span>
