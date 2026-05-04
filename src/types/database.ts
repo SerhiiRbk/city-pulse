@@ -34,7 +34,7 @@ export interface Profile {
   social_links: SocialLinks;
   hide_events: boolean;
   is_blocked: boolean;
-  role: 'user' | 'admin' | 'moderator';
+  role: 'user' | 'admin' | 'moderator' | 'system';
   /**
    * Timestamp when the user finished the post-signup onboarding
    * wizard (city + interests + languages). NULL means the wizard
@@ -43,6 +43,25 @@ export interface Profile {
   onboarded_at: string | null;
   created_at: string;
   updated_at: string;
+}
+
+/**
+ * Append-only log written by SQL triggers when an admin performs a
+ * privileged action (currently only `profile.role_change`). Surface
+ * is intentionally generic so we can extend it without another
+ * migration when we decide to log block/unblock or feature-flag
+ * toggles too.
+ */
+export interface AdminAuditLogEntry {
+  id: string;
+  /** Actor profile id; nullable so the row outlives deleted admins. */
+  actor_id: string | null;
+  actor_email_snapshot: string | null;
+  action: string;
+  target_type: string;
+  target_id: string | null;
+  metadata: Record<string, unknown>;
+  created_at: string;
 }
 
 export interface InterestCategory {

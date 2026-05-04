@@ -1,10 +1,15 @@
 import { setRequestLocale } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
+import { getViewerContext } from '@/lib/server/viewer-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Link } from '@/i18n/navigation';
 import { AdminBlockToggleButton } from '@/components/admin/block-toggle-button';
+import { RoleSelect } from '@/components/admin/role-select';
+import type { AssignableRole } from '@/lib/actions/admin-roles';
+
+type ProfileRole = AssignableRole | 'system';
 
 export default async function AdminUsersPage({
   params,
@@ -22,6 +27,7 @@ export default async function AdminUsersPage({
   const offset = (page - 1) * limit;
 
   const supabase = await createClient();
+  const viewer = await getViewerContext();
   const { data: users, count } = await supabase
     .from('profiles')
     .select('id, display_name, email, avatar_url, role, city, country, is_available, is_blocked, created_at', { count: 'exact' })
@@ -53,9 +59,6 @@ export default async function AdminUsersPage({
                 </div>
               </Link>
               <div className="flex flex-wrap items-center justify-end gap-2">
-                {u.role !== 'user' && (
-                  <Badge variant={u.role === 'admin' ? 'default' : 'secondary'}>{u.role}</Badge>
-                )}
                 {u.is_blocked && <Badge variant="destructive">Blocked</Badge>}
                 {u.city && (
                   <span className="text-muted-foreground text-xs">{u.city}</span>
@@ -63,6 +66,11 @@ export default async function AdminUsersPage({
                 <span className="text-muted-foreground text-xs">
                   {new Date(u.created_at).toLocaleDateString()}
                 </span>
+                <RoleSelect
+                  userId={u.id}
+                  currentRole={u.role as ProfileRole}
+                  viewerId={viewer.userId ?? ''}
+                />
                 <AdminBlockToggleButton
                   targetType="user"
                   targetId={u.id}
