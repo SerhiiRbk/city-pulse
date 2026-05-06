@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { EventCard } from '@/components/events/event-card';
 import { Button } from '@/components/ui/button';
@@ -65,6 +65,20 @@ export function EventsGridWithLoadMore({
   const [friendsGoing, setFriendsGoing] = useState<Record<string, FriendGoing[]>>(initialFriendsGoing);
   const [hasMore, setHasMore] = useState(initialEvents.length >= pageSize);
   const [isPending, startTransition] = useTransition();
+
+  // Reset state when server re-renders with new data (e.g. filter change).
+  // We use the first event ID as a fingerprint — if it changes, the dataset
+  // is different and we need to sync.
+  const fingerprint = initialEvents.map((e) => e.id).join(',');
+  useEffect(() => {
+    setEvents(initialEvents);
+    setGoingSet(new Set(initialGoingSet));
+    setWaitlistSet(new Set(initialWaitlistSet));
+    setInterestedSet(new Set(initialInterestedSet));
+    setFavoritedSet(new Set(initialFavoritedSet));
+    setFriendsGoing(initialFriendsGoing);
+    setHasMore(initialEvents.length >= pageSize);
+  }, [fingerprint]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleLoadMore = () => {
     startTransition(async () => {
