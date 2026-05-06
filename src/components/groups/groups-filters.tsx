@@ -32,6 +32,9 @@ import type { City, Interest, InterestCategory } from '@/types/database';
 interface GroupsFiltersProps {
   interests: Interest[];
   categories: InterestCategory[];
+  /** Pre-resolved city object so the picker shows a label on first
+   *  render (e.g. from geo-detection or profile city). */
+  initialCity?: City | null;
   currentFilters: {
     city?: string;
     city_id?: string;
@@ -42,14 +45,14 @@ interface GroupsFiltersProps {
   };
 }
 
-export function GroupsFilters({ interests, categories, currentFilters }: GroupsFiltersProps) {
+export function GroupsFilters({ interests, categories, initialCity, currentFilters }: GroupsFiltersProps) {
   const t = useTranslations('groups.filters');
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const [interestsOpen, setInterestsOpen] = useState(false);
   const [languagesOpen, setLanguagesOpen] = useState(false);
-  const [selectedCity, setSelectedCity] = useState<City | null>(null);
+  const [selectedCity, setSelectedCity] = useState<City | null>(initialCity ?? null);
   const [searchQuery, setSearchQuery] = useState(currentFilters.q || '');
 
   const selectedInterestIds = currentFilters.interest

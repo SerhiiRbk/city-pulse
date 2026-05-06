@@ -369,8 +369,17 @@ export async function getEvents(filters: {
   if (filters.languages && filters.languages.length > 0) {
     query = query.overlaps('languages', filters.languages);
   }
-  if (filters.date_from) query = query.gte('starts_at', filters.date_from);
-  if (filters.date_to) query = query.lte('starts_at', filters.date_to);
+  if (filters.date_from) {
+    // Plain YYYY-MM-DD strings are inflated to start/end of day so the
+    // user gets the inclusive window they expect (e.g. `from=2026-05-06`
+    // matches an event at 2026-05-06T20:00:00Z).
+    const expandedFrom = filters.date_from.length === 10 ? `${filters.date_from}T00:00:00Z` : filters.date_from;
+    query = query.gte('starts_at', expandedFrom);
+  }
+  if (filters.date_to) {
+    const expandedTo = filters.date_to.length === 10 ? `${filters.date_to}T23:59:59Z` : filters.date_to;
+    query = query.lte('starts_at', expandedTo);
+  }
   if (filters.is_free !== undefined) query = query.eq('is_free', filters.is_free);
   if (filters.is_online !== undefined) query = query.eq('is_online', filters.is_online);
   if (filters.is_system !== undefined) query = query.eq('is_system', filters.is_system);

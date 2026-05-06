@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getGroups } from '@/lib/actions/groups';
 import { getInterestCategories, getInterests } from '@/lib/actions/profile';
-import { getUser } from '@/lib/actions/auth';
+import { getUser, getUserProfile } from '@/lib/actions/auth';
 import { GroupCard } from '@/components/groups/group-card';
 import { GroupsFilters } from '@/components/groups/groups-filters';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -10,6 +10,9 @@ import { Link } from '@/i18n/navigation';
 import { Plus, Sparkles } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
 import { HeroImage } from '@/components/ui/hero-image';
+import { getVisitorGeo } from '@/lib/geo';
+import { findCityByGeo } from '@/lib/actions/geo-city';
+import { getCityById } from '@/lib/actions/cities';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({
@@ -57,10 +60,48 @@ export default async function GroupsPage({
     ? filters.language.split(',').filter(Boolean)
     : [];
 
+  // --- Geo-based city detection ---
+  let geoCityId: string | undefined = filters.city_id;
+  let geoCityName: string | undefined = filters.city;
+  let geoCountry: string | undefined = filters.country;
+  let detectedCity: { id: string; name: string; country: string } | null = null;
+
+  const hasExplicitLocation = !!(filters.city_id || filters.city || filters.country);
+
+  if (!hasExplicitLocation) {
+    if (user) {
+      const profile = await getUserProfile();
+      if (profile?.city_id && profile?.city) {
+        geoCityId = profile.city_id;
+        geoCityName = profile.city;
+        geoCountry = profile.country ?? undefined;
+        detectedCity = { id: profile.city_id, name: profile.city, country: profile.country ?? '' };
+      }
+    }
+
+    if (!geoCityId) {
+      const geo = await getVisitorGeo();
+      if (geo.city) {
+        const resolved = await findCityByGeo(geo.city, geo.country);
+        if (resolved) {
+          geoCityId = resolved.id;
+          geoCityName = resolved.name;
+          geoCountry = resolved.country ?? undefined;
+          detectedCity = { id: resolved.id, name: resolved.name, country: resolved.country };
+        }
+      }
+    }
+  } else if (filters.city_id) {
+    const city = await getCityById(filters.city_id);
+    if (city) {
+      detectedCity = { id: city.id, name: city.name, country: city.country };
+    }
+  }
+
   const groups = await getGroups({
-    country: filters.country,
-    city_id: filters.city_id,
-    city: filters.city,
+    country: geoCountry,
+    city_id: geoCityId,
+    city: geoCityName,
     interests: interestIds.length > 0 ? interestIds : undefined,
     languages: languageCodes.length > 0 ? languageCodes : undefined,
     q: filters.q,
@@ -129,7 +170,13 @@ export default async function GroupsPage({
             <GroupsFilters
               interests={interests}
               categories={interestCategories}
-              currentFilters={filters}
+              initialCity={detectedCity ? { id: detectedCity.id, name: detectedCity.name, country: detectedCity.country, lat: 0, lng: 0, translations: {} } : null}
+              currentFilters={{
+                ...filters,
+                city_id: geoCityId,
+                city: geoCityName,
+                country: geoCountry,
+              }}
             />
           </div>
         </div>
