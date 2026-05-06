@@ -33,6 +33,9 @@ import type { Interest, InterestCategory, City } from '@/types/database';
 interface EventsFiltersProps {
   interests: Interest[];
   categories: InterestCategory[];
+  /** Pre-resolved city object so the picker shows a label on first
+   *  render (e.g. from geo-detection or profile city). */
+  initialCity?: City | null;
   currentFilters: {
     city?: string;
     city_id?: string;
@@ -87,7 +90,7 @@ function getDateRange(when: string): { from: string; to?: string } {
   }
 }
 
-export function EventsFilters({ interests, categories, currentFilters }: EventsFiltersProps) {
+export function EventsFilters({ interests, categories, initialCity, currentFilters }: EventsFiltersProps) {
   const t = useTranslations('events.filters');
   const tSafety = useTranslations('events.safety');
   const locale = useLocale();
@@ -96,7 +99,7 @@ export function EventsFilters({ interests, categories, currentFilters }: EventsF
   const [interestsOpen, setInterestsOpen] = useState(false);
   const [languagesOpen, setLanguagesOpen] = useState(false);
   const [whenOpen, setWhenOpen] = useState(false);
-  const [selectedCity, setSelectedCity] = useState<City | null>(null);
+  const [selectedCity, setSelectedCity] = useState<City | null>(initialCity ?? null);
   const [rangeFrom, setRangeFrom] = useState(currentFilters.when === 'range' ? (currentFilters.date_from || '') : '');
   const [rangeTo, setRangeTo] = useState(currentFilters.when === 'range' ? (currentFilters.date_to || '') : '');
   const [searchQuery, setSearchQuery] = useState(currentFilters.q ?? '');

@@ -4,7 +4,7 @@ import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { getUser } from '@/lib/actions/auth';
 import { getFriendsGoingBulk } from '@/lib/actions/friends-going';
 import { isFeatureEnabled } from '@/lib/feature-flags';
-import { EventCard } from '@/components/events/event-card';
+import { EventsGridWithLoadMore } from '@/components/events/events-grid-with-load-more';
 import { EventsFilters } from '@/components/events/events-filters';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/button';
@@ -22,7 +22,12 @@ import {
 } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
 import { HeroImage } from '@/components/ui/hero-image';
+import { getVisitorGeo } from '@/lib/geo';
+import { findCityByGeo } from '@/lib/actions/geo-city';
+import { getCityById } from '@/lib/actions/cities';
+import { getUserProfile } from '@/lib/actions/auth';
 import type { EventSort } from '@/lib/actions/events';
+import type { LoadMoreFilters } from '@/lib/actions/events-load-more';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({
@@ -99,10 +104,56 @@ export default async function EventsPage({
   const isSystemFilter =
     sourceFilter === 'community' ? false : sourceFilter === 'afisha' ? true : undefined;
 
+  // --- Geo-based city detection ---
+  // If the user hasn't explicitly set a city filter, try to infer one:
+  //   1. Logged-in user with a city in their profile → use that.
+  //   2. Otherwise → use Vercel's IP-based geo headers.
+  // This gives first-time visitors a localized experience without
+  // requiring them to manually pick a city.
+  let geoCityId: string | undefined = filters.city_id;
+  let geoCityName: string | undefined = filters.city;
+  let geoCountry: string | undefined = filters.country;
+  let detectedCity: { id: string; name: string; country: string } | null = null;
+
+  const hasExplicitLocation = !!(filters.city_id || filters.city || filters.country);
+
+  if (!hasExplicitLocation) {
+    // Try profile city first (already chosen by user, most relevant).
+    if (user) {
+      const profile = await getUserProfile();
+      if (profile?.city_id && profile?.city) {
+        geoCityId = profile.city_id;
+        geoCityName = profile.city;
+        geoCountry = profile.country ?? undefined;
+        detectedCity = { id: profile.city_id, name: profile.city, country: profile.country ?? '' };
+      }
+    }
+
+    // Fallback to Vercel geo headers.
+    if (!geoCityId) {
+      const geo = await getVisitorGeo();
+      if (geo.city) {
+        const resolved = await findCityByGeo(geo.city, geo.country);
+        if (resolved) {
+          geoCityId = resolved.id;
+          geoCityName = resolved.name;
+          geoCountry = resolved.country ?? undefined;
+          detectedCity = { id: resolved.id, name: resolved.name, country: resolved.country };
+        }
+      }
+    }
+  } else if (filters.city_id) {
+    // User explicitly set a city — resolve it so the picker shows a label.
+    const city = await getCityById(filters.city_id);
+    if (city) {
+      detectedCity = { id: city.id, name: city.name, country: city.country };
+    }
+  }
+
   const events = await getEvents({
-    country: filters.country,
-    city_id: filters.city_id,
-    city: filters.city,
+    country: geoCountry,
+    city_id: geoCityId,
+    city: geoCityName,
     categories: categoryIds.length > 0 ? categoryIds : undefined,
     languages: languageCodes.length > 0 ? languageCodes : undefined,
     date_from: filters.date_from,
@@ -144,6 +195,25 @@ export default async function EventsPage({
     user && (await isFeatureEnabled('friends_going', user.id))
       ? await getFriendsGoingBulk(events.map((e) => e.id))
       : {};
+
+  // Filters object passed to the load-more component so it can fetch
+  // subsequent pages with the same criteria.
+  const loadMoreFilters: LoadMoreFilters = {
+    country: geoCountry,
+    city_id: geoCityId,
+    city: geoCityName,
+    categories: categoryIds.length > 0 ? categoryIds : undefined,
+    languages: languageCodes.length > 0 ? languageCodes : undefined,
+    date_from: filters.date_from,
+    date_to: filters.date_to,
+    is_free: filters.is_free === 'true' ? true : filters.is_free === 'false' ? false : undefined,
+    is_online: filters.is_online === 'true' ? true : filters.is_online === 'false' ? false : undefined,
+    is_system: isSystemFilter,
+    q: filters.q,
+    safety_tags: safetyTags.length > 0 ? safetyTags : undefined,
+    sort,
+    include_past: includePast,
+  };
 
   return (
     <div>
@@ -240,7 +310,13 @@ export default async function EventsPage({
             <EventsFilters
               interests={interests}
               categories={interestCategories}
-              currentFilters={filters}
+              initialCity={detectedCity ? { id: detectedCity.id, name: detectedCity.name, country: detectedCity.country, lat: 0, lng: 0, translations: {} } : null}
+              currentFilters={{
+                ...filters,
+                city_id: geoCityId,
+                city: geoCityName,
+                country: geoCountry,
+              }}
             />
           </div>
         </div>
@@ -355,20 +431,17 @@ export default async function EventsPage({
             )}
           </EmptyState>
         ) : (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-                isGoing={goingSet.has(event.id)}
-                isWaitlisted={waitlistSet.has(event.id)}
-                isInterested={interestedSet.has(event.id)}
-                isFavorited={favoritedSet.has(event.id)}
-                isAuthenticated={!!user}
-                friendsGoing={friendsGoingByEvent[event.id]}
-              />
-            ))}
-          </div>
+          <EventsGridWithLoadMore
+            initialEvents={events}
+            initialGoingSet={Array.from(goingSet)}
+            initialWaitlistSet={Array.from(waitlistSet)}
+            initialInterestedSet={Array.from(interestedSet)}
+            initialFavoritedSet={Array.from(favoritedSet)}
+            initialFriendsGoing={friendsGoingByEvent}
+            isAuthenticated={!!user}
+            filters={loadMoreFilters}
+            pageSize={24}
+          />
         )}
       </section>
     </div>
