@@ -75,9 +75,17 @@ export async function getSystemEvents(filters: {
     .order('starts_at', { ascending: true })
     .range(offset, offset + limit - 1);
 
-  if (filters.city) query = query.eq('city', filters.city);
-  if (filters.city_id) query = query.eq('city_id', filters.city_id);
-  if (filters.country) query = query.eq('country', filters.country);
+  if (filters.city_id) {
+    if (filters.city) {
+      query = query.or(`city_id.eq.${filters.city_id},city.eq.${filters.city}`);
+    } else {
+      query = query.eq('city_id', filters.city_id);
+    }
+  } else if (filters.city) {
+    query = query.eq('city', filters.city);
+  } else if (filters.country) {
+    query = query.eq('country', filters.country);
+  }
 
   // Date-range filters take precedence over the "ongoing & future" default.
   // Plain YYYY-MM-DD strings are inflated to start/end of day so the user

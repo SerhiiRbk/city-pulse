@@ -358,9 +358,22 @@ export async function getEvents(filters: {
     query = query.gte('ends_at', new Date().toISOString());
   }
 
-  if (filters.country) query = query.eq('country', filters.country);
-  if (filters.city_id) query = query.eq('city_id', filters.city_id);
-  else if (filters.city) query = query.eq('city', filters.city);
+  // When city_id is provided, skip country filter — city already
+  // implies the country and some legacy events may have NULL country.
+  if (filters.city_id) {
+    // Some legacy/imported events may have city name but no city_id.
+    // Match by city_id OR by city name to catch both.
+    if (filters.city) {
+      query = query.or(`city_id.eq.${filters.city_id},city.eq.${filters.city}`);
+    } else {
+      query = query.eq('city_id', filters.city_id);
+    }
+  } else if (filters.city) {
+    query = query.eq('city', filters.city);
+  } else if (filters.country) {
+    // Country-only filter (no city specified).
+    query = query.eq('country', filters.country);
+  }
   if (filters.categories && filters.categories.length > 0) {
     query = query.in('category_id', filters.categories);
   } else if (filters.category) {
