@@ -166,7 +166,13 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
   }
 
   function clearFilters() {
-    router.push(pathname);
+    setSelectedCity(null);
+    setSearchQuery('');
+    setRangeFrom('');
+    setRangeTo('');
+    // Pass geo_off=1 to signal that the user explicitly cleared location,
+    // preventing geo-detection from re-applying the city.
+    router.push(`${pathname}?geo_off=1`);
   }
 
   function selectWhenPreset(preset: string) {
@@ -196,6 +202,7 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
     applyFilters({
       city_id: selectedCity?.id || undefined,
       city: selectedCity?.name || undefined,
+      geo_off: undefined,
     });
   }
 
@@ -204,7 +211,7 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
     applyFilter('q', trimmed.length > 0 ? trimmed : undefined);
   }
 
-  const hasFilters = Object.values(currentFilters).some(Boolean);
+  const hasFilters = Object.entries(currentFilters).some(([k, v]) => v && k !== 'geo_off');
 
   const uncategorizedCatId = categories.find((c) => c.slug === 'other')?.id;
   const groupedInterests = categories
@@ -365,7 +372,7 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
             onChange={(city) => {
               setSelectedCity(city);
               if (city) {
-                applyFilters({ city_id: city.id, city: city.name });
+                applyFilters({ city_id: city.id, city: city.name, geo_off: undefined });
               } else {
                 applyFilters({ city_id: undefined, city: undefined });
               }

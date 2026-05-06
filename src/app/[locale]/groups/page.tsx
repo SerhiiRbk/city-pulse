@@ -67,8 +67,9 @@ export default async function GroupsPage({
   let detectedCity: { id: string; name: string; country: string } | null = null;
 
   const hasExplicitLocation = !!(filters.city_id || filters.city || filters.country);
+  const geoDisabled = filters.geo_off === '1';
 
-  if (!hasExplicitLocation) {
+  if (!hasExplicitLocation && !geoDisabled) {
     if (user) {
       const profile = await getUserProfile();
       if (profile?.city_id && profile?.city) {

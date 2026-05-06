@@ -116,8 +116,11 @@ export default async function EventsPage({
   let detectedCity: { id: string; name: string; country: string } | null = null;
 
   const hasExplicitLocation = !!(filters.city_id || filters.city || filters.country);
+  // When user explicitly clears filters, geo_off=1 is set to prevent
+  // geo-detection from re-applying the city on the next render.
+  const geoDisabled = filters.geo_off === '1';
 
-  if (!hasExplicitLocation) {
+  if (!hasExplicitLocation && !geoDisabled) {
     // Try profile city first (already chosen by user, most relevant).
     if (user) {
       const profile = await getUserProfile();

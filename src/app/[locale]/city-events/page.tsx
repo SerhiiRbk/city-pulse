@@ -42,6 +42,7 @@ export default async function CityEventsPage({
     when?: string;
     date_from?: string;
     date_to?: string;
+    geo_off?: string;
   }>;
 }) {
   const { locale } = await params;
@@ -57,8 +58,9 @@ export default async function CityEventsPage({
   let geoCountry: string | undefined = filters.country;
 
   const hasExplicitLocation = !!(filters.city_id || filters.city || filters.country);
+  const geoDisabled = filters.geo_off === '1';
 
-  if (!hasExplicitLocation) {
+  if (!hasExplicitLocation && !geoDisabled) {
     if (user) {
       const profile = await getUserProfile();
       if (profile?.city_id && profile?.city) {
