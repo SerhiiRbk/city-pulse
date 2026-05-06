@@ -12,6 +12,7 @@ import {
   getCachedLandingEvents,
   getCachedLandingTopGroups,
 } from '@/lib/actions/landing-cached';
+import { getUser } from '@/lib/actions/auth';
 import { EventCard } from '@/components/events/event-card';
 import { GroupCard } from '@/components/groups/group-card';
 import { HeroAuthCTA } from '@/components/landing/hero-auth-cta';
@@ -48,9 +49,10 @@ export default async function HomePage({
 
   const t = await getTranslations('landing');
 
-  const [events, topGroups] = await Promise.all([
+  const [events, topGroups, user] = await Promise.all([
     getCachedLandingEvents(24),
     getCachedLandingTopGroups(4),
+    getUser(),
   ]);
 
   const featureCards = [
@@ -149,32 +151,34 @@ export default async function HomePage({
         <LandingStats locale={locale} />
       </Suspense>
 
-      {/* Features */}
-      <section className="container mx-auto px-4 pt-24 pb-14">
-        <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">{t('marketing.whyTitle')}</h2>
-          <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-            {t('marketing.whySubtitle')}
-          </p>
-        </div>
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {featureCards.map(({ icon: Icon, title, desc }) => (
-            <Card key={title} className="group rounded-3xl border-border/50 bg-background/80 shadow-none backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-              <CardHeader>
-                <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 transition-colors group-hover:bg-primary/20">
-                  <Icon className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="text-xl font-bold">{title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground leading-relaxed">{desc}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
+      {/* Features — only shown to anonymous visitors as a marketing pitch */}
+      {!user && (
+        <section className="container mx-auto px-4 pt-24 pb-14">
+          <div className="mb-16 text-center">
+            <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">{t('marketing.whyTitle')}</h2>
+            <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
+              {t('marketing.whySubtitle')}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {featureCards.map(({ icon: Icon, title, desc }) => (
+              <Card key={title} className="group rounded-3xl border-border/50 bg-background/80 shadow-none backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                <CardHeader>
+                  <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 transition-colors group-hover:bg-primary/20">
+                    <Icon className="h-8 w-8 text-primary" />
+                  </div>
+                  <CardTitle className="text-xl font-bold">{title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed">{desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
 
-      <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      {!user && <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />}
 
       {/* Events */}
       {events.length > 0 && (
@@ -227,63 +231,68 @@ export default async function HomePage({
         </section>
       )}
 
-      {/* How It Works */}
-      <section id="how-it-works" className="border-t bg-muted/30 py-24">
-        <div className="container mx-auto px-4">
-          <div className="mb-16 text-center">
-            <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">{t('howItWorks.title')}</h2>
-            <p className="text-muted-foreground mx-auto max-w-2xl text-lg">{t('howItWorks.subtitle')}</p>
-          </div>
+      {/* How It Works — only for anonymous visitors */}
+      {!user && (
+        <section id="how-it-works" className="border-t bg-muted/30 py-24">
+          <div className="container mx-auto px-4">
+            <div className="mb-16 text-center">
+              <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">{t('howItWorks.title')}</h2>
+              <p className="text-muted-foreground mx-auto max-w-2xl text-lg">{t('howItWorks.subtitle')}</p>
+            </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
-            {howItWorks.map(({ step, icon: Icon, title, desc }, i) => (
-              <React.Fragment key={step}>
-                <div className="bg-background group relative rounded-3xl border-border/50 p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                  <span className="text-primary/10 absolute right-6 top-6 text-5xl font-black transition-colors group-hover:text-primary/20">
-                    {step}
-                  </span>
-                  <div className="bg-primary/10 mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl transition-colors group-hover:bg-primary/20">
-                    <Icon className="text-primary h-8 w-8" />
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
+              {howItWorks.map(({ step, icon: Icon, title, desc }, i) => (
+                <React.Fragment key={step}>
+                  <div className="bg-background group relative rounded-3xl border-border/50 p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                    <span className="text-primary/10 absolute right-6 top-6 text-5xl font-black transition-colors group-hover:text-primary/20">
+                      {step}
+                    </span>
+                    <div className="bg-primary/10 mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl transition-colors group-hover:bg-primary/20">
+                      <Icon className="text-primary h-8 w-8" />
+                    </div>
+                    <h3 className="mb-3 text-xl font-bold">{title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{desc}</p>
                   </div>
-                  <h3 className="mb-3 text-xl font-bold">{title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{desc}</p>
+                  {i < howItWorks.length - 1 && (
+                    <div className="hidden items-center justify-center lg:flex">
+                      <ArrowRight className="text-muted-foreground/30 h-8 w-8" />
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Marketing CTA — only for anonymous visitors */}
+      {!user && (
+        <section id="contact" className="border-t bg-card py-20">
+          <div className="container mx-auto px-4">
+            <div className="rounded-[2rem] border border-border/50 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 p-8 shadow-sm md:p-12">
+              <div className="mx-auto max-w-3xl text-center">
+                <Badge variant="outline" className="mb-4 rounded-full border-primary/20 bg-primary/5 text-primary">
+                  {t('marketing.contactBadge')}
+                </Badge>
+                <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+                  {t('marketing.contactTitle')}
+                </h2>
+                <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
+                  {t('marketing.contactSubtitle')}
+                </p>
+                <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+                  <Button size="lg" asChild className="rounded-full px-8">
+                    <Link href="/events">{t('marketing.contactPrimary')}</Link>
+                  </Button>
+                  <Button size="lg" variant="outline" asChild className="rounded-full px-8">
+                    <Link href="/groups">{t('marketing.contactSecondary')}</Link>
+                  </Button>
                 </div>
-                {i < howItWorks.length - 1 && (
-                  <div className="hidden items-center justify-center lg:flex">
-                    <ArrowRight className="text-muted-foreground/30 h-8 w-8" />
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="contact" className="border-t bg-card py-20">
-        <div className="container mx-auto px-4">
-          <div className="rounded-[2rem] border border-border/50 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 p-8 shadow-sm md:p-12">
-            <div className="mx-auto max-w-3xl text-center">
-              <Badge variant="outline" className="mb-4 rounded-full border-primary/20 bg-primary/5 text-primary">
-                {t('marketing.contactBadge')}
-              </Badge>
-              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                {t('marketing.contactTitle')}
-              </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-                {t('marketing.contactSubtitle')}
-              </p>
-              <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-                <Button size="lg" asChild className="rounded-full px-8">
-                  <Link href="/events">{t('marketing.contactPrimary')}</Link>
-                </Button>
-                <Button size="lg" variant="outline" asChild className="rounded-full px-8">
-                  <Link href="/groups">{t('marketing.contactSecondary')}</Link>
-                </Button>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }
