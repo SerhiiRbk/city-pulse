@@ -6,6 +6,7 @@ import { getFriendsGoingBulk } from '@/lib/actions/friends-going';
 import { isFeatureEnabled } from '@/lib/feature-flags';
 import { EventsGridWithLoadMore } from '@/components/events/events-grid-with-load-more';
 import { EventsFilters } from '@/components/events/events-filters';
+import { FilterPersistence } from '@/components/events/filter-persistence';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
@@ -220,6 +221,7 @@ export default async function EventsPage({
 
   return (
     <div>
+      <FilterPersistence />
       <section className="relative overflow-hidden bg-slate-950">
         <HeroImage src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1800&q=80" />
         <div
@@ -329,9 +331,6 @@ export default async function EventsPage({
         <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">{tPage('sectionLabel')}</p>
-            <h2 className="mt-1 text-3xl font-bold tracking-tight">
-              {events.length > 0 ? tPage('resultsTitle', { count: events.length }) : tPage('noResultsTitle')}
-            </h2>
           </div>
           <p className="max-w-xl text-sm text-muted-foreground">
             {tPage('sectionBody')}
@@ -444,6 +443,7 @@ export default async function EventsPage({
             isAuthenticated={!!user}
             filters={loadMoreFilters}
             pageSize={24}
+            showCount
           />
         )}
       </section>

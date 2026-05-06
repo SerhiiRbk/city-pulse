@@ -2,6 +2,7 @@
 
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/navigation';
+import { clearSavedFilters } from '@/lib/hooks/use-saved-filters';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -170,6 +171,7 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
     setSearchQuery('');
     setRangeFrom('');
     setRangeTo('');
+    clearSavedFilters();
     // Pass geo_off=1 to signal that the user explicitly cleared location,
     // preventing geo-detection from re-applying the city.
     router.push(`${pathname}?geo_off=1`);

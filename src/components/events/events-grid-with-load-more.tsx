@@ -43,6 +43,8 @@ interface EventsGridWithLoadMoreProps {
   isAuthenticated: boolean;
   filters: LoadMoreFilters;
   pageSize: number;
+  /** Show a dynamic event count heading above the grid. */
+  showCount?: boolean;
 }
 
 export function EventsGridWithLoadMore({
@@ -55,8 +57,10 @@ export function EventsGridWithLoadMore({
   isAuthenticated,
   filters,
   pageSize,
+  showCount,
 }: EventsGridWithLoadMoreProps) {
   const t = useTranslations('common');
+  const tPage = useTranslations('events.page');
   const [events, setEvents] = useState<EventItem[]>(initialEvents);
   const [goingSet, setGoingSet] = useState<Set<string>>(new Set(initialGoingSet));
   const [waitlistSet, setWaitlistSet] = useState<Set<string>>(new Set(initialWaitlistSet));
@@ -118,6 +122,11 @@ export function EventsGridWithLoadMore({
 
   return (
     <>
+      {showCount && (
+        <h2 className="mb-6 text-3xl font-bold tracking-tight">
+          {tPage('resultsTitle', { count: events.length })}
+        </h2>
+      )}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
         {events.map((event) => (
           <EventCard

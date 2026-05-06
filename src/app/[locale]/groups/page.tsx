@@ -4,6 +4,7 @@ import { getInterestCategories, getInterests } from '@/lib/actions/profile';
 import { getUser, getUserProfile } from '@/lib/actions/auth';
 import { GroupCard } from '@/components/groups/group-card';
 import { GroupsFilters } from '@/components/groups/groups-filters';
+import { FilterPersistence } from '@/components/events/filter-persistence';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
@@ -111,6 +112,7 @@ export default async function GroupsPage({
 
   return (
     <div>
+      <FilterPersistence />
       <section className="relative overflow-hidden bg-slate-950">
         <HeroImage src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1800&q=80" />
         <div

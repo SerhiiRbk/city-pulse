@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/navigation';
+import { clearSavedFilters } from '@/lib/hooks/use-saved-filters';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -116,6 +117,7 @@ export function GroupsFilters({ interests, categories, initialCity, currentFilte
   function clearFilters() {
     setSelectedCity(null);
     setSearchQuery('');
+    clearSavedFilters();
     router.push(`${pathname}?geo_off=1`);
   }
 
