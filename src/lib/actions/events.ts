@@ -361,13 +361,7 @@ export async function getEvents(filters: {
   // When city_id is provided, skip country filter — city already
   // implies the country and some legacy events may have NULL country.
   if (filters.city_id) {
-    // Some legacy/imported events may have city name but no city_id.
-    // Match by city_id OR by city name to catch both.
-    if (filters.city) {
-      query = query.or(`city_id.eq.${filters.city_id},city.eq.${filters.city}`);
-    } else {
-      query = query.eq('city_id', filters.city_id);
-    }
+    query = query.eq('city_id', filters.city_id);
   } else if (filters.city) {
     query = query.eq('city', filters.city);
   } else if (filters.country) {

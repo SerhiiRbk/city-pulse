@@ -76,11 +76,7 @@ export async function getSystemEvents(filters: {
     .range(offset, offset + limit - 1);
 
   if (filters.city_id) {
-    if (filters.city) {
-      query = query.or(`city_id.eq.${filters.city_id},city.eq.${filters.city}`);
-    } else {
-      query = query.eq('city_id', filters.city_id);
-    }
+    query = query.eq('city_id', filters.city_id);
   } else if (filters.city) {
     query = query.eq('city', filters.city);
   } else if (filters.country) {
