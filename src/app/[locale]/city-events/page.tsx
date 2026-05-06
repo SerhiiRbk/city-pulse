@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { getSystemEvents } from '@/lib/actions/system-events';
 import { getCityById } from '@/lib/actions/cities';
 import { getUserEventStatuses } from '@/lib/actions/events';
-import { getUser } from '@/lib/actions/auth';
+import { getUser, getUserProfile } from '@/lib/actions/auth';
 import { EventCard } from '@/components/events/event-card';
 import { SystemEventsFilters } from '@/components/city-events/system-events-filters';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,8 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { Landmark, Sparkles } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
 import { HeroImage } from '@/components/ui/hero-image';
+import { getVisitorGeo } from '@/lib/geo';
+import { findCityByGeo } from '@/lib/actions/geo-city';
 
 export async function generateMetadata({
   params,
@@ -48,18 +50,49 @@ export default async function CityEventsPage({
   const filters = await searchParams;
   const t = await getTranslations('cityEvents');
   const user = await getUser();
+
+  // --- Geo-based city detection ---
+  let geoCityId: string | undefined = filters.city_id;
+  let geoCityName: string | undefined = filters.city;
+  let geoCountry: string | undefined = filters.country;
+
+  const hasExplicitLocation = !!(filters.city_id || filters.city || filters.country);
+
+  if (!hasExplicitLocation) {
+    if (user) {
+      const profile = await getUserProfile();
+      if (profile?.city_id && profile?.city) {
+        geoCityId = profile.city_id;
+        geoCityName = profile.city;
+        geoCountry = profile.country ?? undefined;
+      }
+    }
+
+    if (!geoCityId) {
+      const geo = await getVisitorGeo();
+      if (geo.city) {
+        const resolved = await findCityByGeo(geo.city, geo.country);
+        if (resolved) {
+          geoCityId = resolved.id;
+          geoCityName = resolved.name;
+          geoCountry = resolved.country ?? undefined;
+        }
+      }
+    }
+  }
+
   const events = await getSystemEvents({
-    city: filters.city,
-    city_id: filters.city_id,
-    country: filters.country,
+    city: geoCityName,
+    city_id: geoCityId,
+    country: geoCountry,
     date_from: filters.date_from,
     date_to: filters.date_to,
     limit: 24,
   });
 
   // Pre-load the selected city object so the picker shows a localized
-  // label on first paint (otherwise it stays empty until user types).
-  const initialCity = filters.city_id ? await getCityById(filters.city_id) : null;
+  // label on first paint (from geo-detection, profile, or explicit URL).
+  const initialCity = geoCityId ? await getCityById(geoCityId) : null;
 
   const { goingSet, waitlistSet, interestedSet, favoritedSet } = user
     ? await getUserEventStatuses(events.map((e) => e.id))
@@ -100,7 +133,7 @@ export default async function CityEventsPage({
                   <div>
                     <p className="font-semibold">{t('resultsDescription')}</p>
                     <p className="mt-1 text-sm text-white/65">
-                      {filters.city ? filters.city : t('subtitle')}
+                      {geoCityName ? geoCityName : t('subtitle')}
                     </p>
                   </div>
                 </div>
@@ -116,9 +149,9 @@ export default async function CityEventsPage({
           <div className="rounded-[1.75rem] border border-border/60 bg-background/95 p-3 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.35)] ring-1 ring-black/5 backdrop-blur-xl supports-[backdrop-filter]:bg-background/85 sm:p-4">
             <SystemEventsFilters
               currentFilters={{
-                city: filters.city,
-                city_id: filters.city_id,
-                country: filters.country,
+                city: geoCityName,
+                city_id: geoCityId,
+                country: geoCountry,
                 when: filters.when,
                 date_from: filters.date_from,
                 date_to: filters.date_to,
