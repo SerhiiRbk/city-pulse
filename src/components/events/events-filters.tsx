@@ -58,11 +58,11 @@ function getDateRange(when: string): { from: string; to?: string } {
   const fmt = (d: Date) => d.toISOString().split('T')[0];
   switch (when) {
     case 'today':
-      return { from: fmt(now) };
+      return { from: fmt(now), to: fmt(now) };
     case 'tomorrow': {
       const d = new Date(now);
       d.setDate(d.getDate() + 1);
-      return { from: fmt(d) };
+      return { from: fmt(d), to: fmt(d) };
     }
     case 'weekend': {
       const fri = new Date(now);
