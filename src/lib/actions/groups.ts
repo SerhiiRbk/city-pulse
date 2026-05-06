@@ -395,14 +395,17 @@ export async function getGroups(
     .eq('creator_is_blocked', false)
     .order('member_count', { ascending: false });
 
-  if (filters.country) {
-    query = query.eq('country', filters.country);
-  }
-
   if (filters.city_id) {
-    query = query.eq('city_id', filters.city_id);
+    // Some legacy groups may have city name but no city_id.
+    if (filters.city) {
+      query = query.or(`city_id.eq.${filters.city_id},city.eq.${filters.city}`);
+    } else {
+      query = query.eq('city_id', filters.city_id);
+    }
   } else if (filters.city) {
     query = query.ilike('city', `%${filters.city}%`);
+  } else if (filters.country) {
+    query = query.eq('country', filters.country);
   }
 
   if (filters.interests && filters.interests.length > 0) {
