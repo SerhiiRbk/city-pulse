@@ -242,7 +242,14 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
       return;
     }
 
-    const result = await createEvent(data);
+    let result: Awaited<ReturnType<typeof createEvent>>;
+    try {
+      result = await createEvent(data);
+    } catch (err) {
+      toast.error('Failed to create event. Please try again.');
+      setIsLoading(false);
+      return;
+    }
 
     if ('error' in result) {
       toast.error(result.error);
