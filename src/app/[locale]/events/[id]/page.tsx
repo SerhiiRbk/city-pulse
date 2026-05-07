@@ -480,8 +480,8 @@ export default async function EventDetailPage({ params }: Props) {
                   {isAuthenticated && needsReconfirm && (
                     <ReconfirmBanner eventId={id} initiallyOpen />
                   )}
-                  <div className="flex flex-col gap-2 sm:flex-row">
-                    <ShareButton title={event.title} className="flex-1 rounded-xl" />
+                  <div className="flex flex-col gap-2">
+                    <ShareButton title={event.title} className="rounded-xl" />
                     <AddToCalendarButton
                       event={{
                         id: event.id,
@@ -493,7 +493,7 @@ export default async function EventDetailPage({ params }: Props) {
                         duration_minutes: event.duration_minutes,
                         is_online: event.is_online,
                       }}
-                      className="flex-1 rounded-xl"
+                      className="rounded-xl"
                     />
                   </div>
                 </>
