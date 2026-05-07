@@ -298,6 +298,7 @@
       "free": "Free",
       "cancelled": "Cancelled",
       "completed": "Completed",
+      "systemBadge": "City event",
       "draft": "Draft",
       "editEvent": "Edit event",
       "goingCount": "{count, plural, one {# going} other {# going}}",

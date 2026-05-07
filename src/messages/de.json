@@ -298,6 +298,7 @@
       "free": "Kostenlos",
       "cancelled": "Abgesagt",
       "completed": "Abgeschlossen",
+      "systemBadge": "Stadtveranstaltung",
       "draft": "Entwurf",
       "editEvent": "Veranstaltung bearbeiten",
       "goingCount": "{count, plural, one {# Zusage} other {# Zusagen}}",

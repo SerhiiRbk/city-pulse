@@ -298,6 +298,7 @@
       "free": "Безкоштовно",
       "cancelled": "Скасовано",
       "completed": "Завершено",
+      "systemBadge": "Афіша",
       "draft": "Чернетка",
       "editEvent": "Редагувати захід",
       "goingCount": "{count, plural, one {# учасник йде} few {# учасники йдуть} other {# учасників йдуть}}",

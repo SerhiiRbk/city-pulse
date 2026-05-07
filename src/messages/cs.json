@@ -298,6 +298,7 @@
       "free": "Zdarma",
       "cancelled": "Zrušeno",
       "completed": "Dokončeno",
+      "systemBadge": "Městská akce",
       "draft": "Koncept",
       "editEvent": "Upravit akci",
       "goingCount": "{count, plural, one {# účastník jde} few {# účastníci jdou} other {# účastníků jde}}",

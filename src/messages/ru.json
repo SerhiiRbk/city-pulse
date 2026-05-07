@@ -298,6 +298,7 @@
       "free": "Бесплатно",
       "cancelled": "Отменено",
       "completed": "Завершено",
+      "systemBadge": "Афиша",
       "draft": "Черновик",
       "editEvent": "Редактировать мероприятие",
       "goingCount": "{count, plural, one {# участник идёт} few {# участника идут} other {# участников идут}}",
