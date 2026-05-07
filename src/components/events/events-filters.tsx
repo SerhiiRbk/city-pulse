@@ -288,8 +288,7 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
           </button>
         )}
       </div>
-      <div className="-mx-1 overflow-x-auto px-1 pb-1">
-        <div className="flex min-w-max gap-2">
+      <div className="flex flex-wrap gap-2 pb-1">
         {[
           { key: 'today', label: t('today') },
           { key: 'tomorrow', label: t('tomorrow') },
@@ -304,7 +303,7 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
               type="button"
               onClick={() => selectWhenPreset(preset.key)}
               className={cn(
-                'shrink-0 rounded-full border px-3 py-1.5 text-[13px] font-medium shadow-sm transition-colors sm:text-sm',
+                'rounded-full border px-3 py-1.5 text-[13px] font-medium shadow-sm transition-colors sm:text-sm',
                 active
                   ? 'border-primary/30 bg-primary text-primary-foreground'
                   : 'border-border/70 bg-background/90 text-foreground hover:bg-muted/70',
@@ -314,7 +313,6 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
             </button>
           );
         })}
-        </div>
       </div>
 
       {/*
@@ -322,8 +320,7 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
        * AND-filter (event must have ALL selected tags). Vocabulary
        * mirrors `SAFETY_TAGS` in @/types/database.
        */}
-      <div className="-mx-1 overflow-x-auto px-1">
-        <div className="flex min-w-max gap-2">
+      <div className="flex flex-wrap gap-2">
           {SAFETY_TAGS.map((tag) => {
             const active = selectedSafetyTags.includes(tag);
             return (
@@ -332,7 +329,7 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
                 type="button"
                 onClick={() => toggleSafetyTag(tag)}
                 className={cn(
-                  'shrink-0 rounded-full border px-3 py-1 text-[12px] font-medium shadow-sm transition-colors sm:text-[13px]',
+                  'rounded-full border px-3 py-1 text-[12px] font-medium shadow-sm transition-colors sm:text-[13px]',
                   active
                     ? 'border-primary/30 bg-primary text-primary-foreground'
                     : 'border-border/70 bg-background/90 text-foreground hover:bg-muted/70',
@@ -343,7 +340,6 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
               </button>
             );
           })}
-        </div>
       </div>
 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,0.95fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,0.95fr)_auto]">
