@@ -13,9 +13,9 @@ import {
 } from '@/components/ui/select';
 import {
   ASSIGNABLE_ROLES,
-  setUserRole,
   type AssignableRole,
-} from '@/lib/actions/admin-roles';
+} from '@/lib/constants/roles';
+import { setUserRole } from '@/lib/actions/admin-roles';
 
 type Props = {
   userId: string;

@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Link } from '@/i18n/navigation';
 import { AdminBlockToggleButton } from '@/components/admin/block-toggle-button';
 import { RoleSelect } from '@/components/admin/role-select';
-import type { AssignableRole } from '@/lib/actions/admin-roles';
+import type { AssignableRole } from '@/lib/constants/roles';
 
 type ProfileRole = AssignableRole | 'system';
 

@@ -4,16 +4,9 @@ import { revalidatePath } from 'next/cache';
 import { locales } from '@/i18n/config';
 import { createClient } from '@/lib/supabase/server';
 import { getViewerContext } from '@/lib/server/viewer-context';
+import { ASSIGNABLE_ROLES, type AssignableRole } from '@/lib/constants/roles';
 
-/**
- * Roles that an admin is allowed to assign through the UI.
- * `'system'` is intentionally excluded — it's reserved for the
- * Афиша/system-events service account and shouldn't be reachable
- * by point-and-click. To create a `system` user, do it once in
- * SQL editor.
- */
-export const ASSIGNABLE_ROLES = ['user', 'moderator', 'admin'] as const;
-export type AssignableRole = (typeof ASSIGNABLE_ROLES)[number];
+export { ASSIGNABLE_ROLES, type AssignableRole };
 
 function isAssignableRole(value: unknown): value is AssignableRole {
   return (
