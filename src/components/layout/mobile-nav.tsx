@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+import { useTranslations, useLocale } from 'next-intl';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
@@ -22,9 +22,11 @@ import {
   Landmark,
   Newspaper,
   CalendarCheck,
+  Globe,
 } from 'lucide-react';
 import type { Profile } from '@/types/database';
 import { SITE_NAME } from '@/lib/constants';
+import { locales, localeNames, localeFlags, type Locale } from '@/i18n/config';
 
 interface MobileNavProps {
   user?: Profile | null;
@@ -33,7 +35,15 @@ interface MobileNavProps {
 export function MobileNav({ user }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const t = useTranslations('nav');
+  const locale = useLocale();
+  const pathname = usePathname();
+  const router = useRouter();
   const close = () => setOpen(false);
+
+  function handleLocaleChange(newLocale: Locale) {
+    router.replace(pathname, { locale: newLocale });
+    close();
+  }
 
   const initials = user
     ? user.display_name
@@ -164,6 +174,31 @@ export function MobileNav({ user }: MobileNavProps) {
               </Button>
             </>
           )}
+
+          {/* Language switcher */}
+          <Separator className="my-2" />
+          <div className="px-2 py-1">
+            <p className="mb-2 flex items-center gap-2 text-xs font-medium text-muted-foreground">
+              <Globe className="h-4 w-4" />
+              {t('language')}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {locales.map((loc) => (
+                <button
+                  key={loc}
+                  type="button"
+                  onClick={() => handleLocaleChange(loc)}
+                  className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
+                    locale === loc
+                      ? 'border-primary bg-primary text-primary-foreground'
+                      : 'border-border bg-background hover:bg-muted'
+                  }`}
+                >
+                  {localeFlags[loc]} {localeNames[loc]}
+                </button>
+              ))}
+            </div>
+          </div>
         </nav>
       </SheetContent>
     </Sheet>

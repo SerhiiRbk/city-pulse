@@ -70,7 +70,8 @@
     "cityEvents": "Stadtevents",
     "feed": "Feed",
     "admin": "Admin",
-    "myEvents": "Meine Veranstaltungen"
+    "myEvents": "Meine Veranstaltungen",
+    "language": "Sprache"
   },
   "landing": {
     "hero": {

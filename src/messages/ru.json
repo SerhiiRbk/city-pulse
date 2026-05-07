@@ -70,7 +70,8 @@
     "cityEvents": "Афиша",
     "feed": "Лента",
     "admin": "Админ",
-    "myEvents": "Мои мероприятия"
+    "myEvents": "Мои мероприятия",
+    "language": "Язык"
   },
   "landing": {
     "hero": {
