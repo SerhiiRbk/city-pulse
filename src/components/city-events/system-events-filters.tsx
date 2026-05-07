@@ -91,14 +91,13 @@ export function SystemEventsFilters({ currentFilters, initialCity }: SystemEvent
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      {/* Date presets — horizontal scroll on mobile */}
-      <div className="-mx-1 overflow-x-auto px-1 pb-1">
-        <div className="flex min-w-max gap-2">
+      {/* Date presets — wrap on mobile */}
+      <div className="flex flex-wrap gap-2 pb-1">
           <button
             type="button"
             onClick={() => pickPreset('any')}
             className={cn(
-              'shrink-0 rounded-full border px-3 py-1.5 text-[13px] font-medium shadow-sm transition-colors sm:text-sm',
+              'rounded-full border px-3 py-1.5 text-[13px] font-medium shadow-sm transition-colors sm:text-sm',
               !activePreset
                 ? 'border-primary/30 bg-primary text-primary-foreground'
                 : 'border-border/70 bg-background/90 text-foreground hover:bg-muted/70',
@@ -114,7 +113,7 @@ export function SystemEventsFilters({ currentFilters, initialCity }: SystemEvent
                 type="button"
                 onClick={() => pickPreset(preset)}
                 className={cn(
-                  'shrink-0 rounded-full border px-3 py-1.5 text-[13px] font-medium shadow-sm transition-colors sm:text-sm',
+                  'rounded-full border px-3 py-1.5 text-[13px] font-medium shadow-sm transition-colors sm:text-sm',
                   active
                     ? 'border-primary/30 bg-primary text-primary-foreground'
                     : 'border-border/70 bg-background/90 text-foreground hover:bg-muted/70',
@@ -125,7 +124,6 @@ export function SystemEventsFilters({ currentFilters, initialCity }: SystemEvent
               </button>
             );
           })}
-        </div>
       </div>
 
       {/* Country + City selectors */}
