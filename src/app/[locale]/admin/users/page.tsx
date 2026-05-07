@@ -28,12 +28,26 @@ export default async function AdminUsersPage({
 
   const supabase = await createClient();
   const viewer = await getViewerContext();
-  const { data: users, count } = await supabase
+  const { data: users, count, error } = await supabase
     .from('profiles')
     .select('id, display_name, email, avatar_url, role, city, country, is_available, is_blocked, created_at', { count: 'exact' })
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
 
+  if (error) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Users</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-destructive">Failed to load users: {error.message}</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const userList = Array.isArray(users) ? users : [];
   const totalPages = Math.ceil((count || 0) / limit);
 
   return (
@@ -43,7 +57,7 @@ export default async function AdminUsersPage({
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          {(users || []).map((u) => (
+          {userList.map((u) => (
             <div
               key={u.id}
               className="flex items-center gap-3 rounded-xl border p-3 transition-colors hover:bg-accent/40"
