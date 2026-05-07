@@ -6,8 +6,6 @@ import { createClient } from '@/lib/supabase/server';
 import { getViewerContext } from '@/lib/server/viewer-context';
 import { ASSIGNABLE_ROLES, type AssignableRole } from '@/lib/constants/roles';
 
-export { ASSIGNABLE_ROLES, type AssignableRole };
-
 function isAssignableRole(value: unknown): value is AssignableRole {
   return (
     typeof value === 'string' &&
