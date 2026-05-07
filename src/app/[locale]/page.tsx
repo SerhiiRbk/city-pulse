@@ -102,31 +102,31 @@ export default async function HomePage({
 
         <div className="relative z-10 container mx-auto px-4 pt-20 pb-16 md:pt-28 md:pb-24">
           <div className="grid items-end gap-12 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="max-w-3xl">
-              <Badge className="mb-5 border-white/15 bg-white/10 text-white backdrop-blur-sm">
-                <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-                {t('marketing.heroBadge')}
+            <div className="min-w-0">
+              <Badge className="mb-5 max-w-full border-white/15 bg-white/10 text-white backdrop-blur-sm">
+                <Sparkles className="mr-1.5 h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{t('marketing.heroBadge')}</span>
               </Badge>
-              <h1 className="max-w-2xl text-4xl font-extrabold tracking-tight text-white md:text-6xl">
+              <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-6xl">
                 {t('hero.title')}
               </h1>
-              <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/75 md:text-xl">
+              <p className="mt-5 text-base leading-relaxed text-white/75 sm:text-lg md:text-xl">
                 {t('hero.subtitle')}
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-6 flex flex-wrap gap-2 sm:mt-8 sm:gap-3">
                 {trustPoints.map((point) => (
                   <span
                     key={point}
-                    className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/90 backdrop-blur-sm"
+                    className="rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-xs text-white/90 backdrop-blur-sm sm:px-3 sm:py-1.5 sm:text-sm"
                   >
                     {point}
                   </span>
                 ))}
               </div>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button size="lg" asChild className="h-12 rounded-full px-8 text-base shadow-xl">
+              <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row">
+                <Button size="lg" asChild className="h-12 rounded-full px-6 text-sm shadow-xl sm:px-8 sm:text-base">
                   <Link href="/events" className="flex items-center gap-2">
                     {t('hero.cta')}
                     <ArrowRight className="h-4 w-4" />
@@ -138,7 +138,7 @@ export default async function HomePage({
               </div>
             </div>
 
-            <div className="lg:justify-self-end">
+            <div className="min-w-0 lg:justify-self-end">
               <Suspense fallback={null}>
                 <TonightInCity locale={locale} />
               </Suspense>

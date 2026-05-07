@@ -84,7 +84,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={`${sansFont.variable} ${monoFont.variable} font-sans antialiased`}>
+      <body className={`${sansFont.variable} ${monoFont.variable} font-sans antialiased overflow-x-hidden`}>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider
             attribute="class"
