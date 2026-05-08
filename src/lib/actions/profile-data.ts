@@ -119,20 +119,19 @@ export async function getProfileCreatedEvents(userId: string) {
 }
 
 /**
- * Returns upcoming system events the user marked as `interested`.
+ * Returns upcoming system events the user marked as `going`.
  *
  * Used by the personal "В календаре" section on /events/my — system events
- * cannot be RSVP'd to, so an "interested" row is the user's only commitment
- * signal and forms a personal city-events agenda. Past events are intentionally
+ * use the unified 'going' RSVP status. Past events are intentionally
  * excluded since the section is forward-looking.
  */
-export async function getProfileInterestedSystemEvents(userId: string) {
+export async function getProfileGoingSystemEvents(userId: string) {
   const supabase = await createClient();
   const { data: rows } = await supabase
     .from('event_attendees')
     .select('event_id')
     .eq('user_id', userId)
-    .eq('status', 'interested');
+    .eq('status', 'going');
 
   if (!rows || rows.length === 0) return [];
 

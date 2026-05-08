@@ -5,10 +5,9 @@ import { Link } from '@/i18n/navigation';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Heart, MapPin, Calendar, Users, Globe, Sparkles, Star } from 'lucide-react';
+import { Heart, MapPin, Calendar, Users, Globe, Sparkles } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import {
-  setInterest,
   toggleAttendance,
   toggleFavorite,
   type AttendanceStatus,
@@ -77,21 +76,20 @@ export function EventCard({
       return country ? ((country as Record<string, string>)[locale] || country.en) : event.country;
     })()
     : '';
+  const isSystem = !!event.is_system;
+  // System events only use 'going' status — ignore interested for display
   const initialStatus: AttendanceStatus = initialGoing
     ? 'going'
     : initialWait
       ? 'waitlist'
-      : initialInterested
+      : (!isSystem && initialInterested)
         ? 'interested'
         : 'none';
   const [status, setStatus] = useState<AttendanceStatus>(initialStatus);
-  const isSystem = !!event.is_system;
-  const isInterested = status === 'interested';
   const going = status === 'going';
   const onWaitlist = status === 'waitlist';
   const [favorited, setFavorited] = useState(initialFav || false);
   const [goingCount, setGoingCount] = useState(event.going_count);
-  const [interestedCount, setInterestedCount] = useState(event.interested_count ?? 0);
   const languageLabels = (event.languages || [])
     .map((code) => {
       const language = LANGUAGES.find((item) => item.code === code);
@@ -143,26 +141,7 @@ export function EventCard({
     else toast.success(tDetail('cancelledAttendance'));
   }
 
-  async function handleToggleInterest(e: React.MouseEvent) {
-    e.preventDefault();
-    if (!isAuthenticated) return;
-    const prev = status;
-    const next: AttendanceStatus = prev === 'interested' ? 'none' : 'interested';
-    setStatus(next);
-    if (next === 'interested') setInterestedCount((c) => c + 1);
-    else if (prev === 'interested') setInterestedCount((c) => Math.max(0, c - 1));
 
-    const result = await setInterest(event.id, next === 'interested');
-    if (result.error) {
-      setStatus(prev);
-      if (next === 'interested') setInterestedCount((c) => Math.max(0, c - 1));
-      else if (prev === 'interested') setInterestedCount((c) => c + 1);
-      return;
-    }
-    setStatus(result.status ?? 'none');
-    if (next === 'interested') toast.success(tDetail('markedInterested'));
-    else toast.success(tDetail('unmarkedInterested'));
-  }
 
   function getRelativeTime(dateStr: string): string | null {
     const now = new Date();
@@ -275,32 +254,18 @@ export function EventCard({
             ) : (
               <span />
             )}
-            {/*
-             * Counter row: community events highlight headcount + capacity, but
-             * system events have no capacity ownership, so we show "interested"
-             * as the social signal instead.
-             */}
             <div className="text-muted-foreground flex items-center gap-1.5 text-xs font-medium">
-              {isSystem ? (
-                <>
-                  <Star className="h-3.5 w-3.5" />
-                  <span>{interestedCount}</span>
-                </>
-              ) : (
-                <>
-                  <Users className="h-3.5 w-3.5" />
-                  <span>{goingCount}</span>
-                  {spotsLeft !== null && spotsLeft > 0 && spotsLeft <= 5 && (
-                    <Badge variant="destructive" className="ml-1 px-1.5 py-0 text-[10px]">
-                      {t('spotsLeft', { count: spotsLeft })}
-                    </Badge>
-                  )}
-                  {spotsLeft !== null && spotsLeft <= 0 && (
-                    <Badge variant="destructive" className="ml-1 px-1.5 py-0 text-[10px]">
-                      {t('noSpotsLeft')}
-                    </Badge>
-                  )}
-                </>
+              <Users className="h-3.5 w-3.5" />
+              <span>{goingCount}</span>
+              {!isSystem && spotsLeft !== null && spotsLeft > 0 && spotsLeft <= 5 && (
+                <Badge variant="destructive" className="ml-1 px-1.5 py-0 text-[10px]">
+                  {t('spotsLeft', { count: spotsLeft })}
+                </Badge>
+              )}
+              {!isSystem && spotsLeft !== null && spotsLeft <= 0 && (
+                <Badge variant="destructive" className="ml-1 px-1.5 py-0 text-[10px]">
+                  {t('noSpotsLeft')}
+                </Badge>
               )}
             </div>
           </div>
@@ -350,42 +315,24 @@ export function EventCard({
             <FriendsGoingCue friends={friendsGoing} variant="card" className="mb-2" />
           )}
 
-          {/*
-           * Bottom CTA: community events use the going/waitlist join button;
-           * system events get a soft "Interested" toggle instead, mirroring
-           * the action bar on the event detail page.
-           */}
           {isAuthenticated && (
             <div className="mt-auto flex justify-end">
-              {isSystem ? (
-                <Button
-                  size="sm"
-                  variant={isInterested ? 'secondary' : 'default'}
-                  className="w-full rounded-xl font-semibold"
-                  onClick={handleToggleInterest}
-                  aria-pressed={isInterested}
-                >
-                  <Star
-                    className={`mr-1.5 h-4 w-4 ${isInterested ? 'fill-amber-400 text-amber-500' : ''}`}
-                  />
-                  {isInterested ? t('interested') : t('markInterested')}
-                </Button>
-              ) : (
-                <Button
-                  size="sm"
-                  variant={going || onWaitlist ? 'secondary' : 'default'}
-                  className="w-full rounded-xl font-semibold"
-                  onClick={handleToggleGoing}
-                >
-                  {going
-                    ? t('going')
-                    : onWaitlist
-                      ? t('onWaitlist')
+              <Button
+                size="sm"
+                variant={going || onWaitlist ? 'secondary' : 'default'}
+                className="w-full rounded-xl font-semibold"
+                onClick={handleToggleGoing}
+              >
+                {going
+                  ? t('going')
+                  : onWaitlist
+                    ? t('onWaitlist')
+                    : isSystem
+                      ? t('join')
                       : isFull
                         ? t('joinWaitlist')
                         : t('join')}
-                </Button>
-              )}
+              </Button>
             </div>
           )}
         </div>

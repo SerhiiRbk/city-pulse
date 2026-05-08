@@ -5,7 +5,6 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Heart, Hourglass, Share2, Star, UserCheck, UserPlus } from 'lucide-react';
 import {
-  setInterest,
   toggleAttendance,
   toggleFavorite,
   type AttendanceStatus,
@@ -70,17 +69,7 @@ export function EventActions({
   async function handleToggleInterest() {
     if (!isAuthenticated) return;
     if (status === 'going' || status === 'waitlist') return;
-    const prev = status;
-    const next: AttendanceStatus = prev === 'interested' ? 'none' : 'interested';
-    setStatus(next);
-    const result = await setInterest(eventId, next === 'interested');
-    if (result.error) {
-      setStatus(prev);
-      return;
-    }
-    setStatus(result.status ?? 'none');
-    if (next === 'interested') toast.success(tDetail('markedInterested'));
-    else toast.success(tDetail('unmarkedInterested'));
+    // TODO: setInterest removed — this handler will be cleaned up in task 3.2
   }
 
   async function handleToggleFavorite() {

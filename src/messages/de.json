@@ -286,8 +286,6 @@
       "registeredForEvent": "Du bist angemeldet!",
       "cancelledAttendance": "Teilnahme abgesagt",
       "addedToWaitlist": "Auf die Warteliste gesetzt — du rückst nach, sobald ein Platz frei wird",
-      "markedInterested": "Als interessant markiert",
-      "unmarkedInterested": "Nicht mehr interessiert",
       "breadcrumbs": "Veranstaltungen",
       "popularCue": "Beliebte Veranstaltung zum Kennenlernen und Austauschen",
       "soloCue": "Leicht beizutreten, auch wenn du allein kommst",
@@ -305,7 +303,6 @@
       "spotsLeft": "{count, plural, one {# Platz frei} other {# Plätze frei}}",
       "noSpotsLeft": "Keine Plätze frei",
       "waitlistCount": "{count, plural, one {# auf Warteliste} other {# auf Warteliste}}",
-      "interestedCount": "{count, plural, one {# interessiert} other {# interessiert}}",
       "reviewsCount": "{rating} ({count, plural, one {# Bewertung} other {# Bewertungen}})",
       "moreAttendees": "+{count} weitere Teilnehmende",
       "noComments": "Noch keine Kommentare.",
@@ -331,10 +328,6 @@
       "systemEditorialSubtitle": "Wir veranstalten dieses Event nicht — wir helfen dir nur, es nicht zu verpassen.",
       "goWithGroupNew": "Gemeinsam hingehen",
       "goWithGroupExisting": "Einer Gruppe beitreten"
-    },
-    "systemActions": {
-      "interested": "Du hast Interesse",
-      "markInterested": "Interesse merken"
     },
     "meetup": {
       "sectionLabel": "Gemeinsam hingehen",
@@ -431,7 +424,7 @@
       "draftsDescription": "Nur du siehst sie. Veröffentliche sie, sobald du bereit bist, Gäste einzuladen.",
       "savedLabel": "Im Kalender",
       "savedTitle": "{count, plural, one {# gespeicherte Stadt-Veranstaltung} other {# gespeicherte Stadt-Veranstaltungen}}",
-      "savedDescription": "Redaktionelle Veranstaltungen, die du dir gemerkt hast — direkt neben deinen eigenen.",
+      "savedDescription": "Redaktionelle Veranstaltungen, zu denen du gehst — direkt neben deinen eigenen.",
       "emptyTitle": "Du hast noch keine Veranstaltungen organisiert",
       "emptyDescription": "Sobald du Veranstaltungen erstellst oder moderierst, erscheinen sie hier zur einfachen Verwaltung.",
       "stats": {
@@ -1199,7 +1192,6 @@
   },
   "friends": {
     "goingCue": "{count, plural, one {# Bekannte:r geht} other {# Bekannte gehen}}",
-    "interestedCue": "{count, plural, one {# Bekannte:r interessiert} other {# Bekannte interessiert}}",
     "noFollowingYet": "Folge ein paar Organisator:innen, um zu sehen, wer wohin geht."
   },
   "safety": {

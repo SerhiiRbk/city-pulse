@@ -286,8 +286,6 @@
       "registeredForEvent": "Jste přihlášeni na akci!",
       "cancelledAttendance": "Účast zrušena",
       "addedToWaitlist": "Přidáno na čekací listinu — přesuneme vás, jakmile se uvolní místo",
-      "markedInterested": "Označeno jako zajímavé",
-      "unmarkedInterested": "Již nezajímá",
       "breadcrumbs": "Akce",
       "popularCue": "Oblíbená společenská akce",
       "soloCue": "Snadné připojení, i když jdete sami",
@@ -305,7 +303,6 @@
       "spotsLeft": "{count, plural, one {# místo zbývá} few {# místa zbývají} other {# míst zbývá}}",
       "noSpotsLeft": "Žádná volná místa",
       "waitlistCount": "{count, plural, one {# na čekací listině} few {# na čekací listině} other {# na čekací listině}}",
-      "interestedCount": "{count, plural, one {# má zájem} few {# mají zájem} other {# má zájem}}",
       "reviewsCount": "{rating} ({count, plural, one {# recenze} few {# recenze} other {# recenzí}})",
       "moreAttendees": "+{count} dalších účastníků",
       "noComments": "Zatím žádné komentáře.",
@@ -331,10 +328,6 @@
       "systemEditorialSubtitle": "Tuto akci nepořádáme — jen vám pomáháme, abyste ji nezmeškali.",
       "goWithGroupNew": "Jdeme ve skupině",
       "goWithGroupExisting": "Přidat se ke skupině"
-    },
-    "systemActions": {
-      "interested": "Máte zájem",
-      "markInterested": "Mám zájem"
     },
     "meetup": {
       "sectionLabel": "Jdeme spolu",
@@ -431,7 +424,7 @@
       "draftsDescription": "Vidíte je jen vy. Publikujte je, až budete připraveni pozvat lidi.",
       "savedLabel": "V kalendáři",
       "savedTitle": "{count, plural, one {# uložená městská akce} few {# uložené městské akce} other {# uložených městských akcí}}",
-      "savedDescription": "Akce z plakátu, které jste si označili jako zajímavé. Najdete je vedle vlastních akcí.",
+      "savedDescription": "Akce z plakátu, na které jdete. Najdete je vedle vlastních akcí.",
       "emptyTitle": "Zatím jste žádné akce nepořádali",
       "emptyDescription": "Jakmile vytvoříte nebo budete moderovat akci, zobrazí se zde pro snadnou správu.",
       "stats": {
@@ -1199,7 +1192,6 @@
   },
   "friends": {
     "goingCue": "{count, plural, one {# známý jde} few {# známých jde} many {# známých jde} other {# známých jde}}",
-    "interestedCue": "{count, plural, one {# známého zaujalo} few {# známých zaujalo} many {# známých zaujalo} other {# známých zaujalo}}",
     "noFollowingYet": "Sledujte organizátory, abyste viděli, kam kdo jde."
   },
   "safety": {

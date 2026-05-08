@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { getUser } from '@/lib/actions/auth';
 import {
   getProfileCreatedEvents,
-  getProfileInterestedSystemEvents,
+  getProfileGoingSystemEvents,
 } from '@/lib/actions/profile-data';
 import { getUserEventStatuses } from '@/lib/actions/events';
 import { EventCard } from '@/components/events/event-card';
@@ -69,7 +69,7 @@ export default async function MyEventsPage({
 
   const [events, savedSystemEvents, calendarToken] = await Promise.all([
     getProfileCreatedEvents(user.id),
-    getProfileInterestedSystemEvents(user.id),
+    getProfileGoingSystemEvents(user.id),
     ensureCalendarToken(),
   ]);
 

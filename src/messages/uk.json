@@ -286,8 +286,6 @@
       "registeredForEvent": "Ви записалися на захід!",
       "cancelledAttendance": "Участь скасовано",
       "addedToWaitlist": "Додано до списку очікування — вас переведуть, коли звільниться місце",
-      "markedInterested": "Позначено як цікаве",
-      "unmarkedInterested": "Більше не цікаво",
       "breadcrumbs": "Події",
       "popularCue": "Популярний захід для знайомств і спілкування",
       "soloCue": "Легко долучитися, навіть якщо ви йдете самі",
@@ -305,7 +303,6 @@
       "spotsLeft": "{count, plural, one {# місце залишилось} few {# місця залишилось} other {# місць залишилось}}",
       "noSpotsLeft": "Вільних місць немає",
       "waitlistCount": "{count, plural, one {# у списку очікування} few {# у списку очікування} other {# у списку очікування}}",
-      "interestedCount": "{count, plural, one {# цікавиться} few {# цікавляться} other {# цікавляться}}",
       "reviewsCount": "{rating} ({count, plural, one {# відгук} few {# відгуки} other {# відгуків}})",
       "moreAttendees": "Ще +{count} учасників",
       "noComments": "Коментарів поки немає.",
@@ -331,10 +328,6 @@
       "systemEditorialSubtitle": "Ми не організовуємо цю подію — просто допомагаємо не пропустити її.",
       "goWithGroupNew": "Ідемо компанією",
       "goWithGroupExisting": "Долучитися до компанії"
-    },
-    "systemActions": {
-      "interested": "Вам цікаво",
-      "markInterested": "У календар"
     },
     "meetup": {
       "sectionLabel": "Ідемо разом",
@@ -431,7 +424,7 @@
       "draftsDescription": "Бачите тільки ви. Опублікуйте, коли будете готові запросити людей.",
       "savedLabel": "У календарі",
       "savedTitle": "{count, plural, one {# подія з афіші} few {# події з афіші} many {# подій з афіші} other {# подій з афіші}}",
-      "savedDescription": "Події з афіші, які ви позначили як цікаві. Вони поряд із вашими власними заходами.",
+      "savedDescription": "Події з афіші, на які ви йдете. Вони поряд із вашими власними заходами.",
       "emptyTitle": "Ви ще не організовували заходів",
       "emptyDescription": "Щойно ви створите захід або станете його модератором, він з'явиться тут.",
       "stats": {
@@ -1199,7 +1192,6 @@
   },
   "friends": {
     "goingCue": "{count, plural, one {# знайомий іде} few {# знайомих ідуть} many {# знайомих ідуть} other {# знайомих ідуть}}",
-    "interestedCue": "{count, plural, one {# знайомому цікаво} few {# знайомим цікаво} many {# знайомим цікаво} other {# знайомим цікаво}}",
     "noFollowingYet": "Підпишіться на організаторів, щоб бачити, хто куди йде."
   },
   "safety": {
