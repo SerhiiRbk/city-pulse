@@ -56,7 +56,7 @@ export async function getCachedLandingStats(): Promise<LandingStats> {
   const supabase = createPublicClient();
   const nowIso = new Date().toISOString();
 
-  const [eventsRes, groupsRes, membersRes, groupCitiesRes] = await Promise.all([
+  const [eventsRes, groupsRes, membersRes, groupCitiesRes, eventCitiesRes] = await Promise.all([
     supabase
       .from('events')
       .select('id', { count: 'exact', head: true })
@@ -78,13 +78,26 @@ export async function getCachedLandingStats(): Promise<LandingStats> {
       .select('city_id')
       .eq('is_blocked', false)
       .not('city_id', 'is', null),
+    supabase
+      .from('events')
+      .select('city')
+      .eq('status', 'published')
+      .eq('is_private', false)
+      .eq('is_blocked', false)
+      .gte('ends_at', nowIso)
+      .not('city', 'is', null),
   ]);
 
-  const citySet = new Set(
-    (groupCitiesRes.data ?? [])
-      .map((row) => (row as { city_id: string | null }).city_id)
-      .filter(Boolean),
-  );
+  // Combine unique cities from both groups and events
+  const citySet = new Set<string>();
+  for (const row of groupCitiesRes.data ?? []) {
+    const cityId = (row as { city_id: string | null }).city_id;
+    if (cityId) citySet.add(cityId);
+  }
+  for (const row of eventCitiesRes.data ?? []) {
+    const city = (row as { city: string | null }).city;
+    if (city) citySet.add(city);
+  }
 
   return {
     events: eventsRes.count ?? 0,
