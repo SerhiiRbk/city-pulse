@@ -35,6 +35,7 @@ import {
 
 import { CrewMemberList } from '@/components/crew/CrewMemberList';
 import { CrewJoinRequestCard } from '@/components/crew/CrewJoinRequestCard';
+import { InviteLinkManager } from '@/components/crew/InviteLinkManager';
 
 import {
   deleteCrew,
@@ -91,13 +92,15 @@ export interface CrewPanelProps {
   myRole: CrewRole;
   currentUserId: string;
   eventId: string;
+  eventName?: string;
+  isEventEnded?: boolean;
 }
 
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
-export function CrewPanel({ crew, myRole, currentUserId, eventId }: CrewPanelProps) {
+export function CrewPanel({ crew, myRole, currentUserId, eventId, eventName, isEventEnded }: CrewPanelProps) {
   const t = useTranslations('crew');
   const router = useRouter();
 
@@ -413,6 +416,19 @@ export function CrewPanel({ crew, myRole, currentUserId, eventId }: CrewPanelPro
           actionLoading={actionLoading}
         />
       </section>
+
+      {/* Invite Link Manager (Host/Moderator only) */}
+      {canManage && eventName && (
+        <InviteLinkManager
+          crewId={crew.id}
+          crewName={crew.name}
+          eventName={eventName}
+          userRole={myRole as 'host' | 'moderator'}
+          userId={currentUserId}
+          isCrewFull={crew.participant_count >= crew.capacity}
+          isEventEnded={isEventEnded ?? false}
+        />
+      )}
 
       {/* Pending Invitations (Host/Moderator) */}
       {canManage &&

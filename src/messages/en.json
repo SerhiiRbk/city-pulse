@@ -1345,5 +1345,65 @@
     "delete_crew_confirm_description": "This will permanently delete the crew, all messages, and remove all members. This action cannot be undone.",
     "request_accepted": "Join request accepted",
     "request_rejected": "Join request declined"
+  },
+  "invite": {
+    "error": {
+      "invalid": "This invite link is invalid.",
+      "invalidTitle": "Invalid Link",
+      "expired": "This invite link has expired. Ask the sender to generate a new one.",
+      "expiredTitle": "Link Expired",
+      "revoked": "This invite link is no longer valid.",
+      "revokedTitle": "Link Revoked",
+      "crewDeleted": "This crew no longer exists.",
+      "crewDeletedTitle": "Crew Not Found",
+      "crewArchived": "This crew is archived. Joining is not possible.",
+      "crewArchivedTitle": "Crew Archived",
+      "crewFull": "The crew is already full. No spots available.",
+      "crewFullTitle": "Crew Full",
+      "eventEnded": "The event has already ended. Joining the crew is not possible.",
+      "eventEndedTitle": "Event Ended",
+      "cannotJoin": "You cannot join this crew.",
+      "cannotJoinTitle": "Cannot Join",
+      "alreadyInCrew": "You are already in another crew for this event. Leave your current crew to join this one.",
+      "organizerCannotJoin": "Event organizers cannot join crews."
+    },
+    "generate": {
+      "crewFull": "Cannot generate invite link: the crew is full.",
+      "crewArchived": "Cannot generate invite link: the crew is archived.",
+      "maxLinks": "Maximum number of active invite links reached (5).",
+      "invitationLimit": "The crew has reached its invitation limit (20).",
+      "rateLimited": "Too many links generated recently. Please try again later.",
+      "eventEnded": "Cannot generate invite link: the event has ended."
+    },
+    "revoke": {
+      "notAuthorized": "You do not have permission to revoke this link."
+    },
+    "share": {
+      "clipboardFailed": "Could not copy the link to clipboard.",
+      "copySuccess": "Invite link copied to clipboard!",
+      "copyButton": "Copy link",
+      "shareButton": "Share",
+      "shareText": "Join the crew \"{crewName}\" for {eventName}! {url}"
+    },
+    "join": {
+      "confirmTitle": "Join crew",
+      "confirmMessage": "Would you like to join the crew \"{crewName}\" for the event \"{eventName}\" by invitation from {inviterName}?",
+      "joinButton": "Join",
+      "declineButton": "Decline",
+      "joining": "Joining..."
+    },
+    "manage": {
+      "title": "Invite Links",
+      "generateButton": "Generate Invite Link",
+      "revokeButton": "Revoke",
+      "activeLinks": "Active links",
+      "noLinks": "No active invite links",
+      "createdBy": "Created by {name}",
+      "expiresAt": "Expires {date}",
+      "useCount": "{count, plural, one {# use} other {# uses}}"
+    },
+    "notification": {
+      "joinedViaLink": "{userName} joined via invite link from {inviterName}"
+    }
   }
 }

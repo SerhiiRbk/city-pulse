@@ -1325,5 +1325,65 @@
     "delete_crew_confirm_description": "Dies löscht die Crew, alle Nachrichten und entfernt alle Mitglieder dauerhaft. Diese Aktion kann nicht rückgängig gemacht werden.",
     "request_accepted": "Beitrittsanfrage angenommen",
     "request_rejected": "Beitrittsanfrage abgelehnt"
+  },
+  "invite": {
+    "error": {
+      "invalid": "Dieser Einladungslink ist ungültig.",
+      "invalidTitle": "Ungültiger Link",
+      "expired": "Dieser Einladungslink ist abgelaufen. Bitten Sie den Absender, einen neuen zu erstellen.",
+      "expiredTitle": "Link abgelaufen",
+      "revoked": "Dieser Einladungslink ist nicht mehr gültig.",
+      "revokedTitle": "Link widerrufen",
+      "crewDeleted": "Diese Crew existiert nicht mehr.",
+      "crewDeletedTitle": "Crew nicht gefunden",
+      "crewArchived": "Diese Crew ist archiviert. Ein Beitritt ist nicht möglich.",
+      "crewArchivedTitle": "Crew archiviert",
+      "crewFull": "Die Crew ist bereits voll. Keine Plätze verfügbar.",
+      "crewFullTitle": "Crew voll",
+      "eventEnded": "Das Event ist bereits beendet. Ein Beitritt zur Crew ist nicht möglich.",
+      "eventEndedTitle": "Event beendet",
+      "cannotJoin": "Sie können dieser Crew nicht beitreten.",
+      "cannotJoinTitle": "Beitritt nicht möglich",
+      "alreadyInCrew": "Sie sind bereits in einer anderen Crew für dieses Event. Verlassen Sie Ihre aktuelle Crew, um dieser beizutreten.",
+      "organizerCannotJoin": "Event-Organisatoren können keiner Crew beitreten."
+    },
+    "generate": {
+      "crewFull": "Einladungslink kann nicht erstellt werden: Die Crew ist voll.",
+      "crewArchived": "Einladungslink kann nicht erstellt werden: Die Crew ist archiviert.",
+      "maxLinks": "Maximale Anzahl aktiver Einladungslinks erreicht (5).",
+      "invitationLimit": "Die Crew hat ihr Einladungslimit erreicht (20).",
+      "rateLimited": "Zu viele Links in letzter Zeit erstellt. Bitte versuchen Sie es später erneut.",
+      "eventEnded": "Einladungslink kann nicht erstellt werden: Das Event ist beendet."
+    },
+    "revoke": {
+      "notAuthorized": "Sie haben keine Berechtigung, diesen Link zu widerrufen."
+    },
+    "share": {
+      "clipboardFailed": "Der Link konnte nicht in die Zwischenablage kopiert werden.",
+      "copySuccess": "Einladungslink in die Zwischenablage kopiert!",
+      "copyButton": "Link kopieren",
+      "shareButton": "Teilen",
+      "shareText": "Tritt der Crew \u201E{crewName}\u201C f\u00FCr {eventName} bei! {url}"
+    },
+    "join": {
+      "confirmTitle": "Crew beitreten",
+      "confirmMessage": "M\u00F6chten Sie der Crew \u201E{crewName}\u201C f\u00FCr das Event \u201E{eventName}\u201C auf Einladung von {inviterName} beitreten?",
+      "joinButton": "Beitreten",
+      "declineButton": "Ablehnen",
+      "joining": "Beitritt läuft..."
+    },
+    "manage": {
+      "title": "Einladungslinks",
+      "generateButton": "Einladungslink erstellen",
+      "revokeButton": "Widerrufen",
+      "activeLinks": "Aktive Links",
+      "noLinks": "Keine aktiven Einladungslinks",
+      "createdBy": "Erstellt von {name}",
+      "expiresAt": "Läuft ab am {date}",
+      "useCount": "{count, plural, one {# Nutzung} other {# Nutzungen}}"
+    },
+    "notification": {
+      "joinedViaLink": "{userName} ist über einen Einladungslink von {inviterName} beigetreten"
+    }
   }
 }

@@ -406,6 +406,34 @@ export interface EventCrewMessage {
   created_at: string;
 }
 
+export type CrewInviteLinkStatus = 'active' | 'revoked' | 'expired' | 'deactivated';
+
+export interface CrewInviteLink {
+  id: string;
+  crew_id: string;
+  created_by: string;
+  token: string;
+  status: CrewInviteLinkStatus;
+  use_count: number;
+  created_at: string;
+  expires_at: string;
+  revoked_at: string | null;
+}
+
+export interface CrewInviteLinkJoin {
+  id: string;
+  link_id: string;
+  user_id: string;
+  joined_at: string;
+}
+
+export interface CrewKickedMember {
+  crew_id: string;
+  user_id: string;
+  kicked_at: string;
+  kicked_by: string;
+}
+
 export interface UserContact {
   owner_id: string;
   contact_id: string;

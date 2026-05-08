@@ -15,6 +15,13 @@ export async function GET(request: Request) {
       if (type === 'recovery') {
         return NextResponse.redirect(`${origin}/${locale}/profile/edit`);
       }
+
+      // Honor redirectTo param (e.g. from invite link flow)
+      const redirectTo = searchParams.get('redirectTo');
+      if (redirectTo && redirectTo.startsWith('/')) {
+        return NextResponse.redirect(`${origin}/${locale}${redirectTo}`);
+      }
+
       return NextResponse.redirect(`${origin}/${locale}`);
     }
   }

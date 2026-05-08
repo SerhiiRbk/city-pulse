@@ -25,3 +25,9 @@ export const MAX_INVITATIONS_PER_CREW = 20;
 
 // Maximum active crews a single user can create
 export const MAX_ACTIVE_CREWS_PER_USER = 10;
+
+// Invite link constraints
+export const MAX_ACTIVE_INVITE_LINKS_PER_CREW = 5;
+export const INVITE_LINK_EXPIRY_DAYS = 7;
+export const INVITE_LINK_TOKEN_BYTES = 36; // produces 48 base64url chars
+export const MAX_INVITE_LINK_GENERATIONS_PER_24H = 10;

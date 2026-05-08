@@ -1325,5 +1325,65 @@
     "delete_crew_confirm_description": "Toto trvale smaže crew, všechny zprávy a odebere všechny členy. Tuto akci nelze vrátit.",
     "request_accepted": "Žádost o připojení přijata",
     "request_rejected": "Žádost o připojení zamítnuta"
+  },
+  "invite": {
+    "error": {
+      "invalid": "Tento odkaz na pozvánku je neplatný.",
+      "invalidTitle": "Neplatný odkaz",
+      "expired": "Tento odkaz na pozvánku vypršel. Požádejte odesílatele o vytvoření nového.",
+      "expiredTitle": "Odkaz vypršel",
+      "revoked": "Tento odkaz na pozvánku již není platný.",
+      "revokedTitle": "Odkaz odvolán",
+      "crewDeleted": "Tato crew již neexistuje.",
+      "crewDeletedTitle": "Crew nenalezena",
+      "crewArchived": "Tato crew je archivována. Připojení není možné.",
+      "crewArchivedTitle": "Crew archivována",
+      "crewFull": "Crew je již plná. Žádná volná místa.",
+      "crewFullTitle": "Crew je plná",
+      "eventEnded": "Akce již skončila. Připojení ke crew není možné.",
+      "eventEndedTitle": "Akce skončila",
+      "cannotJoin": "Nemůžete se připojit k této crew.",
+      "cannotJoinTitle": "Nelze se připojit",
+      "alreadyInCrew": "Již jste v jiné crew pro tuto akci. Opusťte svou současnou crew, abyste se mohli připojit k této.",
+      "organizerCannotJoin": "Organizátoři akcí se nemohou připojit ke crew."
+    },
+    "generate": {
+      "crewFull": "Nelze vytvořit odkaz: crew je plná.",
+      "crewArchived": "Nelze vytvořit odkaz: crew je archivována.",
+      "maxLinks": "Dosažen maximální počet aktivních odkazů (5).",
+      "invitationLimit": "Crew dosáhla limitu pozvánek (20).",
+      "rateLimited": "Příliš mnoho odkazů vytvořeno v poslední době. Zkuste to prosím později.",
+      "eventEnded": "Nelze vytvořit odkaz: akce skončila."
+    },
+    "revoke": {
+      "notAuthorized": "Nemáte oprávnění zrušit tento odkaz."
+    },
+    "share": {
+      "clipboardFailed": "Odkaz se nepodařilo zkopírovat do schránky.",
+      "copySuccess": "Odkaz na pozvánku zkopírován!",
+      "copyButton": "Kopírovat odkaz",
+      "shareButton": "Sdílet",
+      "shareText": "P\u0159ipoj se ke crew \u201E{crewName}\u201C na {eventName}! {url}"
+    },
+    "join": {
+      "confirmTitle": "Připojit se ke crew",
+      "confirmMessage": "Chcete se p\u0159ipojit ke crew \u201E{crewName}\u201C na akci \u201E{eventName}\u201C na pozv\u00E1n\u00ED od {inviterName}?",
+      "joinButton": "Připojit se",
+      "declineButton": "Odmítnout",
+      "joining": "Připojování..."
+    },
+    "manage": {
+      "title": "Odkazy na pozvánky",
+      "generateButton": "Vytvořit odkaz na pozvánku",
+      "revokeButton": "Zrušit",
+      "activeLinks": "Aktivní odkazy",
+      "noLinks": "Žádné aktivní odkazy na pozvánky",
+      "createdBy": "Vytvořil(a) {name}",
+      "expiresAt": "Vyprší {date}",
+      "useCount": "{count, plural, one {# použití} few {# použití} many {# použití} other {# použití}}"
+    },
+    "notification": {
+      "joinedViaLink": "{userName} se připojil(a) přes odkaz od {inviterName}"
+    }
   }
 }

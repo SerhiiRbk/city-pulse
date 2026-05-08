@@ -2,6 +2,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { redirect } from '@/i18n/navigation';
 import { getUser } from '@/lib/actions/auth';
 import { getCrewDetails } from '@/lib/actions/crew';
+import { getEventRaw } from '@/lib/actions/events';
 import { CrewPanel } from '@/components/crew/CrewPanel';
 import { CrewChat } from '@/components/crew/CrewChat';
 
@@ -27,6 +28,13 @@ export default async function CrewDetailPage({ params }: Props) {
 
   const { crew, myRole } = result;
   const isArchived = crew.status === 'archived';
+
+  // Fetch event data for invite link management
+  const event = await getEventRaw(eventId);
+  const eventName = event?.title ?? '';
+  const isEventEnded = event?.starts_at && event?.duration_minutes
+    ? new Date(event.starts_at).getTime() + event.duration_minutes * 60 * 1000 < Date.now()
+    : false;
 
   // 4. Map crew data to CrewPanel props format
   const panelCrew = {
@@ -66,6 +74,8 @@ export default async function CrewDetailPage({ params }: Props) {
             myRole={myRole}
             currentUserId={user!.id}
             eventId={eventId}
+            eventName={eventName}
+            isEventEnded={isEventEnded}
           />
         </div>
 

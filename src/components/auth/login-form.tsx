@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,6 +17,8 @@ import { toast } from 'sonner';
 export function LoginForm() {
   const t = useTranslations('auth.login');
   const locale = useLocale();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirectTo') || undefined;
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
@@ -36,7 +39,7 @@ export function LoginForm() {
       return;
     }
 
-    const result = await signIn({ ...data, locale });
+    const result = await signIn({ ...data, locale, redirectTo });
 
     if (result?.error) {
       toast.error(result.error);
@@ -46,7 +49,7 @@ export function LoginForm() {
 
   async function handleGoogleLogin() {
     setIsGoogleLoading(true);
-    const result = await signInWithGoogle(locale);
+    const result = await signInWithGoogle(locale, redirectTo);
     if (result?.error) {
       toast.error(result.error);
       setIsGoogleLoading(false);
@@ -145,7 +148,10 @@ export function LoginForm() {
       <CardFooter className="justify-center">
         <p className="text-muted-foreground text-sm">
           {t('noAccount')}{' '}
-          <Link href="/register" className="text-primary font-medium hover:underline">
+          <Link
+            href={redirectTo ? `/register?redirectTo=${encodeURIComponent(redirectTo)}` : '/register'}
+            className="text-primary font-medium hover:underline"
+          >
             {t('signUp')}
           </Link>
         </p>
