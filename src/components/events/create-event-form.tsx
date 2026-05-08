@@ -92,6 +92,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
   const [isOnline, setIsOnline] = useState(false);
   const [isFree, setIsFree] = useState(true);
   const [isPrivate, setIsPrivate] = useState(false);
+  const [allowCrews, setAllowCrews] = useState(true);
   const [safetyTags, setSafetyTags] = useState<SafetyTag[]>([]);
   const [recurrence, setRecurrence] = useState<RecurrenceState>({ frequency: 'none' });
   const [descriptionDoc, setDescriptionDoc] = useState<RichTextDoc>(EMPTY_DESCRIPTION_DOC);
@@ -234,6 +235,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
         : [],
       group_id: selectedGroupId !== '__personal' ? selectedGroupId : null,
       safety_tags: safetyTags,
+      allow_crews: allowCrews,
     };
 
     if (!data.title || !data.starts_at || !primaryCategory) {
@@ -466,6 +468,13 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
               <p className="text-muted-foreground text-xs">{t('privateHint')}</p>
             </div>
             <Switch id="is_private" checked={isPrivate} onCheckedChange={setIsPrivate} />
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <Label htmlFor="allow_crews">{t('allowCrews')}</Label>
+              <p className="text-muted-foreground text-xs">{t('allowCrewsHint')}</p>
+            </div>
+            <Switch id="allow_crews" checked={allowCrews} onCheckedChange={setAllowCrews} />
           </div>
           <div className="space-y-2">
             <Label>{tSafety('inputLabel')}</Label>

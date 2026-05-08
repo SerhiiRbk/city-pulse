@@ -134,6 +134,12 @@ export interface Event {
    */
   safety_tags: SafetyTag[];
   /**
+   * Whether crews can be created for this event.
+   * Always treated as `true` for system events (is_system = true)
+   * regardless of stored value. Community event organizers toggle this.
+   */
+  allow_crews: boolean;
+  /**
    * Set when this event is one occurrence of a recurring series.
    * NULL for stand-alone events. See migration 055 for the
    * `event_series` parent row and `series_position`.
@@ -336,5 +342,72 @@ export interface UserBadge {
 export interface UserSubscription {
   subscriber_id: string;
   target_user_id: string;
+  created_at: string;
+}
+
+export type CrewRole = 'host' | 'moderator' | 'member';
+export type CrewVisibility = 'public' | 'private';
+export type CrewStatus = 'active' | 'archived';
+export type CrewInvitationStatus = 'pending' | 'accepted' | 'declined' | 'cancelled';
+export type CrewJoinRequestStatus = 'pending' | 'accepted' | 'rejected' | 'cancelled';
+
+export interface EventCrew {
+  id: string;
+  event_id: string;
+  host_id: string;
+  name: string;
+  description: string;
+  capacity: number;
+  languages: string[];
+  visibility: CrewVisibility;
+  status: CrewStatus;
+  participant_count: number;
+  created_at: string;
+  updated_at: string;
+  archived_at: string | null;
+}
+
+export interface EventCrewMember {
+  crew_id: string;
+  user_id: string;
+  role: CrewRole;
+  joined_at: string;
+}
+
+export interface EventCrewInvitation {
+  id: string;
+  crew_id: string;
+  inviter_id: string;
+  invitee_id: string;
+  message: string | null;
+  message_is_custom: boolean;
+  status: CrewInvitationStatus;
+  created_at: string;
+  responded_at: string | null;
+}
+
+export interface EventCrewJoinRequest {
+  id: string;
+  crew_id: string;
+  requester_id: string;
+  message: string | null;
+  status: CrewJoinRequestStatus;
+  created_at: string;
+  responded_at: string | null;
+  responded_by: string | null;
+}
+
+export interface EventCrewMessage {
+  id: string;
+  crew_id: string;
+  sender_id: string | null;
+  content: string;
+  is_system: boolean;
+  created_at: string;
+}
+
+export interface UserContact {
+  owner_id: string;
+  contact_id: string;
   created_at: string;
 }

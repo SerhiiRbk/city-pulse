@@ -93,6 +93,7 @@ export function EditEventForm({ event, interests, categories, moderators: initia
   const [isOnline, setIsOnline] = useState(event.is_online);
   const [isFree, setIsFree] = useState(event.is_free);
   const [isPrivate, setIsPrivate] = useState(event.is_private);
+  const [allowCrews, setAllowCrews] = useState(event.allow_crews ?? true);
   const [safetyTags, setSafetyTags] = useState<SafetyTag[]>(
     Array.isArray(event.safety_tags) ? (event.safety_tags as SafetyTag[]) : [],
   );
@@ -289,6 +290,7 @@ export function EditEventForm({ event, interests, categories, moderators: initia
           ? [photos[coverIndex], ...photos.filter((_, i) => i !== coverIndex)]
           : [],
       safety_tags: safetyTags,
+      allow_crews: allowCrews,
     };
 
     const result = await updateEvent(event.id, data);
@@ -502,6 +504,15 @@ export function EditEventForm({ event, interests, categories, moderators: initia
             </div>
             <Switch id="is_private" checked={isPrivate} onCheckedChange={setIsPrivate} />
           </div>
+          {!event.is_system && (
+            <div className="flex items-center justify-between">
+              <div>
+                <Label htmlFor="allow_crews">{t('allowCrews')}</Label>
+                <p className="text-muted-foreground text-xs">{t('allowCrewsHint')}</p>
+              </div>
+              <Switch id="allow_crews" checked={allowCrews} onCheckedChange={setAllowCrews} />
+            </div>
+          )}
           <div className="space-y-2">
             <Label>{tSafety('inputLabel')}</Label>
             <p className="text-muted-foreground text-xs">{tSafety('inputHint')}</p>

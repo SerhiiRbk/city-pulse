@@ -17,7 +17,7 @@ import { Logo } from '@/components/ui/logo';
 import { MobileNav } from './mobile-nav';
 import { NotificationBell } from '@/components/notifications/notification-bell';
 import { HeaderMessagesButton } from '@/components/messages/header-messages-button';
-import { CalendarDays, Users, MapPin, Plus, LogOut, User, Settings, Landmark, ShieldCheck, Newspaper, CalendarCheck } from 'lucide-react';
+import { CalendarDays, Users, MapPin, Plus, LogOut, User, Settings, Landmark, ShieldCheck, Newspaper, CalendarCheck, UserRound } from 'lucide-react';
 import type { Profile } from '@/types/database';
 
 interface HeaderProps {
@@ -113,6 +113,7 @@ export function Header({ user }: HeaderProps) {
 
 function UserMenu({ user }: { user: Profile }) {
   const t = useTranslations('nav');
+  const tCrew = useTranslations('crew');
 
   const initials = user.display_name
     .split(' ')
@@ -147,6 +148,18 @@ function UserMenu({ user }: { user: Profile }) {
           <Link href="/events/my" className="flex items-center gap-2">
             <CalendarCheck className="h-4 w-4" />
             {t('myEvents')}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/profile/crews" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            {tCrew('my_crews')}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/profile/contacts" className="flex items-center gap-2">
+            <UserRound className="h-4 w-4" />
+            {tCrew('contacts')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>

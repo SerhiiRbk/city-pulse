@@ -35,6 +35,8 @@ import type { RichTextDoc } from '@/lib/rich-text/types';
 import { getFriendsGoing } from '@/lib/actions/friends-going';
 import { FriendsGoingCue } from '@/components/events/friends-going-cue';
 import { isFeatureEnabled } from '@/lib/feature-flags';
+import { getCrewsForEvent } from '@/lib/actions/crew';
+import { CrewEventBlock } from '@/components/crew/CrewEventBlock';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Locale } from '@/i18n/config';
@@ -148,6 +150,11 @@ export default async function EventDetailPage({ params }: Props) {
     user && (await isFeatureEnabled('friends_going', user.id))
       ? await getFriendsGoing(id, 6)
       : [];
+  // Crew data (gated by event_crews_enabled feature flag)
+  const crewsEnabled = await isFeatureEnabled('event_crews_enabled', user?.id ?? null);
+  const crewData = crewsEnabled
+    ? await getCrewsForEvent({ event_id: id })
+    : null;
   const roster = canManageAttendance ? await getEventRoster(id) : [];
   const rosterEntries: RosterEntry[] = roster.map((row) => {
     const profile = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
@@ -319,7 +326,8 @@ export default async function EventDetailPage({ params }: Props) {
            * community events already are the meetup, so a recursive shelf
            * here would be confusing.
            */}
-          {isSystemEvent && (
+          {/* Legacy meetup hub — only shown when crew feature is NOT enabled */}
+          {isSystemEvent && !crewData && (
             <SystemEventMeetups
               parentEvent={{
                 id: event.id,
@@ -329,6 +337,20 @@ export default async function EventDetailPage({ params }: Props) {
                 address: event.address,
               }}
               isAuthenticated={isAuthenticated}
+            />
+          )}
+
+          {/* Crew "Пойти вместе" block — replaces meetups when event_crews_enabled */}
+          {crewData && (event.allow_crews || isSystemEvent) && (
+            <CrewEventBlock
+              eventId={id}
+              eventTitle={event.title}
+              publicCrews={crewData.publicCrews}
+              crewCount={crewData.crewCount}
+              myCrewId={crewData.myCrewId}
+              isOrganizer={isOrganizer}
+              isSystemEvent={isSystemEvent}
+              allowCrews={isSystemEvent || !!event.allow_crews}
             />
           )}
 

@@ -23,6 +23,7 @@ import {
   Newspaper,
   CalendarCheck,
   Globe,
+  UserRound,
 } from 'lucide-react';
 import type { Profile } from '@/types/database';
 import { SITE_NAME } from '@/lib/constants';
@@ -35,6 +36,7 @@ interface MobileNavProps {
 export function MobileNav({ user }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const t = useTranslations('nav');
+  const tCrew = useTranslations('crew');
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
@@ -135,6 +137,18 @@ export function MobileNav({ user }: MobileNavProps) {
                 <Link href="/events/my" className="flex items-center gap-3">
                   <CalendarCheck className="h-5 w-5" />
                   {t('myEvents')}
+                </Link>
+              </Button>
+              <Button variant="ghost" className="justify-start" asChild onClick={close}>
+                <Link href="/profile/crews" className="flex items-center gap-3">
+                  <Users className="h-5 w-5" />
+                  {tCrew('my_crews')}
+                </Link>
+              </Button>
+              <Button variant="ghost" className="justify-start" asChild onClick={close}>
+                <Link href="/profile/contacts" className="flex items-center gap-3">
+                  <UserRound className="h-5 w-5" />
+                  {tCrew('contacts')}
                 </Link>
               </Button>
               <Button variant="ghost" className="justify-start" asChild onClick={close}>

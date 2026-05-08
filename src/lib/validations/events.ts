@@ -60,6 +60,12 @@ const baseEventFields = {
    * enforces the same set via a CHECK constraint (migration 050).
    */
   safety_tags: z.array(z.enum(safetyTagValues)).max(SAFETY_TAGS.length).default([]),
+  /**
+   * Whether crews can be created for this event.
+   * Defaults to true for community events. System events always
+   * allow crews regardless of this value.
+   */
+  allow_crews: z.boolean().default(true),
 };
 
 export const createEventSchema = z
