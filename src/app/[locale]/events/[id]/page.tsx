@@ -348,6 +348,7 @@ export default async function EventDetailPage({ params }: Props) {
               isOrganizer={isOrganizer}
               isSystemEvent={isSystemEvent}
               allowCrews={isSystemEvent || !!event.allow_crews}
+              isAuthenticated={isAuthenticated}
             />
           )}
 

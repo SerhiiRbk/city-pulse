@@ -29,6 +29,7 @@ interface CrewEventBlockProps {
   isOrganizer: boolean;
   isSystemEvent?: boolean;
   allowCrews: boolean;
+  isAuthenticated?: boolean;
 }
 
 /**
@@ -47,13 +48,14 @@ export function CrewEventBlock({
   isOrganizer,
   isSystemEvent = false,
   allowCrews,
+  isAuthenticated = true,
 }: CrewEventBlockProps) {
   const t = useTranslations('crew');
   const [joining, setJoining] = useState<string | null>(null);
 
   // For system events, the "organizer" is just the admin who created it,
   // so they should still be able to create crews.
-  const showCreateButton = allowCrews && !(isOrganizer && !isSystemEvent) && !myCrewId;
+  const showCreateButton = allowCrews && !(isOrganizer && !isSystemEvent) && !myCrewId && isAuthenticated;
 
   async function handleRequestJoin(crewId: string) {
     setJoining(crewId);
@@ -89,6 +91,15 @@ export function CrewEventBlock({
         {showCreateButton && (
           <CrewCreateDialog eventId={eventId} eventTitle={eventTitle} />
         )}
+
+        {/* Login CTA for unauthenticated users */}
+        {!isAuthenticated && allowCrews && (
+          <Button variant="outline" size="sm" asChild className="rounded-xl">
+            <Link href={`/login?redirectTo=/events/${eventId}`}>
+              {t('ctaLogin')}
+            </Link>
+          </Button>
+        )}
       </div>
 
       {/* Aggregate crew count */}
@@ -121,7 +132,7 @@ export function CrewEventBlock({
               languages={crew.languages}
               capacity={crew.capacity}
               participant_count={crew.participant_count}
-              onRequestJoin={joining === crew.id ? undefined : handleRequestJoin}
+              onRequestJoin={isAuthenticated && joining !== crew.id ? handleRequestJoin : undefined}
               isUserInCrew={!!myCrewId}
             />
           ))}

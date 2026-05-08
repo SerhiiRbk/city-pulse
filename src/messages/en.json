@@ -1272,6 +1272,7 @@
     "crew_deleted": "The crew \"{crewName}\" has been deleted by the host",
     "crew_full": "Crew is full",
     "create_crew_button": "Create a Crew",
+    "ctaLogin": "Log in to create a crew",
     "request_to_join": "Request to join",
     "go_together_title": "Go together",
     "go_together_description": "Don't want to go alone? Create a small crew or join people who are already going to this event.",

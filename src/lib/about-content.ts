@@ -27,6 +27,7 @@ const aboutEn: AboutContent = {
       paragraphs: [
         'We surface curated city events ("Афиша") for the cities we cover, and we make it easy for community organizers to publish their own meetups, walks, language exchanges, and clubs.',
         'Members can RSVP, see who else is coming, message organizers, save events to a personal calendar (with native subscriptions for Google Calendar, Apple Calendar, and Outlook), and follow recurring groups that match their interests.',
+        'Our Crew feature lets you create a small group (2–10 people) to attend any event together. Invite friends via a shareable link, coordinate in a private group chat, and show up as a team. It is the easiest way to turn "I want to go but not alone" into an actual plan.',
       ],
     },
     {
@@ -74,6 +75,7 @@ const aboutRu: AboutContent = {
       paragraphs: [
         'Мы собираем кураторскую афишу мероприятий по городам, которые покрываем, и даём организаторам сообществ простой способ публиковать свои встречи, прогулки, языковые клубы и регулярные собрания.',
         'Участники могут отвечать на приглашения, видеть кто ещё идёт, писать организаторам, сохранять события в свой календарь (с подпиской через Google/Apple/Outlook) и подписываться на регулярные группы по интересам.',
+        'Функция «Компания» позволяет собрать небольшую группу (2–10 человек) и пойти на любое мероприятие вместе. Пригласите друзей по ссылке, договоритесь в приватном чате и приходите командой. Это самый простой способ превратить «хочу пойти, но не один» в реальный план.',
       ],
     },
     {
@@ -121,6 +123,7 @@ const aboutUk: AboutContent = {
       paragraphs: [
         'Ми збираємо редакційну афішу подій у містах, які покриваємо, і даємо організаторам спільнот простий спосіб публікувати свої зустрічі, прогулянки, мовні клуби та регулярні зустрічі.',
         'Учасники можуть відповідати на запрошення, бачити хто ще йде, писати організаторам, зберігати події у власний календар (з підпискою через Google/Apple/Outlook) і підписуватися на регулярні групи за інтересами.',
+        'Функція «Компанія» дозволяє зібрати невелику групу (2–10 осіб) і піти на будь-яку подію разом. Запросіть друзів за посиланням, домовтеся у приватному чаті та приходьте командою. Це найпростіший спосіб перетворити «хочу піти, але не сам» на реальний план.',
       ],
     },
     {
@@ -168,6 +171,7 @@ const aboutCs: AboutContent = {
       paragraphs: [
         'Sestavujeme redakční afiši ("Афиша") pro města, která pokrýváme, a dáváme komunitním organizátorům jednoduchý způsob, jak publikovat vlastní setkání, procházky, jazykové výměny a kluby.',
         'Členové mohou potvrdit účast, vidět kdo další přijde, psát organizátorům, ukládat akce do osobního kalendáře (s nativní synchronizací do Google Calendar, Apple Calendar a Outlook) a sledovat opakující se skupiny podle zájmů.',
+        'Funkce „Crew" (parta) umožňuje vytvořit malou skupinu (2–10 lidí) a jít na jakoukoli akci společně. Pozvěte přátele přes sdílený odkaz, domluvte se v soukromém skupinovém chatu a přijďte jako tým. Je to nejjednodušší způsob, jak proměnit „chci jít, ale ne sám" ve skutečný plán.',
       ],
     },
     {
@@ -215,6 +219,7 @@ const aboutDe: AboutContent = {
       paragraphs: [
         'Wir kuratieren redaktionelle Stadtveranstaltungen ("Афиша") für die Städte, die wir abdecken, und ermöglichen Community-Organisatoren, ihre eigenen Treffen, Spaziergänge, Sprach­tandems und Clubs einfach zu veröffentlichen.',
         'Mitglieder können zusagen, sehen wer noch kommt, Organisatoren anschreiben, Events in ihren persönlichen Kalender speichern (mit nativer Anbindung an Google Calendar, Apple Calendar und Outlook) und wiederkehrenden Gruppen nach Interessen folgen.',
+        'Unsere Crew-Funktion ermöglicht es, eine kleine Gruppe (2–10 Personen) zu erstellen und gemeinsam zu jeder Veranstaltung zu gehen. Laden Sie Freunde per teilbarem Link ein, koordinieren Sie sich im privaten Gruppenchat und erscheinen Sie als Team. Es ist der einfachste Weg, „Ich will hin, aber nicht allein" in einen konkreten Plan zu verwandeln.',
       ],
     },
     {

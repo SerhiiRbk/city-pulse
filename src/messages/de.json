@@ -1271,6 +1271,7 @@
     "crew_deleted": "Die Gruppe \u201E{crewName}\u201C wurde vom Host gelöscht",
     "crew_full": "Gruppe ist voll",
     "create_crew_button": "Gruppe erstellen",
+    "ctaLogin": "Anmelden, um eine Gruppe zu erstellen",
     "request_to_join": "Beitritt anfragen",
     "go_together_title": "Zusammen gehen",
     "go_together_description": "Möchtest du nicht alleine gehen? Erstelle eine kleine Gruppe oder schließe dich Leuten an, die bereits zu diesem Event gehen.",
