@@ -24,6 +24,7 @@ export default async function CrewDetailPage({ params }: Props) {
   // 3. If user is not a member or crew not found, redirect to event page
   if (result.error || !result.crew || !result.myRole) {
     redirect({ href: `/events/${eventId}`, locale });
+    return null;
   }
 
   const { crew, myRole } = result;
