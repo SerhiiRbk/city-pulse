@@ -286,8 +286,6 @@
       "registeredForEvent": "Jste přihlášeni na akci!",
       "cancelledAttendance": "Účast zrušena",
       "addedToWaitlist": "Přidáno na čekací listinu — přesuneme vás, jakmile se uvolní místo",
-      "markedInterested": "Označeno jako zajímavé",
-      "unmarkedInterested": "Již nezajímá",
       "breadcrumbs": "Akce",
       "popularCue": "Oblíbená společenská akce",
       "soloCue": "Snadné připojení, i když jdete sami",
@@ -305,7 +303,6 @@
       "spotsLeft": "{count, plural, one {# místo zbývá} few {# místa zbývají} other {# míst zbývá}}",
       "noSpotsLeft": "Žádná volná místa",
       "waitlistCount": "{count, plural, one {# na čekací listině} few {# na čekací listině} other {# na čekací listině}}",
-      "interestedCount": "{count, plural, one {# má zájem} few {# mají zájem} other {# má zájem}}",
       "reviewsCount": "{rating} ({count, plural, one {# recenze} few {# recenze} other {# recenzí}})",
       "moreAttendees": "+{count} dalších účastníků",
       "noComments": "Zatím žádné komentáře.",
@@ -331,10 +328,6 @@
       "systemEditorialSubtitle": "Tuto akci nepořádáme — jen vám pomáháme, abyste ji nezmeškali.",
       "goWithGroupNew": "Jdeme ve skupině",
       "goWithGroupExisting": "Přidat se ke skupině"
-    },
-    "systemActions": {
-      "interested": "Máte zájem",
-      "markInterested": "Mám zájem"
     },
     "meetup": {
       "sectionLabel": "Jdeme spolu",
@@ -431,7 +424,7 @@
       "draftsDescription": "Vidíte je jen vy. Publikujte je, až budete připraveni pozvat lidi.",
       "savedLabel": "V kalendáři",
       "savedTitle": "{count, plural, one {# uložená městská akce} few {# uložené městské akce} other {# uložených městských akcí}}",
-      "savedDescription": "Akce z plakátu, které jste si označili jako zajímavé. Najdete je vedle vlastních akcí.",
+      "savedDescription": "Akce z plakátu, na které jdete. Najdete je vedle vlastních akcí.",
       "emptyTitle": "Zatím jste žádné akce nepořádali",
       "emptyDescription": "Jakmile vytvoříte nebo budete moderovat akci, zobrazí se zde pro snadnou správu.",
       "stats": {
@@ -540,6 +533,8 @@
       "clickMap": "Klikněte na mapu pro výběr místa",
       "isPrivate": "Soukromá akce",
       "privateHint": "Přístup pouze přes speciální odkaz",
+      "allowCrews": "Povolit účast ve skupině",
+      "allowCrewsHint": "Účastníci mohou vytvářet malé skupiny pro společnou návštěvu",
       "photos": "Fotografie (max 5)",
       "group": "Vytvořit jménem",
       "personalEvent": "Osobní akce",
@@ -962,7 +957,14 @@
     "chatDeclinedBody": "Vaše žádost o konverzaci byla odmítnuta.",
     "spotsAlmost": "Zbývá pouze {count} míst!",
     "reminder24h": "Zítra akce: {name}",
-    "reminder2h": "Akce za 2 hodiny: {name}"
+    "reminder2h": "Akce za 2 hodiny: {name}",
+    "crewInvitation": "Byli jste pozváni do skupiny",
+    "crewJoinRequest": "Nová žádost o připojení k vaší skupině",
+    "crewJoinAccepted": "Vaše žádost o připojení byla přijata",
+    "crewJoinRejected": "Vaše žádost o připojení byla zamítnuta",
+    "crewMemberJoined": "Nový člen se připojil k vaší skupině",
+    "crewMemberLeft": "Člen opustil vaši skupinu",
+    "crewDeleted": "Skupina, ve které jste byli, byla smazána"
   },
   "cityEvents": {
     "title": "Městské akce",
@@ -1190,7 +1192,6 @@
   },
   "friends": {
     "goingCue": "{count, plural, one {# známý jde} few {# známých jde} many {# známých jde} other {# známých jde}}",
-    "interestedCue": "{count, plural, one {# známého zaujalo} few {# známých zaujalo} many {# známých zaujalo} other {# známých zaujalo}}",
     "noFollowingYet": "Sledujte organizátory, abyste viděli, kam kdo jde."
   },
   "safety": {
@@ -1256,6 +1257,134 @@
         "subscribeSuccess": "Push-oznámení zapnuto",
         "unsubscribeSuccess": "Push-oznámení vypnuto"
       }
+    }
+  },
+  "crew": {
+    "invitation_default": "{hostName} vás zve do party na {eventTitle}",
+    "join_request_accepted": "Vaše žádost o vstup do \u201E{crewName}\u201C byla přijata",
+    "join_request_rejected": "Vaše žádost o vstup do \u201E{crewName}\u201C byla zamítnuta",
+    "crew_created": "Skupina vytvořena",
+    "member_joined": "{userName} se připojil ke skupině",
+    "member_left": "{userName} opustil skupinu",
+    "member_removed": "{userName} byl odebrán ze skupiny",
+    "host_updated_description": "Hostitel aktualizoval popis skupiny",
+    "crew_deleted": "Skupina \u201E{crewName}\u201C byla smazána hostitelem",
+    "crew_full": "Skupina je plná",
+    "create_crew_button": "Vytvořit skupinu",
+    "ctaLogin": "Přihlaste se pro vytvoření skupiny",
+    "request_to_join": "Požádat o vstup",
+    "go_together_title": "Jít společně",
+    "go_together_description": "Nechcete jít sami? Vytvořte malou skupinu nebo se připojte k lidem, kteří se na tuto akci už chystají.",
+    "spots_available": "{current}/{max} míst",
+    "spots_full": "{max}/{max} plno",
+    "crews_count": "{count} skupin",
+    "leave_crew": "Opustit skupinu",
+    "delete_crew": "Smazat skupinu",
+    "invite_members": "Pozvat členy",
+    "pending_invitations": "Čekající pozvánky",
+    "pending_requests": "Čekající žádosti",
+    "accept": "Přijmout",
+    "decline": "Odmítnout",
+    "reject": "Zamítnout",
+    "promote_moderator": "Povýšit na moderátora",
+    "demote_moderator": "Snížit na člena",
+    "remove_member": "Odebrat ze skupiny",
+    "my_crews": "Moje skupiny",
+    "contacts": "Kontakty",
+    "add_contact": "Přidat kontakt",
+    "remove_contact": "Odebrat kontakt",
+    "search_contacts": "Hledat kontakty",
+    "no_crews": "Zatím nemáte žádné skupiny",
+    "no_contacts": "Zatím nemáte žádné kontakty",
+    "archived": "Archivované",
+    "active": "Aktivní",
+    "role_host": "Hostitel",
+    "role_moderator": "Moderátor",
+    "role_member": "Člen",
+    "member_actions": "Akce s členem",
+    "load_more_messages": "Načíst starší zprávy",
+    "no_messages_yet": "Zatím žádné zprávy. Začněte konverzaci!",
+    "chat_archived": "Tato crew je archivována. Chat je pouze ke čtení.",
+    "type_message": "Napište zprávu...",
+    "edit_settings": "Upravit nastavení",
+    "settings_title": "Nastavení crew",
+    "settings_saved": "Nastavení uloženo",
+    "settings_save_error": "Nepodařilo se uložit nastavení",
+    "save_settings": "Uložit",
+    "visibility_public": "Veřejná",
+    "visibility_private": "Soukromá",
+    "members_title": "Členové ({count})",
+    "you": "vy",
+    "promote_moderator_success": "Člen povýšen na moderátora",
+    "demote_moderator_success": "Moderátor degradován na člena",
+    "remove_member_success": "Člen odebrán z crew",
+    "leave_crew_success": "Opustili jste crew",
+    "delete_crew_success": "Crew smazána",
+    "leave_crew_confirm_title": "Opustit crew?",
+    "leave_crew_confirm_description": "Ztratíte přístup k chatu a seznamu členů. Tuto akci nelze vrátit.",
+    "delete_crew_confirm_title": "Smazat crew?",
+    "delete_crew_confirm_description": "Toto trvale smaže crew, všechny zprávy a odebere všechny členy. Tuto akci nelze vrátit.",
+    "request_accepted": "Žádost o připojení přijata",
+    "request_rejected": "Žádost o připojení zamítnuta"
+  },
+  "invite": {
+    "error": {
+      "invalid": "Tento odkaz na pozvánku je neplatný.",
+      "invalidTitle": "Neplatný odkaz",
+      "expired": "Tento odkaz na pozvánku vypršel. Požádejte odesílatele o vytvoření nového.",
+      "expiredTitle": "Odkaz vypršel",
+      "revoked": "Tento odkaz na pozvánku již není platný.",
+      "revokedTitle": "Odkaz odvolán",
+      "crewDeleted": "Tato crew již neexistuje.",
+      "crewDeletedTitle": "Crew nenalezena",
+      "crewArchived": "Tato crew je archivována. Připojení není možné.",
+      "crewArchivedTitle": "Crew archivována",
+      "crewFull": "Crew je již plná. Žádná volná místa.",
+      "crewFullTitle": "Crew je plná",
+      "eventEnded": "Akce již skončila. Připojení ke crew není možné.",
+      "eventEndedTitle": "Akce skončila",
+      "cannotJoin": "Nemůžete se připojit k této crew.",
+      "cannotJoinTitle": "Nelze se připojit",
+      "alreadyInCrew": "Již jste v jiné crew pro tuto akci. Opusťte svou současnou crew, abyste se mohli připojit k této.",
+      "organizerCannotJoin": "Organizátoři akcí se nemohou připojit ke crew."
+    },
+    "generate": {
+      "crewFull": "Nelze vytvořit odkaz: crew je plná.",
+      "crewArchived": "Nelze vytvořit odkaz: crew je archivována.",
+      "maxLinks": "Dosažen maximální počet aktivních odkazů (5).",
+      "invitationLimit": "Crew dosáhla limitu pozvánek (20).",
+      "rateLimited": "Příliš mnoho odkazů vytvořeno v poslední době. Zkuste to prosím později.",
+      "eventEnded": "Nelze vytvořit odkaz: akce skončila."
+    },
+    "revoke": {
+      "notAuthorized": "Nemáte oprávnění zrušit tento odkaz."
+    },
+    "share": {
+      "clipboardFailed": "Odkaz se nepodařilo zkopírovat do schránky.",
+      "copySuccess": "Odkaz na pozvánku zkopírován!",
+      "copyButton": "Kopírovat odkaz",
+      "shareButton": "Sdílet",
+      "shareText": "P\u0159ipoj se ke crew \u201E{crewName}\u201C na {eventName}! {url}"
+    },
+    "join": {
+      "confirmTitle": "Připojit se ke crew",
+      "confirmMessage": "Chcete se p\u0159ipojit ke crew \u201E{crewName}\u201C na akci \u201E{eventName}\u201C na pozv\u00E1n\u00ED od {inviterName}?",
+      "joinButton": "Připojit se",
+      "declineButton": "Odmítnout",
+      "joining": "Připojování..."
+    },
+    "manage": {
+      "title": "Odkazy na pozvánky",
+      "generateButton": "Vytvořit odkaz na pozvánku",
+      "revokeButton": "Zrušit",
+      "activeLinks": "Aktivní odkazy",
+      "noLinks": "Žádné aktivní odkazy na pozvánky",
+      "createdBy": "Vytvořil(a) {name}",
+      "expiresAt": "Vyprší {date}",
+      "useCount": "{count, plural, one {# použití} few {# použití} many {# použití} other {# použití}}"
+    },
+    "notification": {
+      "joinedViaLink": "{userName} se připojil(a) přes odkaz od {inviterName}"
     }
   }
 }

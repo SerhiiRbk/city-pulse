@@ -35,6 +35,8 @@ import type { RichTextDoc } from '@/lib/rich-text/types';
 import { getFriendsGoing } from '@/lib/actions/friends-going';
 import { FriendsGoingCue } from '@/components/events/friends-going-cue';
 import { isFeatureEnabled } from '@/lib/feature-flags';
+import { getCrewsForEvent } from '@/lib/actions/crew';
+import { CrewEventBlock } from '@/components/crew/CrewEventBlock';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
 import type { Locale } from '@/i18n/config';
@@ -135,7 +137,6 @@ export default async function EventDetailPage({ params }: Props) {
   const spotsLeft = event.max_attendees ? event.max_attendees - (event.going_count || 0) : null;
   const isFull = event.max_attendees != null && (spotsLeft ?? 0) <= 0;
   const waitlistCount = event.waitlist_count ?? 0;
-  const interestedCount = event.interested_count ?? 0;
   // For system events we surface a "Going with a group" CTA in the sidebar;
   // the count drives the pill so users can tell at a glance whether
   // someone has already started a meetup.
@@ -148,6 +149,11 @@ export default async function EventDetailPage({ params }: Props) {
     user && (await isFeatureEnabled('friends_going', user.id))
       ? await getFriendsGoing(id, 6)
       : [];
+  // Crew data (gated by event_crews_enabled feature flag)
+  const crewsEnabled = await isFeatureEnabled('event_crews_enabled', user?.id ?? null);
+  const crewData = crewsEnabled
+    ? await getCrewsForEvent({ event_id: id })
+    : null;
   const roster = canManageAttendance ? await getEventRoster(id) : [];
   const rosterEntries: RosterEntry[] = roster.map((row) => {
     const profile = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
@@ -289,9 +295,7 @@ export default async function EventDetailPage({ params }: Props) {
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Users className="h-4 w-4" />
                 <span>
-                  {isSystemEvent
-                    ? t('interestedCount', { count: interestedCount })
-                    : t('goingCount', { count: event.going_count || 0 })}
+                  {t('goingCount', { count: event.going_count || 0 })}
                 </span>
               </div>
             </div>
@@ -319,7 +323,8 @@ export default async function EventDetailPage({ params }: Props) {
            * community events already are the meetup, so a recursive shelf
            * here would be confusing.
            */}
-          {isSystemEvent && (
+          {/* Legacy meetup hub — only shown when crew feature is NOT enabled */}
+          {isSystemEvent && !crewData && (
             <SystemEventMeetups
               parentEvent={{
                 id: event.id,
@@ -328,6 +333,21 @@ export default async function EventDetailPage({ params }: Props) {
                 city: event.city,
                 address: event.address,
               }}
+              isAuthenticated={isAuthenticated}
+            />
+          )}
+
+          {/* Crew "Пойти вместе" block — replaces meetups when event_crews_enabled */}
+          {crewData && (event.allow_crews || isSystemEvent) && (
+            <CrewEventBlock
+              eventId={id}
+              eventTitle={event.title}
+              publicCrews={crewData.publicCrews}
+              crewCount={crewData.crewCount}
+              myCrewId={crewData.myCrewId}
+              isOrganizer={isOrganizer}
+              isSystemEvent={isSystemEvent}
+              allowCrews={isSystemEvent || !!event.allow_crews}
               isAuthenticated={isAuthenticated}
             />
           )}
@@ -541,12 +561,11 @@ export default async function EventDetailPage({ params }: Props) {
                   <Users className="text-muted-foreground h-5 w-5 shrink-0" />
                   <div>
                     {/*
-                     * Counter for community events shows "X going" + spots/waitlist;
-                     * system events have no attendance ownership, so we surface the
-                     * "interested" count as the headline number instead.
+                     * Counter shows "X going" + spots/waitlist for community events;
+                     * system events show going count as the headline number.
                      */}
                     {isSystemEvent ? (
-                      <p className="text-sm">{t('interestedCount', { count: interestedCount })}</p>
+                      <p className="text-sm">{t('goingCount', { count: event.going_count || 0 })}</p>
                     ) : (
                       <>
                         <p className="text-sm">{t('goingCount', { count: event.going_count || 0 })}</p>
@@ -558,11 +577,6 @@ export default async function EventDetailPage({ params }: Props) {
                         {waitlistCount > 0 && (
                           <p className="text-muted-foreground text-xs">
                             {t('waitlistCount', { count: waitlistCount })}
-                          </p>
-                        )}
-                        {interestedCount > 0 && (
-                          <p className="text-muted-foreground text-xs">
-                            {t('interestedCount', { count: interestedCount })}
                           </p>
                         )}
                       </>

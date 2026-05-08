@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Heart, Share2, Star, Users } from 'lucide-react';
+import { Heart, Share2, UserCheck, UserPlus, Users } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import {
-  setInterest,
+  toggleAttendance,
   toggleFavorite,
   type AttendanceStatus,
 } from '@/lib/actions/events';
@@ -42,10 +42,9 @@ interface SystemEventActionsProps {
 }
 
 /**
- * Action bar for system events (Афиша). The platform does not own attendance
- * for these listings, so we never offer "Going" / "Waitlist" — only:
+ * Action bar for system events (Афиша). Provides:
  *   - Save to calendar (Google / Apple / .ics)
- *   - "Interested" toggle (soft signal, used for personal feeds + counters)
+ *   - "Going" toggle (same as community events)
  *   - Favorite (private bookmark)
  *   - Share
  *   - Optional "Going with a group" CTA that opens the meetup composer.
@@ -57,26 +56,31 @@ export function SystemEventActions({
   isAuthenticated,
   meetupCta,
 }: SystemEventActionsProps) {
-  const t = useTranslations('events.systemActions');
+  const t = useTranslations('events.card');
   const tDetail = useTranslations('events.detail');
   const tCommon = useTranslations('common');
 
   const [status, setStatus] = useState<AttendanceStatus>(initialStatus ?? 'none');
   const [favorited, setFavorited] = useState(initialFavorited);
 
-  async function handleToggleInterest() {
+  async function handleToggleGoing() {
     if (!isAuthenticated) return;
     const prev = status;
-    const next: AttendanceStatus = prev === 'interested' ? 'none' : 'interested';
-    setStatus(next);
-    const result = await setInterest(event.id, next === 'interested');
+    // Optimistic: going → none, otherwise → going (no waitlist for system events)
+    const optimistic: AttendanceStatus = prev === 'going' ? 'none' : 'going';
+    setStatus(optimistic);
+    const result = await toggleAttendance(event.id);
     if (result.error) {
       setStatus(prev);
       return;
     }
-    setStatus(result.status ?? 'none');
-    if (next === 'interested') toast.success(tDetail('markedInterested'));
-    else toast.success(tDetail('unmarkedInterested'));
+    const next = result.status ?? 'none';
+    setStatus(next);
+    if (next === 'going') {
+      toast.success(tDetail('registeredForEvent'));
+    } else {
+      toast.success(tDetail('cancelledAttendance'));
+    }
   }
 
   async function handleToggleFavorite() {
@@ -103,30 +107,33 @@ export function SystemEventActions({
     }
   }
 
-  const isInterested = status === 'interested';
+  const isGoing = status === 'going';
+
+  const goingLabel = isGoing ? t('going') : t('join');
+  const goingIcon = isGoing ? (
+    <UserCheck className="h-5 w-5" />
+  ) : (
+    <UserPlus className="h-5 w-5" />
+  );
+  const goingVariant = isGoing ? ('secondary' as const) : ('default' as const);
 
   return (
     <div className="space-y-2">
-      {/* Primary row — Save to calendar + Interested + Favorite + Share.
-          Icon-only buttons use the square `icon-lg` size (40×40) instead of
-          the default `size` (which is rectangular due to `has-[>svg]:px-4`)
-          so they don't visually crowd the sidebar at narrow widths and
-          their icons stay properly centered without clipping. */}
+      {/* Primary row — Save to calendar + Going + Favorite + Share */}
       <div className="flex flex-wrap items-stretch gap-2">
         <AddToCalendarButton event={event} className="flex-1 min-w-[220px] rounded-xl shadow-sm" />
         {isAuthenticated && (
           <>
             <Button
-              size="icon-lg"
-              variant={isInterested ? 'secondary' : 'outline'}
-              onClick={handleToggleInterest}
-              aria-pressed={isInterested}
-              title={isInterested ? t('interested') : t('markInterested')}
-              className="rounded-xl shadow-sm"
+              size="lg"
+              variant={goingVariant}
+              onClick={handleToggleGoing}
+              className="flex-1 rounded-xl font-semibold shadow-sm"
             >
-              <Star
-                className={`h-5 w-5 ${isInterested ? 'fill-amber-400 text-amber-500' : ''}`}
-              />
+              <span className="inline-flex items-center gap-2">
+                {goingIcon}
+                {goingLabel}
+              </span>
             </Button>
             <Button
               size="icon-lg"

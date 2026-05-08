@@ -286,8 +286,6 @@
       "registeredForEvent": "Ви записалися на захід!",
       "cancelledAttendance": "Участь скасовано",
       "addedToWaitlist": "Додано до списку очікування — вас переведуть, коли звільниться місце",
-      "markedInterested": "Позначено як цікаве",
-      "unmarkedInterested": "Більше не цікаво",
       "breadcrumbs": "Події",
       "popularCue": "Популярний захід для знайомств і спілкування",
       "soloCue": "Легко долучитися, навіть якщо ви йдете самі",
@@ -305,7 +303,6 @@
       "spotsLeft": "{count, plural, one {# місце залишилось} few {# місця залишилось} other {# місць залишилось}}",
       "noSpotsLeft": "Вільних місць немає",
       "waitlistCount": "{count, plural, one {# у списку очікування} few {# у списку очікування} other {# у списку очікування}}",
-      "interestedCount": "{count, plural, one {# цікавиться} few {# цікавляться} other {# цікавляться}}",
       "reviewsCount": "{rating} ({count, plural, one {# відгук} few {# відгуки} other {# відгуків}})",
       "moreAttendees": "Ще +{count} учасників",
       "noComments": "Коментарів поки немає.",
@@ -331,10 +328,6 @@
       "systemEditorialSubtitle": "Ми не організовуємо цю подію — просто допомагаємо не пропустити її.",
       "goWithGroupNew": "Ідемо компанією",
       "goWithGroupExisting": "Долучитися до компанії"
-    },
-    "systemActions": {
-      "interested": "Вам цікаво",
-      "markInterested": "У календар"
     },
     "meetup": {
       "sectionLabel": "Ідемо разом",
@@ -431,7 +424,7 @@
       "draftsDescription": "Бачите тільки ви. Опублікуйте, коли будете готові запросити людей.",
       "savedLabel": "У календарі",
       "savedTitle": "{count, plural, one {# подія з афіші} few {# події з афіші} many {# подій з афіші} other {# подій з афіші}}",
-      "savedDescription": "Події з афіші, які ви позначили як цікаві. Вони поряд із вашими власними заходами.",
+      "savedDescription": "Події з афіші, на які ви йдете. Вони поряд із вашими власними заходами.",
       "emptyTitle": "Ви ще не організовували заходів",
       "emptyDescription": "Щойно ви створите захід або станете його модератором, він з'явиться тут.",
       "stats": {
@@ -540,6 +533,8 @@
       "clickMap": "Натисніть на карту для вибору місця",
       "isPrivate": "Закритий захід",
       "privateHint": "Доступ лише за спеціальним посиланням",
+      "allowCrews": "Дозволити відвідування компанією",
+      "allowCrewsHint": "Учасники зможуть створювати невеликі групи для спільного відвідування",
       "photos": "Фотографії (до 5)",
       "group": "Створити від імені",
       "personalEvent": "Особистий захід",
@@ -962,7 +957,14 @@
     "chatDeclinedBody": "Ваш запит на листування відхилили.",
     "spotsAlmost": "Залишилось лише {count} місць!",
     "reminder24h": "Завтра захід: {name}",
-    "reminder2h": "Захід через 2 години: {name}"
+    "reminder2h": "Захід через 2 години: {name}",
+    "crewInvitation": "Вас запросили до компанії",
+    "crewJoinRequest": "Новий запит на приєднання до вашої компанії",
+    "crewJoinAccepted": "Ваш запит на приєднання прийнято",
+    "crewJoinRejected": "Ваш запит на приєднання відхилено",
+    "crewMemberJoined": "Новий учасник приєднався до вашої компанії",
+    "crewMemberLeft": "Учасник покинув вашу компанію",
+    "crewDeleted": "Компанію, в якій ви були, видалено"
   },
   "cityEvents": {
     "title": "Афіша міста",
@@ -1190,7 +1192,6 @@
   },
   "friends": {
     "goingCue": "{count, plural, one {# знайомий іде} few {# знайомих ідуть} many {# знайомих ідуть} other {# знайомих ідуть}}",
-    "interestedCue": "{count, plural, one {# знайомому цікаво} few {# знайомим цікаво} many {# знайомим цікаво} other {# знайомим цікаво}}",
     "noFollowingYet": "Підпишіться на організаторів, щоб бачити, хто куди йде."
   },
   "safety": {
@@ -1256,6 +1257,134 @@
         "subscribeSuccess": "Push-сповіщення увімкнено",
         "unsubscribeSuccess": "Push-сповіщення вимкнено"
       }
+    }
+  },
+  "crew": {
+    "invitation_default": "{hostName} запрошує вас приєднатися до компанії на {eventTitle}",
+    "join_request_accepted": "Ваш запит на вступ до «{crewName}» прийнято",
+    "join_request_rejected": "Ваш запит на вступ до «{crewName}» відхилено",
+    "crew_created": "Компанію створено",
+    "member_joined": "{userName} приєднався до компанії",
+    "member_left": "{userName} покинув компанію",
+    "member_removed": "{userName} був видалений з компанії",
+    "host_updated_description": "Хост оновив опис компанії",
+    "crew_deleted": "Компанію «{crewName}» було видалено хостом",
+    "crew_full": "Компанія заповнена",
+    "create_crew_button": "Створити компанію",
+    "ctaLogin": "Увійдіть, щоб створити компанію",
+    "request_to_join": "Запросити вступ",
+    "go_together_title": "Піти разом",
+    "go_together_description": "Не хочете йти самі? Створіть невелику компанію або приєднайтесь до людей, які вже збираються на цю подію.",
+    "spots_available": "{current}/{max} місць",
+    "spots_full": "{max}/{max} заповнено",
+    "crews_count": "{count} компаній",
+    "leave_crew": "Покинути компанію",
+    "delete_crew": "Видалити компанію",
+    "invite_members": "Запросити учасників",
+    "pending_invitations": "Очікувані запрошення",
+    "pending_requests": "Очікувані запити",
+    "accept": "Прийняти",
+    "decline": "Відхилити",
+    "reject": "Відмовити",
+    "promote_moderator": "Призначити модератором",
+    "demote_moderator": "Зняти роль модератора",
+    "remove_member": "Видалити з компанії",
+    "my_crews": "Мої компанії",
+    "contacts": "Контакти",
+    "add_contact": "Додати контакт",
+    "remove_contact": "Видалити контакт",
+    "search_contacts": "Пошук контактів",
+    "no_crews": "У вас поки немає компаній",
+    "no_contacts": "У вас поки немає контактів",
+    "archived": "Архів",
+    "active": "Активні",
+    "role_host": "Хост",
+    "role_moderator": "Модератор",
+    "role_member": "Учасник",
+    "member_actions": "Дії з учасником",
+    "load_more_messages": "Завантажити старіші повідомлення",
+    "no_messages_yet": "Поки немає повідомлень. Почніть розмову!",
+    "chat_archived": "Ця компанія в архіві. Чат доступний лише для читання.",
+    "type_message": "Напишіть повідомлення...",
+    "edit_settings": "Редагувати налаштування",
+    "settings_title": "Налаштування компанії",
+    "settings_saved": "Налаштування збережено",
+    "settings_save_error": "Не вдалося зберегти налаштування",
+    "save_settings": "Зберегти",
+    "visibility_public": "Публічна",
+    "visibility_private": "Приватна",
+    "members_title": "Учасники ({count})",
+    "you": "ви",
+    "promote_moderator_success": "Учасника підвищено до модератора",
+    "demote_moderator_success": "Модератора понижено до учасника",
+    "remove_member_success": "Учасника видалено з компанії",
+    "leave_crew_success": "Ви покинули компанію",
+    "delete_crew_success": "Компанію видалено",
+    "leave_crew_confirm_title": "Покинути компанію?",
+    "leave_crew_confirm_description": "Ви втратите доступ до чату та списку учасників. Цю дію не можна скасувати.",
+    "delete_crew_confirm_title": "Видалити компанію?",
+    "delete_crew_confirm_description": "Це назавжди видалить компанію, всі повідомлення та всіх учасників. Цю дію не можна скасувати.",
+    "request_accepted": "Запит на вступ прийнято",
+    "request_rejected": "Запит на вступ відхилено"
+  },
+  "invite": {
+    "error": {
+      "invalid": "Це посилання-запрошення недійсне.",
+      "invalidTitle": "Недійсне посилання",
+      "expired": "Це посилання-запрошення закінчилось. Попросіть відправника створити нове.",
+      "expiredTitle": "Посилання закінчилось",
+      "revoked": "Це посилання-запрошення більше не дійсне.",
+      "revokedTitle": "Посилання відкликано",
+      "crewDeleted": "Ця компанія більше не існує.",
+      "crewDeletedTitle": "Компанію не знайдено",
+      "crewArchived": "Ця компанія вже архівована. Приєднання неможливе.",
+      "crewArchivedTitle": "Компанія в архіві",
+      "crewFull": "Компанія вже заповнена. Вільних місць немає.",
+      "crewFullTitle": "Компанія заповнена",
+      "eventEnded": "Подія вже завершилась. Приєднання до компанії неможливе.",
+      "eventEndedTitle": "Подія завершилась",
+      "cannotJoin": "Ви не можете приєднатися до цієї компанії.",
+      "cannotJoinTitle": "Неможливо приєднатися",
+      "alreadyInCrew": "Ви вже перебуваєте в іншій компанії для цієї події. Покиньте поточну компанію, щоб приєднатися до цієї.",
+      "organizerCannotJoin": "Організатори подій не можуть приєднуватися до компаній."
+    },
+    "generate": {
+      "crewFull": "Неможливо створити посилання: компанія заповнена.",
+      "crewArchived": "Неможливо створити посилання: компанія в архіві.",
+      "maxLinks": "Досягнуто максимальну кількість активних посилань (5).",
+      "invitationLimit": "Компанія досягла ліміту запрошень (20).",
+      "rateLimited": "Забагато посилань створено останнім часом. Спробуйте пізніше.",
+      "eventEnded": "Неможливо створити посилання: подія завершилась."
+    },
+    "revoke": {
+      "notAuthorized": "У вас немає прав для відкликання цього посилання."
+    },
+    "share": {
+      "clipboardFailed": "Не вдалося скопіювати посилання до буфера обміну.",
+      "copySuccess": "Посилання-запрошення скопійовано!",
+      "copyButton": "Скопіювати",
+      "shareButton": "Поділитися",
+      "shareText": "Приєднуйся до компанії «{crewName}» на {eventName}! {url}"
+    },
+    "join": {
+      "confirmTitle": "Приєднатися до компанії",
+      "confirmMessage": "Бажаєте приєднатися до компанії «{crewName}» для відвідування події «{eventName}» за запрошенням від {inviterName}?",
+      "joinButton": "Приєднатися",
+      "declineButton": "Відхилити",
+      "joining": "Приєднання..."
+    },
+    "manage": {
+      "title": "Посилання-запрошення",
+      "generateButton": "Створити посилання-запрошення",
+      "revokeButton": "Відкликати",
+      "activeLinks": "Активні посилання",
+      "noLinks": "Немає активних посилань-запрошень",
+      "createdBy": "Створив(ла) {name}",
+      "expiresAt": "Закінчується {date}",
+      "useCount": "{count, plural, one {# використання} few {# використання} many {# використань} other {# використань}}"
+    },
+    "notification": {
+      "joinedViaLink": "{userName} приєднався до компанії за посиланням від {inviterName}"
     }
   }
 }

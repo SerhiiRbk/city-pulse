@@ -64,6 +64,14 @@ const helpEn: HelpContent = {
       ],
     },
     {
+      question: 'What is a Crew and how do I use it?',
+      paragraphs: [
+        'A Crew is a small group (2–10 people) that you create to attend an event together. Think of it as "going with friends" — you pick an event, create a crew, give it a name, and invite people via the platform or by sharing an invite link through any messenger.',
+        'Anyone can create a crew for events that allow it. Once created, crew members get a private group chat, see who else is coming, and can coordinate meeting details. You can also join an existing public crew if there are open spots.',
+        'Invite links make it easy to bring friends who are not yet on the platform — they register, click the link, and land directly in your crew.',
+      ],
+    },
+    {
       question: 'How do I add an event to my calendar?',
       paragraphs: [
         'Open any event page and click "Add to calendar". You can pick Google Calendar, Apple Calendar, or download a generic .ics file. There is also a personal subscription URL on your "My events" page — paste it once into your calendar app and every new RSVP shows up automatically without any further clicks.',
@@ -149,6 +157,14 @@ const helpRu: HelpContent = {
       question: 'Что такое «Афиша» / Городские события?',
       paragraphs: [
         'Это подборка нашей редакции — концерты, выставки, фестивали и другие события из официальных источников (сайты площадок, kudyznudy.cz, goout.net и др.). Каждое системное событие ссылается на оригинальный источник, чтобы всегда было понятно, откуда информация.',
+      ],
+    },
+    {
+      question: 'Что такое Компания (Crew) и как ей пользоваться?',
+      paragraphs: [
+        'Компания — это небольшая группа (2–10 человек), которую вы создаёте, чтобы пойти на мероприятие вместе. Это как «пойти с друзьями»: выбираете событие, создаёте компанию, даёте ей название и приглашаете людей через платформу или по ссылке-приглашению в любом мессенджере.',
+        'Создать компанию может любой зарегистрированный пользователь для событий, где это разрешено. После создания участники получают приватный групповой чат, видят кто ещё идёт и могут договориться о деталях встречи. Также можно присоединиться к существующей публичной компании, если есть свободные места.',
+        'Ссылки-приглашения позволяют легко позвать друзей, которых ещё нет на платформе — они регистрируются, переходят по ссылке и сразу попадают в вашу компанию.',
       ],
     },
     {
@@ -240,6 +256,14 @@ const helpUk: HelpContent = {
       ],
     },
     {
+      question: 'Що таке Компанія (Crew) і як нею користуватися?',
+      paragraphs: [
+        'Компанія — це невелика група (2–10 осіб), яку ви створюєте, щоб піти на подію разом. Це як «піти з друзями»: обираєте подію, створюєте компанію, даєте їй назву та запрошуєте людей через платформу або за посиланням-запрошенням у будь-якому месенджері.',
+        'Створити компанію може будь-який зареєстрований користувач для подій, де це дозволено. Після створення учасники отримують приватний груповий чат, бачать хто ще йде та можуть домовитися про деталі зустрічі. Також можна приєднатися до існуючої публічної компанії, якщо є вільні місця.',
+        'Посилання-запрошення дозволяють легко покликати друзів, яких ще немає на платформі — вони реєструються, переходять за посиланням і одразу потрапляють у вашу компанію.',
+      ],
+    },
+    {
       question: 'Як додати подію в календар?',
       paragraphs: [
         'Відкрийте сторінку події та натисніть «Додати в календар». Можна обрати Google Calendar, Apple Calendar або завантажити .ics-файл. На сторінці «Мої події» є особисте посилання для підписки — вставте його один раз у календар, і всі нові RSVP з’являтимуться автоматично.',
@@ -328,6 +352,14 @@ const helpCs: HelpContent = {
       ],
     },
     {
+      question: 'Co je to Crew (parta) a jak ji používat?',
+      paragraphs: [
+        'Crew je malá skupina (2–10 lidí), kterou vytvoříte, abyste šli na akci společně. Představte si to jako „jít s přáteli": vyberete akci, vytvoříte partu, pojmenujete ji a pozvete lidi přes platformu nebo sdílením odkazu v jakémkoli messengeru.',
+        'Partu může vytvořit kdokoli pro akce, které to umožňují. Po vytvoření členové získají soukromý skupinový chat, vidí kdo další jde a mohou se domluvit na detailech setkání. Můžete se také připojit k existující veřejné partě, pokud jsou volná místa.',
+        'Pozvánkové odkazy usnadňují přivedení přátel, kteří ještě nejsou na platformě — zaregistrují se, kliknou na odkaz a rovnou se ocitnou ve vaší partě.',
+      ],
+    },
+    {
       question: 'Jak přidat akci do kalendáře?',
       paragraphs: [
         'Otevřete stránku akce a klikněte na "Přidat do kalendáře". Můžete zvolit Google Calendar, Apple Calendar nebo stáhnout obecný .ics soubor. Na stránce "Moje akce" je také osobní URL pro odběr — vložíte ji jednou do své kalendářové aplikace a všechna nová RSVP se objeví automaticky.',
@@ -413,6 +445,14 @@ const helpDe: HelpContent = {
       question: 'Was ist "Афиша" / Stadtveranstaltungen?',
       paragraphs: [
         'Das sind von unserer Redaktion kuratierte Listings — Konzerte, Ausstellungen, Festivals und andere Veranstaltungen aus offiziellen Quellen (Veranstalter-Websites, kudyznudy.cz, goout.net usw.). Jede Systemveranstaltung verlinkt auf die Originalquelle, damit immer klar ist, woher die Informationen stammen.',
+      ],
+    },
+    {
+      question: 'Was ist eine Crew und wie nutze ich sie?',
+      paragraphs: [
+        'Eine Crew ist eine kleine Gruppe (2–10 Personen), die Sie erstellen, um gemeinsam eine Veranstaltung zu besuchen. Stellen Sie es sich als „mit Freunden hingehen" vor: Sie wählen ein Event, erstellen eine Crew, geben ihr einen Namen und laden Leute über die Plattform oder per Einladungslink in einem beliebigen Messenger ein.',
+        'Jede registrierte Person kann für Events, die es erlauben, eine Crew erstellen. Nach der Erstellung erhalten die Mitglieder einen privaten Gruppenchat, sehen wer noch kommt und können Treffpunkt-Details absprechen. Sie können auch einer bestehenden öffentlichen Crew beitreten, wenn noch Plätze frei sind.',
+        'Einladungslinks machen es einfach, Freunde mitzubringen, die noch nicht auf der Plattform sind — sie registrieren sich, klicken auf den Link und landen direkt in Ihrer Crew.',
       ],
     },
     {

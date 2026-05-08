@@ -77,6 +77,7 @@ export function MapView({ lat, lng, zoom = 13, marker, onClick, className }: Map
     <div
       ref={mapRef}
       className={className || 'h-[300px] w-full rounded-lg border'}
+      style={{ isolation: 'isolate', position: 'relative', zIndex: 0 }}
     />
   );
 }

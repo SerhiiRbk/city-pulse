@@ -463,16 +463,11 @@ export async function toggleAttendance(
   } = await supabase.auth.getUser();
   if (!user) return { error: 'Not authenticated' };
 
-  // System events cannot accept going/waitlist; UI should never trigger
-  // this path for them, but we guard anyway in case of stale clients.
   const { data: ev } = await supabase
     .from('events')
     .select('is_system')
     .eq('id', eventId)
     .single();
-  if (ev?.is_system) {
-    return { error: 'system_events_no_rsvp' };
-  }
 
   const { data: existing } = await supabase
     .from('event_attendees')
@@ -481,8 +476,7 @@ export async function toggleAttendance(
     .eq('user_id', user.id)
     .single();
 
-  // Going or waitlist → leave on toggle. Interested does NOT count — a second
-  // click of "Join" upgrades an 'interested' RSVP to 'going'.
+  // Toggle off: if already going (or waitlist for community), remove
   if (existing && (existing.status === 'going' || existing.status === 'waitlist')) {
     await supabase
       .from('event_attendees')
@@ -492,55 +486,20 @@ export async function toggleAttendance(
     return { status: 'none' };
   }
 
-  // Upsert as 'going'; DB trigger may downgrade to 'waitlist' if the event
-  // is at capacity. This path also upgrades an existing 'interested' row.
+  // For system events: always set 'going', no capacity check
+  if (ev?.is_system) {
+    const { data: inserted } = await supabase
+      .from('event_attendees')
+      .upsert({ event_id: eventId, user_id: user.id, status: 'going' })
+      .select('status')
+      .single();
+    return { status: normalizeAttendanceStatus(inserted?.status) };
+  }
+
+  // For community events: upsert as 'going'; DB trigger may downgrade to 'waitlist'
   const { data: inserted } = await supabase
     .from('event_attendees')
     .upsert({ event_id: eventId, user_id: user.id, status: 'going' })
-    .select('status')
-    .single();
-
-  return { status: normalizeAttendanceStatus(inserted?.status) };
-}
-
-export async function setInterest(
-  eventId: string,
-  interested: boolean,
-): Promise<{ error?: string; status?: AttendanceStatus }> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: 'Not authenticated' };
-
-  const { data: existing } = await supabase
-    .from('event_attendees')
-    .select('status')
-    .eq('event_id', eventId)
-    .eq('user_id', user.id)
-    .single();
-
-  if (!interested) {
-    // Only clear rows that represent interest; never delete a going/waitlist
-    // RSVP through this action.
-    if (existing?.status === 'interested') {
-      await supabase
-        .from('event_attendees')
-        .delete()
-        .eq('event_id', eventId)
-        .eq('user_id', user.id);
-    }
-    return { status: 'none' };
-  }
-
-  // Do not downgrade an active RSVP into 'interested'.
-  if (existing?.status === 'going' || existing?.status === 'waitlist') {
-    return { status: normalizeAttendanceStatus(existing.status) };
-  }
-
-  const { data: inserted } = await supabase
-    .from('event_attendees')
-    .upsert({ event_id: eventId, user_id: user.id, status: 'interested' })
     .select('status')
     .single();
 

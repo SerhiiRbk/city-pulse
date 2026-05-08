@@ -8,7 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Bell, Check, MessageCircle, Calendar, Users, AlertCircle } from 'lucide-react';
+import { Bell, Check, MessageCircle, Calendar, Users, AlertCircle, UserPlus, UserMinus, X, Trash2 } from 'lucide-react';
 import { getNotifications, markAsRead, markAllAsRead, getUnreadCount } from '@/lib/actions/notifications';
 import { Link } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
@@ -153,6 +153,19 @@ export function NotificationBell() {
         return <Calendar className="h-4 w-4" />;
       case 'spots_almost_full':
         return <Users className="h-4 w-4" />;
+      case 'crew_invitation':
+        return <Users className="h-4 w-4" />;
+      case 'crew_join_request':
+      case 'crew_member_joined':
+        return <UserPlus className="h-4 w-4" />;
+      case 'crew_join_accepted':
+        return <Check className="h-4 w-4" />;
+      case 'crew_join_rejected':
+        return <X className="h-4 w-4" />;
+      case 'crew_member_left':
+        return <UserMinus className="h-4 w-4" />;
+      case 'crew_deleted':
+        return <Trash2 className="h-4 w-4" />;
       default:
         return <AlertCircle className="h-4 w-4" />;
     }
@@ -183,10 +196,49 @@ export function NotificationBell() {
       return { title: t('newComment'), body: n.body };
     }
 
+    if (n.type === 'crew_invitation') {
+      return { title: t('crewInvitation'), body: n.body };
+    }
+
+    if (n.type === 'crew_join_request') {
+      return { title: t('crewJoinRequest'), body: n.body };
+    }
+
+    if (n.type === 'crew_join_accepted') {
+      return { title: t('crewJoinAccepted'), body: n.body };
+    }
+
+    if (n.type === 'crew_join_rejected') {
+      return { title: t('crewJoinRejected'), body: n.body };
+    }
+
+    if (n.type === 'crew_member_joined') {
+      return { title: t('crewMemberJoined'), body: n.body };
+    }
+
+    if (n.type === 'crew_member_left') {
+      return { title: t('crewMemberLeft'), body: n.body };
+    }
+
+    if (n.type === 'crew_deleted') {
+      return { title: t('crewDeleted'), body: n.body };
+    }
+
     return { title: n.title, body: n.body };
   }
 
   function getLink(n: Notification): string | null {
+    // Crew notification links
+    if (n.type === 'crew_invitation' || n.type === 'crew_join_request' || n.type === 'crew_join_accepted' || n.type === 'crew_member_joined' || n.type === 'crew_member_left') {
+      if (n.data?.crewId && n.data?.eventId) {
+        return `/events/${n.data.eventId}/crew/${n.data.crewId}`;
+      }
+    }
+    if (n.type === 'crew_deleted') {
+      if (n.data?.eventId) return `/events/${n.data.eventId}`;
+    }
+    // crew_join_rejected has no specific link
+
     if (n.data?.eventId) return `/events/${n.data.eventId}`;
     if (n.data?.conversationId) return `/messages/${n.data.conversationId}`;
     if (n.data?.groupId) return `/groups/${n.data.groupId}`;
