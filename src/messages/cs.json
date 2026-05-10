@@ -27,8 +27,8 @@
     "downloadQr": "Stáhnout PNG",
     "qrDialogTitle": "Naskenujte pro otevření",
     "qrDialogHelp": "Namiřte na kód kamerou a otevřete stránku na jiném zařízení, nebo si obrázek uložte pro leták.",
-    "follow": "Sledovat",
-    "following": "Sledujete",
+    "addToContacts": "Přidat do kontaktů",
+    "removeFromContacts": "Odebrat z kontaktů",
     "user": "Uživatel",
     "send": "Odeslat",
     "searchAddress": "Hledat adresu...",
@@ -869,7 +869,7 @@
     },
     "breadcrumbs": "Komunita",
     "yearsOld": "{age} let",
-    "followers": "Sledující",
+    "contacts": "Kontakty",
     "reputation": {
       "reliability": "Spolehlivost",
       "attendanceRate": "Účast",
@@ -1192,7 +1192,7 @@
   },
   "friends": {
     "goingCue": "{count, plural, one {# známý jde} few {# známých jde} many {# známých jde} other {# známých jde}}",
-    "noFollowingYet": "Sledujte organizátory, abyste viděli, kam kdo jde."
+    "noContactsYet": "Přidejte kontakty, abyste viděli, kam kdo jde."
   },
   "safety": {
     "tagWomenOnly": "Pouze pro ženy",

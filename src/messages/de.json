@@ -27,8 +27,8 @@
     "downloadQr": "PNG herunterladen",
     "qrDialogTitle": "Zum Öffnen scannen",
     "qrDialogHelp": "Richte die Kamera auf den Code, um die Seite auf einem anderen Gerät zu öffnen oder speichere das Bild für einen Flyer.",
-    "follow": "Folgen",
-    "following": "Du folgst",
+    "addToContacts": "Zu Kontakten hinzufügen",
+    "removeFromContacts": "Aus Kontakten entfernen",
     "user": "Benutzer",
     "send": "Senden",
     "searchAddress": "Adresse suchen...",
@@ -869,7 +869,7 @@
     },
     "breadcrumbs": "Community",
     "yearsOld": "{age} Jahre",
-    "followers": "Follower",
+    "contacts": "Kontakte",
     "reputation": {
       "reliability": "Zuverlässigkeit",
       "attendanceRate": "Teilnahmequote",
@@ -1192,7 +1192,7 @@
   },
   "friends": {
     "goingCue": "{count, plural, one {# Bekannte:r geht} other {# Bekannte gehen}}",
-    "noFollowingYet": "Folge ein paar Organisator:innen, um zu sehen, wer wohin geht."
+    "noContactsYet": "Füge Kontakte hinzu, um zu sehen, wer wohin geht."
   },
   "safety": {
     "tagWomenOnly": "Nur für Frauen",

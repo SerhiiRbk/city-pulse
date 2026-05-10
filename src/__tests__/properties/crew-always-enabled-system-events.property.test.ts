@@ -101,6 +101,7 @@ describe('Feature: system-event-rsvp-unification, Property 6: Crew always enable
           event_id: eventId,
           name: 'Test Crew Name',
           capacity: 4,
+          languages: [],
           visibility: 'public',
         });
 
