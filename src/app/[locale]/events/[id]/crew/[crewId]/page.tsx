@@ -67,6 +67,17 @@ export default async function CrewDetailPage({ params }: Props) {
   // 5. Render CrewPanel and CrewChat side by side (stacked on mobile)
   return (
     <div className="container mx-auto max-w-6xl px-4 py-6 sm:py-8">
+      {/* Back to event link */}
+      <a
+        href={`/${locale}/events/${eventId}`}
+        className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+        {eventName || 'Back to event'}
+      </a>
+
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5 lg:gap-8">
         {/* Left/top: Crew management panel */}
         <div className="lg:col-span-2">
