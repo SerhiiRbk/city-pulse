@@ -6,6 +6,7 @@ import { Search, UserPlus, UserMinus, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Link } from '@/i18n/navigation';
 import {
   getContacts,
   getInteractionPool,
@@ -103,22 +104,9 @@ export function ContactsList() {
       const result = await addContact({ contact_id: userId });
       if (result.success) {
         // Remove from pool results
-        const addedUser = poolUsers.find((u) => u.id === userId);
         setPoolUsers((prev) => prev.filter((u) => u.id !== userId));
-        // Reload contacts to get fresh data
+        // Reload contacts to get fresh data from server
         await loadContacts();
-        // If the added user was found, we could optimistically add it
-        if (addedUser) {
-          setContacts((prev) => [
-            ...prev,
-            {
-              contact_id: addedUser.id,
-              display_name: addedUser.display_name,
-              avatar_url: addedUser.avatar_url,
-              created_at: new Date().toISOString(),
-            },
-          ]);
-        }
       }
       setActionUserId(null);
     });
@@ -153,16 +141,21 @@ export function ContactsList() {
               key={contact.contact_id}
               className="flex items-center gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-muted/50"
             >
-              <Avatar className="h-9 w-9">
-                <AvatarImage src={contact.avatar_url || undefined} />
-                <AvatarFallback className="text-xs">
-                  {contact.display_name?.[0] || '?'}
-                </AvatarFallback>
-              </Avatar>
+              <Link
+                href={`/profile/${contact.contact_id}`}
+                className="flex min-w-0 flex-1 items-center gap-3"
+              >
+                <Avatar className="h-9 w-9 shrink-0">
+                  <AvatarImage src={contact.avatar_url || undefined} />
+                  <AvatarFallback className="text-xs">
+                    {contact.display_name?.[0] || '?'}
+                  </AvatarFallback>
+                </Avatar>
 
-              <span className="min-w-0 flex-1 truncate text-sm font-medium">
-                {contact.display_name}
-              </span>
+                <span className="min-w-0 flex-1 truncate text-sm font-medium">
+                  {contact.display_name}
+                </span>
+              </Link>
 
               {actionUserId === contact.contact_id && isPending ? (
                 <Loader2 className="h-4 w-4 shrink-0 animate-spin text-muted-foreground" />
