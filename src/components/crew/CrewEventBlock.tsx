@@ -74,7 +74,7 @@ export function CrewEventBlock({
   }
 
   return (
-    <section className="scroll-mt-24 rounded-2xl border border-border/60 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 p-5 sm:p-6">
+    <section id="crew" className="scroll-mt-24 rounded-2xl border border-border/60 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">

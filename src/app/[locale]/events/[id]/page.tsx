@@ -478,7 +478,7 @@ export default async function EventDetailPage({ params }: Props) {
                   isAuthenticated={isAuthenticated}
                   meetupCta={{
                     label: t(meetupCount > 0 ? 'goWithGroupExisting' : 'goWithGroupNew'),
-                    href: '#meetups',
+                    href: '#crew',
                     count: meetupCount,
                   }}
                 />
