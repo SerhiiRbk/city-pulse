@@ -95,7 +95,7 @@ export function CrewCreateDialog({
     });
 
     if (result.error) {
-      toast.error(t('create_error'));
+      toast.error(result.error);
       setSubmitting(false);
       return;
     }
