@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
 import { getConversations } from '@/lib/actions/messages';
 import { formatRelativeTime } from '@/lib/format-relative-time';
+import { isSentinelUser } from '@/lib/deletion/display';
 
 interface Conversation {
   id: string;
@@ -151,7 +152,11 @@ export function ConversationList({ conversations, currentUserId, activeConversat
     <div className="divide-y">
       {items.map((conv) => {
         const isP1 = conv.participant_1 === currentUserId;
-        const otherName = isP1 ? conv.p2_name : conv.p1_name;
+        const otherUserId = isP1 ? conv.participant_2 : conv.participant_1;
+        const rawOtherName = isP1 ? conv.p2_name : conv.p1_name;
+        const otherName = isSentinelUser(otherUserId)
+          ? t('deletedUser')
+          : rawOtherName;
         const otherAvatar = isP1 ? conv.p2_avatar : conv.p1_avatar;
         const isActive = conv.id === activeConversationId;
 

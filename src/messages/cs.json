@@ -936,6 +936,7 @@
     "block": "Zablokovat",
     "unblock": "Odblokovat",
     "blocked": "Uživatel je zablokován",
+    "deletedUser": "Smazaný uživatel",
     "timeNow": "teď",
     "timeMinutesAgo": "před {count} min",
     "timeHoursAgo": "před {count} h",
@@ -1386,5 +1387,39 @@
     "notification": {
       "joinedViaLink": "{userName} se připojil(a) přes odkaz od {inviterName}"
     }
+  },
+  "accountDeletion": {
+    "deleteButton": "Smazat účet",
+    "dangerZone": {
+      "title": "Nebezpečná zóna",
+      "description": "Trvalé smazání vašeho účtu a všech souvisejících dat. Tuto akci nelze po uplynutí ochranné lhůty vrátit zpět.",
+      "pendingMessage": "Váš účet je naplánován ke smazání. Můžete jej obnovit přihlášením během 30denní ochranné lhůty."
+    },
+    "dialog": {
+      "title": "Smazat účet",
+      "consequences": "Smazáním účtu okamžitě ztratíte přístup, váš obsah bude anonymizován a máte 30denní ochrannou lhůtu pro reaktivaci před trvalým smazáním.",
+      "confirmationLabel": "Zadejte {word} pro potvrzení",
+      "confirmationPlaceholder": "Zadejte SMAZAT pro potvrzení",
+      "submit": "Smazat můj účet",
+      "cancel": "Zrušit"
+    },
+    "errors": {
+      "invalidConfirmation": "Potvrzovací slovo se neshoduje",
+      "rateLimited": "Počkejte prosím 24 hodin před dalším požadavkem na smazání",
+      "alreadyPending": "Požadavek na smazání již čeká na zpracování",
+      "internalError": "Něco se pokazilo. Zkuste to prosím později."
+    },
+    "reactivation": {
+      "title": "Reaktivovat účet?",
+      "description": "Váš účet je naplánován ke smazání. Můžete jej nyní reaktivovat, abyste obnovili přístup a zrušili smazání.",
+      "gracePeriodEnds": "Váš účet bude trvale smazán {date}.",
+      "confirm": "Reaktivovat účet",
+      "decline": "Ponechat smazaný"
+    },
+    "success": {
+      "title": "Smazání účtu zahájeno",
+      "description": "Váš účet bude trvale smazán za 30 dní. Můžete jej reaktivovat přihlášením během tohoto období."
+    },
+    "anonymizedUser": "Smazaný uživatel"
   }
 }

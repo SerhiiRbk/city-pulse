@@ -5,6 +5,7 @@ import { getUser } from '@/lib/actions/auth';
 import { getConversation, getMessages, getConversations } from '@/lib/actions/messages';
 import { ConversationList } from '@/components/messages/conversation-list';
 import { ChatView } from '@/components/messages/chat-view';
+import { resolveDisplayName } from '@/lib/deletion/display';
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
@@ -28,7 +29,9 @@ export default async function ConversationPage({ params }: Props) {
   const t = await getTranslations('messages');
 
   const isP1 = conversation.participant_1 === user!.id;
-  const otherName = isP1 ? conversation.p2_name : conversation.p1_name;
+  const otherUserId = isP1 ? conversation.participant_2 : conversation.participant_1;
+  const rawOtherName = isP1 ? conversation.p2_name : conversation.p1_name;
+  const otherName = resolveDisplayName(otherUserId, rawOtherName, locale);
   const otherAvatar = isP1 ? conversation.p2_avatar : conversation.p1_avatar;
   const isRecipient = conversation.participant_2 === user!.id;
 

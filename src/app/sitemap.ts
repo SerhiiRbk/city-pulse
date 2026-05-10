@@ -122,6 +122,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .select('id, updated_at')
     .eq('is_private', false)
     .eq('is_blocked', false)
+    .is('deleted_at', null)
     .order('updated_at', { ascending: false })
     .limit(500);
 

@@ -28,6 +28,7 @@ export async function GET(request: Request) {
     .from('profiles')
     .select('id, display_name')
     .eq('calendar_token', token)
+    .is('deleted_at', null)
     .single();
 
   if (!profile) {

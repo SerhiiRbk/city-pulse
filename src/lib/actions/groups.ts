@@ -254,6 +254,7 @@ export async function searchUsers(query: string) {
     .from('profiles')
     .select('id, display_name, avatar_url')
     .eq('is_blocked', false)
+    .is('deleted_at', null)
     .ilike('display_name', `%${query}%`)
     .limit(10);
   return data || [];

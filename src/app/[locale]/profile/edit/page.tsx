@@ -6,6 +6,8 @@ import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { getCityById } from '@/lib/actions/cities';
 import { getUserPhotos } from '@/lib/actions/user-photos';
 import { ProfileEditForm } from '@/components/profile/profile-edit-form';
+import { DeleteAccountSection } from '@/components/account-deletion';
+import { getDeletionStatus } from '@/lib/actions/account-deletion';
 import { buildNoIndexMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildNoIndexMetadata('Edit profile');
@@ -24,10 +26,11 @@ export default async function ProfileEditPage({
     redirect(`/${locale}/login`);
   }
 
-  const [interests, categories, photos] = await Promise.all([
+  const [interests, categories, photos, deletionStatus] = await Promise.all([
     getInterests(),
     getInterestCategories(),
     getUserPhotos(profile.id),
+    getDeletionStatus(),
   ]);
 
   const initialCity = profile.city_id ? await getCityById(profile.city_id) : null;
@@ -36,6 +39,9 @@ export default async function ProfileEditPage({
     <div className="container mx-auto max-w-2xl px-4 py-8">
       <h1 className="mb-6 text-2xl font-bold">Edit Profile</h1>
       <ProfileEditForm profile={profile} interests={interests} categories={categories} initialPhotos={photos} initialCity={initialCity} />
+      <div className="mt-8">
+        <DeleteAccountSection hasPendingDeletion={deletionStatus.isPending} />
+      </div>
     </div>
   );
 }

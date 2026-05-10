@@ -937,6 +937,7 @@
     "block": "Block user",
     "unblock": "Unblock user",
     "blocked": "This user is blocked",
+    "deletedUser": "Deleted User",
     "timeNow": "now",
     "timeMinutesAgo": "{count}m ago",
     "timeHoursAgo": "{count}h ago",
@@ -1406,5 +1407,39 @@
     "notification": {
       "joinedViaLink": "{userName} joined via invite link from {inviterName}"
     }
+  },
+  "accountDeletion": {
+    "deleteButton": "Delete Account",
+    "dangerZone": {
+      "title": "Danger Zone",
+      "description": "Permanently delete your account and all associated data. This action cannot be undone after the grace period.",
+      "pendingMessage": "Your account is scheduled for deletion. You can reactivate by logging in during the 30-day grace period."
+    },
+    "dialog": {
+      "title": "Delete Account",
+      "consequences": "By deleting your account you will lose access immediately, your content will be anonymized, and you have a 30-day grace period to reactivate before permanent deletion.",
+      "confirmationLabel": "Type {word} to confirm",
+      "confirmationPlaceholder": "Type DELETE to confirm",
+      "submit": "Delete My Account",
+      "cancel": "Cancel"
+    },
+    "errors": {
+      "invalidConfirmation": "Confirmation word does not match",
+      "rateLimited": "Please wait 24 hours before requesting another deletion",
+      "alreadyPending": "A deletion request is already pending",
+      "internalError": "Something went wrong. Please try again later."
+    },
+    "reactivation": {
+      "title": "Reactivate Your Account?",
+      "description": "Your account is scheduled for deletion. You can reactivate it now to restore access and cancel the deletion.",
+      "gracePeriodEnds": "Your account will be permanently deleted on {date}.",
+      "confirm": "Reactivate Account",
+      "decline": "Keep Deleted"
+    },
+    "success": {
+      "title": "Account Deletion Initiated",
+      "description": "Your account will be permanently deleted in 30 days. You can reactivate by logging in during this period."
+    },
+    "anonymizedUser": "Deleted User"
   }
 }

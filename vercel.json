@@ -27,6 +27,14 @@
     {
       "path": "/api/cron/crew-archive",
       "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/cron/hard-delete-accounts",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/deletion-reminder",
+      "schedule": "0 9 * * *"
     }
   ]
 }

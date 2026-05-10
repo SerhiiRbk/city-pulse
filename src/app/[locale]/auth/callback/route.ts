@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { checkReactivation } from '@/lib/actions/deletion/check-reactivation';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -14,6 +15,14 @@ export async function GET(request: Request) {
       const type = searchParams.get('type');
       if (type === 'recovery') {
         return NextResponse.redirect(`${origin}/${locale}/profile/edit`);
+      }
+
+      // Check if user has a pending deletion request (reactivation flow)
+      const reactivationResult = await checkReactivation();
+      if (reactivationResult.needsReactivation && reactivationResult.expiresAt) {
+        const reactivateUrl = new URL(`${origin}/${locale}/reactivate`);
+        reactivateUrl.searchParams.set('expiresAt', reactivationResult.expiresAt);
+        return NextResponse.redirect(reactivateUrl.toString());
       }
 
       // Honor redirectTo param (e.g. from invite link flow)
