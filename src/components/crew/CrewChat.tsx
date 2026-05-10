@@ -89,7 +89,10 @@ export function CrewChat({ crewId, isArchived, currentUserId }: CrewChatProps) {
   // Auto-scroll to bottom on initial load and new messages
   useEffect(() => {
     if (isInitialLoad.current && messages.length > 0) {
-      bottomRef.current?.scrollIntoView({ behavior: 'instant' });
+      const container = scrollContainerRef.current;
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
       isInitialLoad.current = false;
     }
   }, [messages]);
@@ -162,9 +165,12 @@ export function CrewChat({ crewId, isArchived, currentUserId }: CrewChatProps) {
             }
           }
 
-          // Auto-scroll to bottom on new messages
+          // Auto-scroll to bottom on new messages (only within the chat container)
           setTimeout(() => {
-            bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+            const container = scrollContainerRef.current;
+            if (container) {
+              container.scrollTop = container.scrollHeight;
+            }
           }, 50);
         },
       )

@@ -2,11 +2,12 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getUserProfile } from '@/lib/actions/auth';
-import { getMyCrews } from '@/lib/actions/crew';
+import { getMyCrews, getMyPendingInvitations, respondToInvitation } from '@/lib/actions/crew';
 import { Link } from '@/i18n/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Users } from 'lucide-react';
 import { buildNoIndexMetadata } from '@/lib/seo';
+import { CrewInvitationCard } from '@/components/crew/CrewInvitationCard';
 
 export const metadata: Metadata = buildNoIndexMetadata('My Crews');
 
@@ -25,7 +26,10 @@ export default async function ProfileCrewsPage({
   }
 
   const t = await getTranslations('crew');
-  const { crews = [] } = await getMyCrews();
+  const [{ crews = [] }, { invitations = [] }] = await Promise.all([
+    getMyCrews(),
+    getMyPendingInvitations(),
+  ]);
 
   const activeCrews = crews.filter((c) => c.status === 'active');
   const archivedCrews = crews.filter((c) => c.status === 'archived');
@@ -33,6 +37,18 @@ export default async function ProfileCrewsPage({
   return (
     <div className="container mx-auto max-w-2xl px-4 py-8">
       <h1 className="mb-6 text-2xl font-bold">{t('my_crews')}</h1>
+
+      {/* Pending invitations */}
+      {invitations.length > 0 && (
+        <section className="mb-8">
+          <h2 className="mb-4 text-lg font-semibold">{t('pending_invitations')}</h2>
+          <div className="space-y-3">
+            {invitations.map((inv) => (
+              <CrewInvitationCard key={inv.id} invitation={inv} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {crews.length === 0 ? (
         <p className="text-muted-foreground">{t('no_crews')}</p>

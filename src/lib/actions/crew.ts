@@ -814,7 +814,9 @@ export async function respondToInvitation(
   // --- Accepting the invitation ---
 
   // 5a. Fetch crew details to validate capacity
-  const { data: crew, error: crewError } = await supabase
+  // Use admin client because the invitee is not yet a member (RLS would block)
+  const admin = createAdminClient();
+  const { data: crew, error: crewError } = await admin
     .from('event_crews')
     .select('id, event_id, name, capacity, participant_count, status')
     .eq('id', invitation.crew_id)
@@ -1427,7 +1429,10 @@ export async function getMyPendingInvitations(): Promise<{
   if (!user) return { error: 'Not authenticated' };
 
   // 2. Query pending invitations with joined crew, event, and inviter details
-  const { data, error } = await supabase
+  // NOTE: We use the admin client here because the invitee is NOT yet a member
+  // of the crew, so RLS on event_crews would block the join.
+  const admin = createAdminClient();
+  const { data, error } = await admin
     .from('event_crew_invitations')
     .select(
       `

@@ -228,18 +228,26 @@ export function NotificationBell() {
   }
 
   function getLink(n: Notification): string | null {
-    // Crew notification links
-    if (n.type === 'crew_invitation' || n.type === 'crew_join_request' || n.type === 'crew_join_accepted' || n.type === 'crew_member_joined' || n.type === 'crew_member_left') {
-      if (n.data?.crewId && n.data?.eventId) {
-        return `/events/${n.data.eventId}/crew/${n.data.crewId}`;
+    // Crew notification links (support both snake_case and camelCase keys)
+    const crewId = n.data?.crewId || n.data?.crew_id;
+    const eventId = n.data?.eventId || n.data?.event_id;
+
+    // Invitation: send to "My Crews" page where user can accept/decline
+    if (n.type === 'crew_invitation') {
+      return '/profile/crews';
+    }
+
+    if (n.type === 'crew_join_request' || n.type === 'crew_join_accepted' || n.type === 'crew_member_joined' || n.type === 'crew_member_left') {
+      if (crewId && eventId) {
+        return `/events/${eventId}/crew/${crewId}`;
       }
     }
     if (n.type === 'crew_deleted') {
-      if (n.data?.eventId) return `/events/${n.data.eventId}`;
+      if (eventId) return `/events/${eventId}`;
     }
     // crew_join_rejected has no specific link
 
-    if (n.data?.eventId) return `/events/${n.data.eventId}`;
+    if (eventId) return `/events/${eventId}`;
     if (n.data?.conversationId) return `/messages/${n.data.conversationId}`;
     if (n.data?.groupId) return `/groups/${n.data.groupId}`;
     return null;
