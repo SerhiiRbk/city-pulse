@@ -1274,6 +1274,7 @@
     "create_crew_button": "Gruppe erstellen",
     "ctaLogin": "Anmelden, um eine Gruppe zu erstellen",
     "request_to_join": "Beitritt anfragen",
+    "requested": "Angefragt",
     "go_together_title": "Zusammen gehen",
     "go_together_description": "Möchtest du nicht alleine gehen? Erstelle eine kleine Gruppe oder schließe dich Leuten an, die bereits zu diesem Event gehen.",
     "spots_available": "{current}/{max} Plätze",

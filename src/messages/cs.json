@@ -1274,6 +1274,7 @@
     "create_crew_button": "Vytvořit skupinu",
     "ctaLogin": "Přihlaste se pro vytvoření skupiny",
     "request_to_join": "Požádat o vstup",
+    "requested": "Požadavek odeslán",
     "go_together_title": "Jít společně",
     "go_together_description": "Nechcete jít sami? Vytvořte malou skupinu nebo se připojte k lidem, kteří se na tuto akci už chystají.",
     "spots_available": "{current}/{max} míst",

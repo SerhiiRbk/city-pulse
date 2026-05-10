@@ -13,6 +13,7 @@ interface CrewCardProps {
   participant_count: number;
   onRequestJoin?: (crewId: string) => void;
   isUserInCrew?: boolean;
+  isRequested?: boolean;
 }
 
 /**
@@ -28,6 +29,7 @@ export function CrewCard({
   participant_count,
   onRequestJoin,
   isUserInCrew = false,
+  isRequested = false,
 }: CrewCardProps) {
   const t = useTranslations('crew');
 
@@ -62,6 +64,10 @@ export function CrewCard({
             <Badge variant="outline" className="text-[10px] uppercase tracking-wide">
               {t('crew_full')}
             </Badge>
+          ) : isRequested ? (
+            <Button size="sm" variant="ghost" disabled>
+              {t('requested')}
+            </Button>
           ) : (
             !isUserInCrew &&
             onRequestJoin && (

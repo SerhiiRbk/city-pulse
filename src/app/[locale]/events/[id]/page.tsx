@@ -349,6 +349,7 @@ export default async function EventDetailPage({ params }: Props) {
               isSystemEvent={isSystemEvent}
               allowCrews={isSystemEvent || !!event.allow_crews}
               isAuthenticated={isAuthenticated}
+              pendingRequestCrewIds={crewData.pendingRequestCrewIds}
             />
           )}
 

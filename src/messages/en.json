@@ -1275,6 +1275,7 @@
     "create_crew_button": "Create a Crew",
     "ctaLogin": "Log in to create a crew",
     "request_to_join": "Request to join",
+    "requested": "Requested",
     "go_together_title": "Go together",
     "go_together_description": "Don't want to go alone? Create a small crew or join people who are already going to this event.",
     "spots_available": "{current}/{max} spots",

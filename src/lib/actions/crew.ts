@@ -2388,6 +2388,7 @@ export interface GetCrewsForEventResult {
   publicCrews: PublicCrewInfo[];
   crewCount: number;
   myCrewId?: string | null;
+  pendingRequestCrewIds: string[];
   error?: string;
 }
 
@@ -2420,7 +2421,7 @@ export async function getCrewsForEvent(input: {
     .eq('status', 'active');
 
   if (countError) {
-    return { publicCrews: [], crewCount: 0, error: countError.message };
+    return { publicCrews: [], crewCount: 0, pendingRequestCrewIds: [], error: countError.message };
   }
 
   // 3. Query public crews with details
@@ -2433,7 +2434,7 @@ export async function getCrewsForEvent(input: {
     .order('created_at', { ascending: true });
 
   if (publicError) {
-    return { publicCrews: [], crewCount: crewCount ?? 0, error: publicError.message };
+    return { publicCrews: [], crewCount: crewCount ?? 0, pendingRequestCrewIds: [], error: publicError.message };
   }
 
   const mappedPublicCrews: PublicCrewInfo[] = (publicCrews || []).map((crew) => ({
@@ -2446,6 +2447,7 @@ export async function getCrewsForEvent(input: {
 
   // 4. If user is authenticated, check if they're in a crew for this event
   let myCrewId: string | null = null;
+  let pendingRequestCrewIds: string[] = [];
 
   if (user) {
     const { data: membership } = await supabase
@@ -2458,11 +2460,24 @@ export async function getCrewsForEvent(input: {
     if (membership && membership.length > 0) {
       myCrewId = membership[0].crew_id;
     }
+
+    // Check for pending join requests from this user for crews in this event
+    const { data: pendingRequests } = await supabase
+      .from('event_crew_join_requests')
+      .select('crew_id, event_crews!inner(event_id)')
+      .eq('requester_id', user.id)
+      .eq('status', 'pending')
+      .eq('event_crews.event_id', input.event_id);
+
+    if (pendingRequests && pendingRequests.length > 0) {
+      pendingRequestCrewIds = pendingRequests.map((r) => r.crew_id);
+    }
   }
 
   return {
     publicCrews: mappedPublicCrews,
     crewCount: crewCount ?? 0,
     myCrewId,
+    pendingRequestCrewIds,
   };
 }
