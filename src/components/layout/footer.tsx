@@ -1,31 +1,37 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Separator } from '@/components/ui/separator';
 import { Logo } from '@/components/ui/logo';
 
 // City "hubs" linked from the footer give Google an extra crawl path
-// into long-tail inventory ("events in Praha", "expat groups in
-// Berlin"). Each entry maps a stable URL slug (the value stored in the
-// `city` text column on `system_events` and `events`) to the human
-// label rendered in the footer. We intentionally use native city names
-// so the URL is stable across all five UI locales and matches what
-// organizers type when they create events.
-const FOOTER_CITIES = [
-  { slug: 'Praha', label: 'Praha' },
-  { slug: 'Brno', label: 'Brno' },
-  { slug: 'Wien', label: 'Wien' },
-  { slug: 'Berlin', label: 'Berlin' },
-  { slug: 'München', label: 'München' },
-  { slug: 'Warszawa', label: 'Warszawa' },
-  { slug: 'Bratislava', label: 'Bratislava' },
-  { slug: 'Budapest', label: 'Budapest' },
-] as const;
+// into long-tail inventory ("events in Prague", "expat groups in
+// Berlin"). The slug uses the English city name for stable URLs across
+// all locales. The label is localized per UI language.
+// The `dbName` is the native name stored in the database `city` column.
+const FOOTER_CITIES: {
+  slug: string;
+  dbName: string;
+  labels: Record<string, string>;
+}[] = [
+  { slug: 'Prague', dbName: 'Prague', labels: { en: 'Prague', ru: 'Прага', uk: 'Прага', cs: 'Praha', de: 'Prag' } },
+  { slug: 'Brno', dbName: 'Brno', labels: { en: 'Brno', ru: 'Брно', uk: 'Брно', cs: 'Brno', de: 'Brünn' } },
+  { slug: 'Vienna', dbName: 'Vienna', labels: { en: 'Vienna', ru: 'Вена', uk: 'Відень', cs: 'Vídeň', de: 'Wien' } },
+  { slug: 'Berlin', dbName: 'Berlin', labels: { en: 'Berlin', ru: 'Берлин', uk: 'Берлін', cs: 'Berlín', de: 'Berlin' } },
+  { slug: 'Munich', dbName: 'Munich', labels: { en: 'Munich', ru: 'Мюнхен', uk: 'Мюнхен', cs: 'Mnichov', de: 'München' } },
+  { slug: 'Warsaw', dbName: 'Warsaw', labels: { en: 'Warsaw', ru: 'Варшава', uk: 'Варшава', cs: 'Varšava', de: 'Warschau' } },
+  { slug: 'Bratislava', dbName: 'Bratislava', labels: { en: 'Bratislava', ru: 'Братислава', uk: 'Братислава', cs: 'Bratislava', de: 'Bratislava' } },
+  { slug: 'Budapest', dbName: 'Budapest', labels: { en: 'Budapest', ru: 'Будапешт', uk: 'Будапешт', cs: 'Budapešť', de: 'Budapest' } },
+  { slug: 'Barcelona', dbName: 'Barcelona', labels: { en: 'Barcelona', ru: 'Барселона', uk: 'Барселона', cs: 'Barcelona', de: 'Barcelona' } },
+  { slug: 'Valencia', dbName: 'Valencia', labels: { en: 'Valencia', ru: 'Валенсия', uk: 'Валенсія', cs: 'Valencie', de: 'Valencia' } },
+  { slug: 'Tel Aviv', dbName: 'Tel Aviv', labels: { en: 'Tel Aviv', ru: 'Тель-Авив', uk: 'Тель-Авів', cs: 'Tel Aviv', de: 'Tel Aviv' } },
+];
 
 export function Footer() {
   const t = useTranslations('footer');
   const tNav = useTranslations('nav');
+  const locale = useLocale();
   const year = new Date().getFullYear();
 
   return (
@@ -107,10 +113,10 @@ export function Footer() {
               {FOOTER_CITIES.map((city) => (
                 <li key={city.slug}>
                   <Link
-                    href={{ pathname: '/city-events', query: { city: city.slug } }}
+                    href={`/city-events/city-${city.slug.toLowerCase().replace(/\s+/g, '-')}`}
                     className="hover:text-foreground transition-colors"
                   >
-                    {city.label}
+                    {city.labels[locale] || city.labels.en}
                   </Link>
                 </li>
               ))}
