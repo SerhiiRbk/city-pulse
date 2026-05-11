@@ -27,8 +27,8 @@
     "downloadQr": "Download PNG",
     "qrDialogTitle": "Scan to open",
     "qrDialogHelp": "Point a camera at the code to open the page on another device or save the image for a flyer.",
-    "follow": "Follow",
-    "following": "Following",
+    "addToContacts": "Add to contacts",
+    "removeFromContacts": "Remove from contacts",
     "user": "User",
     "send": "Send",
     "searchAddress": "Search address...",
@@ -870,7 +870,7 @@
     },
     "breadcrumbs": "Community",
     "yearsOld": "{age} y.o.",
-    "followers": "Followers",
+    "contacts": "Contacts",
     "reputation": {
       "reliability": "Reliability",
       "attendanceRate": "Attendance rate",
@@ -937,6 +937,7 @@
     "block": "Block user",
     "unblock": "Unblock user",
     "blocked": "This user is blocked",
+    "deletedUser": "Deleted User",
     "timeNow": "now",
     "timeMinutesAgo": "{count}m ago",
     "timeHoursAgo": "{count}h ago",
@@ -1192,8 +1193,8 @@
     "done": "All set — welcome aboard!"
   },
   "friends": {
-    "goingCue": "{count, plural, one {# person you follow is going} other {# people you follow are going}}",
-    "noFollowingYet": "Follow a few organizers to see who's going to what."
+    "goingCue": "{count, plural, one {# contact is going} other {# contacts are going}}",
+    "noContactsYet": "Add contacts to see who's going to what."
   },
   "safety": {
     "tagWomenOnly": "Women only",
@@ -1274,6 +1275,7 @@
     "create_crew_button": "Create a Crew",
     "ctaLogin": "Log in to create a crew",
     "request_to_join": "Request to join",
+    "requested": "Requested",
     "go_together_title": "Go together",
     "go_together_description": "Don't want to go alone? Create a small crew or join people who are already going to this event.",
     "spots_available": "{current}/{max} spots",
@@ -1406,5 +1408,39 @@
     "notification": {
       "joinedViaLink": "{userName} joined via invite link from {inviterName}"
     }
+  },
+  "accountDeletion": {
+    "deleteButton": "Delete Account",
+    "dangerZone": {
+      "title": "Danger Zone",
+      "description": "Permanently delete your account and all associated data. This action cannot be undone after the grace period.",
+      "pendingMessage": "Your account is scheduled for deletion. You can reactivate by logging in during the 30-day grace period."
+    },
+    "dialog": {
+      "title": "Delete Account",
+      "consequences": "By deleting your account you will lose access immediately, your content will be anonymized, and you have a 30-day grace period to reactivate before permanent deletion.",
+      "confirmationLabel": "Type {word} to confirm",
+      "confirmationPlaceholder": "Type DELETE to confirm",
+      "submit": "Delete My Account",
+      "cancel": "Cancel"
+    },
+    "errors": {
+      "invalidConfirmation": "Confirmation word does not match",
+      "rateLimited": "Please wait 24 hours before requesting another deletion",
+      "alreadyPending": "A deletion request is already pending",
+      "internalError": "Something went wrong. Please try again later."
+    },
+    "reactivation": {
+      "title": "Reactivate Your Account?",
+      "description": "Your account is scheduled for deletion. You can reactivate it now to restore access and cancel the deletion.",
+      "gracePeriodEnds": "Your account will be permanently deleted on {date}.",
+      "confirm": "Reactivate Account",
+      "decline": "Keep Deleted"
+    },
+    "success": {
+      "title": "Account Deletion Initiated",
+      "description": "Your account will be permanently deleted in 30 days. You can reactivate by logging in during this period."
+    },
+    "anonymizedUser": "Deleted User"
   }
 }

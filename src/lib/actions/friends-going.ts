@@ -10,14 +10,12 @@ export interface FriendGoing {
 }
 
 /**
- * Returns up to `max` people the current viewer follows
- * (`user_subscriptions.target_user_id`) who have an RSVP on the
- * given event. Sorted: going > waitlist > interested, then by
- * RSVP timestamp ascending (earliest committed first).
+ * Returns up to `max` people in the current viewer's contacts
+ * (`user_contacts.contact_id`) who have an RSVP on the given
+ * event. Sorted: going > waitlist > interested, then by RSVP
+ * timestamp ascending (earliest committed first).
  *
- * Returns [] for anonymous viewers — there's nothing useful to
- * say without an identity to compare against. Callers should
- * gate on auth before calling.
+ * Returns [] for anonymous viewers or users with zero contacts.
  */
 export async function getFriendsGoing(
   eventId: string,
@@ -29,15 +27,15 @@ export async function getFriendsGoing(
   } = await supabase.auth.getUser();
   if (!user) return [];
 
-  // We pull the viewer's follow graph and the event's RSVPs in
+  // We pull the viewer's contact list and the event's RSVPs in
   // one round-trip via two `select`s, then intersect locally —
   // this avoids a join across two policy domains and stays well
   // under the row-count where a more clever SQL would help.
-  const [{ data: follows }, { data: attendees }] = await Promise.all([
+  const [{ data: contacts }, { data: attendees }] = await Promise.all([
     supabase
-      .from('user_subscriptions')
-      .select('target_user_id')
-      .eq('subscriber_id', user.id),
+      .from('user_contacts')
+      .select('contact_id')
+      .eq('owner_id', user.id),
     supabase
       .from('event_attendees')
       .select('user_id, status, created_at')
@@ -45,12 +43,12 @@ export async function getFriendsGoing(
       .in('status', ['going', 'waitlist', 'interested']),
   ]);
 
-  if (!follows || !attendees || follows.length === 0 || attendees.length === 0) {
+  if (!contacts || !attendees || contacts.length === 0 || attendees.length === 0) {
     return [];
   }
 
-  const followSet = new Set(follows.map((f) => f.target_user_id));
-  const overlap = attendees.filter((a) => followSet.has(a.user_id));
+  const contactSet = new Set(contacts.map((c) => c.contact_id));
+  const overlap = attendees.filter((a) => contactSet.has(a.user_id));
   if (overlap.length === 0) return [];
 
   // Stable ordering for the "you know X" cue.
@@ -110,11 +108,11 @@ export async function getFriendsGoingBulk(
   } = await supabase.auth.getUser();
   if (!user) return out;
 
-  const [{ data: follows }, { data: attendees }] = await Promise.all([
+  const [{ data: contacts }, { data: attendees }] = await Promise.all([
     supabase
-      .from('user_subscriptions')
-      .select('target_user_id')
-      .eq('subscriber_id', user.id),
+      .from('user_contacts')
+      .select('contact_id')
+      .eq('owner_id', user.id),
     supabase
       .from('event_attendees')
       .select('event_id, user_id, status, created_at')
@@ -122,12 +120,12 @@ export async function getFriendsGoingBulk(
       .in('status', ['going', 'waitlist', 'interested']),
   ]);
 
-  if (!follows || !attendees || follows.length === 0 || attendees.length === 0) {
+  if (!contacts || !attendees || contacts.length === 0 || attendees.length === 0) {
     return out;
   }
 
-  const followSet = new Set(follows.map((f) => f.target_user_id));
-  const overlap = attendees.filter((a) => followSet.has(a.user_id));
+  const contactSet = new Set(contacts.map((c) => c.contact_id));
+  const overlap = attendees.filter((a) => contactSet.has(a.user_id));
   if (overlap.length === 0) return out;
 
   const allUserIds = Array.from(new Set(overlap.map((row) => row.user_id)));

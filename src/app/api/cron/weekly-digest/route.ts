@@ -70,6 +70,7 @@ export async function GET(request: Request) {
       .from('profiles')
       .select('id, email, display_name, city, country, languages, interests')
       .eq('email_digest_enabled', true)
+      .is('deleted_at', null)
       .neq('email', '')
       .or(`email_digest_last_sent_at.is.null,email_digest_last_sent_at.lt.${sixDaysAgo}`)
       .order('id')

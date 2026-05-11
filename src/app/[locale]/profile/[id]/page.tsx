@@ -17,10 +17,11 @@ import {
 } from 'lucide-react';
 import { RequestChatButton } from '@/components/messages/request-chat-button';
 import { ReportDialog } from '@/components/reports/report-dialog';
-import { FollowButton } from '@/components/social/follow-button';
+import { ContactButton } from '@/components/social/contact-button';
 import { ProfileTabs } from '@/components/profile/profile-tabs';
 import { LinkifiedText } from '@/components/ui/linkified-text';
-import { getProfileReputation, getProfileStats, getUserBadges, isFollowing } from '@/lib/actions/social';
+import { getProfileReputation, getProfileStats, getUserBadges } from '@/lib/actions/social';
+import { isInInteractionPool, isContact } from '@/lib/actions/contacts';
 import { ReputationBadge } from '@/components/profile/reputation-badge';
 import {
   getProfileFavoriteEvents,
@@ -74,11 +75,12 @@ export default async function ProfilePage({ params }: Props) {
   const currentUser = await getUser();
   const isOwnProfile = currentUser?.id === profile.id;
 
-  const [stats, badges, reputation, following, userPhotos, allInterests] = await Promise.all([
+  const [stats, badges, reputation, isInPool, isUserContact, userPhotos, allInterests] = await Promise.all([
     getProfileStats(id),
     getUserBadges(id),
     getProfileReputation(id),
-    currentUser && !isOwnProfile ? isFollowing(id) : Promise.resolve(false),
+    currentUser && !isOwnProfile ? isInInteractionPool(id) : Promise.resolve(false),
+    currentUser && !isOwnProfile ? isContact(id) : Promise.resolve(false),
     getUserPhotos(id),
     getInterests(),
   ]);
@@ -238,7 +240,7 @@ export default async function ProfilePage({ params }: Props) {
               )}
               {!isOwnProfile && currentUser && (
                 <>
-                  <FollowButton targetUserId={profile.id} isFollowing={following} />
+                  <ContactButton targetUserId={profile.id} isInPool={isInPool} isContact={isUserContact} />
                   <RequestChatButton targetUserId={profile.id} />
                   <ReportDialog targetType="user" targetId={profile.id} />
                 </>
@@ -253,7 +255,7 @@ export default async function ProfilePage({ params }: Props) {
             { value: stats.events_created, label: t('eventsCreated'), icon: Calendar },
             { value: stats.events_attended, label: t('eventsAttended'), icon: Users },
             { value: stats.avg_organizer_rating > 0 ? stats.avg_organizer_rating : '-', label: t('rating'), icon: Star, isStar: true },
-            { value: stats.follower_count, label: t('followers'), icon: Sparkles },
+            { value: stats.follower_count, label: t('contacts'), icon: Sparkles },
           ].map(({ value, label, icon: Icon, isStar }) => (
             <div key={label} className="flex flex-col items-center gap-0.5 py-4">
               <div className="flex items-center gap-1">

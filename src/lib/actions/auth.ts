@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import { checkReactivation } from '@/lib/actions/deletion/check-reactivation';
 
 export async function signUp(formData: {
   email: string;
@@ -60,6 +61,14 @@ export async function signIn(formData: {
 
   if (error) {
     return { error: error.message };
+  }
+
+  // Check if user has a pending deletion request (reactivation flow)
+  const reactivationResult = await checkReactivation();
+  if (reactivationResult.needsReactivation && reactivationResult.expiresAt) {
+    redirect(
+      `/${formData.locale}/reactivate?expiresAt=${encodeURIComponent(reactivationResult.expiresAt)}`,
+    );
   }
 
   // Redirect to the preserved destination (e.g. invite link) or homepage

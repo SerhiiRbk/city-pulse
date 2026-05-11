@@ -27,8 +27,8 @@
     "downloadQr": "PNG herunterladen",
     "qrDialogTitle": "Zum Öffnen scannen",
     "qrDialogHelp": "Richte die Kamera auf den Code, um die Seite auf einem anderen Gerät zu öffnen oder speichere das Bild für einen Flyer.",
-    "follow": "Folgen",
-    "following": "Du folgst",
+    "addToContacts": "Zu Kontakten hinzufügen",
+    "removeFromContacts": "Aus Kontakten entfernen",
     "user": "Benutzer",
     "send": "Senden",
     "searchAddress": "Adresse suchen...",
@@ -869,7 +869,7 @@
     },
     "breadcrumbs": "Community",
     "yearsOld": "{age} Jahre",
-    "followers": "Follower",
+    "contacts": "Kontakte",
     "reputation": {
       "reliability": "Zuverlässigkeit",
       "attendanceRate": "Teilnahmequote",
@@ -936,6 +936,7 @@
     "block": "Blockieren",
     "unblock": "Entblockieren",
     "blocked": "Benutzer ist blockiert",
+    "deletedUser": "Gelöschter Benutzer",
     "timeNow": "jetzt",
     "timeMinutesAgo": "vor {count} Min.",
     "timeHoursAgo": "vor {count} Std.",
@@ -1192,7 +1193,7 @@
   },
   "friends": {
     "goingCue": "{count, plural, one {# Bekannte:r geht} other {# Bekannte gehen}}",
-    "noFollowingYet": "Folge ein paar Organisator:innen, um zu sehen, wer wohin geht."
+    "noContactsYet": "Füge Kontakte hinzu, um zu sehen, wer wohin geht."
   },
   "safety": {
     "tagWomenOnly": "Nur für Frauen",
@@ -1273,6 +1274,7 @@
     "create_crew_button": "Gruppe erstellen",
     "ctaLogin": "Anmelden, um eine Gruppe zu erstellen",
     "request_to_join": "Beitritt anfragen",
+    "requested": "Angefragt",
     "go_together_title": "Zusammen gehen",
     "go_together_description": "Möchtest du nicht alleine gehen? Erstelle eine kleine Gruppe oder schließe dich Leuten an, die bereits zu diesem Event gehen.",
     "spots_available": "{current}/{max} Plätze",
@@ -1386,5 +1388,39 @@
     "notification": {
       "joinedViaLink": "{userName} ist über einen Einladungslink von {inviterName} beigetreten"
     }
+  },
+  "accountDeletion": {
+    "deleteButton": "Konto löschen",
+    "dangerZone": {
+      "title": "Gefahrenzone",
+      "description": "Dauerhaftes Löschen Ihres Kontos und aller zugehörigen Daten. Diese Aktion kann nach Ablauf der Schonfrist nicht rückgängig gemacht werden.",
+      "pendingMessage": "Ihr Konto ist zur Löschung vorgemerkt. Sie können es durch Anmeldung innerhalb der 30-tägigen Schonfrist reaktivieren."
+    },
+    "dialog": {
+      "title": "Konto löschen",
+      "consequences": "Durch das Löschen Ihres Kontos verlieren Sie sofort den Zugang, Ihre Inhalte werden anonymisiert, und Sie haben eine 30-tägige Schonfrist zur Reaktivierung vor der endgültigen Löschung.",
+      "confirmationLabel": "Geben Sie {word} zur Bestätigung ein",
+      "confirmationPlaceholder": "Geben Sie LÖSCHEN zur Bestätigung ein",
+      "submit": "Mein Konto löschen",
+      "cancel": "Abbrechen"
+    },
+    "errors": {
+      "invalidConfirmation": "Bestätigungswort stimmt nicht überein",
+      "rateLimited": "Bitte warten Sie 24 Stunden, bevor Sie eine weitere Löschung anfordern",
+      "alreadyPending": "Ein Löschantrag ist bereits ausstehend",
+      "internalError": "Etwas ist schiefgelaufen. Bitte versuchen Sie es später erneut."
+    },
+    "reactivation": {
+      "title": "Konto reaktivieren?",
+      "description": "Ihr Konto ist zur Löschung vorgemerkt. Sie können es jetzt reaktivieren, um den Zugang wiederherzustellen und die Löschung abzubrechen.",
+      "gracePeriodEnds": "Ihr Konto wird am {date} endgültig gelöscht.",
+      "confirm": "Konto reaktivieren",
+      "decline": "Gelöscht lassen"
+    },
+    "success": {
+      "title": "Kontolöschung eingeleitet",
+      "description": "Ihr Konto wird in 30 Tagen endgültig gelöscht. Sie können es durch Anmeldung während dieses Zeitraums reaktivieren."
+    },
+    "anonymizedUser": "Gelöschter Benutzer"
   }
 }

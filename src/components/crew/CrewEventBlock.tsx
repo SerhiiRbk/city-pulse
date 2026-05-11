@@ -30,6 +30,7 @@ interface CrewEventBlockProps {
   isSystemEvent?: boolean;
   allowCrews: boolean;
   isAuthenticated?: boolean;
+  pendingRequestCrewIds?: string[];
 }
 
 /**
@@ -49,9 +50,11 @@ export function CrewEventBlock({
   isSystemEvent = false,
   allowCrews,
   isAuthenticated = true,
+  pendingRequestCrewIds = [],
 }: CrewEventBlockProps) {
   const t = useTranslations('crew');
   const [joining, setJoining] = useState<string | null>(null);
+  const [requestedCrewIds, setRequestedCrewIds] = useState<Set<string>>(new Set(pendingRequestCrewIds));
 
   // For system events, the "organizer" is just the admin who created it,
   // so they should still be able to create crews.
@@ -65,6 +68,7 @@ export function CrewEventBlock({
         toast.error(result.error);
       } else {
         toast.success(t('request_to_join'));
+        setRequestedCrewIds((prev) => new Set(prev).add(crewId));
       }
     } catch {
       toast.error('Something went wrong');
@@ -134,6 +138,7 @@ export function CrewEventBlock({
               participant_count={crew.participant_count}
               onRequestJoin={isAuthenticated && joining !== crew.id ? handleRequestJoin : undefined}
               isUserInCrew={!!myCrewId}
+              isRequested={requestedCrewIds.has(crew.id)}
             />
           ))}
         </div>

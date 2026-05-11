@@ -76,7 +76,7 @@ export async function addContact(
   }
 
   // 3. Validate the target user is in the interaction pool
-  const isInPool = await isInInteractionPool(supabase, user.id, contactId);
+  const isInPool = await isInInteractionPoolInternal(supabase, user.id, contactId);
   if (!isInPool) {
     return { error: 'User is not in your interaction pool' };
   }
@@ -366,17 +366,41 @@ export async function getInteractionPool(input?: {
 }
 
 // ---------------------------------------------------------------------------
-// Helper: isInInteractionPool
+// isInInteractionPool (public server action)
 // ---------------------------------------------------------------------------
 
 /**
- * Checks if a target user is in the current user's interaction pool.
- * A user is in the pool if they share at least one of:
+ * Public server action that checks if a target user is in the current
+ * authenticated user's interaction pool.
+ *
+ * Returns `false` for unauthenticated users.
+ *
+ * Requirements: 6.1, 6.2
+ */
+export async function isInInteractionPool(
+  targetUserId: string,
+): Promise<boolean> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return false;
+
+  return isInInteractionPoolInternal(supabase, user.id, targetUserId);
+}
+
+// ---------------------------------------------------------------------------
+// Helper: isInInteractionPoolInternal
+// ---------------------------------------------------------------------------
+
+/**
+ * Internal helper that checks if a target user is in the current user's
+ * interaction pool. A user is in the pool if they share at least one of:
  * - Membership in the same crew (current or past)
  * - An approved (active) chat conversation
  * - Mutual "going" RSVP on the same event
  */
-async function isInInteractionPool(
+async function isInInteractionPoolInternal(
   supabase: Awaited<ReturnType<typeof createClient>>,
   currentUserId: string,
   targetUserId: string,
@@ -438,4 +462,31 @@ async function isInInteractionPool(
   }
 
   return false;
+}
+
+// ---------------------------------------------------------------------------
+// isContact
+// ---------------------------------------------------------------------------
+
+/**
+ * Checks whether the target user is in the current user's contact list.
+ * Returns `false` for unauthenticated users.
+ *
+ * Requirements: 2.1, 2.2
+ */
+export async function isContact(targetUserId: string): Promise<boolean> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return false;
+
+  const { data } = await supabase
+    .from('user_contacts')
+    .select('contact_id')
+    .eq('owner_id', user.id)
+    .eq('contact_id', targetUserId)
+    .single();
+
+  return !!data;
 }

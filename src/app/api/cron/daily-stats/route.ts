@@ -19,8 +19,8 @@ export async function GET(request: Request) {
     { count: publishedEvents },
     { count: newAttendees },
   ] = await Promise.all([
-    supabase.from('profiles').select('*', { count: 'exact', head: true }),
-    supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', `${today}T00:00:00`),
+    supabase.from('profiles').select('*', { count: 'exact', head: true }).is('deleted_at', null),
+    supabase.from('profiles').select('*', { count: 'exact', head: true }).is('deleted_at', null).gte('created_at', `${today}T00:00:00`),
     supabase.from('events').select('*', { count: 'exact', head: true }).eq('status', 'published'),
     supabase.from('event_attendees').select('*', { count: 'exact', head: true }).gte('joined_at', `${today}T00:00:00`),
   ]);

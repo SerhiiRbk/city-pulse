@@ -21,6 +21,17 @@ const nextConfig: NextConfig = {
     // and unlocks the Vercel Image Optimization edge cache.
     formats: ['image/avif', 'image/webp'],
   },
+  async rewrites() {
+    return [
+      // Crew invite links are shared without locale prefix.
+      // Rewrite to the default locale route so crawlers get OG tags
+      // without a visible redirect.
+      {
+        source: '/invite/crew/:token',
+        destination: '/en/invite/crew/:token',
+      },
+    ];
+  },
 };
 
 export default withNextIntl(nextConfig);

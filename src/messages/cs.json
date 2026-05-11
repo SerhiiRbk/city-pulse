@@ -27,8 +27,8 @@
     "downloadQr": "Stáhnout PNG",
     "qrDialogTitle": "Naskenujte pro otevření",
     "qrDialogHelp": "Namiřte na kód kamerou a otevřete stránku na jiném zařízení, nebo si obrázek uložte pro leták.",
-    "follow": "Sledovat",
-    "following": "Sledujete",
+    "addToContacts": "Přidat do kontaktů",
+    "removeFromContacts": "Odebrat z kontaktů",
     "user": "Uživatel",
     "send": "Odeslat",
     "searchAddress": "Hledat adresu...",
@@ -869,7 +869,7 @@
     },
     "breadcrumbs": "Komunita",
     "yearsOld": "{age} let",
-    "followers": "Sledující",
+    "contacts": "Kontakty",
     "reputation": {
       "reliability": "Spolehlivost",
       "attendanceRate": "Účast",
@@ -936,6 +936,7 @@
     "block": "Zablokovat",
     "unblock": "Odblokovat",
     "blocked": "Uživatel je zablokován",
+    "deletedUser": "Smazaný uživatel",
     "timeNow": "teď",
     "timeMinutesAgo": "před {count} min",
     "timeHoursAgo": "před {count} h",
@@ -1192,7 +1193,7 @@
   },
   "friends": {
     "goingCue": "{count, plural, one {# známý jde} few {# známých jde} many {# známých jde} other {# známých jde}}",
-    "noFollowingYet": "Sledujte organizátory, abyste viděli, kam kdo jde."
+    "noContactsYet": "Přidejte kontakty, abyste viděli, kam kdo jde."
   },
   "safety": {
     "tagWomenOnly": "Pouze pro ženy",
@@ -1273,6 +1274,7 @@
     "create_crew_button": "Vytvořit skupinu",
     "ctaLogin": "Přihlaste se pro vytvoření skupiny",
     "request_to_join": "Požádat o vstup",
+    "requested": "Požadavek odeslán",
     "go_together_title": "Jít společně",
     "go_together_description": "Nechcete jít sami? Vytvořte malou skupinu nebo se připojte k lidem, kteří se na tuto akci už chystají.",
     "spots_available": "{current}/{max} míst",
@@ -1386,5 +1388,39 @@
     "notification": {
       "joinedViaLink": "{userName} se připojil(a) přes odkaz od {inviterName}"
     }
+  },
+  "accountDeletion": {
+    "deleteButton": "Smazat účet",
+    "dangerZone": {
+      "title": "Nebezpečná zóna",
+      "description": "Trvalé smazání vašeho účtu a všech souvisejících dat. Tuto akci nelze po uplynutí ochranné lhůty vrátit zpět.",
+      "pendingMessage": "Váš účet je naplánován ke smazání. Můžete jej obnovit přihlášením během 30denní ochranné lhůty."
+    },
+    "dialog": {
+      "title": "Smazat účet",
+      "consequences": "Smazáním účtu okamžitě ztratíte přístup, váš obsah bude anonymizován a máte 30denní ochrannou lhůtu pro reaktivaci před trvalým smazáním.",
+      "confirmationLabel": "Zadejte {word} pro potvrzení",
+      "confirmationPlaceholder": "Zadejte SMAZAT pro potvrzení",
+      "submit": "Smazat můj účet",
+      "cancel": "Zrušit"
+    },
+    "errors": {
+      "invalidConfirmation": "Potvrzovací slovo se neshoduje",
+      "rateLimited": "Počkejte prosím 24 hodin před dalším požadavkem na smazání",
+      "alreadyPending": "Požadavek na smazání již čeká na zpracování",
+      "internalError": "Něco se pokazilo. Zkuste to prosím později."
+    },
+    "reactivation": {
+      "title": "Reaktivovat účet?",
+      "description": "Váš účet je naplánován ke smazání. Můžete jej nyní reaktivovat, abyste obnovili přístup a zrušili smazání.",
+      "gracePeriodEnds": "Váš účet bude trvale smazán {date}.",
+      "confirm": "Reaktivovat účet",
+      "decline": "Ponechat smazaný"
+    },
+    "success": {
+      "title": "Smazání účtu zahájeno",
+      "description": "Váš účet bude trvale smazán za 30 dní. Můžete jej reaktivovat přihlášením během tohoto období."
+    },
+    "anonymizedUser": "Smazaný uživatel"
   }
 }
