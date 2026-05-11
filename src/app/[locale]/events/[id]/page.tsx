@@ -30,6 +30,7 @@ import { AttendanceRoster, type RosterEntry } from '@/components/events/attendan
 import { EventReviewForm } from '@/components/events/event-review-form';
 import { EventPhotoGallery } from '@/components/events/event-photo-gallery';
 import { generateBreadcrumbJsonLd, generateEventJsonLd } from '@/lib/json-ld';
+import { resolveEventTitle, resolveEventDescription } from '@/lib/event-i18n';
 import { RichTextView } from '@/components/ui/rich-text-view';
 import type { RichTextDoc } from '@/lib/rich-text/types';
 import { getFriendsGoing } from '@/lib/actions/friends-going';
@@ -60,6 +61,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Build a richer alt for the OG image so Google Image Search and
   // chat preview surfaces (Slack, iMessage) get useful context beyond
   // just the event title.
+  const localizedMetaTitle = resolveEventTitle(event, locale);
+  const localizedMetaDescription = resolveEventDescription(event, locale);
   const cityForAlt = event.city || null;
   const dateForAlt = (() => {
     try {
@@ -72,13 +75,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       return null;
     }
   })();
-  const imageAlt = [event.title, cityForAlt, dateForAlt].filter(Boolean).join(' — ');
+  const imageAlt = [localizedMetaTitle, cityForAlt, dateForAlt].filter(Boolean).join(' — ');
 
   return buildPageMetadata({
     locale: locale as Locale,
     path: `/events/${event.id}`,
-    title: event.title,
-    description: event.description?.slice(0, 160) || event.title,
+    title: localizedMetaTitle,
+    description: localizedMetaDescription?.slice(0, 160) || localizedMetaTitle,
     image: event.photos?.[0] || null,
     imageAlt,
     type: 'article',
@@ -104,6 +107,10 @@ export default async function EventDetailPage({ params }: Props) {
   const event = await getEvent(id);
 
   if (!event) notFound();
+
+  // Resolve localized title and description for display
+  const localizedTitle = resolveEventTitle(event, locale);
+  const localizedDescription = resolveEventDescription(event, locale);
 
   // Fire-and-forget: record a de-duped view in the funnel. The
   // helper swallows errors so analytics flakiness can't break the
@@ -194,7 +201,7 @@ export default async function EventDetailPage({ params }: Props) {
   const jsonLd = generateEventJsonLd(event);
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
     { name: t('breadcrumbs'), url: `/${locale}/events` },
-    { name: event.title, url: `/${locale}/events/${id}` },
+    { name: localizedTitle, url: `/${locale}/events/${id}` },
   ]);
 
   return (
@@ -210,7 +217,7 @@ export default async function EventDetailPage({ params }: Props) {
       <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground sm:mb-5">
         <Link href="/events" className="transition-colors hover:text-foreground">{t('breadcrumbs')}</Link>
         <span>/</span>
-        <span className="truncate">{event.title}</span>
+        <span className="truncate">{localizedTitle}</span>
       </div>
       {/* Photos */}
       {event.photos && event.photos.length > 0 && (
@@ -255,7 +262,7 @@ export default async function EventDetailPage({ params }: Props) {
             {event.safety_tags && event.safety_tags.length > 0 && (
               <SafetyTagBadges tags={event.safety_tags} className="mb-3" />
             )}
-            <h1 className="text-2xl font-bold tracking-tight sm:text-4xl">{event.title}</h1>
+            <h1 className="text-2xl font-bold tracking-tight sm:text-4xl">{localizedTitle}</h1>
 
             {event.status === 'cancelled' && (
               <Badge variant="destructive" className="mt-3">{t('cancelled')}</Badge>
@@ -307,12 +314,12 @@ export default async function EventDetailPage({ params }: Props) {
           <Separator />
 
           {/* Description */}
-          {(event.description_json || (event.description && event.description.trim())) && (
+          {(event.description_json || (localizedDescription && localizedDescription.trim())) && (
             <div>
               <h2 className="mb-2 font-semibold">{t('description')}</h2>
               <RichTextView
                 doc={event.description_json as RichTextDoc | null}
-                fallbackText={event.description}
+                fallbackText={localizedDescription}
                 className="text-sm leading-7 text-foreground/90"
               />
             </div>

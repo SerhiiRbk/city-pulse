@@ -539,7 +539,15 @@
       "group": "Vytvořit jménem",
       "personalEvent": "Osobní akce",
       "groupEvent": "Skupina: {name}",
-      "submit": "Publikovat"
+      "submit": "Publikovat",
+      "translations": "Překlady",
+      "translationsHint": "Přidejte název a popis v dalších jazycích. Hlavní název/popis se použije jako záloha.",
+      "selectLocale": "Vyberte jazyk",
+      "translatedTitle": "Přeložený název",
+      "translatedTitlePlaceholder": "Název akce v tomto jazyce",
+      "translatedDescription": "Přeložený popis",
+      "translatedDescriptionPlaceholder": "Popis akce v tomto jazyce",
+      "addTranslation": "Přidat překlad"
     },
     "edit": {
       "title": "Upravit akci",
@@ -550,7 +558,15 @@
       "removeModerator": "Odebrat moderátora",
       "noModerators": "Zatím nebyli přidáni žádní moderátoři",
       "moderatorAdded": "Moderátor přidán",
-      "moderatorRemoved": "Moderátor odebrán"
+      "moderatorRemoved": "Moderátor odebrán",
+      "translations": "Překlady",
+      "translationsHint": "Přidejte překlady názvu a popisu do dalších jazyků. Původní název/popis se použije jako záložní varianta.",
+      "selectLocale": "Vyberte jazyk",
+      "translatedTitle": "Přeložený název",
+      "translatedTitlePlaceholder": "Název akce v tomto jazyce",
+      "translatedDescription": "Přeložený popis",
+      "translatedDescriptionPlaceholder": "Popis akce v tomto jazyce",
+      "addTranslation": "Přidat překlad"
     },
     "safety": {
       "inputLabel": "Cílová skupina",
@@ -1115,7 +1131,15 @@
           "review": "V revizi",
           "scheduled": "Naplánováno",
           "published": "Publikováno"
-        }
+        },
+        "translationsTitle": "Překlady",
+        "translationsHint": "Přidejte název a popis v dalších jazycích. Hlavní pole se použijí jako záloha.",
+        "selectLocale": "Vyberte jazyk",
+        "translatedTitleLabel": "Název",
+        "translatedTitlePlaceholder": "Název akce v tomto jazyce",
+        "translatedDescriptionLabel": "Popis",
+        "translatedDescriptionPlaceholder": "Popis akce v tomto jazyce",
+        "addTranslationButton": "Přidat překlad"
       },
       "gates": {
         "panelTitle": "Kontrola kvality",

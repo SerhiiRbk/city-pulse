@@ -4,6 +4,7 @@ import { getEvents, getUserEventStatuses } from '@/lib/actions/events';
 import { getUser } from '@/lib/actions/auth';
 import { getFriendsGoingBulk } from '@/lib/actions/friends-going';
 import { isFeatureEnabled } from '@/lib/feature-flags';
+import { resolveEventTitle, resolveEventDescription } from '@/lib/event-i18n';
 import type { EventSort } from '@/lib/actions/events';
 import type { FriendGoing } from '@/lib/actions/friends-going';
 
@@ -27,6 +28,7 @@ export interface LoadMoreFilters {
 interface LoadMoreParams extends LoadMoreFilters {
   offset: number;
   limit: number;
+  locale?: string;
 }
 
 interface LoadMoreResult {
@@ -62,7 +64,7 @@ interface LoadMoreResult {
 }
 
 export async function loadMoreEvents(params: LoadMoreParams): Promise<LoadMoreResult | null> {
-  const { offset, limit, ...filters } = params;
+  const { offset, limit, locale, ...filters } = params;
 
   const events = await getEvents({
     ...filters,
@@ -73,6 +75,15 @@ export async function loadMoreEvents(params: LoadMoreParams): Promise<LoadMoreRe
   if (!events || events.length === 0) {
     return { events: [], goingIds: [], waitlistIds: [], interestedIds: [], favoritedIds: [], friendsGoingByEvent: {} };
   }
+
+  // Resolve localized titles/descriptions if locale is provided
+  const localizedEvents = locale
+    ? events.map((e) => ({
+        ...e,
+        title: resolveEventTitle(e, locale),
+        description: resolveEventDescription(e, locale) ?? e.description,
+      }))
+    : events;
 
   const user = await getUser();
   const eventIds = events.map((e) => e.id);
@@ -92,7 +103,7 @@ export async function loadMoreEvents(params: LoadMoreParams): Promise<LoadMoreRe
       : {};
 
   return {
-    events,
+    events: localizedEvents,
     goingIds: Array.from(goingSet),
     waitlistIds: Array.from(waitlistSet),
     interestedIds: Array.from(interestedSet),

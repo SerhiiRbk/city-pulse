@@ -4,6 +4,7 @@ import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { getUser } from '@/lib/actions/auth';
 import { getFriendsGoingBulk } from '@/lib/actions/friends-going';
 import { isFeatureEnabled } from '@/lib/feature-flags';
+import { resolveEventTitle, resolveEventDescription } from '@/lib/event-i18n';
 import { EventsGridWithLoadMore } from '@/components/events/events-grid-with-load-more';
 import { EventsFilters } from '@/components/events/events-filters';
 import { FilterPersistence } from '@/components/events/filter-persistence';
@@ -434,7 +435,11 @@ export default async function EventsPage({
           </EmptyState>
         ) : (
           <EventsGridWithLoadMore
-            initialEvents={events}
+            initialEvents={events.map((e) => ({
+              ...e,
+              title: resolveEventTitle(e, locale),
+              description: resolveEventDescription(e, locale) ?? e.description,
+            }))}
             initialGoingSet={Array.from(goingSet)}
             initialWaitlistSet={Array.from(waitlistSet)}
             initialInterestedSet={Array.from(interestedSet)}

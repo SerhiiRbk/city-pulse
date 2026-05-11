@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2, Sparkles, Wand2 } from 'lucide-react';
+import { Loader2, Sparkles, Wand2, ChevronDown, Plus, X, Languages } from 'lucide-react';
 import {
   fetchOpenGraphFromUrl,
   publishSystemEvent,
@@ -30,6 +30,7 @@ import {
   type QualityGate,
 } from '@/lib/system-events/quality-gates';
 import { QualityGatesPanel } from './quality-gates-panel';
+import { locales, localeNames, localeFlags } from '@/i18n/config';
 
 interface Category {
   id: string;
@@ -75,6 +76,15 @@ export function SystemEventComposer({ initial, categories }: SystemEventComposer
   const [serverGates, setServerGates] = useState<QualityGate[] | null>(null);
 
   const [form, setForm] = useState(initial);
+
+  // Translations state
+  interface TranslationEntry {
+    locale: string;
+    title: string;
+    description: string;
+  }
+  const [translations, setTranslations] = useState<TranslationEntry[]>([]);
+  const [translationsOpen, setTranslationsOpen] = useState(false);
 
   /**
    * Quality gates are recomputed on every keystroke. The function is pure
@@ -137,6 +147,16 @@ export function SystemEventComposer({ initial, categories }: SystemEventComposer
       currency: form.is_free ? null : form.currency || 'EUR',
       photos: form.cover_url ? [form.cover_url] : [],
       editorial_status: target,
+      title_translations: Object.fromEntries(
+        translations
+          .filter((tr) => tr.locale && tr.title.trim())
+          .map((tr) => [tr.locale, tr.title.trim()]),
+      ),
+      description_translations: Object.fromEntries(
+        translations
+          .filter((tr) => tr.locale && tr.description.trim())
+          .map((tr) => [tr.locale, tr.description.trim()]),
+      ),
     };
   }
 
@@ -407,6 +427,132 @@ export function SystemEventComposer({ initial, categories }: SystemEventComposer
               </div>
             )}
           </CardContent>
+        </Card>
+
+        {/* Translations */}
+        <Card>
+          <CardHeader className="pb-3">
+            <button
+              type="button"
+              className="flex w-full items-center justify-between"
+              onClick={() => setTranslationsOpen(!translationsOpen)}
+            >
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Languages className="h-4 w-4" />
+                {t('translationsTitle')}
+              </CardTitle>
+              <ChevronDown
+                className={`h-4 w-4 text-muted-foreground transition-transform ${translationsOpen ? 'rotate-180' : ''}`}
+              />
+            </button>
+          </CardHeader>
+          {translationsOpen && (
+            <CardContent className="space-y-4">
+              <p className="text-xs text-muted-foreground">{t('translationsHint')}</p>
+              {translations.map((entry, index) => {
+                const usedLocales = translations
+                  .filter((_, i) => i !== index)
+                  .map((tr) => tr.locale);
+                const availableLocales = locales.filter(
+                  (l) => !usedLocales.includes(l),
+                );
+                return (
+                  <div
+                    key={index}
+                    className="space-y-3 rounded-xl border bg-muted/20 p-4"
+                  >
+                    <div className="flex items-center justify-between">
+                      <Select
+                        value={entry.locale}
+                        onValueChange={(val) =>
+                          setTranslations((prev) =>
+                            prev.map((tr, i) =>
+                              i === index ? { ...tr, locale: val } : tr,
+                            ),
+                          )
+                        }
+                      >
+                        <SelectTrigger className="w-48">
+                          <SelectValue placeholder={t('selectLocale')} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {availableLocales.map((loc) => (
+                            <SelectItem key={loc} value={loc}>
+                              {localeFlags[loc]} {localeNames[loc]}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="text-destructive h-8 w-8 p-0"
+                        onClick={() =>
+                          setTranslations((prev) =>
+                            prev.filter((_, i) => i !== index),
+                          )
+                        }
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div>
+                      <Label>{t('translatedTitleLabel')}</Label>
+                      <Input
+                        value={entry.title}
+                        onChange={(e) =>
+                          setTranslations((prev) =>
+                            prev.map((tr, i) =>
+                              i === index ? { ...tr, title: e.target.value } : tr,
+                            ),
+                          )
+                        }
+                        placeholder={t('translatedTitlePlaceholder')}
+                      />
+                    </div>
+                    <div>
+                      <Label>{t('translatedDescriptionLabel')}</Label>
+                      <Textarea
+                        value={entry.description}
+                        onChange={(e) =>
+                          setTranslations((prev) =>
+                            prev.map((tr, i) =>
+                              i === index ? { ...tr, description: e.target.value } : tr,
+                            ),
+                          )
+                        }
+                        placeholder={t('translatedDescriptionPlaceholder')}
+                        rows={3}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+              {translations.length < locales.length && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    setTranslations((prev) => [
+                      ...prev,
+                      {
+                        locale: locales.find(
+                          (l) => !prev.some((tr) => tr.locale === l),
+                        ) || '',
+                        title: '',
+                        description: '',
+                      },
+                    ])
+                  }
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  {t('addTranslationButton')}
+                </Button>
+              )}
+            </CardContent>
+          )}
         </Card>
       </div>
 

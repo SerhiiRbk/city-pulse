@@ -32,6 +32,8 @@ const composerInputSchema = z.object({
   currency: z.string().min(3).max(3).nullable().optional(),
   photos: z.array(z.string().url()).max(6).default([]),
   editorial_status: editorialStatusEnum.default('draft'),
+  title_translations: z.record(z.string(), z.string().max(120)).optional().default({}),
+  description_translations: z.record(z.string(), z.string().max(4000)).optional().default({}),
 });
 
 export type ComposerInput = z.infer<typeof composerInputSchema>;
@@ -237,6 +239,8 @@ export async function saveSystemEventDraft(
     currency: data.is_free ? null : data.currency ?? null,
     photos: data.photos,
     editorial_status: data.editorial_status,
+    title_translations: data.title_translations ?? {},
+    description_translations: data.description_translations ?? {},
     is_system: true,
     is_online: false,
     is_private: false,
