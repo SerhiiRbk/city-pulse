@@ -539,7 +539,15 @@
       "group": "Создать от имени",
       "personalEvent": "Личное мероприятие",
       "groupEvent": "Группа: {name}",
-      "submit": "Опубликовать"
+      "submit": "Опубликовать",
+      "translations": "Переводы",
+      "translationsHint": "Добавьте название и описание на других языках. Основные название/описание используются как запасной вариант.",
+      "selectLocale": "Выберите язык",
+      "translatedTitle": "Переведённое название",
+      "translatedTitlePlaceholder": "Название события на этом языке",
+      "translatedDescription": "Переведённое описание",
+      "translatedDescriptionPlaceholder": "Описание события на этом языке",
+      "addTranslation": "Добавить перевод"
     },
     "edit": {
       "title": "Редактировать мероприятие",
@@ -550,7 +558,15 @@
       "removeModerator": "Удалить модератора",
       "noModerators": "Модераторы ещё не добавлены",
       "moderatorAdded": "Модератор добавлен",
-      "moderatorRemoved": "Модератор удалён"
+      "moderatorRemoved": "Модератор удалён",
+      "translations": "Переводы",
+      "translationsHint": "Добавьте переводы названия и описания на другие языки. Оригинальные название/описание используются как запасной вариант.",
+      "selectLocale": "Выберите язык",
+      "translatedTitle": "Переведённое название",
+      "translatedTitlePlaceholder": "Название мероприятия на этом языке",
+      "translatedDescription": "Переведённое описание",
+      "translatedDescriptionPlaceholder": "Описание мероприятия на этом языке",
+      "addTranslation": "Добавить перевод"
     },
     "safety": {
       "inputLabel": "Метки аудитории",
@@ -1115,7 +1131,15 @@
           "review": "Ревью",
           "scheduled": "Запланировано",
           "published": "Опубликовано"
-        }
+        },
+        "translationsTitle": "Переводы",
+        "translationsHint": "Добавьте название и описание на других языках. Основные поля используются как запасной вариант.",
+        "selectLocale": "Выберите язык",
+        "translatedTitleLabel": "Название",
+        "translatedTitlePlaceholder": "Название события на этом языке",
+        "translatedDescriptionLabel": "Описание",
+        "translatedDescriptionPlaceholder": "Описание события на этом языке",
+        "addTranslationButton": "Добавить перевод"
       },
       "gates": {
         "panelTitle": "Контроль качества",

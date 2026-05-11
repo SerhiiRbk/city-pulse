@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2, UsersRound, MapPin } from 'lucide-react';
+import { Loader2, X, ChevronsUpDown, Check, ImagePlus, Star, Trash2, UsersRound, MapPin, ChevronDown, Plus, Languages } from 'lucide-react';
 import { LocationPicker } from '@/components/maps/location-picker';
 import { CityPicker } from '@/components/ui/city-picker';
 import { LanguageMultiSelect } from '@/components/ui/language-multi-select';
@@ -36,6 +36,8 @@ import { COUNTRIES } from '@/lib/constants';
 import { extractPlainText } from '@/lib/rich-text/extract-plain';
 import { richTextHasContent } from '@/lib/rich-text/validate';
 import { SafetyTagsInput } from '@/components/events/safety-tags-input';
+import { Textarea } from '@/components/ui/textarea';
+import { locales, localeNames, localeFlags } from '@/i18n/config';
 import type { RichTextDoc } from '@/lib/rich-text/types';
 import type { Interest, InterestCategory, City, SafetyTag } from '@/types/database';
 
@@ -114,6 +116,15 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
   const [photos, setPhotos] = useState<string[]>([]);
   const [coverIndex, setCoverIndex] = useState(0);
   const [uploading, setUploading] = useState(false);
+
+  // Translations state
+  interface TranslationEntry {
+    locale: string;
+    title: string;
+    description: string;
+  }
+  const [translations, setTranslations] = useState<TranslationEntry[]>([]);
+  const [translationsOpen, setTranslationsOpen] = useState(false);
 
   function handleGroupChange(groupId: string) {
     setSelectedGroupId(groupId);
@@ -236,6 +247,16 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
       group_id: selectedGroupId !== '__personal' ? selectedGroupId : null,
       safety_tags: safetyTags,
       allow_crews: allowCrews,
+      title_translations: Object.fromEntries(
+        translations
+          .filter((t) => t.locale && t.title.trim())
+          .map((t) => [t.locale, t.title.trim()]),
+      ),
+      description_translations: Object.fromEntries(
+        translations
+          .filter((t) => t.locale && t.description.trim())
+          .map((t) => [t.locale, t.description.trim()]),
+      ),
     };
 
     if (!data.title || !data.starts_at || !primaryCategory) {
@@ -635,6 +656,140 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
             ))}
           </div>
         </CardContent>
+      </Card>
+
+      {/* Translations */}
+      <Card className="rounded-3xl border-border/50 shadow-sm">
+        <CardHeader>
+          <button
+            type="button"
+            className="flex w-full items-center justify-between"
+            onClick={() => setTranslationsOpen(!translationsOpen)}
+          >
+            <CardTitle className="flex items-center gap-2">
+              <Languages className="h-5 w-5" />
+              {t('translations')}
+            </CardTitle>
+            <ChevronDown
+              className={cn(
+                'h-5 w-5 text-muted-foreground transition-transform',
+                translationsOpen && 'rotate-180',
+              )}
+            />
+          </button>
+        </CardHeader>
+        {translationsOpen && (
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground text-xs">{t('translationsHint')}</p>
+            {translations.map((entry, index) => {
+              const usedLocales = translations
+                .filter((_, i) => i !== index)
+                .map((tr) => tr.locale);
+              const availableLocales = locales.filter(
+                (l) => !usedLocales.includes(l),
+              );
+              return (
+                <div
+                  key={index}
+                  className="space-y-3 rounded-2xl border border-border/50 bg-muted/20 p-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <Select
+                      value={entry.locale}
+                      onValueChange={(val) => {
+                        setTranslations((prev) =>
+                          prev.map((tr, i) =>
+                            i === index ? { ...tr, locale: val } : tr,
+                          ),
+                        );
+                      }}
+                    >
+                      <SelectTrigger className="w-48">
+                        <SelectValue placeholder={t('selectLocale')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableLocales.map((loc) => (
+                          <SelectItem key={loc} value={loc}>
+                            {localeFlags[loc]} {localeNames[loc]}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="text-destructive hover:text-destructive h-8 w-8 p-0"
+                      onClick={() =>
+                        setTranslations((prev) =>
+                          prev.filter((_, i) => i !== index),
+                        )
+                      }
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>{t('translatedTitle')}</Label>
+                    <Input
+                      value={entry.title}
+                      onChange={(e) =>
+                        setTranslations((prev) =>
+                          prev.map((tr, i) =>
+                            i === index
+                              ? { ...tr, title: e.target.value }
+                              : tr,
+                          ),
+                        )
+                      }
+                      placeholder={t('translatedTitlePlaceholder')}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>{t('translatedDescription')}</Label>
+                    <Textarea
+                      value={entry.description}
+                      onChange={(e) =>
+                        setTranslations((prev) =>
+                          prev.map((tr, i) =>
+                            i === index
+                              ? { ...tr, description: e.target.value }
+                              : tr,
+                          ),
+                        )
+                      }
+                      placeholder={t('translatedDescriptionPlaceholder')}
+                      className="min-h-24"
+                    />
+                  </div>
+                </div>
+              );
+            })}
+            {translations.length < locales.length && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="rounded-xl"
+                onClick={() =>
+                  setTranslations((prev) => [
+                    ...prev,
+                    {
+                      locale: locales.find(
+                        (l) => !prev.some((tr) => tr.locale === l),
+                      ) || '',
+                      title: '',
+                      description: '',
+                    },
+                  ])
+                }
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                {t('addTranslation')}
+              </Button>
+            )}
+          </CardContent>
+        )}
       </Card>
 
       <div className="sticky bottom-3 z-20 rounded-[1.5rem] border border-border/50 bg-background/95 p-3 shadow-xl backdrop-blur-md">

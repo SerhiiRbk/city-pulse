@@ -539,7 +539,15 @@
       "group": "Erstellen im Namen von",
       "personalEvent": "Persönliches Event",
       "groupEvent": "Gruppe: {name}",
-      "submit": "Veröffentlichen"
+      "submit": "Veröffentlichen",
+      "translations": "Übersetzungen",
+      "translationsHint": "Fügen Sie Titel und Beschreibung in anderen Sprachen hinzu. Der Haupttitel/-beschreibung wird als Fallback verwendet.",
+      "selectLocale": "Sprache wählen",
+      "translatedTitle": "Übersetzter Titel",
+      "translatedTitlePlaceholder": "Eventtitel in dieser Sprache",
+      "translatedDescription": "Übersetzte Beschreibung",
+      "translatedDescriptionPlaceholder": "Eventbeschreibung in dieser Sprache",
+      "addTranslation": "Übersetzung hinzufügen"
     },
     "edit": {
       "title": "Veranstaltung bearbeiten",
@@ -550,7 +558,15 @@
       "removeModerator": "Moderator entfernen",
       "noModerators": "Noch keine Moderatoren hinzugefügt",
       "moderatorAdded": "Moderator hinzugefügt",
-      "moderatorRemoved": "Moderator entfernt"
+      "moderatorRemoved": "Moderator entfernt",
+      "translations": "Übersetzungen",
+      "translationsHint": "Fügen Sie Übersetzungen für Titel und Beschreibung in anderen Sprachen hinzu. Der Originaltitel/-beschreibung wird als Fallback verwendet.",
+      "selectLocale": "Sprache auswählen",
+      "translatedTitle": "Übersetzter Titel",
+      "translatedTitlePlaceholder": "Veranstaltungstitel in dieser Sprache",
+      "translatedDescription": "Übersetzte Beschreibung",
+      "translatedDescriptionPlaceholder": "Veranstaltungsbeschreibung in dieser Sprache",
+      "addTranslation": "Übersetzung hinzufügen"
     },
     "safety": {
       "inputLabel": "Zielgruppen-Hinweise",
@@ -1115,7 +1131,15 @@
           "review": "Review",
           "scheduled": "Geplant",
           "published": "Veröffentlicht"
-        }
+        },
+        "translationsTitle": "Übersetzungen",
+        "translationsHint": "Fügen Sie Titel und Beschreibung in anderen Sprachen hinzu. Die Hauptfelder werden als Fallback verwendet.",
+        "selectLocale": "Sprache wählen",
+        "translatedTitleLabel": "Titel",
+        "translatedTitlePlaceholder": "Eventtitel in dieser Sprache",
+        "translatedDescriptionLabel": "Beschreibung",
+        "translatedDescriptionPlaceholder": "Eventbeschreibung in dieser Sprache",
+        "addTranslationButton": "Übersetzung hinzufügen"
       },
       "gates": {
         "panelTitle": "Qualitätsprüfung",

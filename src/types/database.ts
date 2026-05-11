@@ -146,6 +146,16 @@ export interface Event {
    */
   series_id: string | null;
   series_position: number | null;
+  /**
+   * Locale-keyed title overrides. Format: {"en": "...", "cs": "..."}.
+   * Falls back to `title` when the viewer locale has no entry.
+   */
+  title_translations: Record<string, string>;
+  /**
+   * Locale-keyed plain-text description overrides.
+   * Falls back to `description` when the viewer locale has no entry.
+   */
+  description_translations: Record<string, string>;
   created_at: string;
   updated_at: string;
 }

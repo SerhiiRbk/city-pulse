@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { EventCard } from '@/components/events/event-card';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
@@ -61,6 +61,7 @@ export function EventsGridWithLoadMore({
 }: EventsGridWithLoadMoreProps) {
   const t = useTranslations('common');
   const tPage = useTranslations('events.page');
+  const locale = useLocale();
   const [events, setEvents] = useState<EventItem[]>(initialEvents);
   const [goingSet, setGoingSet] = useState<Set<string>>(new Set(initialGoingSet));
   const [waitlistSet, setWaitlistSet] = useState<Set<string>>(new Set(initialWaitlistSet));
@@ -90,6 +91,7 @@ export function EventsGridWithLoadMore({
         ...filters,
         offset: events.length,
         limit: pageSize,
+        locale,
       });
 
       if (!result) return;

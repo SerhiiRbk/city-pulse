@@ -539,7 +539,15 @@
       "group": "Створити від імені",
       "personalEvent": "Особистий захід",
       "groupEvent": "Група: {name}",
-      "submit": "Опублікувати"
+      "submit": "Опублікувати",
+      "translations": "Переклади",
+      "translationsHint": "Додайте назву та опис іншими мовами. Основні назва/опис використовуються як запасний варіант.",
+      "selectLocale": "Оберіть мову",
+      "translatedTitle": "Перекладена назва",
+      "translatedTitlePlaceholder": "Назва події цією мовою",
+      "translatedDescription": "Перекладений опис",
+      "translatedDescriptionPlaceholder": "Опис події цією мовою",
+      "addTranslation": "Додати переклад"
     },
     "edit": {
       "title": "Редагувати захід",
@@ -550,7 +558,15 @@
       "removeModerator": "Видалити модератора",
       "noModerators": "Модераторів ще не додано",
       "moderatorAdded": "Модератора додано",
-      "moderatorRemoved": "Модератора видалено"
+      "moderatorRemoved": "Модератора видалено",
+      "translations": "Переклади",
+      "translationsHint": "Додайте переклади назви та опису іншими мовами. Оригінальні назва/опис використовуються як запасний варіант.",
+      "selectLocale": "Оберіть мову",
+      "translatedTitle": "Перекладена назва",
+      "translatedTitlePlaceholder": "Назва заходу цією мовою",
+      "translatedDescription": "Перекладений опис",
+      "translatedDescriptionPlaceholder": "Опис заходу цією мовою",
+      "addTranslation": "Додати переклад"
     },
     "safety": {
       "inputLabel": "Мітки аудиторії",
@@ -1115,7 +1131,15 @@
           "review": "Ревʼю",
           "scheduled": "Заплановано",
           "published": "Опубліковано"
-        }
+        },
+        "translationsTitle": "Переклади",
+        "translationsHint": "Додайте назву та опис іншими мовами. Основні поля використовуються як запасний варіант.",
+        "selectLocale": "Оберіть мову",
+        "translatedTitleLabel": "Назва",
+        "translatedTitlePlaceholder": "Назва події цією мовою",
+        "translatedDescriptionLabel": "Опис",
+        "translatedDescriptionPlaceholder": "Опис події цією мовою",
+        "addTranslationButton": "Додати переклад"
       },
       "gates": {
         "panelTitle": "Контроль якості",

@@ -66,6 +66,16 @@ const baseEventFields = {
    * allow crews regardless of this value.
    */
   allow_crews: z.boolean().default(true),
+  /**
+   * Locale-keyed title overrides (JSONB).
+   * Format: {"en": "English title", "ru": "Русское название"}
+   */
+  title_translations: z.record(z.string(), z.string().max(120)).optional().default({}),
+  /**
+   * Locale-keyed plain-text description overrides (JSONB).
+   * Format: {"en": "English desc", "ru": "Русское описание"}
+   */
+  description_translations: z.record(z.string(), z.string().max(4000)).optional().default({}),
 };
 
 export const createEventSchema = z
@@ -102,6 +112,6 @@ export const eventCommentSchema = z.object({
   quotedAuthorName: z.string().trim().max(120).optional(),
 });
 
-export type CreateEventInput = z.infer<typeof createEventSchema>;
-export type UpdateEventInput = z.infer<typeof updateEventSchema>;
+export type CreateEventInput = z.input<typeof createEventSchema>;
+export type UpdateEventInput = z.input<typeof updateEventSchema>;
 export type EventCommentInput = z.infer<typeof eventCommentSchema>;

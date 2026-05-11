@@ -540,7 +540,15 @@
       "group": "Create on behalf of",
       "personalEvent": "Personal event",
       "groupEvent": "Group: {name}",
-      "submit": "Publish event"
+      "submit": "Publish event",
+      "translations": "Translations",
+      "translationsHint": "Add title and description in other languages. The main title/description is used as fallback.",
+      "selectLocale": "Select language",
+      "translatedTitle": "Translated title",
+      "translatedTitlePlaceholder": "Event title in this language",
+      "translatedDescription": "Translated description",
+      "translatedDescriptionPlaceholder": "Event description in this language",
+      "addTranslation": "Add translation"
     },
     "edit": {
       "title": "Edit event",
@@ -551,7 +559,15 @@
       "removeModerator": "Remove moderator",
       "noModerators": "No moderators added yet",
       "moderatorAdded": "Moderator added",
-      "moderatorRemoved": "Moderator removed"
+      "moderatorRemoved": "Moderator removed",
+      "translations": "Translations",
+      "translationsHint": "Add title and description translations for other languages. The original title/description is used as fallback.",
+      "selectLocale": "Select language",
+      "translatedTitle": "Translated title",
+      "translatedTitlePlaceholder": "Event title in this language",
+      "translatedDescription": "Translated description",
+      "translatedDescriptionPlaceholder": "Event description in this language",
+      "addTranslation": "Add translation"
     },
     "safety": {
       "inputLabel": "Audience guardrails",
@@ -1116,7 +1132,15 @@
           "review": "Review",
           "scheduled": "Scheduled",
           "published": "Published"
-        }
+        },
+        "translationsTitle": "Translations",
+        "translationsHint": "Add title and description in other languages. The main fields are used as fallback.",
+        "selectLocale": "Select language",
+        "translatedTitleLabel": "Title",
+        "translatedTitlePlaceholder": "Event title in this language",
+        "translatedDescriptionLabel": "Description",
+        "translatedDescriptionPlaceholder": "Event description in this language",
+        "addTranslationButton": "Add translation"
       },
       "gates": {
         "panelTitle": "Quality gates",

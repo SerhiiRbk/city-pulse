@@ -9,6 +9,10 @@ import {
   Sparkles,
   Wine,
   Users,
+  Dog,
+  Baby,
+  TreePine,
+  Leaf,
 } from 'lucide-react';
 import { SAFETY_TAGS, type SafetyTag } from '@/types/database';
 
@@ -18,6 +22,10 @@ const ICONS: Record<SafetyTag, typeof ShieldCheck> = {
   lgbtq_friendly: Sparkles,
   sober: Wine,
   beginner_friendly: Users,
+  dog_friendly: Dog,
+  kid_friendly: Baby,
+  outdoor: TreePine,
+  healthy_lifestyle: Leaf,
 };
 
 const TONE: Record<SafetyTag, string> = {
@@ -26,6 +34,10 @@ const TONE: Record<SafetyTag, string> = {
   lgbtq_friendly: 'border-violet-300/70 bg-violet-50 text-violet-900 dark:border-violet-800/50 dark:bg-violet-950/30 dark:text-violet-200',
   sober: 'border-emerald-300/70 bg-emerald-50 text-emerald-900 dark:border-emerald-800/50 dark:bg-emerald-950/30 dark:text-emerald-200',
   beginner_friendly: 'border-sky-300/70 bg-sky-50 text-sky-900 dark:border-sky-800/50 dark:bg-sky-950/30 dark:text-sky-200',
+  dog_friendly: 'border-orange-300/70 bg-orange-50 text-orange-900 dark:border-orange-800/50 dark:bg-orange-950/30 dark:text-orange-200',
+  kid_friendly: 'border-cyan-300/70 bg-cyan-50 text-cyan-900 dark:border-cyan-800/50 dark:bg-cyan-950/30 dark:text-cyan-200',
+  outdoor: 'border-green-300/70 bg-green-50 text-green-900 dark:border-green-800/50 dark:bg-green-950/30 dark:text-green-200',
+  healthy_lifestyle: 'border-lime-300/70 bg-lime-50 text-lime-900 dark:border-lime-800/50 dark:bg-lime-950/30 dark:text-lime-200',
 };
 
 function isSafetyTag(value: string): value is SafetyTag {
