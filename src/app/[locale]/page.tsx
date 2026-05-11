@@ -13,6 +13,7 @@ import {
   getCachedLandingTopGroups,
 } from '@/lib/actions/landing-cached';
 import { getUser } from '@/lib/actions/auth';
+import { resolveEventTitle, resolveEventDescription } from '@/lib/event-i18n';
 import { EventCard } from '@/components/events/event-card';
 import { GroupCard } from '@/components/groups/group-card';
 import { HeroAuthCTA } from '@/components/landing/hero-auth-cta';
@@ -185,7 +186,11 @@ export default async function HomePage({
         <div className="pt-4">
           <EventSection
             title={t('sections.topEvents')}
-            events={events}
+            events={events.map((e) => ({
+              ...e,
+              title: resolveEventTitle(e, locale),
+              description: resolveEventDescription(e, locale) ?? e.description,
+            }))}
             viewAllLabel={t('sections.viewAllEvents')}
           />
         </div>
