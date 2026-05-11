@@ -566,7 +566,11 @@
         "adults_only": "18+",
         "lgbtq_friendly": "LGBTQ+ friendly",
         "sober": "Alkoholfrei",
-        "beginner_friendly": "Anfänger willkommen"
+        "beginner_friendly": "Anfänger willkommen",
+        "dog_friendly": "Hundefreundlich",
+        "kid_friendly": "Kinderfreundlich",
+        "outdoor": "Im Freien",
+        "healthy_lifestyle": "Gesunder Lebensstil"
       }
     },
     "reconfirm": {

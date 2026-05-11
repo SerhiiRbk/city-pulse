@@ -566,7 +566,11 @@
         "adults_only": "18+",
         "lgbtq_friendly": "LGBTQ+ friendly",
         "sober": "Без алкоголю",
-        "beginner_friendly": "Для початківців"
+        "beginner_friendly": "Для початківців",
+        "dog_friendly": "Можна з собакою",
+        "kid_friendly": "Підходить для дітей",
+        "outdoor": "На відкритому повітрі",
+        "healthy_lifestyle": "Здоровий спосіб життя"
       }
     },
     "reconfirm": {

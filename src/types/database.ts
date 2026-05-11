@@ -161,6 +161,10 @@ export const SAFETY_TAGS = [
   'lgbtq_friendly',
   'sober',
   'beginner_friendly',
+  'dog_friendly',
+  'kid_friendly',
+  'outdoor',
+  'healthy_lifestyle',
 ] as const;
 export type SafetyTag = (typeof SAFETY_TAGS)[number];
 
