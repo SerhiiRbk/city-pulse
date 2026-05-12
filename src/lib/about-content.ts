@@ -260,6 +260,53 @@ const ABOUT: Record<Locale, AboutContent> = {
   uk: aboutUk,
   cs: aboutCs,
   de: aboutDe,
+  es: {
+    title: 'Sobre Localisio',
+    description:
+      'Localisio es una plataforma social para comunidades offline. Ayudamos a expatriados y locales a encontrar personas con intereses similares, unirse a eventos acogedores y convertir las ciudades en lugares donde es fácil hacer amigos.',
+    introTitle: 'Por qué existe Localisio',
+    introBody:
+      'Las ciudades están llenas de personas interesantes, pero es difícil encontrarlas. Las plataformas existentes se centran en citas, networking profesional o grandes conciertos a los que vas solo. Construimos Localisio para el espacio intermedio: eventos pequeños, recurrentes y amigables donde puedes llegar solo y salir con nuevos conocidos.',
+    sections: [
+      {
+        title: 'Qué hacemos',
+        paragraphs: [
+          'Mostramos eventos curados de la ciudad para las ciudades que cubrimos, y facilitamos a los organizadores de comunidades publicar sus propios encuentros, paseos, intercambios de idiomas y clubes.',
+          'Los miembros pueden confirmar asistencia, ver quién más va, enviar mensajes a los organizadores, guardar eventos en su calendario personal y seguir grupos recurrentes que coincidan con sus intereses.',
+          'Nuestra función Crew te permite crear un pequeño grupo (2–10 personas) para asistir juntos a cualquier evento. Invita amigos con un enlace, coordina en un chat grupal privado y preséntense como equipo.',
+        ],
+      },
+      {
+        title: 'Quién construye Localisio',
+        paragraphs: [
+          'Localisio es gestionado por un pequeño equipo distribuido de expatriados que usan el producto ellos mismos. Estamos basados entre Praga, Berlín y Lisboa, y publicamos actualizaciones casi cada semana.',
+          'No tenemos respaldo de capital de riesgo y no mostramos anuncios. El producto se financia mediante asociaciones selectivas con instituciones culturales.',
+        ],
+      },
+      {
+        title: 'Cómo mantenemos la plataforma segura',
+        paragraphs: [
+          'Cada cuenta pasa por un paso de incorporación que solicita foto de perfil, idiomas e intereses. Los reportes son revisados por una persona en un plazo de 24 horas.',
+          'No permitimos contenido que promueva violencia, acoso, odio, actividad ilegal o material sexual. Esperamos que los asistentes se comporten respetuosamente tanto en línea como en los eventos.',
+        ],
+      },
+      {
+        title: 'Idiomas que soportamos',
+        paragraphs: [
+          'La interfaz está completamente traducida al inglés, ruso, ucraniano, checo, alemán y español. Las descripciones de eventos se almacenan en el idioma en que el organizador las escribió.',
+          'Si tu comunidad se beneficiaría de otro idioma, escríbenos a info@localisio.com.',
+        ],
+      },
+      {
+        title: 'Cómo contactarnos',
+        paragraphs: [
+          'Prensa, asociaciones y consultas de medios: info@localisio.com. Intentamos responder en dos días hábiles.',
+          'Para comentarios sobre el producto, la vía más rápida es usar el enlace de feedback en la aplicación o escribir a la misma dirección con la URL de la página en cuestión.',
+        ],
+      },
+    ],
+    contactEmail: 'info@localisio.com',
+  },
 };
 
 export function getAboutContent(locale: Locale): AboutContent {

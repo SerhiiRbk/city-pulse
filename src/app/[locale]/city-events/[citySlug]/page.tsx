@@ -21,6 +21,8 @@ const SLUG_TO_CITY: Record<string, string> = {
   barcelona: 'Barcelona',
   valencia: 'Valencia',
   'tel-aviv': 'Tel Aviv',
+  ubud: 'Ubud',
+  montevideo: 'Montevideo',
 };
 
 type Props = {

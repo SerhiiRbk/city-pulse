@@ -505,6 +505,7 @@ const HELP: Record<Locale, HelpContent> = {
   uk: helpUk,
   cs: helpCs,
   de: helpDe,
+  es: helpEn, // Falls back to English; Spanish help content can be added later
 };
 
 export function getHelpContent(locale: Locale): HelpContent {
