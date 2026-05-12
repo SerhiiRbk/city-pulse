@@ -5,7 +5,7 @@ import { updateSession } from './lib/supabase/middleware';
 
 const intlMiddleware = createIntlMiddleware(routing);
 
-const GROUP_SLUG_RE = /^\/(?:(en|ru|uk|cs|de)\/)?groups\/(global|[a-z]{2})\/([a-z0-9][a-z0-9-]*[a-z0-9])$/i;
+const GROUP_SLUG_RE = /^\/(?:(en|ru|uk|cs|de|es)\/)?groups\/(global|[a-z]{2})\/([a-z0-9][a-z0-9-]*[a-z0-9])$/i;
 
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -43,5 +43,5 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/(en|ru|uk|cs|de)/:path*'],
+  matcher: ['/', '/(en|ru|uk|cs|de|es)/:path*'],
 };

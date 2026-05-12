@@ -15,17 +15,19 @@ const FOOTER_CITIES: {
   dbName: string;
   labels: Record<string, string>;
 }[] = [
-  { slug: 'Prague', dbName: 'Prague', labels: { en: 'Prague', ru: 'Прага', uk: 'Прага', cs: 'Praha', de: 'Prag' } },
-  { slug: 'Brno', dbName: 'Brno', labels: { en: 'Brno', ru: 'Брно', uk: 'Брно', cs: 'Brno', de: 'Brünn' } },
-  { slug: 'Vienna', dbName: 'Vienna', labels: { en: 'Vienna', ru: 'Вена', uk: 'Відень', cs: 'Vídeň', de: 'Wien' } },
-  { slug: 'Berlin', dbName: 'Berlin', labels: { en: 'Berlin', ru: 'Берлин', uk: 'Берлін', cs: 'Berlín', de: 'Berlin' } },
-  { slug: 'Munich', dbName: 'Munich', labels: { en: 'Munich', ru: 'Мюнхен', uk: 'Мюнхен', cs: 'Mnichov', de: 'München' } },
-  { slug: 'Warsaw', dbName: 'Warsaw', labels: { en: 'Warsaw', ru: 'Варшава', uk: 'Варшава', cs: 'Varšava', de: 'Warschau' } },
-  { slug: 'Bratislava', dbName: 'Bratislava', labels: { en: 'Bratislava', ru: 'Братислава', uk: 'Братислава', cs: 'Bratislava', de: 'Bratislava' } },
-  { slug: 'Budapest', dbName: 'Budapest', labels: { en: 'Budapest', ru: 'Будапешт', uk: 'Будапешт', cs: 'Budapešť', de: 'Budapest' } },
-  { slug: 'Barcelona', dbName: 'Barcelona', labels: { en: 'Barcelona', ru: 'Барселона', uk: 'Барселона', cs: 'Barcelona', de: 'Barcelona' } },
-  { slug: 'Valencia', dbName: 'Valencia', labels: { en: 'Valencia', ru: 'Валенсия', uk: 'Валенсія', cs: 'Valencie', de: 'Valencia' } },
-  { slug: 'Tel Aviv', dbName: 'Tel Aviv', labels: { en: 'Tel Aviv', ru: 'Тель-Авив', uk: 'Тель-Авів', cs: 'Tel Aviv', de: 'Tel Aviv' } },
+  { slug: 'Prague', dbName: 'Prague', labels: { en: 'Prague', ru: 'Прага', uk: 'Прага', cs: 'Praha', de: 'Prag', es: 'Praga' } },
+  { slug: 'Brno', dbName: 'Brno', labels: { en: 'Brno', ru: 'Брно', uk: 'Брно', cs: 'Brno', de: 'Brünn', es: 'Brno' } },
+  { slug: 'Vienna', dbName: 'Vienna', labels: { en: 'Vienna', ru: 'Вена', uk: 'Відень', cs: 'Vídeň', de: 'Wien', es: 'Viena' } },
+  { slug: 'Berlin', dbName: 'Berlin', labels: { en: 'Berlin', ru: 'Берлин', uk: 'Берлін', cs: 'Berlín', de: 'Berlin', es: 'Berlín' } },
+  { slug: 'Munich', dbName: 'Munich', labels: { en: 'Munich', ru: 'Мюнхен', uk: 'Мюнхен', cs: 'Mnichov', de: 'München', es: 'Múnich' } },
+  { slug: 'Warsaw', dbName: 'Warsaw', labels: { en: 'Warsaw', ru: 'Варшава', uk: 'Варшава', cs: 'Varšava', de: 'Warschau', es: 'Varsovia' } },
+  { slug: 'Bratislava', dbName: 'Bratislava', labels: { en: 'Bratislava', ru: 'Братислава', uk: 'Братислава', cs: 'Bratislava', de: 'Bratislava', es: 'Bratislava' } },
+  { slug: 'Budapest', dbName: 'Budapest', labels: { en: 'Budapest', ru: 'Будапешт', uk: 'Будапешт', cs: 'Budapešť', de: 'Budapest', es: 'Budapest' } },
+  { slug: 'Barcelona', dbName: 'Barcelona', labels: { en: 'Barcelona', ru: 'Барселона', uk: 'Барселона', cs: 'Barcelona', de: 'Barcelona', es: 'Barcelona' } },
+  { slug: 'Valencia', dbName: 'Valencia', labels: { en: 'Valencia', ru: 'Валенсия', uk: 'Валенсія', cs: 'Valencie', de: 'Valencia', es: 'Valencia' } },
+  { slug: 'Tel Aviv', dbName: 'Tel Aviv', labels: { en: 'Tel Aviv', ru: 'Тель-Авив', uk: 'Тель-Авів', cs: 'Tel Aviv', de: 'Tel Aviv', es: 'Tel Aviv' } },
+  { slug: 'Ubud', dbName: 'Ubud', labels: { en: 'Ubud', ru: 'Убуд', uk: 'Убуд', cs: 'Ubud', de: 'Ubud', es: 'Ubud' } },
+  { slug: 'Montevideo', dbName: 'Montevideo', labels: { en: 'Montevideo', ru: 'Монтевидео', uk: 'Монтевідео', cs: 'Montevideo', de: 'Montevideo', es: 'Montevideo' } },
 ];
 
 export function Footer() {
@@ -109,7 +111,7 @@ export function Footer() {
 
           <div>
             <h4 className="mb-3 font-semibold">{t('cities')}</h4>
-            <ul className="text-muted-foreground space-y-2 text-sm">
+            <ul className="text-muted-foreground grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
               {FOOTER_CITIES.map((city) => (
                 <li key={city.slug}>
                   <Link

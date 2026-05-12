@@ -12,15 +12,15 @@ export const MAX_IMAGE_SIZE_MB = 5;
 export const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
 
 export const INTEREST_CATEGORIES = [
-  { id: 'social', en: 'Social & Networking', ru: 'Общение и нетворкинг', uk: 'Спілкування та нетворкінг', cs: 'Sociální aktivity', de: 'Soziales & Networking' },
-  { id: 'sports', en: 'Sports & Outdoors', ru: 'Спорт и активный отдых', uk: 'Спорт та активний відпочинок', cs: 'Sport & outdoor', de: 'Sport & Outdoor' },
-  { id: 'arts', en: 'Arts & Culture', ru: 'Искусство и культура', uk: 'Мистецтво та культура', cs: 'Umění a kultura', de: 'Kunst & Kultur' },
-  { id: 'tech', en: 'Technology', ru: 'Технологии', uk: 'Технології', cs: 'Technologie', de: 'Technologie' },
-  { id: 'food', en: 'Food & Drink', ru: 'Еда и напитки', uk: 'Їжа та напої', cs: 'Jídlo a pití', de: 'Essen & Trinken' },
-  { id: 'games', en: 'Games & Entertainment', ru: 'Игры и развлечения', uk: 'Ігри та розваги', cs: 'Hry a zábava', de: 'Spiele & Unterhaltung' },
-  { id: 'lifestyle', en: 'Lifestyle', ru: 'Образ жизни', uk: 'Спосіб життя', cs: 'Životní styl', de: 'Lebensstil' },
-  { id: 'education', en: 'Education & Science', ru: 'Образование и наука', uk: 'Освіта та наука', cs: 'Vzdělávání a věda', de: 'Bildung & Wissenschaft' },
-  { id: 'other', en: 'Other', ru: 'Другое', uk: 'Інше', cs: 'Ostatní', de: 'Sonstiges' },
+  { id: 'social', en: 'Social & Networking', ru: 'Общение и нетворкинг', uk: 'Спілкування та нетворкінг', cs: 'Sociální aktivity', de: 'Soziales & Networking', es: 'Social y Networking' },
+  { id: 'sports', en: 'Sports & Outdoors', ru: 'Спорт и активный отдых', uk: 'Спорт та активний відпочинок', cs: 'Sport & outdoor', de: 'Sport & Outdoor', es: 'Deportes y Aire libre' },
+  { id: 'arts', en: 'Arts & Culture', ru: 'Искусство и культура', uk: 'Мистецтво та культура', cs: 'Umění a kultura', de: 'Kunst & Kultur', es: 'Arte y Cultura' },
+  { id: 'tech', en: 'Technology', ru: 'Технологии', uk: 'Технології', cs: 'Technologie', de: 'Technologie', es: 'Tecnología' },
+  { id: 'food', en: 'Food & Drink', ru: 'Еда и напитки', uk: 'Їжа та напої', cs: 'Jídlo a pití', de: 'Essen & Trinken', es: 'Comida y Bebida' },
+  { id: 'games', en: 'Games & Entertainment', ru: 'Игры и развлечения', uk: 'Ігри та розваги', cs: 'Hry a zábava', de: 'Spiele & Unterhaltung', es: 'Juegos y Entretenimiento' },
+  { id: 'lifestyle', en: 'Lifestyle', ru: 'Образ жизни', uk: 'Спосіб життя', cs: 'Životní styl', de: 'Lebensstil', es: 'Estilo de vida' },
+  { id: 'education', en: 'Education & Science', ru: 'Образование и наука', uk: 'Освіта та наука', cs: 'Vzdělávání a věda', de: 'Bildung & Wissenschaft', es: 'Educación y Ciencia' },
+  { id: 'other', en: 'Other', ru: 'Другое', uk: 'Інше', cs: 'Ostatní', de: 'Sonstiges', es: 'Otros' },
 ] as const;
 
 export const INTEREST_META: Record<string, { icon: string; category: string }> = {
