@@ -63,6 +63,15 @@ const EMAIL_CONTENT: Record<string, EmailContent> = {
     closing:
       'Wenn Sie diese Löschung nicht angefordert haben, melden Sie sich bitte sofort an, um sie abzubrechen.',
   },
+  es: {
+    subject: 'Confirmación de eliminación de cuenta',
+    heading: 'La eliminación de tu cuenta ha sido iniciada',
+    body: (name, endDate) =>
+      `Hola ${name}, tu cuenta de City Pulse ha sido programada para eliminación permanente. Tus datos se conservarán hasta ${endDate}. Después de esa fecha, todos los datos personales serán eliminados permanentemente y tu contenido será anonimizado.`,
+    reactivation:
+      'Para reactivar tu cuenta, simplemente inicia sesión antes de que termine el período de gracia. Tu cuenta será completamente restaurada.',
+    closing: 'Si no solicitaste esta eliminación, inicia sesión inmediatamente para cancelarla.',
+  },
 };
 
 // ---------------------------------------------------------------------------

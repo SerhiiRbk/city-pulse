@@ -3,7 +3,7 @@
  * Handles email locale determination and anonymized user label resolution.
  */
 
-export const SUPPORTED_LOCALES = ['en', 'ru', 'uk', 'cs', 'de'] as const;
+export const SUPPORTED_LOCALES = ['en', 'ru', 'uk', 'cs', 'de', 'es'] as const;
 
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
@@ -17,6 +17,7 @@ export const ANONYMIZED_USER_LABELS: Record<SupportedLocale, string> = {
   uk: 'Видалений користувач',
   cs: 'Smazaný uživatel',
   de: 'Gelöschter Benutzer',
+  es: 'Usuario eliminado',
 };
 
 /**

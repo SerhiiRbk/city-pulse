@@ -11,6 +11,7 @@ export const CONFIRMATION_WORDS: Record<string, string> = {
   uk: 'ВИДАЛИТИ',
   cs: 'SMAZAT',
   de: 'LÖSCHEN',
+  es: 'ELIMINAR',
 };
 
 /**

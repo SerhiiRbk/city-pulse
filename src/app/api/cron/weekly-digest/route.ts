@@ -254,6 +254,15 @@ function pickDigestStrings(
         free: 'Kostenlos',
         goingCount: '{count} kommen',
       };
+    case 'es':
+      return {
+        subjectLine: `${cityLabel}: ${count} nuevos eventos esta semana`,
+        preheader: 'Seleccionados según tus intereses y las personas que sigues.',
+        intro: `Hola ${name}, esto es lo que viene esta semana.`,
+        ctaUnsubscribe: 'Gestionar preferencias de correo',
+        free: 'Gratis',
+        goingCount: '{count} asisten',
+      };
     default:
       return {
         subjectLine: `${cityLabel}: ${count} new events this week`,

@@ -40,6 +40,11 @@ const REMINDER_CONTENT: Record<string, { subject: string; body: (name: string, d
     body: (name, date) =>
       `Hallo ${name}, wir möchten Sie daran erinnern, dass Ihr City Pulse-Konto am ${date} endgültig gelöscht wird. Nach diesem Datum werden alle persönlichen Daten unwiderruflich entfernt. Um Ihr Konto zu behalten, melden Sie sich einfach vor der Frist an.`,
   },
+  es: {
+    subject: 'Tu cuenta será eliminada permanentemente en 3 días',
+    body: (name, date) =>
+      `Hola ${name}, te recordamos que tu cuenta de City Pulse será eliminada permanentemente el ${date}. Después de esta fecha, todos los datos personales serán eliminados irreversiblemente. Para conservar tu cuenta, simplemente inicia sesión antes de la fecha límite.`,
+  },
 };
 
 export async function GET(request: Request) {
