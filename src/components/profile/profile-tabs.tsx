@@ -115,9 +115,9 @@ export function ProfileTabs({
     <Tabs defaultValue="about">
       <TabsList variant="line" className="h-auto w-full flex-nowrap justify-start gap-1 overflow-x-auto rounded-2xl border border-border/50 bg-card p-1 scrollbar-none">
         {tabs.map(({ id, icon: Icon, label, count }) => (
-          <TabsTrigger key={id} value={id} className="relative h-11 shrink-0 gap-1.5 rounded-xl px-3 py-2.5 sm:px-4">
+          <TabsTrigger key={id} value={id} className="relative h-11 shrink-0 gap-1.5 rounded-xl px-2.5 py-2.5 sm:px-4">
             <Icon className="h-4 w-4" />
-            <span className="whitespace-nowrap text-xs sm:text-sm">{label}</span>
+            <span className="hidden whitespace-nowrap text-xs sm:inline sm:text-sm">{label}</span>
             <CountBadge count={count} />
           </TabsTrigger>
         ))}
