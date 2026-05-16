@@ -53,5 +53,15 @@ export async function findCityByGeo(
     .limit(1)
     .maybeSingle();
 
-  return (data as City) || null;
+  if (data) return data as City;
+
+  // Also try English translation (e.g. "Prague" when DB stores "Прага").
+  const { data: byTranslation } = await supabase
+    .from('cities')
+    .select('*')
+    .ilike('translations->>en', cityName)
+    .limit(1)
+    .maybeSingle();
+
+  return (byTranslation as City) || null;
 }

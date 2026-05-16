@@ -99,12 +99,6 @@ export function MobileNav({ user }: MobileNavProps) {
             </Link>
           </Button>
           <Button variant="ghost" className="justify-start" asChild onClick={close}>
-            <Link href="/city-events" className="flex items-center gap-3">
-              <Landmark className="h-5 w-5" />
-              {t('cityEvents')}
-            </Link>
-          </Button>
-          <Button variant="ghost" className="justify-start" asChild onClick={close}>
             <Link href="/calendar" className="flex items-center gap-3">
               <CalendarDays className="h-5 w-5" />
               {t('calendar')}

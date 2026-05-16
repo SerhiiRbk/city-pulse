@@ -77,7 +77,8 @@
     "hero": {
       "title": "Find your people in the city",
       "subtitle": "Join local communities, discover events, and make meaningful connections",
-      "cta": "Find people by interests"
+      "cta": "Find people by interests",
+      "allCities": "All cities"
     },
     "sections": {
       "todayEvents": "Today's events",

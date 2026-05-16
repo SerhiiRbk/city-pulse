@@ -77,7 +77,8 @@
     "hero": {
       "title": "Najdi své lidi ve městě",
       "subtitle": "Připoj se k místním komunitám, objevuj akce a navazuj skutečná přátelství",
-      "cta": "Najít lidi podle zájmů"
+      "cta": "Najít lidi podle zájmů",
+      "allCities": "Všechna města"
     },
     "sections": {
       "todayEvents": "Akce dnes",

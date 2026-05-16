@@ -77,7 +77,8 @@
     "hero": {
       "title": "Finde deine Leute in der Stadt",
       "subtitle": "Tritt lokalen Communities bei, entdecke Events und knüpfe echte Kontakte",
-      "cta": "Leute nach Interessen finden"
+      "cta": "Leute nach Interessen finden",
+      "allCities": "Alle Städte"
     },
     "sections": {
       "todayEvents": "Veranstaltungen heute",

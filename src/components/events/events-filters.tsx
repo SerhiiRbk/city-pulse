@@ -28,6 +28,7 @@ import { useState } from 'react';
 import { cn, countryCodeToFlag } from '@/lib/utils';
 import { COUNTRIES, LANGUAGES } from '@/lib/constants';
 import { CityPicker } from '@/components/ui/city-picker';
+import { SUPPORTED_CITIES } from '@/lib/cities';
 import { SAFETY_TAGS, type SafetyTag } from '@/types/database';
 import type { Interest, InterestCategory, City } from '@/types/database';
 
@@ -128,11 +129,28 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
   function applyFilters(overrides: Record<string, string | undefined>) {
     const params = new URLSearchParams();
     const merged = { ...currentFilters, ...overrides };
+
+    // Check if the resulting city is a supported city → use /cities/{slug}/events path
+    const mergedCity = merged.city;
+    const supportedCity = mergedCity
+      ? SUPPORTED_CITIES.find((c) => c.dbName.toLowerCase() === mergedCity.toLowerCase() || c.slug.toLowerCase() === mergedCity.toLowerCase())
+      : undefined;
+
+    // Build query params — exclude city/city_id if navigating to a city path
     Object.entries(merged).forEach(([k, v]) => {
-      if (v) params.set(k, v);
+      if (!v) return;
+      if (supportedCity && (k === 'city' || k === 'city_id')) return;
+      params.set(k, v);
     });
+
     const qs = params.toString();
-    router.push(qs ? `${pathname}?${qs}` : pathname);
+
+    if (supportedCity) {
+      const slug = supportedCity.slug.toLowerCase().replace(/\s+/g, '-');
+      router.push(qs ? `/cities/${slug}/events?${qs}` : `/cities/${slug}/events`);
+    } else {
+      router.push(qs ? `${pathname}?${qs}` : pathname);
+    }
   }
 
   function applyFilter(key: string, value: string | undefined) {
@@ -174,7 +192,8 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
     clearSavedFilters();
     // Pass geo_off=1 to signal that the user explicitly cleared location,
     // preventing geo-detection from re-applying the city.
-    router.push(`${pathname}?geo_off=1`);
+    // Always navigate to /events (not the city path) when clearing.
+    router.push('/events?geo_off=1');
   }
 
   function selectWhenPreset(preset: string) {
@@ -370,7 +389,23 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
             onChange={(city) => {
               setSelectedCity(city);
               if (city) {
-                applyFilters({ city_id: city.id, city: city.name, geo_off: undefined });
+                // Check if this is a supported city → navigate to /cities/{slug}/events
+                const supported = SUPPORTED_CITIES.find(
+                  (c) => c.dbName.toLowerCase() === city.name.toLowerCase(),
+                );
+                if (supported) {
+                  // Build query params without city (it's in the path now)
+                  const params = new URLSearchParams();
+                  const merged = { ...currentFilters, city_id: undefined, city: undefined, geo_off: undefined };
+                  Object.entries(merged).forEach(([k, v]) => {
+                    if (v && k !== 'city' && k !== 'city_id' && k !== 'geo_off') params.set(k, v);
+                  });
+                  const qs = params.toString();
+                  const slug = supported.slug.toLowerCase().replace(/\s+/g, '-');
+                  router.push(qs ? `/cities/${slug}/events?${qs}` : `/cities/${slug}/events`);
+                } else {
+                  applyFilters({ city_id: city.id, city: city.name, geo_off: undefined });
+                }
               } else {
                 applyFilters({ city_id: undefined, city: undefined });
               }
@@ -417,7 +452,7 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
                     {group.label}
                   </p>
                   {group.items.map((interest) => {
-                    const selected = selectedCategories.includes(interest.id);
+                    const selected = selectedCategories.includes(interest.slug);
                     return (
                       <button
                         key={interest.id}
@@ -426,7 +461,7 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
                           'hover:bg-accent flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm transition-colors',
                           selected && 'bg-accent',
                         )}
-                        onClick={() => toggleCategory(interest.id)}
+                        onClick={() => toggleCategory(interest.slug)}
                       >
                         <Check className={cn('h-4 w-4 shrink-0', selected ? 'opacity-100' : 'opacity-0')} />
                         {interest.icon && <span className="text-base leading-none">{interest.icon}</span>}
@@ -622,17 +657,17 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
       {/* Selected chips + clear */}
       {hasFilters && (
         <div className="flex flex-wrap items-center gap-2">
-          {selectedCategories.map((id) => {
-            const interest = interests.find((i) => i.id === id);
+          {selectedCategories.map((slug) => {
+            const interest = interests.find((i) => i.slug === slug);
             if (!interest) return null;
             return (
               <span
-                key={id}
+                key={slug}
                 className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-muted px-3 py-1 text-xs font-medium text-foreground"
               >
                 {interest.icon && <span>{interest.icon}</span>}
                 {getInterestLabel(interest)}
-                <button type="button" onClick={() => toggleCategory(id)} className="ml-0.5 opacity-70 hover:opacity-100">
+                <button type="button" onClick={() => toggleCategory(slug)} className="ml-0.5 opacity-70 hover:opacity-100">
                   <X className="h-3 w-3" />
                 </button>
               </span>

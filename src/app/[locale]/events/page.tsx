@@ -26,6 +26,7 @@ import { buildPageMetadata } from '@/lib/seo';
 import { HeroImage } from '@/components/ui/hero-image';
 import { getVisitorGeo } from '@/lib/geo';
 import { findCityByGeo } from '@/lib/actions/geo-city';
+import { findSupportedCity } from '@/lib/cities';
 import { getCityById } from '@/lib/actions/cities';
 import { getUserProfile } from '@/lib/actions/auth';
 import type { EventSort } from '@/lib/actions/events';
@@ -71,9 +72,13 @@ export default async function EventsPage({
     getInterestCategories(),
   ]);
 
-  const categoryIds = filters.category
+  const categorySlugs = filters.category
     ? filters.category.split(',').filter(Boolean)
     : [];
+  // Resolve slugs to UUIDs for the database query
+  const categoryIds = categorySlugs
+    .map((slug) => interests.find((i) => i.slug === slug)?.id)
+    .filter((id): id is string => !!id);
   const languageCodes = filters.language
     ? filters.language.split(',').filter(Boolean)
     : [];
@@ -86,7 +91,7 @@ export default async function EventsPage({
   // uses coarse presets (today/weekend/etc) rather than arbitrary dates.
   const mapHref = (() => {
     const qs = new URLSearchParams();
-    if (categoryIds.length > 0) qs.set('category', categoryIds.join(','));
+    if (categorySlugs.length > 0) qs.set('category', categorySlugs.join(','));
     if (filters.is_free === 'true') qs.set('is_free', 'true');
     const query = qs.toString();
     return query ? `/events/map?${query}` : '/events/map';
@@ -116,6 +121,15 @@ export default async function EventsPage({
   let geoCityName: string | undefined = filters.city;
   let geoCountry: string | undefined = filters.country;
   let detectedCity: { id: string; name: string; country: string } | null = null;
+
+  // If city param is a supported city slug (from /cities/prague/events rewrite),
+  // resolve it to the proper dbName for database queries.
+  if (geoCityName && !geoCityId) {
+    const supported = findSupportedCity(geoCityName);
+    if (supported) {
+      geoCityName = supported.dbName;
+    }
+  }
 
   const hasExplicitLocation = !!(filters.city_id || filters.city || filters.country);
   // When user explicitly clears filters, geo_off=1 is set to prevent
@@ -152,6 +166,15 @@ export default async function EventsPage({
     const city = await getCityById(filters.city_id);
     if (city) {
       detectedCity = { id: city.id, name: city.name, country: city.country };
+    }
+  } else if (geoCityName && !geoCityId) {
+    // City came from a supported city slug (rewrite from /cities/prague/events).
+    // Resolve it from the database so the picker shows the correct label.
+    const resolved = await findCityByGeo(geoCityName, undefined);
+    if (resolved) {
+      geoCityId = resolved.id;
+      geoCountry = resolved.country ?? undefined;
+      detectedCity = { id: resolved.id, name: resolved.name, country: resolved.country };
     }
   }
 
