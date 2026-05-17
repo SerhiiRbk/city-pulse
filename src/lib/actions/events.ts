@@ -752,13 +752,16 @@ export async function getAttendeeAvatarsBulk(
 
   const result: Record<string, { avatar_url: string | null; display_name: string }[]> = {};
   for (const row of data) {
-    const profile = row.profiles as unknown as { display_name: string; avatar_url: string | null } | null;
+    // Supabase returns the joined profile as an object (single FK relation)
+    // but TS types it as array. We safely extract the first element.
+    const rawProfile = row.profiles;
+    const profile = Array.isArray(rawProfile) ? rawProfile[0] : rawProfile;
     if (!profile) continue;
     if (!result[row.event_id]) result[row.event_id] = [];
     if (result[row.event_id].length < 3) {
       result[row.event_id].push({
-        avatar_url: profile.avatar_url,
-        display_name: profile.display_name,
+        avatar_url: profile.avatar_url ?? null,
+        display_name: profile.display_name ?? '',
       });
     }
   }
