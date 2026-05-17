@@ -104,16 +104,14 @@ export async function resolveCityFilter(params: {
     };
   }
 
-  // --- Priority 3: User profile city ---
+  // --- Priority 3: User profile city (logged-in users skip geo-detection) ---
   if (userId) {
     const profile = await getUserProfile();
     if (profile?.city_id && profile?.city) {
       // Profile stores localized city name (e.g. "Прага") but events use
       // the English name ("Prague"). Resolve via city_id → cities table.
       const cityRecord = await getCityById(profile.city_id);
-      const cityNameForQuery = cityRecord?.name ?? profile.city;
-      // Check content using the English translation (events.city stores English names)
-      const englishName = cityRecord?.translations?.en ?? cityNameForQuery;
+      const englishName = cityRecord?.translations?.en ?? cityRecord?.name ?? profile.city;
       const hasContent = await cityHasContent(englishName);
       if (hasContent) {
         return {
@@ -129,9 +127,14 @@ export async function resolveCityFilter(params: {
         };
       }
     }
+    // Logged-in user with no city in profile or city has no content → show all
+    return {
+      isAutoDetected: false,
+      detectedCity: null,
+    };
   }
 
-  // --- Priority 4: Geo-detection (Vercel headers) ---
+  // --- Priority 4: Geo-detection (only for anonymous users) ---
   const geo = await getVisitorGeo();
   if (geo.city) {
     // First try matching against supported cities list (fast, no DB call)
