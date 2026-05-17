@@ -752,7 +752,7 @@ export async function getAttendeeAvatarsBulk(
 
   const result: Record<string, { avatar_url: string | null; display_name: string }[]> = {};
   for (const row of data) {
-    const profile = row.profiles as { display_name: string; avatar_url: string | null } | null;
+    const profile = row.profiles as unknown as { display_name: string; avatar_url: string | null } | null;
     if (!profile) continue;
     if (!result[row.event_id]) result[row.event_id] = [];
     if (result[row.event_id].length < 3) {
