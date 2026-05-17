@@ -337,7 +337,8 @@
       "goWithGroupNew": "Gemeinsam hingehen",
       "goWithGroupExisting": "Einer Gruppe beitreten",
       "whatToExpect": "Was dich erwartet",
-      "icebreaker": "Gesprächsstarter"
+      "icebreaker": "Gesprächsstarter",
+      "beFirstToGo": "Sei der Erste"
     },
     "meetup": {
       "sectionLabel": "Gemeinsam hingehen",

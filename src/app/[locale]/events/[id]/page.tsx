@@ -305,21 +305,13 @@ export default async function EventDetailPage({ params }: Props) {
           </div>
 
           <div className="rounded-2xl border border-border/50 bg-muted/30 p-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm font-semibold">
-                  {isSystemEvent ? t('systemEditorialTitle') : t('easyJoinTitle')}
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {isSystemEvent ? t('systemEditorialSubtitle') : easyJoinCopy}
-                </p>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Users className="h-4 w-4" />
-                <span>
-                  {t('goingCount', { count: event.going_count || 0 })}
-                </span>
-              </div>
+            <div>
+              <p className="text-sm font-semibold">
+                {isSystemEvent ? t('systemEditorialTitle') : t('easyJoinTitle')}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {isSystemEvent ? t('systemEditorialSubtitle') : easyJoinCopy}
+              </p>
             </div>
             {friendsGoing.length > 0 && (
               <FriendsGoingCue friends={friendsGoing} variant="detail" className="mt-3" />
@@ -604,10 +596,18 @@ export default async function EventDetailPage({ params }: Props) {
                      * system events show going count as the headline number.
                      */}
                     {isSystemEvent ? (
-                      <p className="text-sm">{t('goingCount', { count: event.going_count || 0 })}</p>
+                      <p className="text-sm">
+                        {(event.going_count || 0) > 0
+                          ? t('goingCount', { count: event.going_count || 0 })
+                          : t('beFirstToGo')}
+                      </p>
                     ) : (
                       <>
-                        <p className="text-sm">{t('goingCount', { count: event.going_count || 0 })}</p>
+                        <p className="text-sm">
+                          {(event.going_count || 0) > 0
+                            ? t('goingCount', { count: event.going_count || 0 })
+                            : t('beFirstToGo')}
+                        </p>
                         {spotsLeft !== null && (
                           <p className="text-muted-foreground text-xs">
                             {spotsLeft > 0 ? t('spotsLeft', { count: spotsLeft }) : t('noSpotsLeft')}

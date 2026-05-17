@@ -337,7 +337,8 @@
       "goWithGroupNew": "Иду компанией",
       "goWithGroupExisting": "Присоединиться к компании",
       "whatToExpect": "Что ожидать",
-      "icebreaker": "Тема для разговора"
+      "icebreaker": "Тема для разговора",
+      "beFirstToGo": "Будьте первым"
     },
     "meetup": {
       "sectionLabel": "Идём вместе",
