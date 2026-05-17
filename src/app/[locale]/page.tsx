@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   ArrowRight, MapPin, Users, CalendarDays, Heart, Globe, Shield,
-  CalendarPlus, Bell, UsersRound, Sparkles,
+  CalendarPlus, Bell, UsersRound, Sparkles, MessageCircle,
 } from 'lucide-react';
 import {
   getCachedLandingEvents,
@@ -97,10 +97,12 @@ export default async function HomePage({
   });
 
   const howItWorks = [
-    { step: '01', icon: CalendarPlus, title: t('howItWorks.step1Title'), desc: t('howItWorks.step1Desc') },
-    { step: '02', icon: Globe, title: t('howItWorks.step2Title'), desc: t('howItWorks.step2Desc') },
-    { step: '03', icon: Bell, title: t('howItWorks.step3Title'), desc: t('howItWorks.step3Desc') },
-    { step: '04', icon: UsersRound, title: t('howItWorks.step4Title'), desc: t('howItWorks.step4Desc') },
+    { step: '01', icon: CalendarDays, title: t('howItWorks.step1Title'), desc: t('howItWorks.step1Desc') },
+    { step: '02', icon: CalendarPlus, title: t('howItWorks.step2Title'), desc: t('howItWorks.step2Desc') },
+    { step: '03', icon: UsersRound, title: t('howItWorks.step3Title'), desc: t('howItWorks.step3Desc') },
+    { step: '04', icon: Bell, title: t('howItWorks.step4Title'), desc: t('howItWorks.step4Desc') },
+    { step: '05', icon: Users, title: t('howItWorks.step5Title'), desc: t('howItWorks.step5Desc') },
+    { step: '06', icon: MessageCircle, title: t('howItWorks.step6Title'), desc: t('howItWorks.step6Desc') },
   ];
 
   const trustPoints = [
@@ -278,8 +280,8 @@ export default async function HomePage({
               <p className="text-muted-foreground mx-auto max-w-2xl text-lg">{t('howItWorks.subtitle')}</p>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
-              {howItWorks.map(({ step, icon: Icon, title, desc }, i) => (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
+              {howItWorks.slice(0, 3).map(({ step, icon: Icon, title, desc }, i) => (
                 <React.Fragment key={step}>
                   <div className="bg-background group relative rounded-3xl border-border/50 p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                     <span className="text-primary/10 absolute right-6 top-6 text-5xl font-black transition-colors group-hover:text-primary/20">
@@ -291,7 +293,29 @@ export default async function HomePage({
                     <h3 className="mb-3 text-xl font-bold">{title}</h3>
                     <p className="text-muted-foreground leading-relaxed">{desc}</p>
                   </div>
-                  {i < howItWorks.length - 1 && (
+                  {i < 2 && (
+                    <div className="hidden items-center justify-center lg:flex">
+                      <ArrowRight className="text-muted-foreground/30 h-8 w-8" />
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
+              {howItWorks.slice(3).map(({ step, icon: Icon, title, desc }, i) => (
+                <React.Fragment key={step}>
+                  <div className="bg-background group relative rounded-3xl border-border/50 p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                    <span className="text-primary/10 absolute right-6 top-6 text-5xl font-black transition-colors group-hover:text-primary/20">
+                      {step}
+                    </span>
+                    <div className="bg-primary/10 mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl transition-colors group-hover:bg-primary/20">
+                      <Icon className="text-primary h-8 w-8" />
+                    </div>
+                    <h3 className="mb-3 text-xl font-bold">{title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{desc}</p>
+                  </div>
+                  {i < 2 && (
                     <div className="hidden items-center justify-center lg:flex">
                       <ArrowRight className="text-muted-foreground/30 h-8 w-8" />
                     </div>

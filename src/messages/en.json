@@ -75,9 +75,9 @@
   },
   "landing": {
     "hero": {
-      "title": "Find your people in the city",
-      "subtitle": "Join local communities, discover events, and make meaningful connections",
-      "cta": "Find people by interests",
+      "title": "Don't go alone — find a crew",
+      "subtitle": "Pick an event, create a crew of 2–10 people or join one that's already going. Found your people? Start a permanent group to organize meetups together regularly.",
+      "cta": "Find events",
       "allCities": "All cities"
     },
     "sections": {
@@ -112,16 +112,20 @@
     },
     "howItWorks": {
       "title": "How It Works",
-      "subtitle": "Four simple steps to get started",
+      "subtitle": "Six steps from idea to real connections",
       "step": "STEP",
-      "step1Title": "Create an event or group",
-      "step1Desc": "Share your idea — add a meetup, workshop, or community group in a few clicks.",
-      "step2Title": "Discover what's happening",
-      "step2Desc": "Browse events and groups by city, interests, or date. Find your vibe.",
-      "step3Title": "Join & subscribe",
-      "step3Desc": "RSVP to events, follow groups, and get notified about updates.",
-      "step4Title": "Connect & belong",
-      "step4Desc": "Meet like-minded people, build friendships, and become part of the community."
+      "step1Title": "Find an event",
+      "step1Desc": "Concerts, exhibitions, festivals, sports — everything happening in your city.",
+      "step2Title": "Can't find one? Create your own",
+      "step2Desc": "Publish a meetup and invite friends or new acquaintances.",
+      "step3Title": "Build a crew",
+      "step3Desc": "Create a crew of 2-10 people or join one that's already going.",
+      "step4Title": "Coordinate in chat",
+      "step4Desc": "Agree on where to meet and details in a private group chat.",
+      "step5Title": "Start a permanent group",
+      "step5Desc": "A crew is for one event. A group is your permanent community — organize regular meetups, share photos, and grow together.",
+      "step6Title": "Stay in touch",
+      "step6Desc": "Add people you met at events to your contacts and keep the conversation going in direct messages."
     },
     "marketing": {
       "heroBadge": "Find your people for walks, board games, language clubs, and more",
@@ -133,9 +137,9 @@
       "quickFormat3Body": "Shared games make introductions feel easier",
       "quickFormat4": "Walks & excursions",
       "quickFormat4Body": "Explore the city while meeting new people",
-      "trustPoint1": "Small-group friendly",
-      "trustPoint2": "Perfect for newcomers",
-      "trustPoint3": "Multi-language communities",
+      "trustPoint1": "Crews for single events",
+      "trustPoint2": "Groups for regular meetups",
+      "trustPoint3": "Perfect for newcomers",
       "tonightLabel": "Tonight in your city",
       "quickTitle": "Find a kind of meetup that already feels easy to join",
       "quickMeta": "Join conversations before you show up",
