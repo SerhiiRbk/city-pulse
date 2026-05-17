@@ -67,6 +67,14 @@ const baseEventFields = {
    */
   allow_crews: z.boolean().default(true),
   /**
+   * Short text for newcomers: what to expect, where to meet, format.
+   */
+  what_to_expect: z.string().max(500).nullable().optional(),
+  /**
+   * Optional conversation starter question for attendees.
+   */
+  icebreaker: z.string().max(200).nullable().optional(),
+  /**
    * Locale-keyed title overrides (JSONB).
    * Format: {"en": "English title", "ru": "Русское название"}
    */

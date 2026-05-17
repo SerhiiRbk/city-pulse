@@ -173,7 +173,8 @@ export const SAFETY_TAGS = [
   'beginner_friendly',
   'dog_friendly',
   'kid_friendly',
-  'outdoor'
+  'outdoor',
+  'healthy_lifestyle',
 ] as const;
 export type SafetyTag = (typeof SAFETY_TAGS)[number];
 

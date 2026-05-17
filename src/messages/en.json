@@ -143,9 +143,9 @@
       "tonightLabel": "Tonight in your city",
       "quickTitle": "Find a kind of meetup that already feels easy to join",
       "quickMeta": "Join conversations before you show up",
-      "statsEvents": "Events created",
-      "statsGroups": "Active groups",
-      "statsMembers": "Members",
+      "statsEvents": "Plans made",
+      "statsGroups": "Active communities",
+      "statsMembers": "People found their crew",
       "statsCities": "Cities",
       "whyTitle": "Why Localisio?",
       "whySubtitle": "Everything you need to find your crowd, feel comfortable joining, and turn shared interests into real plans.",
@@ -206,7 +206,7 @@
   },
   "events": {
     "title": "Events",
-    "noEvents": "No events found",
+    "noEvents": "It's quiet here for now — but that can change",
     "filters": {
       "searchPlaceholder": "Search events, places, themes…",
       "clearSearch": "Clear search",
@@ -266,6 +266,7 @@
       "firstToJoin": "Be the first to go",
       "crewGoing": "{count, plural, one {# crew going} other {# crews going}}",
       "createFirstCrew": "Create the first crew",
+      "matchesYourInterests": "Matches your interests",
       "upcoming": "Upcoming",
       "showing": "Showing",
       "tomorrow": "Tomorrow"
@@ -335,7 +336,9 @@
       "systemEditorialTitle": "City listing",
       "systemEditorialSubtitle": "We don't host this event — we just keep it on your calendar so you don't miss it.",
       "goWithGroupNew": "Go with a group",
-      "goWithGroupExisting": "Join a group going"
+      "goWithGroupExisting": "Join a group going",
+      "whatToExpect": "What to expect",
+      "icebreaker": "Conversation starter"
     },
     "meetup": {
       "sectionLabel": "Going together",
@@ -402,7 +405,7 @@
       "resultsTitle": "{count, plural, one {# event worth joining} other {# events worth joining}}",
       "noResultsTitle": "No matching events yet",
       "sectionBody": "Look for welcoming formats, recurring communities, and events that already show signs of good social energy.",
-      "emptyDescription": "Try adjusting your filters or check back later",
+      "emptyDescription": "Try widening your filters or check back soon — new events pop up every day",
       "sort": {
         "label": "Sort",
         "soon": "Soonest",
@@ -525,6 +528,7 @@
       "title": "Create event",
       "name": "Event name",
       "description": "Description",
+      "descriptionHint": "Tip: describe what will happen, what language you'll speak, whether newcomers need to bring anything, and how to find you at the venue.",
       "category": "Category",
       "language": "Languages",
       "date": "Date",
@@ -555,7 +559,13 @@
       "translatedTitlePlaceholder": "Event title in this language",
       "translatedDescription": "Translated description",
       "translatedDescriptionPlaceholder": "Event description in this language",
-      "addTranslation": "Add translation"
+      "addTranslation": "Add translation",
+      "whatToExpect": "What to expect",
+      "whatToExpectPlaceholder": "We meet at the main entrance, introduce ourselves in the first 5 minutes, then go in together. No preparation needed.",
+      "whatToExpectHint": "Help newcomers feel confident — describe the format, meeting point, and vibe.",
+      "icebreaker": "Icebreaker question",
+      "icebreakerPlaceholder": "What's the last interesting place you discovered in the city?",
+      "icebreakerHint": "A conversation starter shown to attendees — helps people connect before the event."
     },
     "edit": {
       "title": "Edit event",

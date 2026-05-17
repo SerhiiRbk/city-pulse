@@ -266,6 +266,7 @@
       "firstToJoin": "Sé el primero",
       "crewGoing": "{count, plural, one {# crew va} other {# crews van}}",
       "createFirstCrew": "Crea el primer crew",
+      "matchesYourInterests": "Coincide con tus intereses",
       "upcoming": "Próximamente",
       "showing": "Mostrando",
       "tomorrow": "Mañana"
@@ -333,8 +334,10 @@
       "downloadIcs": "Descargar .ics",
       "systemEditorialTitle": "Listado de la ciudad",
       "systemEditorialSubtitle": "No organizamos este evento — solo lo mantenemos en tu calendario para que no te lo pierdas.",
-      "goWithGroupNew": "Ir con un grupo",
-      "goWithGroupExisting": "Unirse a un grupo que va"
+      "goWithGroupNew": "Unirse a un grupo que va",
+      "goWithGroupExisting": "Unirse a un grupo que va",
+      "whatToExpect": "Qué esperar",
+      "icebreaker": "Tema para romper el hielo"
     },
     "meetup": {
       "sectionLabel": "Ir juntos",
@@ -554,7 +557,13 @@
       "translatedTitlePlaceholder": "Título del evento en este idioma",
       "translatedDescription": "Descripción traducida",
       "translatedDescriptionPlaceholder": "Descripción del evento en este idioma",
-      "addTranslation": "Añadir traducción"
+      "addTranslation": "Añadir traducción",
+      "whatToExpect": "Qué esperar",
+      "whatToExpectPlaceholder": "Nos encontramos en la entrada principal, nos presentamos en los primeros 5 minutos y luego entramos juntos. No se necesita preparación.",
+      "whatToExpectHint": "Ayuda a los nuevos a sentirse seguros — describe el formato, punto de encuentro y ambiente.",
+      "icebreaker": "Pregunta para romper el hielo",
+      "icebreakerPlaceholder": "¿Cuál es el último lugar interesante que descubriste en la ciudad?",
+      "icebreakerHint": "Una pregunta para iniciar conversación que verán los asistentes — ayuda a conectar antes del evento."
     },
     "edit": {
       "title": "Editar evento",

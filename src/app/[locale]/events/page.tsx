@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { getEvents, getUserEventStatuses } from '@/lib/actions/events';
+import { getEvents, getUserEventStatuses, getAttendeeAvatarsBulk } from '@/lib/actions/events';
 import { getInterests, getInterestCategories } from '@/lib/actions/profile';
-import { getUser } from '@/lib/actions/auth';
+import { getUser, getUserProfile } from '@/lib/actions/auth';
 import { getFriendsGoingBulk } from '@/lib/actions/friends-going';
 import { getPublicCrewCountsBulk } from '@/lib/actions/crew';
 import { isFeatureEnabled } from '@/lib/feature-flags';
@@ -175,6 +175,13 @@ export default async function EventsPage({
 
   // Crew counts for card indicators
   const crewCounts = await getPublicCrewCountsBulk(events.map((e) => e.id));
+
+  // Attendee avatars for social proof on cards
+  const attendeeAvatars = await getAttendeeAvatarsBulk(events.map((e) => e.id));
+
+  // User interests for "matches your interests" indicator
+  const userProfile = user ? await getUserProfile() : null;
+  const userInterestIds = new Set(userProfile?.interests || []);
 
   // Filters object passed to the load-more component so it can fetch
   // subsequent pages with the same criteria.
@@ -416,6 +423,8 @@ export default async function EventsPage({
               title: resolveEventTitle(e, locale),
               description: resolveEventDescription(e, locale) ?? e.description,
               public_crew_count: crewCounts[e.id] ?? 0,
+              attendee_avatars: attendeeAvatars[e.id] ?? [],
+              matches_interests: e.category_id ? userInterestIds.has(e.category_id) : false,
             }))}
             initialGoingSet={Array.from(goingSet)}
             initialWaitlistSet={Array.from(waitlistSet)}

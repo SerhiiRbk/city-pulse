@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { getEvent, getUserAttendance, getEventAttendees, getEventRoster, getComments, canEditEvent } from '@/lib/actions/events';
+import { getEvent, getUserAttendance, getEventAttendees, getEventRoster, getComments, canEditEvent, getOrganizerEventCount } from '@/lib/actions/events';
 import { recordEventView } from '@/lib/actions/event-funnel';
 import { getGroupPostByEventId } from '@/lib/actions/group-posts';
 import { Button } from '@/components/ui/button';
@@ -138,6 +138,9 @@ export default async function EventDetailPage({ params }: Props) {
       };
   const attendees = await getEventAttendees(id);
   const comments = await getComments(id);
+
+  // Organizer credibility: how many events they've published
+  const organizerEventCount = await getOrganizerEventCount(event.organizer_id);
   const recap = event.group_id ? await getGroupPostByEventId(id) : null;
 
   const isSystemEvent = !!event.is_system;
@@ -283,9 +286,21 @@ export default async function EventDetailPage({ params }: Props) {
             </Avatar>
             <div>
               <p className="text-xs text-muted-foreground">{t('organizer')}</p>
-              <Link href={`/profile/${event.organizer_id}`} className="font-medium hover:underline">
-                {event.organizer_name}
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link href={`/profile/${event.organizer_id}`} className="font-medium hover:underline">
+                  {event.organizer_name}
+                </Link>
+                {organizerEventCount >= 5 && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200">
+                    ✅ {organizerEventCount} events
+                  </span>
+                )}
+                {organizerEventCount >= 1 && organizerEventCount < 5 && (
+                  <span className="text-[10px] text-muted-foreground">
+                    {organizerEventCount === 1 ? '1 event' : `${organizerEventCount} events`}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -322,6 +337,22 @@ export default async function EventDetailPage({ params }: Props) {
                 fallbackText={localizedDescription}
                 className="text-sm leading-7 text-foreground/90"
               />
+            </div>
+          )}
+
+          {/* What to expect — helps newcomers feel confident */}
+          {event.what_to_expect && (
+            <div className="rounded-2xl border border-primary/10 bg-primary/5 p-4">
+              <h3 className="mb-1.5 text-sm font-semibold text-primary">{t('whatToExpect')}</h3>
+              <p className="text-sm leading-relaxed text-foreground/80">{event.what_to_expect}</p>
+            </div>
+          )}
+
+          {/* Icebreaker question — conversation starter */}
+          {event.icebreaker && (
+            <div className="rounded-2xl border border-amber-500/15 bg-amber-500/5 p-4">
+              <h3 className="mb-1.5 text-sm font-semibold text-amber-700 dark:text-amber-400">{t('icebreaker')}</h3>
+              <p className="text-sm italic leading-relaxed text-foreground/80">"{event.icebreaker}"</p>
             </div>
           )}
 

@@ -206,7 +206,7 @@
   },
   "events": {
     "title": "Заходи",
-    "noEvents": "Заходів не знайдено",
+    "noEvents": "Поки тихо — але ви можете це змінити",
     "filters": {
       "searchPlaceholder": "Пошук подій, місць, тем…",
       "clearSearch": "Очистити",
@@ -266,6 +266,7 @@
       "firstToJoin": "Будьте першим",
       "crewGoing": "{count, plural, one {# компанія йде} few {# компанії йдуть} other {# компаній йдуть}}",
       "createFirstCrew": "Створити першу компанію",
+      "matchesYourInterests": "Збігається з вашими інтересами",
       "upcoming": "Незабаром",
       "showing": "Триває",
       "tomorrow": "Завтра"
@@ -334,7 +335,9 @@
       "systemEditorialTitle": "Подія міста",
       "systemEditorialSubtitle": "Ми не організовуємо цю подію — просто допомагаємо не пропустити її.",
       "goWithGroupNew": "Ідемо компанією",
-      "goWithGroupExisting": "Долучитися до компанії"
+      "goWithGroupExisting": "Долучитися до компанії",
+      "whatToExpect": "Що очікувати",
+      "icebreaker": "Тема для знайомства"
     },
     "meetup": {
       "sectionLabel": "Ідемо разом",
@@ -554,7 +557,13 @@
       "translatedTitlePlaceholder": "Назва події цією мовою",
       "translatedDescription": "Перекладений опис",
       "translatedDescriptionPlaceholder": "Опис події цією мовою",
-      "addTranslation": "Додати переклад"
+      "addTranslation": "Додати переклад",
+      "whatToExpect": "Що очікувати",
+      "whatToExpectPlaceholder": "Зустрічаємось біля головного входу, знайомимось у перші 5 хвилин, потім ідемо разом. Підготовка не потрібна.",
+      "whatToExpectHint": "Допоможіть новачкам почуватися впевненіше — опишіть формат, місце зустрічі та атмосферу.",
+      "icebreaker": "Питання для знайомства",
+      "icebreakerPlaceholder": "Яке останнє цікаве місце ви відкрили у місті?",
+      "icebreakerHint": "Тема для розмови, яку побачать учасники — допомагає почати спілкування до заходу."
     },
     "edit": {
       "title": "Редагувати захід",

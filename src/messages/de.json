@@ -266,6 +266,7 @@
       "firstToJoin": "Sei der Erste",
       "crewGoing": "{count, plural, one {# Crew geht hin} other {# Crews gehen hin}}",
       "createFirstCrew": "Erste Crew erstellen",
+      "matchesYourInterests": "Passt zu deinen Interessen",
       "upcoming": "Demnächst",
       "showing": "Läuft jetzt",
       "tomorrow": "Morgen"
@@ -334,7 +335,9 @@
       "systemEditorialTitle": "Stadt-Veranstaltung",
       "systemEditorialSubtitle": "Wir veranstalten dieses Event nicht — wir helfen dir nur, es nicht zu verpassen.",
       "goWithGroupNew": "Gemeinsam hingehen",
-      "goWithGroupExisting": "Einer Gruppe beitreten"
+      "goWithGroupExisting": "Einer Gruppe beitreten",
+      "whatToExpect": "Was dich erwartet",
+      "icebreaker": "Gesprächsstarter"
     },
     "meetup": {
       "sectionLabel": "Gemeinsam hingehen",
@@ -554,7 +557,13 @@
       "translatedTitlePlaceholder": "Eventtitel in dieser Sprache",
       "translatedDescription": "Übersetzte Beschreibung",
       "translatedDescriptionPlaceholder": "Eventbeschreibung in dieser Sprache",
-      "addTranslation": "Übersetzung hinzufügen"
+      "addTranslation": "Übersetzung hinzufügen",
+      "whatToExpect": "Was dich erwartet",
+      "whatToExpectPlaceholder": "Wir treffen uns am Haupteingang, stellen uns in den ersten 5 Minuten vor und gehen dann gemeinsam rein. Keine Vorbereitung nötig.",
+      "whatToExpectHint": "Hilf Neulingen, sich sicher zu fühlen — beschreibe Format, Treffpunkt und Atmosphäre.",
+      "icebreaker": "Gesprächsstarter",
+      "icebreakerPlaceholder": "Was ist der letzte interessante Ort, den du in der Stadt entdeckt hast?",
+      "icebreakerHint": "Eine Gesprächsfrage, die Teilnehmende sehen — hilft, vor dem Event ins Gespräch zu kommen."
     },
     "edit": {
       "title": "Veranstaltung bearbeiten",

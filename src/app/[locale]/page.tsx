@@ -15,6 +15,7 @@ import {
 import { getUser } from '@/lib/actions/auth';
 import { resolveEventTitle, resolveEventDescription } from '@/lib/event-i18n';
 import { getPublicCrewCountsBulk } from '@/lib/actions/crew';
+import { getAttendeeAvatarsBulk } from '@/lib/actions/events';
 import { EventCard } from '@/components/events/event-card';
 import { GroupCard } from '@/components/groups/group-card';
 import { HeroAuthCTA } from '@/components/landing/hero-auth-cta';
@@ -85,6 +86,11 @@ export default async function HomePage({
   // Crew counts for event cards
   const crewCounts = events.length > 0
     ? await getPublicCrewCountsBulk(events.map((e) => e.id))
+    : {};
+
+  // Attendee avatars for social proof
+  const attendeeAvatars = events.length > 0
+    ? await getAttendeeAvatarsBulk(events.map((e) => e.id))
     : {};
 
   const featureCards = [
@@ -234,6 +240,7 @@ export default async function HomePage({
             }))}
             viewAllLabel={t('sections.viewAllEvents')}
             crewCounts={crewCounts}
+            attendeeAvatars={attendeeAvatars}
           />
         </div>
       )}
@@ -373,11 +380,13 @@ function EventSection({
   events,
   viewAllLabel,
   crewCounts,
+  attendeeAvatars,
 }: {
   title: string;
   events: LandingEvent[];
   viewAllLabel: string;
   crewCounts?: Record<string, number>;
+  attendeeAvatars?: Record<string, { avatar_url: string | null; display_name: string }[]>;
 }) {
   return (
     <section className="py-14">
@@ -397,6 +406,7 @@ function EventSection({
               key={event.id}
               event={event}
               publicCrewCount={crewCounts ? (crewCounts[event.id] ?? 0) : undefined}
+              attendeeAvatars={attendeeAvatars ? attendeeAvatars[event.id] : undefined}
             />
           ))}
         </div>

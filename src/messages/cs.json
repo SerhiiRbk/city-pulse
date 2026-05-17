@@ -266,6 +266,7 @@
       "firstToJoin": "Buďte první",
       "crewGoing": "{count, plural, one {# parta jde} few {# party jdou} other {# part jde}}",
       "createFirstCrew": "Vytvořit první partu",
+      "matchesYourInterests": "Odpovídá vašim zájmům",
       "upcoming": "Brzy",
       "showing": "Právě probíhá",
       "tomorrow": "Zítra"
@@ -334,7 +335,9 @@
       "systemEditorialTitle": "Městská událost",
       "systemEditorialSubtitle": "Tuto akci nepořádáme — jen vám pomáháme, abyste ji nezmeškali.",
       "goWithGroupNew": "Jdeme ve skupině",
-      "goWithGroupExisting": "Přidat se ke skupině"
+      "goWithGroupExisting": "Přidat se ke skupině",
+      "whatToExpect": "Co očekávat",
+      "icebreaker": "Téma k rozhovoru"
     },
     "meetup": {
       "sectionLabel": "Jdeme spolu",
@@ -554,7 +557,13 @@
       "translatedTitlePlaceholder": "Název akce v tomto jazyce",
       "translatedDescription": "Přeložený popis",
       "translatedDescriptionPlaceholder": "Popis akce v tomto jazyce",
-      "addTranslation": "Přidat překlad"
+      "addTranslation": "Přidat překlad",
+      "whatToExpect": "Co očekávat",
+      "whatToExpectPlaceholder": "Sejdeme se u hlavního vchodu, představíme se v prvních 5 minutách a pak jdeme společně. Žádná příprava není potřeba.",
+      "whatToExpectHint": "Pomozte nováčkům cítit se jistě — popište formát, místo setkání a atmosféru.",
+      "icebreaker": "Otázka pro seznámení",
+      "icebreakerPlaceholder": "Jaké poslední zajímavé místo jste ve městě objevili?",
+      "icebreakerHint": "Téma k rozhovoru, které uvidí účastníci — pomáhá navázat kontakt ještě před akcí."
     },
     "edit": {
       "title": "Upravit akci",
