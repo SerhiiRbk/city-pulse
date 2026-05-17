@@ -11,7 +11,6 @@ import {
 import {
   getCachedLandingEvents,
   getCachedLandingTopGroups,
-  cityHasContent,
 } from '@/lib/actions/landing-cached';
 import { getUser } from '@/lib/actions/auth';
 import { resolveEventTitle, resolveEventDescription } from '@/lib/event-i18n';
@@ -24,8 +23,8 @@ import { CitySelector } from '@/components/landing/city-selector';
 import { generateOrganizationJsonLd, generateWebSiteJsonLd } from '@/lib/json-ld';
 import { HeroImage } from '@/components/ui/hero-image';
 import { buildPageMetadata } from '@/lib/seo';
-import { getVisitorGeo } from '@/lib/geo';
-import { findSupportedCity, matchGeoCity } from '@/lib/cities';
+import { resolveCityFilter } from '@/lib/resolve-city-filter';
+import { findSupportedCity } from '@/lib/cities';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({
@@ -56,34 +55,30 @@ export default async function HomePage({
   setRequestLocale(locale);
 
   const t = await getTranslations('landing');
+  const user = await getUser();
 
-  // Resolve city: explicit query param > geo-detected city
-  let activeCity: string | undefined;
+  // Resolve city using shared logic
+  const cityFilter = await resolveCityFilter({
+    cityParam: cityParam,
+    geoOff: false, // landing page doesn't use geo_off
+    userId: user?.id,
+  });
 
-  if (cityParam) {
-    // User explicitly selected a city via the dropdown
-    const matched = findSupportedCity(cityParam);
-    if (matched) activeCity = matched.slug;
-  } else {
-    // Try geo-detection from Vercel headers
-    const geo = await getVisitorGeo();
-    const geoMatch = matchGeoCity(geo.city);
-    if (geoMatch) {
-      // Only auto-select if the city has content
-      const hasContent = await cityHasContent(geoMatch.dbName);
-      if (hasContent) activeCity = geoMatch.slug;
+  // Find the slug for URL building (CTA button, CitySelector)
+  const activeCity: string | undefined = (() => {
+    if (cityFilter.cityName) {
+      const supported = findSupportedCity(cityFilter.cityName);
+      return supported?.slug;
     }
-  }
+    return undefined;
+  })();
 
-  // Find the dbName for filtering (events store the dbName in the `city` column)
-  const cityForQuery = activeCity
-    ? findSupportedCity(activeCity)?.dbName
-    : undefined;
+  // dbName for filtering events
+  const cityForQuery = cityFilter.cityName;
 
-  const [events, topGroups, user] = await Promise.all([
+  const [events, topGroups] = await Promise.all([
     getCachedLandingEvents(24, cityForQuery),
     getCachedLandingTopGroups(4),
-    getUser(),
   ]);
 
   const featureCards = [

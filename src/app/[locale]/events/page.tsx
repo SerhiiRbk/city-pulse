@@ -24,11 +24,8 @@ import {
 } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
 import { HeroImage } from '@/components/ui/hero-image';
-import { getVisitorGeo } from '@/lib/geo';
-import { findCityByGeo } from '@/lib/actions/geo-city';
+import { resolveCityFilter } from '@/lib/resolve-city-filter';
 import { findSupportedCity } from '@/lib/cities';
-import { getCityById } from '@/lib/actions/cities';
-import { getUserProfile } from '@/lib/actions/auth';
 import type { EventSort } from '@/lib/actions/events';
 import type { LoadMoreFilters } from '@/lib/actions/events-load-more';
 import type { Metadata } from 'next';
@@ -111,72 +108,23 @@ export default async function EventsPage({
   const isSystemFilter =
     sourceFilter === 'community' ? false : sourceFilter === 'afisha' ? true : undefined;
 
-  // --- Geo-based city detection ---
-  // If the user hasn't explicitly set a city filter, try to infer one:
-  //   1. Logged-in user with a city in their profile → use that.
-  //   2. Otherwise → use Vercel's IP-based geo headers.
-  // This gives first-time visitors a localized experience without
-  // requiring them to manually pick a city.
-  let geoCityId: string | undefined = filters.city_id;
-  let geoCityName: string | undefined = filters.city;
-  let geoCountry: string | undefined = filters.country;
-  let detectedCity: { id: string; name: string; country: string } | null = null;
+  // --- City resolution (shared logic) ---
+  // Determine if the city param is a supported city slug (from /cities/[city]/events rewrite)
+  const cityFromSlug = filters.city ? findSupportedCity(filters.city) : undefined;
 
-  // If city param is a supported city slug (from /cities/prague/events rewrite),
-  // resolve it to the proper dbName for database queries.
-  if (geoCityName && !geoCityId) {
-    const supported = findSupportedCity(geoCityName);
-    if (supported) {
-      geoCityName = supported.dbName;
-    }
-  }
+  const cityFilter = await resolveCityFilter({
+    citySlug: cityFromSlug ? filters.city : undefined,
+    cityParam: filters.city && !cityFromSlug ? filters.city : undefined,
+    cityIdParam: filters.city_id,
+    countryParam: filters.country,
+    geoOff: filters.geo_off === '1',
+    userId: user?.id,
+  });
 
-  const hasExplicitLocation = !!(filters.city_id || filters.city || filters.country);
-  // When user explicitly clears filters, geo_off=1 is set to prevent
-  // geo-detection from re-applying the city on the next render.
-  const geoDisabled = filters.geo_off === '1';
-
-  if (!hasExplicitLocation && !geoDisabled) {
-    // Try profile city first (already chosen by user, most relevant).
-    if (user) {
-      const profile = await getUserProfile();
-      if (profile?.city_id && profile?.city) {
-        geoCityId = profile.city_id;
-        geoCityName = profile.city;
-        geoCountry = profile.country ?? undefined;
-        detectedCity = { id: profile.city_id, name: profile.city, country: profile.country ?? '' };
-      }
-    }
-
-    // Fallback to Vercel geo headers.
-    if (!geoCityId) {
-      const geo = await getVisitorGeo();
-      if (geo.city) {
-        const resolved = await findCityByGeo(geo.city, geo.country);
-        if (resolved) {
-          geoCityId = resolved.id;
-          geoCityName = resolved.name;
-          geoCountry = resolved.country ?? undefined;
-          detectedCity = { id: resolved.id, name: resolved.name, country: resolved.country };
-        }
-      }
-    }
-  } else if (filters.city_id) {
-    // User explicitly set a city — resolve it so the picker shows a label.
-    const city = await getCityById(filters.city_id);
-    if (city) {
-      detectedCity = { id: city.id, name: city.name, country: city.country };
-    }
-  } else if (geoCityName && !geoCityId) {
-    // City came from a supported city slug (rewrite from /cities/prague/events).
-    // Resolve it from the database so the picker shows the correct label.
-    const resolved = await findCityByGeo(geoCityName, undefined);
-    if (resolved) {
-      geoCityId = resolved.id;
-      geoCountry = resolved.country ?? undefined;
-      detectedCity = { id: resolved.id, name: resolved.name, country: resolved.country };
-    }
-  }
+  const geoCityId = cityFilter.cityId;
+  const geoCityName = cityFilter.cityName;
+  const geoCountry = cityFilter.country;
+  const detectedCity = cityFilter.detectedCity;
 
   const events = await getEvents({
     country: geoCountry,
@@ -340,6 +288,7 @@ export default async function EventsPage({
               interests={interests}
               categories={interestCategories}
               initialCity={detectedCity ? { id: detectedCity.id, name: detectedCity.name, country: detectedCity.country, lat: 0, lng: 0, translations: {} } : null}
+              isAutoDetected={cityFilter.isAutoDetected}
               currentFilters={{
                 ...filters,
                 city_id: geoCityId,

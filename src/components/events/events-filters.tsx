@@ -38,6 +38,8 @@ interface EventsFiltersProps {
   /** Pre-resolved city object so the picker shows a label on first
    *  render (e.g. from geo-detection or profile city). */
   initialCity?: City | null;
+  /** True when the city was auto-detected (geo/profile), not explicitly chosen. */
+  isAutoDetected?: boolean;
   currentFilters: {
     city?: string;
     city_id?: string;
@@ -92,7 +94,7 @@ function getDateRange(when: string): { from: string; to?: string } {
   }
 }
 
-export function EventsFilters({ interests, categories, initialCity, currentFilters }: EventsFiltersProps) {
+export function EventsFilters({ interests, categories, initialCity, isAutoDetected, currentFilters }: EventsFiltersProps) {
   const t = useTranslations('events.filters');
   const tSafety = useTranslations('events.safety');
   const locale = useLocale();
@@ -383,7 +385,16 @@ export function EventsFilters({ interests, categories, initialCity, currentFilte
         </div>
 
         {/* City */}
-        <div>
+        <div className="relative">
+          {isAutoDetected && selectedCity && (
+            <span
+              className="absolute -top-1 -right-1 z-10 text-xs"
+              title="Auto-detected location"
+              aria-label="Auto-detected location"
+            >
+              📍
+            </span>
+          )}
           <CityPicker
             value={selectedCity}
             onChange={(city) => {
