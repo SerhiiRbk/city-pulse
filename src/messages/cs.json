@@ -263,7 +263,9 @@
       "inDays": "Za {count, plural, one {# den} few {# dny} other {# dní}}",
       "online": "Online",
       "alreadyIn": "{count, plural, one {# člověk už jde} few {# lidé už jdou} other {# lidí už jde}}",
-      "firstToJoin": "Buďte první, kdo se přidá",
+      "firstToJoin": "Buďte první",
+      "crewGoing": "{count, plural, one {# parta jde} few {# party jdou} other {# part jde}}",
+      "createFirstCrew": "Vytvořit první partu",
       "upcoming": "Brzy",
       "showing": "Právě probíhá",
       "tomorrow": "Zítra"

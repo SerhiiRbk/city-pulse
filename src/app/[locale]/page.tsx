@@ -14,6 +14,7 @@ import {
 } from '@/lib/actions/landing-cached';
 import { getUser } from '@/lib/actions/auth';
 import { resolveEventTitle, resolveEventDescription } from '@/lib/event-i18n';
+import { getPublicCrewCountsBulk } from '@/lib/actions/crew';
 import { EventCard } from '@/components/events/event-card';
 import { GroupCard } from '@/components/groups/group-card';
 import { HeroAuthCTA } from '@/components/landing/hero-auth-cta';
@@ -80,6 +81,11 @@ export default async function HomePage({
     getCachedLandingEvents(24, cityForQuery),
     getCachedLandingTopGroups(4),
   ]);
+
+  // Crew counts for event cards
+  const crewCounts = events.length > 0
+    ? await getPublicCrewCountsBulk(events.map((e) => e.id))
+    : {};
 
   const featureCards = [
     { icon: MapPin, title: t('features.localEvents'), desc: t('features.localEventsDesc') },
@@ -227,6 +233,7 @@ export default async function HomePage({
               description: resolveEventDescription(e, locale) ?? e.description,
             }))}
             viewAllLabel={t('sections.viewAllEvents')}
+            crewCounts={crewCounts}
           />
         </div>
       )}
@@ -365,10 +372,12 @@ function EventSection({
   title,
   events,
   viewAllLabel,
+  crewCounts,
 }: {
   title: string;
   events: LandingEvent[];
   viewAllLabel: string;
+  crewCounts?: Record<string, number>;
 }) {
   return (
     <section className="py-14">
@@ -384,7 +393,11 @@ function EventSection({
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
-            <EventCard key={event.id} event={event} />
+            <EventCard
+              key={event.id}
+              event={event}
+              publicCrewCount={crewCounts ? (crewCounts[event.id] ?? 0) : undefined}
+            />
           ))}
         </div>
       </div>

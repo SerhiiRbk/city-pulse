@@ -263,7 +263,9 @@
       "inDays": "Через {count, plural, one {# день} few {# дні} other {# днів}}",
       "online": "Онлайн",
       "alreadyIn": "{count, plural, one {# людина вже йде} few {# людини вже йдуть} other {# людей вже йдуть}}",
-      "firstToJoin": "Станьте першим, хто долучиться до цього заходу",
+      "firstToJoin": "Будьте першим",
+      "crewGoing": "{count, plural, one {# компанія йде} few {# компанії йдуть} other {# компаній йдуть}}",
+      "createFirstCrew": "Створити першу компанію",
       "upcoming": "Незабаром",
       "showing": "Триває",
       "tomorrow": "Завтра"

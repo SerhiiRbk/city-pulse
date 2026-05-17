@@ -31,6 +31,7 @@ export interface EventItem {
   category_slug: string | null;
   category_translations: Record<string, string> | null;
   safety_tags?: string[] | null;
+  public_crew_count?: number;
 }
 
 interface EventsGridWithLoadMoreProps {
@@ -139,6 +140,7 @@ export function EventsGridWithLoadMore({
             isInterested={interestedSet.has(event.id)}
             isFavorited={favoritedSet.has(event.id)}
             isAuthenticated={isAuthenticated}
+            publicCrewCount={event.public_crew_count}
             friendsGoing={friendsGoing[event.id]}
           />
         ))}

@@ -5,7 +5,7 @@ import { Link } from '@/i18n/navigation';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Heart, MapPin, Calendar, Users, Globe, Sparkles } from 'lucide-react';
+import { Heart, MapPin, Calendar, Users, Globe, Sparkles, UsersRound } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import {
   toggleAttendance,
@@ -50,6 +50,11 @@ interface EventCardProps {
   isFavorited?: boolean;
   isAuthenticated?: boolean;
   /**
+   * Number of public crews going to this event.
+   * When provided, the card shows a crew indicator.
+   */
+  publicCrewCount?: number;
+  /**
    * People the viewer follows who are going / interested in this
    * event. Pre-resolved by the parent so the card stays a pure
    * presentational client component (no fetching at render time).
@@ -64,6 +69,7 @@ export function EventCard({
   isInterested: initialInterested,
   isFavorited: initialFav,
   isAuthenticated,
+  publicCrewCount,
   friendsGoing,
 }: EventCardProps) {
   const t = useTranslations('events.card');
@@ -256,7 +262,11 @@ export function EventCard({
             )}
             <div className="text-muted-foreground flex items-center gap-1.5 text-xs font-medium">
               <Users className="h-3.5 w-3.5" />
-              <span>{goingCount}</span>
+              {goingCount > 0 ? (
+                <span>{goingCount}</span>
+              ) : (
+                <span className="text-primary/80">{t('firstToJoin')}</span>
+              )}
               {!isSystem && spotsLeft !== null && spotsLeft > 0 && spotsLeft <= 5 && (
                 <Badge variant="destructive" className="ml-1 px-1.5 py-0 text-[10px]">
                   {t('spotsLeft', { count: spotsLeft })}
@@ -269,6 +279,20 @@ export function EventCard({
               )}
             </div>
           </div>
+
+          {/* Crew indicator */}
+          {publicCrewCount !== undefined && (
+            <div className="mb-2 flex items-center gap-1.5 text-xs font-medium">
+              <UsersRound className="h-3.5 w-3.5 text-primary/70" />
+              {publicCrewCount > 0 ? (
+                <span className="text-muted-foreground">
+                  {t('crewGoing', { count: publicCrewCount })}
+                </span>
+              ) : (
+                <span className="text-primary/70">{t('createFirstCrew')}</span>
+              )}
+            </div>
+          )}
 
           {/* Title */}
           <h3 className="mb-2 line-clamp-2 text-lg font-bold leading-snug tracking-tight">{event.title}</h3>

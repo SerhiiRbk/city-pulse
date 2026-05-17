@@ -2481,3 +2481,35 @@ export async function getCrewsForEvent(input: {
     pendingRequestCrewIds,
   };
 }
+
+// ---------------------------------------------------------------------------
+// getPublicCrewCountsBulk
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns a map of event_id → public crew count for a batch of event IDs.
+ * Used by event listing pages to show crew indicators on cards.
+ * Only counts active, public crews.
+ */
+export async function getPublicCrewCountsBulk(
+  eventIds: string[],
+): Promise<Record<string, number>> {
+  if (eventIds.length === 0) return {};
+
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('event_crews')
+    .select('event_id')
+    .in('event_id', eventIds)
+    .eq('status', 'active')
+    .eq('visibility', 'public');
+
+  if (error || !data) return {};
+
+  const counts: Record<string, number> = {};
+  for (const row of data) {
+    counts[row.event_id] = (counts[row.event_id] || 0) + 1;
+  }
+  return counts;
+}

@@ -3,6 +3,7 @@ import { getEvents, getUserEventStatuses } from '@/lib/actions/events';
 import { getInterests, getInterestCategories } from '@/lib/actions/profile';
 import { getUser } from '@/lib/actions/auth';
 import { getFriendsGoingBulk } from '@/lib/actions/friends-going';
+import { getPublicCrewCountsBulk } from '@/lib/actions/crew';
 import { isFeatureEnabled } from '@/lib/feature-flags';
 import { resolveEventTitle, resolveEventDescription } from '@/lib/event-i18n';
 import { EventsGridWithLoadMore } from '@/components/events/events-grid-with-load-more';
@@ -171,6 +172,9 @@ export default async function EventsPage({
     user && (await isFeatureEnabled('friends_going', user.id))
       ? await getFriendsGoingBulk(events.map((e) => e.id))
       : {};
+
+  // Crew counts for card indicators
+  const crewCounts = await getPublicCrewCountsBulk(events.map((e) => e.id));
 
   // Filters object passed to the load-more component so it can fetch
   // subsequent pages with the same criteria.
@@ -411,6 +415,7 @@ export default async function EventsPage({
               ...e,
               title: resolveEventTitle(e, locale),
               description: resolveEventDescription(e, locale) ?? e.description,
+              public_crew_count: crewCounts[e.id] ?? 0,
             }))}
             initialGoingSet={Array.from(goingSet)}
             initialWaitlistSet={Array.from(waitlistSet)}

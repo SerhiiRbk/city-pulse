@@ -263,7 +263,9 @@
       "inDays": "In {count} Tagen",
       "online": "Online",
       "alreadyIn": "{count, plural, one {# Person ist schon dabei} other {# Personen sind schon dabei}}",
-      "firstToJoin": "Sei der Erste bei dieser Veranstaltung",
+      "firstToJoin": "Sei der Erste",
+      "crewGoing": "{count, plural, one {# Crew geht hin} other {# Crews gehen hin}}",
+      "createFirstCrew": "Erste Crew erstellen",
       "upcoming": "Demnächst",
       "showing": "Läuft jetzt",
       "tomorrow": "Morgen"

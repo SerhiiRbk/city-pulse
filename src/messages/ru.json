@@ -263,7 +263,9 @@
       "inDays": "Через {count, plural, one {# день} few {# дня} other {# дней}}",
       "online": "Онлайн",
       "alreadyIn": "{count, plural, one {# человек уже идёт} few {# человека уже идут} other {# человек уже идут}}",
-      "firstToJoin": "Станьте первым, кто присоединится к этому мероприятию",
+      "firstToJoin": "Будьте первым",
+      "crewGoing": "{count, plural, one {# компания идёт} few {# компании идут} other {# компаний идут}}",
+      "createFirstCrew": "Создать первую компанию",
       "upcoming": "Скоро",
       "showing": "Идёт сейчас",
       "tomorrow": "Завтра"
