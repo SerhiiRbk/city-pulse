@@ -278,7 +278,8 @@ export default async function EventDetailPage({ params }: Props) {
             )}
           </div>
 
-          {/* Organizer */}
+          {/* Organizer — hidden for system events (editorial listings) */}
+          {!isSystemEvent && (
           <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10">
               <AvatarImage src={event.organizer_avatar || undefined} />
@@ -303,6 +304,7 @@ export default async function EventDetailPage({ params }: Props) {
               </div>
             </div>
           </div>
+          )}
 
           <div className="rounded-2xl border border-border/50 bg-muted/30 p-4">
             <div>
