@@ -59,6 +59,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     pushLocalized(entries, path, meta);
   }
 
+  // City event pages — high-value SEO landing pages targeting
+  // "events in Prague", "мероприятия в Праге", etc.
+  const { SUPPORTED_CITIES } = await import('@/lib/cities');
+  for (const city of SUPPORTED_CITIES) {
+    const citySlug = city.slug.toLowerCase().replace(/\s+/g, '-');
+    pushLocalized(entries, `/cities/${citySlug}/events`, {
+      lastModified: buildTimestamp,
+      changeFrequency: 'hourly',
+      priority: 0.85,
+    });
+  }
+
   const { data: events } = await supabase
     .from('events_with_counts')
     .select('id, updated_at')
