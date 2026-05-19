@@ -420,7 +420,8 @@
         "community": "Community",
         "afisha": "Afisha"
       },
-      "cityGroupsLink": "Groups in {city} — join a community"
+      "cityGroupsLink": "Groups in {city} — join a community",
+      "allCities": "All cities"
     },
     "myEvents": {
       "heroBadge": "Your hosting hub",

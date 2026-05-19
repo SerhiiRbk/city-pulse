@@ -13,7 +13,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import {
-  CalendarCheck, CalendarPlus, List, Map as MapIcon, Sparkles,
+  ArrowDownUp, CalendarCheck, CalendarPlus, Eye, EyeOff, Flame, List, Map as MapIcon, Sparkles, X,
 } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
 import { HeroImage } from '@/components/ui/hero-image';
@@ -151,6 +151,18 @@ export default async function CityEventsPage({ params, searchParams }: Props) {
     include_past: includePast,
   };
 
+  // Build URLs that flip a single param while preserving everything else.
+  const buildHref = (overrides: Record<string, string | undefined>) => {
+    const qs = new URLSearchParams();
+    for (const [key, value] of Object.entries({ ...filters, ...overrides })) {
+      if (value === undefined || value === '') continue;
+      qs.set(key, value as string);
+    }
+    const query = qs.toString();
+    const base = `/cities/${citySlug}/events`;
+    return query ? `${base}?${query}` : base;
+  };
+
   return (
     <div>
       {/* Hero — same as /events */}
@@ -166,6 +178,13 @@ export default async function CityEventsPage({ params, searchParams }: Props) {
                 <Sparkles className="h-4 w-4" />
                 {cityLabel}
               </div>
+              <Link
+                href="/events?geo_off=1"
+                className="mb-3 ml-2 inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-xs text-white/70 backdrop-blur transition-colors hover:bg-white/15 hover:text-white sm:text-sm"
+              >
+                <X className="h-3 w-3" />
+                {tPage('allCities') || 'All cities'}
+              </Link>
               <h1 className="text-4xl font-extrabold tracking-tight text-white drop-shadow-lg sm:text-5xl md:text-6xl">
                 {(SEO_TITLES[locale] || SEO_TITLES.en)(cityLabel)}
               </h1>
@@ -239,7 +258,85 @@ export default async function CityEventsPage({ params, searchParams }: Props) {
       </div>
 
       {/* Events grid */}
-      <section className="container mx-auto max-w-6xl px-4 py-12">
+      <section className="container mx-auto px-4 py-12">
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">{tPage('sectionLabel')}</p>
+          </div>
+          <p className="max-w-xl text-sm text-muted-foreground">
+            {tPage('sectionBody')}
+          </p>
+        </div>
+
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-muted/30 p-1">
+            <span className="hidden items-center gap-1.5 px-2 py-1 text-xs font-medium uppercase tracking-wider text-muted-foreground sm:inline-flex">
+              <ArrowDownUp className="h-3 w-3" />
+              {tPage('sort.label')}
+            </span>
+            {[
+              { value: 'soon' as const, label: tPage('sort.soon'), Icon: Sparkles },
+              { value: 'popular' as const, label: tPage('sort.popular'), Icon: Flame },
+            ].map(({ value, label, Icon }) => {
+              const isActive = sort === value;
+              return (
+                <Button
+                  key={value}
+                  asChild
+                  size="sm"
+                  variant={isActive ? 'default' : 'ghost'}
+                  className="rounded-full px-3"
+                >
+                  <Link href={buildHref({ sort: value === 'soon' ? undefined : value })}>
+                    <Icon className="mr-1.5 h-3.5 w-3.5" />
+                    {label}
+                  </Link>
+                </Button>
+              );
+            })}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-muted/30 p-1">
+              {([
+                { value: 'all' as const, label: tPage('source.all') },
+                { value: 'community' as const, label: tPage('source.community') },
+                { value: 'afisha' as const, label: tPage('source.afisha') },
+              ]).map(({ value, label }) => {
+                const isActive = sourceFilter === value;
+                return (
+                  <Button
+                    key={value}
+                    asChild
+                    size="sm"
+                    variant={isActive ? 'default' : 'ghost'}
+                    className="rounded-full px-3"
+                  >
+                    <Link href={buildHref({ source: value === 'all' ? undefined : value })}>
+                      {label}
+                    </Link>
+                  </Button>
+                );
+              })}
+            </div>
+
+            <Button
+              asChild
+              size="sm"
+              variant={includePast ? 'secondary' : 'outline'}
+              className="rounded-full"
+            >
+              <Link
+                href={buildHref({ include_past: includePast ? undefined : 'true' })}
+                className="flex items-center gap-1.5"
+              >
+                {includePast ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                {includePast ? tPage('hidePast') : tPage('showPast')}
+              </Link>
+            </Button>
+          </div>
+        </div>
+
       {events.length === 0 ? (
         <EmptyState icon="events" title={t('noEvents')} description={tPage('emptyDescription')}>
           {user && (

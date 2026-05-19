@@ -419,7 +419,8 @@
         "community": "Спільнота",
         "afisha": "Афіша"
       },
-      "cityGroupsLink": "Групи у місті {city} — приєднуйся до спільноти"
+      "cityGroupsLink": "Групи у місті {city} — приєднуйся до спільноти",
+      "allCities": "Усі міста"
     },
     "myEvents": {
       "heroBadge": "Ваш центр організатора",

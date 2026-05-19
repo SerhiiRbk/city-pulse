@@ -209,10 +209,14 @@ export function EventsFilters({ interests, categories, initialCity, isAutoDetect
     setRangeFrom('');
     setRangeTo('');
     clearSavedFilters();
-    // Pass geo_off=1 to signal that the user explicitly cleared location,
-    // preventing geo-detection from re-applying the city.
-    // Always navigate to /events (not the city path) when clearing.
-    router.push('/events?geo_off=1');
+
+    if (basePath) {
+      // On a city page: just clear filters, stay on the city page
+      router.push(basePath);
+    } else {
+      // On the main events page: clear everything including city
+      router.push('/events?geo_off=1');
+    }
   }
 
   function selectWhenPreset(preset: string) {
@@ -251,7 +255,13 @@ export function EventsFilters({ interests, categories, initialCity, isAutoDetect
     applyFilter('q', trimmed.length > 0 ? trimmed : undefined);
   }
 
-  const hasFilters = Object.entries(currentFilters).some(([k, v]) => v && k !== 'geo_off');
+  const hasFilters = Object.entries(currentFilters).some(([k, v]) => {
+    if (!v) return false;
+    if (k === 'geo_off') return false;
+    // On city pages, city/country are implicit — don't count them as active filters
+    if (hideCity && (k === 'city' || k === 'city_id' || k === 'country')) return false;
+    return true;
+  });
 
   const uncategorizedCatId = categories.find((c) => c.slug === 'other')?.id;
   const groupedInterests = categories
