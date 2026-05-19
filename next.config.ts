@@ -37,6 +37,11 @@ const nextConfig: NextConfig = {
         source: '/:locale(en|ru|uk|cs|de|es)/cities/:city/events',
         destination: '/:locale/events?city=:city',
       },
+      // City groups pages: /en/cities/prague/groups → /en/groups?city=Prague
+      {
+        source: '/:locale(en|ru|uk|cs|de|es)/cities/:city/groups',
+        destination: '/:locale/groups?city=:city',
+      },
     ];
   },
   async redirects() {

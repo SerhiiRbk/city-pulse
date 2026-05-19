@@ -338,7 +338,8 @@
       "goWithGroupExisting": "Присоединиться к компании",
       "whatToExpect": "Что ожидать",
       "icebreaker": "Тема для разговора",
-      "beFirstToGo": "Будьте первым"
+      "beFirstToGo": "Будьте первым",
+      "relatedEvents": "Ещё мероприятия в этом городе"
     },
     "meetup": {
       "sectionLabel": "Идём вместе",

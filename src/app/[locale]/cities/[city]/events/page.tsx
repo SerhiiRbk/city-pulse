@@ -104,5 +104,5 @@ export default async function CityEventsPage({ params }: Props) {
   setRequestLocale(locale);
   // Content is served via rewrite to /events?city=:city.
   // This component exists for generateMetadata + generateStaticParams.
-  return null;
+  return <></>;
 }

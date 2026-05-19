@@ -292,6 +292,63 @@ export async function getEvent(eventId: string) {
 
 export type EventSort = 'soon' | 'popular';
 
+/**
+ * Fetch related events for internal linking on the event detail page.
+ * Prioritises same city, falls back to same category. Excludes the
+ * current event and only returns published, upcoming, public events.
+ */
+export async function getRelatedEvents(
+  eventId: string,
+  cityName: string | null,
+  categoryId: string | null,
+  limit: number = 3,
+) {
+  const supabase = await createClient();
+  let query = supabase
+    .from('events_with_counts')
+    .select('id, title, starts_at, city, title_translations')
+    .eq('status', 'published')
+    .eq('is_private', false)
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
+    .neq('id', eventId)
+    .gte('ends_at', new Date().toISOString())
+    .order('starts_at', { ascending: true })
+    .limit(limit);
+
+  if (cityName) {
+    query = query.eq('city', cityName);
+  } else if (categoryId) {
+    query = query.eq('category_id', categoryId);
+  }
+
+  const { data } = await query;
+
+  // If city filter returned fewer than limit and we have a category,
+  // backfill with same-category events from other cities.
+  if (data && data.length < limit && cityName && categoryId) {
+    const existingIds = [eventId, ...data.map((e) => e.id)];
+    const { data: backfill } = await supabase
+      .from('events_with_counts')
+      .select('id, title, starts_at, city, title_translations')
+      .eq('status', 'published')
+      .eq('is_private', false)
+      .eq('is_blocked', false)
+      .eq('organizer_is_blocked', false)
+      .eq('category_id', categoryId)
+      .not('id', 'in', `(${existingIds.join(',')})`)
+      .gte('ends_at', new Date().toISOString())
+      .order('starts_at', { ascending: true })
+      .limit(limit - data.length);
+
+    if (backfill) {
+      return [...data, ...backfill];
+    }
+  }
+
+  return data || [];
+}
+
 export async function getEvents(filters: {
   country?: string;
   city?: string;

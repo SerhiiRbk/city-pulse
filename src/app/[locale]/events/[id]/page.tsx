@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { getEvent, getUserAttendance, getEventAttendees, getEventRoster, getComments, canEditEvent, getOrganizerEventCount } from '@/lib/actions/events';
+import { getEvent, getUserAttendance, getEventAttendees, getEventRoster, getComments, canEditEvent, getOrganizerEventCount, getRelatedEvents } from '@/lib/actions/events';
 import { recordEventView } from '@/lib/actions/event-funnel';
 import { getGroupPostByEventId } from '@/lib/actions/group-posts';
 import { Button } from '@/components/ui/button';
@@ -175,6 +175,10 @@ export default async function EventDetailPage({ params }: Props) {
     };
   });
   const categoryLabel = event.category_translations?.[locale] || event.category_translations?.['en'] || '';
+
+  // Related events for internal linking (SEO)
+  const relatedEvents = await getRelatedEvents(id, event.city || null, event.category_id || null, 3);
+
   const orgInitials = (event.organizer_name || 'U')
     .split(' ')
     .map((n: string) => n[0])
@@ -480,6 +484,35 @@ export default async function EventDetailPage({ params }: Props) {
           {isAuthenticated && (
             <div className="flex justify-end">
               <ReportDialog targetType="event" targetId={id} />
+            </div>
+          )}
+
+          {/* Related events — internal linking for SEO */}
+          {relatedEvents.length > 0 && (
+            <div>
+              <Separator className="mb-6" />
+              <h2 className="mb-4 font-semibold">{t('relatedEvents')}</h2>
+              <div className="space-y-3">
+                {relatedEvents.map((related) => {
+                  const relatedTitle =
+                    related.title_translations?.[locale] ||
+                    related.title_translations?.['en'] ||
+                    related.title;
+                  return (
+                    <Link
+                      key={related.id}
+                      href={`/events/${related.id}`}
+                      className="block rounded-xl border border-border/50 p-3 transition-colors hover:bg-muted/50"
+                    >
+                      <p className="text-sm font-medium">{relatedTitle}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {formatDate(related.starts_at, locale)}
+                        {related.city && ` · ${related.city}`}
+                      </p>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>

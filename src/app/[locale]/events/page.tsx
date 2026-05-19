@@ -27,6 +27,8 @@ import { buildPageMetadata } from '@/lib/seo';
 import { HeroImage } from '@/components/ui/hero-image';
 import { resolveCityFilter } from '@/lib/resolve-city-filter';
 import { findSupportedCity } from '@/lib/cities';
+import { generateFaqJsonLd } from '@/lib/json-ld';
+import { SITE_URL } from '@/lib/constants';
 import type { EventSort } from '@/lib/actions/events';
 import type { LoadMoreFilters } from '@/lib/actions/events-load-more';
 import type { Metadata } from 'next';
@@ -204,6 +206,43 @@ export default async function EventsPage({
 
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            generateFaqJsonLd([
+              {
+                question: 'How do I find events near me?',
+                answer: 'Use the city filter or enable location to see events in your area.',
+              },
+              {
+                question: 'Are events free?',
+                answer: 'Many events are free. Use the price filter to find free events.',
+              },
+              {
+                question: 'Can I go with friends?',
+                answer: 'Yes! Create a crew of 2-10 people or join an existing one.',
+              },
+            ]),
+          ),
+        }}
+      />
+      {events.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'ItemList',
+              itemListElement: events.slice(0, 10).map((e, i) => ({
+                '@type': 'ListItem',
+                position: i + 1,
+                url: `${SITE_URL}/${locale}/events/${e.id}`,
+              })),
+            }),
+          }}
+        />
+      )}
       <FilterPersistence />
       <section className="relative overflow-hidden bg-slate-950">
         <HeroImage src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1800&q=80" />

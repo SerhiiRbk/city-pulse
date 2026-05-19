@@ -339,7 +339,8 @@
       "goWithGroupExisting": "Join a group going",
       "whatToExpect": "What to expect",
       "icebreaker": "Conversation starter",
-      "beFirstToGo": "Be the first to go"
+      "beFirstToGo": "Be the first to go",
+      "relatedEvents": "More events in this city"
     },
     "meetup": {
       "sectionLabel": "Going together",
