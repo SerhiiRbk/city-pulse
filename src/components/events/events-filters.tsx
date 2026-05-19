@@ -40,6 +40,10 @@ interface EventsFiltersProps {
   initialCity?: City | null;
   /** True when the city was auto-detected (geo/profile), not explicitly chosen. */
   isAutoDetected?: boolean;
+  /** When true, hide the country and city filter fields (used on city-specific pages). */
+  hideCity?: boolean;
+  /** Base path for filter navigation (e.g. '/cities/prague/events'). Defaults to '/events'. */
+  basePath?: string;
   currentFilters: {
     city?: string;
     city_id?: string;
@@ -94,7 +98,7 @@ function getDateRange(when: string): { from: string; to?: string } {
   }
 }
 
-export function EventsFilters({ interests, categories, initialCity, isAutoDetected, currentFilters }: EventsFiltersProps) {
+export function EventsFilters({ interests, categories, initialCity, isAutoDetected, hideCity, basePath, currentFilters }: EventsFiltersProps) {
   const t = useTranslations('events.filters');
   const tSafety = useTranslations('events.safety');
   const locale = useLocale();
@@ -131,6 +135,19 @@ export function EventsFilters({ interests, categories, initialCity, isAutoDetect
   function applyFilters(overrides: Record<string, string | undefined>) {
     const params = new URLSearchParams();
     const merged = { ...currentFilters, ...overrides };
+
+    // When on a city-specific page (basePath provided), keep navigation on that path
+    if (basePath) {
+      Object.entries(merged).forEach(([k, v]) => {
+        if (!v) return;
+        // Skip city/country params — they're implicit in the path
+        if (k === 'city' || k === 'city_id' || k === 'country' || k === 'geo_off') return;
+        params.set(k, v);
+      });
+      const qs = params.toString();
+      router.push(qs ? `${basePath}?${qs}` : basePath);
+      return;
+    }
 
     // Check if the resulting city is a supported city → use /cities/{slug}/events path
     const mergedCity = merged.city;
@@ -365,6 +382,7 @@ export function EventsFilters({ interests, categories, initialCity, isAutoDetect
 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,0.95fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,0.95fr)_auto]">
         {/* Country */}
+        {!hideCity && (
         <div>
           <Select
             value={currentFilters.country || ''}
@@ -383,8 +401,10 @@ export function EventsFilters({ interests, categories, initialCity, isAutoDetect
             </SelectContent>
           </Select>
         </div>
+        )}
 
         {/* City */}
+        {!hideCity && (
         <div className="relative">
           {isAutoDetected && selectedCity && (
             <span
@@ -426,6 +446,7 @@ export function EventsFilters({ interests, categories, initialCity, isAutoDetect
             compact
           />
         </div>
+        )}
 
         {/* Interests */}
         <div>

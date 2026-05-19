@@ -36,6 +36,10 @@ interface GroupsFiltersProps {
   /** Pre-resolved city object so the picker shows a label on first
    *  render (e.g. from geo-detection or profile city). */
   initialCity?: City | null;
+  /** When true, hide the country and city filter fields (used on city-specific pages). */
+  hideCity?: boolean;
+  /** Base path for filter navigation (e.g. '/cities/prague/groups'). */
+  basePath?: string;
   currentFilters: {
     city?: string;
     city_id?: string;
@@ -46,7 +50,7 @@ interface GroupsFiltersProps {
   };
 }
 
-export function GroupsFilters({ interests, categories, initialCity, currentFilters }: GroupsFiltersProps) {
+export function GroupsFilters({ interests, categories, initialCity, hideCity, basePath, currentFilters }: GroupsFiltersProps) {
   const t = useTranslations('groups.filters');
   const locale = useLocale();
   const router = useRouter();
@@ -93,6 +97,18 @@ export function GroupsFilters({ interests, categories, initialCity, currentFilte
   function applyFilters(overrides: Record<string, string | undefined>) {
     const params = new URLSearchParams();
     const merged = { ...currentFilters, ...overrides };
+
+    if (basePath) {
+      Object.entries(merged).forEach(([key, value]) => {
+        if (!value) return;
+        if (key === 'city' || key === 'city_id' || key === 'country' || key === 'geo_off') return;
+        params.set(key, value);
+      });
+      const qs = params.toString();
+      router.push(qs ? `${basePath}?${qs}` : basePath);
+      return;
+    }
+
     Object.entries(merged).forEach(([key, value]) => {
       if (value) params.set(key, value);
     });
@@ -195,6 +211,7 @@ export function GroupsFilters({ interests, categories, initialCity, currentFilte
         )}
       </div>
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+        {!hideCity && (
         <div>
           <Select
             value={currentFilters.country || ''}
@@ -219,7 +236,9 @@ export function GroupsFilters({ interests, categories, initialCity, currentFilte
             </SelectContent>
           </Select>
         </div>
+        )}
 
+        {!hideCity && (
         <div>
           <CityPicker
             value={currentCityValue}
@@ -234,6 +253,7 @@ export function GroupsFilters({ interests, categories, initialCity, currentFilte
             compact
           />
         </div>
+        )}
 
         <div>
           <Popover open={interestsOpen} onOpenChange={setInterestsOpen}>

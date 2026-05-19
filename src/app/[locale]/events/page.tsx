@@ -35,14 +35,46 @@ import type { Metadata } from 'next';
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: 'en' | 'ru' | 'uk' | 'cs' | 'de' }>;
+  searchParams: Promise<{ city?: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const { city } = await searchParams;
   const [t, tPage] = await Promise.all([
     getTranslations({ locale, namespace: 'events' }),
     getTranslations({ locale, namespace: 'events.page' }),
   ]);
+
+  // City-specific SEO metadata when accessed via /cities/:city/events rewrite
+  const matchedCity = city ? findSupportedCity(city) : undefined;
+  if (matchedCity) {
+    const cityLabel = matchedCity.labels[locale] || matchedCity.labels.en;
+    const citySlug = matchedCity.slug.toLowerCase().replace(/\s+/g, '-');
+    const SEO_TITLES: Record<string, (c: string) => string> = {
+      en: (c) => `Events in ${c} — find people to go with`,
+      ru: (c) => `Мероприятия в городе ${c} — найди компанию`,
+      uk: (c) => `Заходи у місті ${c} — знайди компанію`,
+      cs: (c) => `Akce v ${c} — najdi partu`,
+      de: (c) => `Veranstaltungen in ${c} — finde eine Crew`,
+      es: (c) => `Eventos en ${c} — encuentra tu crew`,
+    };
+    const SEO_DESCS: Record<string, (c: string) => string> = {
+      en: (c) => `Discover events in ${c}: concerts, exhibitions, language exchanges, walks, board games, and more. Join a small crew or create your own.`,
+      ru: (c) => `Мероприятия в ${c}: концерты, выставки, языковые обмены, прогулки, настольные игры и многое другое. Присоединяйся к компании или создай свою.`,
+      uk: (c) => `Заходи у ${c}: концерти, виставки, мовні обміни, прогулянки, настільні ігри та багато іншого. Приєднуйся до компанії або створи свою.`,
+      cs: (c) => `Akce v ${c}: koncerty, výstavy, jazykové výměny, procházky, deskové hry a další. Přidej se k partě nebo si vytvoř vlastní.`,
+      de: (c) => `Veranstaltungen in ${c}: Konzerte, Ausstellungen, Sprachtandems, Spaziergänge, Brettspiele und mehr. Schließ dich einer Crew an oder erstelle deine eigene.`,
+      es: (c) => `Eventos en ${c}: conciertos, exposiciones, intercambios de idiomas, paseos, juegos de mesa y más. Únete a un crew o crea el tuyo.`,
+    };
+    return buildPageMetadata({
+      locale,
+      path: `/cities/${citySlug}/events`,
+      title: (SEO_TITLES[locale] || SEO_TITLES.en)(cityLabel),
+      description: (SEO_DESCS[locale] || SEO_DESCS.en)(cityLabel),
+    });
+  }
 
   return buildPageMetadata({
     locale,
