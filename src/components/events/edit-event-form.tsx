@@ -99,6 +99,8 @@ export function EditEventForm({ event, interests, categories, moderators: initia
   const [safetyTags, setSafetyTags] = useState<SafetyTag[]>(
     Array.isArray(event.safety_tags) ? (event.safety_tags as SafetyTag[]) : [],
   );
+  const [whatToExpect, setWhatToExpect] = useState((event as any).what_to_expect || '');
+  const [icebreaker, setIcebreaker] = useState((event as any).icebreaker || '');
   const [descriptionDoc, setDescriptionDoc] = useState<RichTextDoc>(() => loadDescriptionDoc(event));
   const editorLabels = useRichEditorLabels();
   const [selectedCategory, setSelectedCategory] = useState(event.category_id || '');
@@ -316,6 +318,8 @@ export function EditEventForm({ event, interests, categories, moderators: initia
           : [],
       safety_tags: safetyTags,
       allow_crews: allowCrews,
+      what_to_expect: whatToExpect || null,
+      icebreaker: icebreaker || null,
       title_translations: Object.fromEntries(
         translations
           .filter((t) => t.locale && t.title.trim())
@@ -552,6 +556,34 @@ export function EditEventForm({ event, interests, categories, moderators: initia
             <Label>{tSafety('inputLabel')}</Label>
             <p className="text-muted-foreground text-xs">{tSafety('inputHint')}</p>
             <SafetyTagsInput value={safetyTags} onChange={setSafetyTags} />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="what_to_expect">{t('whatToExpect')}</Label>
+            <p className="text-muted-foreground text-xs">{t('whatToExpectHint')}</p>
+            <textarea
+              id="what_to_expect"
+              value={whatToExpect}
+              onChange={(e) => setWhatToExpect(e.target.value)}
+              placeholder={t('whatToExpectPlaceholder')}
+              maxLength={500}
+              rows={3}
+              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="icebreaker">{t('icebreaker')}</Label>
+            <p className="text-muted-foreground text-xs">{t('icebreakerHint')}</p>
+            <input
+              id="icebreaker"
+              type="text"
+              value={icebreaker}
+              onChange={(e) => setIcebreaker(e.target.value)}
+              placeholder={t('icebreakerPlaceholder')}
+              maxLength={200}
+              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+            />
           </div>
         </CardContent>
       </Card>

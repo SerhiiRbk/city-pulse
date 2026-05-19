@@ -4,14 +4,37 @@ import { createPublicClient } from '@/lib/supabase/public';
 
 const LANDING_CACHE = { stale: 60, revalidate: 120, expire: 900 };
 
-export async function getCachedLandingEvents(limit = 24) {
+/** Check if a city has at least 1 upcoming event or group. */
+export async function cityHasContent(cityDbName: string): Promise<boolean> {
+  'use cache';
+  cacheTag('landing:city-check');
+  cacheLife(LANDING_CACHE);
+
+  const supabase = createPublicClient();
+  const sinceIso = new Date().toISOString();
+
+  const { count } = await supabase
+    .from('events_with_counts')
+    .select('id', { count: 'exact', head: true })
+    .eq('status', 'published')
+    .eq('is_private', false)
+    .eq('is_blocked', false)
+    .eq('organizer_is_blocked', false)
+    .gte('ends_at', sinceIso)
+    .eq('city', cityDbName)
+    .limit(1);
+
+  return (count ?? 0) > 0;
+}
+
+export async function getCachedLandingEvents(limit = 24, city?: string) {
   'use cache';
   cacheTag('landing:events');
   cacheLife(LANDING_CACHE);
 
   const sinceIso = new Date().toISOString();
   const supabase = createPublicClient();
-  const { data } = await supabase
+  let query = supabase
     .from('events_with_counts')
     .select('*')
     .eq('status', 'published')
@@ -19,7 +42,13 @@ export async function getCachedLandingEvents(limit = 24) {
     .eq('is_blocked', false)
     .eq('organizer_is_blocked', false)
     // Hide finished events but keep currently in-progress ones visible.
-    .gte('ends_at', sinceIso)
+    .gte('ends_at', sinceIso);
+
+  if (city) {
+    query = query.eq('city', city);
+  }
+
+  const { data } = await query
     .order('starts_at', { ascending: true })
     .limit(limit);
   return data ?? [];

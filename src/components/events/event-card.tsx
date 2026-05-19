@@ -5,7 +5,7 @@ import { Link } from '@/i18n/navigation';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Heart, MapPin, Calendar, Users, Globe, Sparkles } from 'lucide-react';
+import { Heart, MapPin, Calendar, Users, Globe, Sparkles, UsersRound } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import {
   toggleAttendance,
@@ -50,6 +50,19 @@ interface EventCardProps {
   isFavorited?: boolean;
   isAuthenticated?: boolean;
   /**
+   * Number of public crews going to this event.
+   * When provided, the card shows a crew indicator.
+   */
+  publicCrewCount?: number;
+  /**
+   * A few attendee avatars for social proof display on the card.
+   */
+  attendeeAvatars?: { avatar_url: string | null; display_name: string }[];
+  /**
+   * Whether this event's category matches the viewer's interests.
+   */
+  matchesInterests?: boolean;
+  /**
    * People the viewer follows who are going / interested in this
    * event. Pre-resolved by the parent so the card stays a pure
    * presentational client component (no fetching at render time).
@@ -64,6 +77,9 @@ export function EventCard({
   isInterested: initialInterested,
   isFavorited: initialFav,
   isAuthenticated,
+  publicCrewCount,
+  attendeeAvatars,
+  matchesInterests,
   friendsGoing,
 }: EventCardProps) {
   const t = useTranslations('events.card');
@@ -255,8 +271,34 @@ export function EventCard({
               <span />
             )}
             <div className="text-muted-foreground flex items-center gap-1.5 text-xs font-medium">
+              {attendeeAvatars && attendeeAvatars.length > 0 && (
+                <div className="mr-1 flex -space-x-1.5">
+                  {attendeeAvatars.map((a, i) => (
+                    <div
+                      key={i}
+                      className="h-5 w-5 rounded-full border-2 border-background bg-muted overflow-hidden"
+                      title={a.display_name}
+                    >
+                      {a.avatar_url ? (
+                        <img src={a.avatar_url} alt="" className="h-full w-full object-cover" />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-[8px] font-bold text-muted-foreground">
+                          {a.display_name?.[0]?.toUpperCase() || '?'}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
               <Users className="h-3.5 w-3.5" />
-              <span>{goingCount}</span>
+              {goingCount > 0 ? (
+                <span>{goingCount}</span>
+              ) : (
+                <span className="text-primary/80">{t('firstToJoin')}</span>
+              )}
+              {event.max_attendees && event.max_attendees <= 12 && goingCount > 0 && (
+                <span className="text-muted-foreground/60">/ {event.max_attendees}</span>
+              )}
               {!isSystem && spotsLeft !== null && spotsLeft > 0 && spotsLeft <= 5 && (
                 <Badge variant="destructive" className="ml-1 px-1.5 py-0 text-[10px]">
                   {t('spotsLeft', { count: spotsLeft })}
@@ -269,6 +311,30 @@ export function EventCard({
               )}
             </div>
           </div>
+
+          {/* Crew indicator */}
+          {publicCrewCount !== undefined && (
+            <div className="mb-2 flex items-center gap-1.5 text-xs font-medium">
+              <UsersRound className="h-3.5 w-3.5 text-primary/70" />
+              {publicCrewCount > 0 ? (
+                <span className="text-muted-foreground">
+                  {t('crewGoing', { count: publicCrewCount })}
+                </span>
+              ) : (
+                <span className="text-primary/70">{t('createFirstCrew')}</span>
+              )}
+            </div>
+          )}
+
+          {/* Interests match indicator */}
+          {matchesInterests && (
+            <div className="mb-2">
+              <span className="inline-flex items-center gap-1 rounded-full border border-primary/15 bg-primary/5 px-2 py-0.5 text-[10px] font-medium text-primary">
+                <Sparkles className="h-2.5 w-2.5" />
+                {t('matchesYourInterests')}
+              </span>
+            </div>
+          )}
 
           {/* Title */}
           <h3 className="mb-2 line-clamp-2 text-lg font-bold leading-snug tracking-tight">{event.title}</h3>

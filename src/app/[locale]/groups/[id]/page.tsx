@@ -211,7 +211,7 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
             {group.city && (
               <Link
                 href={{
-                  pathname: '/city-events',
+                  pathname: '/events',
                   query: { city: group.city },
                 }}
                 className="group flex items-center gap-2.5 px-5 py-4 transition-colors hover:bg-muted/40"

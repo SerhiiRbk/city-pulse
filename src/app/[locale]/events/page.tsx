@@ -1,8 +1,9 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { getEvents, getUserEventStatuses } from '@/lib/actions/events';
+import { getEvents, getUserEventStatuses, getAttendeeAvatarsBulk } from '@/lib/actions/events';
 import { getInterests, getInterestCategories } from '@/lib/actions/profile';
-import { getUser } from '@/lib/actions/auth';
+import { getUser, getUserProfile } from '@/lib/actions/auth';
 import { getFriendsGoingBulk } from '@/lib/actions/friends-going';
+import { getPublicCrewCountsBulk } from '@/lib/actions/crew';
 import { isFeatureEnabled } from '@/lib/feature-flags';
 import { resolveEventTitle, resolveEventDescription } from '@/lib/event-i18n';
 import { EventsGridWithLoadMore } from '@/components/events/events-grid-with-load-more';
@@ -24,10 +25,8 @@ import {
 } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
 import { HeroImage } from '@/components/ui/hero-image';
-import { getVisitorGeo } from '@/lib/geo';
-import { findCityByGeo } from '@/lib/actions/geo-city';
-import { getCityById } from '@/lib/actions/cities';
-import { getUserProfile } from '@/lib/actions/auth';
+import { resolveCityFilter } from '@/lib/resolve-city-filter';
+import { findSupportedCity } from '@/lib/cities';
 import type { EventSort } from '@/lib/actions/events';
 import type { LoadMoreFilters } from '@/lib/actions/events-load-more';
 import type { Metadata } from 'next';
@@ -71,9 +70,13 @@ export default async function EventsPage({
     getInterestCategories(),
   ]);
 
-  const categoryIds = filters.category
+  const categorySlugs = filters.category
     ? filters.category.split(',').filter(Boolean)
     : [];
+  // Resolve slugs to UUIDs for the database query
+  const categoryIds = categorySlugs
+    .map((slug) => interests.find((i) => i.slug === slug)?.id)
+    .filter((id): id is string => !!id);
   const languageCodes = filters.language
     ? filters.language.split(',').filter(Boolean)
     : [];
@@ -86,7 +89,7 @@ export default async function EventsPage({
   // uses coarse presets (today/weekend/etc) rather than arbitrary dates.
   const mapHref = (() => {
     const qs = new URLSearchParams();
-    if (categoryIds.length > 0) qs.set('category', categoryIds.join(','));
+    if (categorySlugs.length > 0) qs.set('category', categorySlugs.join(','));
     if (filters.is_free === 'true') qs.set('is_free', 'true');
     const query = qs.toString();
     return query ? `/events/map?${query}` : '/events/map';
@@ -106,54 +109,23 @@ export default async function EventsPage({
   const isSystemFilter =
     sourceFilter === 'community' ? false : sourceFilter === 'afisha' ? true : undefined;
 
-  // --- Geo-based city detection ---
-  // If the user hasn't explicitly set a city filter, try to infer one:
-  //   1. Logged-in user with a city in their profile → use that.
-  //   2. Otherwise → use Vercel's IP-based geo headers.
-  // This gives first-time visitors a localized experience without
-  // requiring them to manually pick a city.
-  let geoCityId: string | undefined = filters.city_id;
-  let geoCityName: string | undefined = filters.city;
-  let geoCountry: string | undefined = filters.country;
-  let detectedCity: { id: string; name: string; country: string } | null = null;
+  // --- City resolution (shared logic) ---
+  // Determine if the city param is a supported city slug (from /cities/[city]/events rewrite)
+  const cityFromSlug = filters.city ? findSupportedCity(filters.city) : undefined;
 
-  const hasExplicitLocation = !!(filters.city_id || filters.city || filters.country);
-  // When user explicitly clears filters, geo_off=1 is set to prevent
-  // geo-detection from re-applying the city on the next render.
-  const geoDisabled = filters.geo_off === '1';
+  const cityFilter = await resolveCityFilter({
+    citySlug: cityFromSlug ? filters.city : undefined,
+    cityParam: filters.city && !cityFromSlug ? filters.city : undefined,
+    cityIdParam: filters.city_id,
+    countryParam: filters.country,
+    geoOff: filters.geo_off === '1',
+    userId: user?.id,
+  });
 
-  if (!hasExplicitLocation && !geoDisabled) {
-    // Try profile city first (already chosen by user, most relevant).
-    if (user) {
-      const profile = await getUserProfile();
-      if (profile?.city_id && profile?.city) {
-        geoCityId = profile.city_id;
-        geoCityName = profile.city;
-        geoCountry = profile.country ?? undefined;
-        detectedCity = { id: profile.city_id, name: profile.city, country: profile.country ?? '' };
-      }
-    }
-
-    // Fallback to Vercel geo headers.
-    if (!geoCityId) {
-      const geo = await getVisitorGeo();
-      if (geo.city) {
-        const resolved = await findCityByGeo(geo.city, geo.country);
-        if (resolved) {
-          geoCityId = resolved.id;
-          geoCityName = resolved.name;
-          geoCountry = resolved.country ?? undefined;
-          detectedCity = { id: resolved.id, name: resolved.name, country: resolved.country };
-        }
-      }
-    }
-  } else if (filters.city_id) {
-    // User explicitly set a city — resolve it so the picker shows a label.
-    const city = await getCityById(filters.city_id);
-    if (city) {
-      detectedCity = { id: city.id, name: city.name, country: city.country };
-    }
-  }
+  const geoCityId = cityFilter.cityId;
+  const geoCityName = cityFilter.cityName;
+  const geoCountry = cityFilter.country;
+  const detectedCity = cityFilter.detectedCity;
 
   const events = await getEvents({
     country: geoCountry,
@@ -200,6 +172,16 @@ export default async function EventsPage({
     user && (await isFeatureEnabled('friends_going', user.id))
       ? await getFriendsGoingBulk(events.map((e) => e.id))
       : {};
+
+  // Crew counts for card indicators
+  const crewCounts = await getPublicCrewCountsBulk(events.map((e) => e.id));
+
+  // Attendee avatars for social proof on cards
+  const attendeeAvatars = await getAttendeeAvatarsBulk(events.map((e) => e.id));
+
+  // User interests for "matches your interests" indicator
+  const userProfile = user ? await getUserProfile() : null;
+  const userInterestIds = new Set(userProfile?.interests || []);
 
   // Filters object passed to the load-more component so it can fetch
   // subsequent pages with the same criteria.
@@ -317,6 +299,7 @@ export default async function EventsPage({
               interests={interests}
               categories={interestCategories}
               initialCity={detectedCity ? { id: detectedCity.id, name: detectedCity.name, country: detectedCity.country, lat: 0, lng: 0, translations: {} } : null}
+              isAutoDetected={cityFilter.isAutoDetected}
               currentFilters={{
                 ...filters,
                 city_id: geoCityId,
@@ -439,6 +422,9 @@ export default async function EventsPage({
               ...e,
               title: resolveEventTitle(e, locale),
               description: resolveEventDescription(e, locale) ?? e.description,
+              public_crew_count: crewCounts[e.id] ?? 0,
+              attendee_avatars: attendeeAvatars[e.id] ?? [],
+              matches_interests: e.category_id ? userInterestIds.has(e.category_id) : false,
             }))}
             initialGoingSet={Array.from(goingSet)}
             initialWaitlistSet={Array.from(waitlistSet)}

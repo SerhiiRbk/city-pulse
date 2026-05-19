@@ -731,6 +731,44 @@ export async function getEventAttendees(eventId: string) {
 }
 
 /**
+ * Bulk-fetch a few visible attendee avatars per event for card display.
+ * Returns up to 3 avatars per event to show social proof on listing cards.
+ */
+export async function getAttendeeAvatarsBulk(
+  eventIds: string[],
+): Promise<Record<string, { avatar_url: string | null; display_name: string }[]>> {
+  if (eventIds.length === 0) return {};
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('event_attendees')
+    .select('event_id, profiles(display_name, avatar_url)')
+    .in('event_id', eventIds)
+    .eq('status', 'going')
+    .eq('is_visible', true)
+    .limit(eventIds.length * 3);
+
+  if (error || !data) return {};
+
+  const result: Record<string, { avatar_url: string | null; display_name: string }[]> = {};
+  for (const row of data) {
+    // Supabase returns the joined profile as an object (single FK relation)
+    // but TS types it as array. We safely extract the first element.
+    const rawProfile = row.profiles;
+    const profile = Array.isArray(rawProfile) ? rawProfile[0] : rawProfile;
+    if (!profile) continue;
+    if (!result[row.event_id]) result[row.event_id] = [];
+    if (result[row.event_id].length < 3) {
+      result[row.event_id].push({
+        avatar_url: profile.avatar_url ?? null,
+        display_name: profile.display_name ?? '',
+      });
+    }
+  }
+  return result;
+}
+
+/**
  * Organizer-facing roster: includes every active/past participant row
  * (going, waitlist, attended, no_show, cancelled). Used for post-event
  * attendance marking.
@@ -744,6 +782,20 @@ export async function getEventRoster(eventId: string) {
     .in('status', ['going', 'waitlist', 'attended', 'no_show'])
     .order('created_at', { ascending: true });
   return data || [];
+}
+
+/**
+ * Returns the count of published events organized by a user.
+ * Used to show "verified organizer" badge on event detail pages.
+ */
+export async function getOrganizerEventCount(organizerId: string): Promise<number> {
+  const supabase = await createClient();
+  const { count } = await supabase
+    .from('events')
+    .select('id', { count: 'exact', head: true })
+    .eq('organizer_id', organizerId)
+    .eq('status', 'published');
+  return count ?? 0;
 }
 
 export async function addComment(

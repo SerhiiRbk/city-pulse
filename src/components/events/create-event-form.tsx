@@ -96,6 +96,8 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
   const [isPrivate, setIsPrivate] = useState(false);
   const [allowCrews, setAllowCrews] = useState(true);
   const [safetyTags, setSafetyTags] = useState<SafetyTag[]>([]);
+  const [whatToExpect, setWhatToExpect] = useState('');
+  const [icebreaker, setIcebreaker] = useState('');
   const [recurrence, setRecurrence] = useState<RecurrenceState>({ frequency: 'none' });
   const [descriptionDoc, setDescriptionDoc] = useState<RichTextDoc>(EMPTY_DESCRIPTION_DOC);
   const editorLabels = useRichEditorLabels();
@@ -247,6 +249,8 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
       group_id: selectedGroupId !== '__personal' ? selectedGroupId : null,
       safety_tags: safetyTags,
       allow_crews: allowCrews,
+      what_to_expect: whatToExpect || null,
+      icebreaker: icebreaker || null,
       title_translations: Object.fromEntries(
         translations
           .filter((t) => t.locale && t.title.trim())
@@ -347,6 +351,9 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">{t('description')}</Label>
+            <p className="text-muted-foreground text-xs leading-relaxed">
+              {t('descriptionHint')}
+            </p>
             <RichTextEditor
               ariaLabel={t('description')}
               value={descriptionDoc}
@@ -501,6 +508,34 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
             <Label>{tSafety('inputLabel')}</Label>
             <p className="text-muted-foreground text-xs">{tSafety('inputHint')}</p>
             <SafetyTagsInput value={safetyTags} onChange={setSafetyTags} />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="what_to_expect">{t('whatToExpect')}</Label>
+            <p className="text-muted-foreground text-xs">{t('whatToExpectHint')}</p>
+            <textarea
+              id="what_to_expect"
+              value={whatToExpect}
+              onChange={(e) => setWhatToExpect(e.target.value)}
+              placeholder={t('whatToExpectPlaceholder')}
+              maxLength={500}
+              rows={3}
+              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="icebreaker">{t('icebreaker')}</Label>
+            <p className="text-muted-foreground text-xs">{t('icebreakerHint')}</p>
+            <input
+              id="icebreaker"
+              type="text"
+              value={icebreaker}
+              onChange={(e) => setIcebreaker(e.target.value)}
+              placeholder={t('icebreakerPlaceholder')}
+              maxLength={200}
+              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+            />
           </div>
         </CardContent>
       </Card>

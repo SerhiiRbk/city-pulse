@@ -30,6 +30,28 @@ const nextConfig: NextConfig = {
         source: '/invite/crew/:token',
         destination: '/en/invite/crew/:token',
       },
+      // City events pages: /en/cities/prague/events → /en/events?city=Prague
+      // URL stays as /cities/prague/events in the browser, but internally
+      // serves the events page with city filter pre-applied.
+      {
+        source: '/:locale(en|ru|uk|cs|de|es)/cities/:city/events',
+        destination: '/:locale/events?city=:city',
+      },
+    ];
+  },
+  async redirects() {
+    return [
+      // Redirect old city-events URLs to new /cities/:city/events structure
+      {
+        source: '/:locale(en|ru|uk|cs|de|es)/city-events/city-:city',
+        destination: '/:locale/cities/:city/events',
+        permanent: true,
+      },
+      {
+        source: '/:locale(en|ru|uk|cs|de|es)/city-events',
+        destination: '/:locale/events',
+        permanent: true,
+      },
     ];
   },
 };

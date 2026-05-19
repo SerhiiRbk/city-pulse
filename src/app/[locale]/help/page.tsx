@@ -1,6 +1,7 @@
 import { setRequestLocale } from 'next-intl/server';
 import type { Metadata } from 'next';
-import { LifeBuoy, Mail } from 'lucide-react';
+import { LifeBuoy, Mail, ArrowRight } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
 import { buildPageMetadata } from '@/lib/seo';
 import {
   generateBreadcrumbJsonLd,
@@ -70,6 +71,13 @@ export default async function HelpPage({
         <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground">
           {content.introBody}
         </p>
+        <Link
+          href="/how-to"
+          className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary transition-colors hover:text-primary/80"
+        >
+          {locale === 'ru' ? 'Подробнее о возможностях' : locale === 'uk' ? 'Детальніше про можливості' : locale === 'cs' ? 'Více o funkcích' : locale === 'de' ? 'Mehr über die Funktionen' : locale === 'es' ? 'Más sobre las funciones' : 'Learn more about features'}
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
       </header>
 
       <div className="mt-8 space-y-4">

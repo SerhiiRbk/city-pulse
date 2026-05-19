@@ -75,9 +75,10 @@
   },
   "landing": {
     "hero": {
-      "title": "Finde deine Leute in der Stadt",
-      "subtitle": "Tritt lokalen Communities bei, entdecke Events und knüpfe echte Kontakte",
-      "cta": "Leute nach Interessen finden"
+      "title": "Geh nicht allein — finde eine Crew",
+      "subtitle": "Entdecke Events in deiner Stadt und finde Leute, mit denen du hingehen kannst. Schließ dich einer kleinen Crew an oder erstelle deine eigene für einen Spaziergang, Kaffee, eine Ausstellung, ein Konzert, Sprachpraxis oder Wochenendpläne.",
+      "cta": "Events finden",
+      "allCities": "Alle Städte"
     },
     "sections": {
       "todayEvents": "Veranstaltungen heute",
@@ -111,16 +112,20 @@
     },
     "howItWorks": {
       "title": "So funktioniert's",
-      "subtitle": "Vier einfache Schritte zum Start",
+      "subtitle": "Sechs Schritte von der Idee zu echten Bekanntschaften",
       "step": "SCHRITT",
-      "step1Title": "Event oder Gruppe erstellen",
-      "step1Desc": "Teilen Sie Ihre Idee — fügen Sie ein Treffen, einen Workshop oder eine Gruppe in wenigen Klicks hinzu.",
-      "step2Title": "Entdecken, was passiert",
-      "step2Desc": "Durchsuche Events und Gruppen nach Stadt, Interessen oder Datum. Finde heraus, was zu dir passt.",
-      "step3Title": "Beitreten & abonnieren",
-      "step3Desc": "Melden Sie sich für Events an, folgen Sie Gruppen und erhalten Sie Benachrichtigungen über Updates.",
-      "step4Title": "Verbinden & dazugehören",
-      "step4Desc": "Lernen Sie Gleichgesinnte kennen, schließen Sie Freundschaften und werden Sie Teil der Community."
+      "step1Title": "Finde ein Event",
+      "step1Desc": "Konzerte, Ausstellungen, Festivals, Sport — alles, was in deiner Stadt passiert.",
+      "step2Title": "Nichts gefunden? Erstell dein eigenes",
+      "step2Desc": "Veröffentliche ein Treffen und lade Freunde oder neue Bekanntschaften ein.",
+      "step3Title": "Stell eine Crew zusammen",
+      "step3Desc": "Erstelle eine Crew aus 2–10 Leuten oder schließ dich einer an, die schon hingeht.",
+      "step4Title": "Abstimmen im Chat",
+      "step4Desc": "Klärt Treffpunkt und Details im privaten Gruppenchat.",
+      "step5Title": "Gründe eine feste Gruppe",
+      "step5Desc": "Eine Crew ist für ein Event. Eine Gruppe ist deine feste Community — organisiert regelmäßige Treffen, teilt Fotos und wachst zusammen.",
+      "step6Title": "Bleib in Kontakt",
+      "step6Desc": "Füge Leute, die du bei Events kennengelernt hast, zu deinen Kontakten hinzu und schreib ihnen direkt."
     },
     "marketing": {
       "heroBadge": "Finde deine Leute für Spaziergänge, Brettspiele, Sprachclubs und mehr",
@@ -132,9 +137,9 @@
       "quickFormat3Body": "Mit einem gemeinsamen Spiel fällt das Kennenlernen leichter",
       "quickFormat4": "Spaziergänge & Ausflüge",
       "quickFormat4Body": "Entdecke die Stadt und lerne unterwegs neue Leute kennen",
-      "trustPoint1": "Ideal für kleine Gruppen",
-      "trustPoint2": "Perfekt für Neulinge",
-      "trustPoint3": "Mehrsprachige Communities",
+      "trustPoint1": "Crews für einzelne Events",
+      "trustPoint2": "Gruppen für regelmäßige Treffen",
+      "trustPoint3": "Perfekt für Neulinge",
       "tonightLabel": "Heute Abend in deiner Stadt",
       "quickTitle": "Finde ein Treffen, bei dem der Einstieg leichtfällt",
       "quickMeta": "Tritt Gesprächen bei, bevor du auftauchst",
@@ -258,7 +263,10 @@
       "inDays": "In {count} Tagen",
       "online": "Online",
       "alreadyIn": "{count, plural, one {# Person ist schon dabei} other {# Personen sind schon dabei}}",
-      "firstToJoin": "Sei der Erste bei dieser Veranstaltung",
+      "firstToJoin": "Sei der Erste",
+      "crewGoing": "{count, plural, one {# Crew geht hin} other {# Crews gehen hin}}",
+      "createFirstCrew": "Erste Crew erstellen",
+      "matchesYourInterests": "Passt zu deinen Interessen",
       "upcoming": "Demnächst",
       "showing": "Läuft jetzt",
       "tomorrow": "Morgen"
@@ -327,7 +335,10 @@
       "systemEditorialTitle": "Stadt-Veranstaltung",
       "systemEditorialSubtitle": "Wir veranstalten dieses Event nicht — wir helfen dir nur, es nicht zu verpassen.",
       "goWithGroupNew": "Gemeinsam hingehen",
-      "goWithGroupExisting": "Einer Gruppe beitreten"
+      "goWithGroupExisting": "Einer Gruppe beitreten",
+      "whatToExpect": "Was dich erwartet",
+      "icebreaker": "Gesprächsstarter",
+      "beFirstToGo": "Sei der Erste"
     },
     "meetup": {
       "sectionLabel": "Gemeinsam hingehen",
@@ -547,7 +558,13 @@
       "translatedTitlePlaceholder": "Eventtitel in dieser Sprache",
       "translatedDescription": "Übersetzte Beschreibung",
       "translatedDescriptionPlaceholder": "Eventbeschreibung in dieser Sprache",
-      "addTranslation": "Übersetzung hinzufügen"
+      "addTranslation": "Übersetzung hinzufügen",
+      "whatToExpect": "Was dich erwartet",
+      "whatToExpectPlaceholder": "Wir treffen uns am Haupteingang, stellen uns in den ersten 5 Minuten vor und gehen dann gemeinsam rein. Keine Vorbereitung nötig.",
+      "whatToExpectHint": "Hilf Neulingen, sich sicher zu fühlen — beschreibe Format, Treffpunkt und Atmosphäre.",
+      "icebreaker": "Gesprächsstarter",
+      "icebreakerPlaceholder": "Was ist der letzte interessante Ort, den du in der Stadt entdeckt hast?",
+      "icebreakerHint": "Eine Gesprächsfrage, die Teilnehmende sehen — hilft, vor dem Event ins Gespräch zu kommen."
     },
     "edit": {
       "title": "Veranstaltung bearbeiten",

@@ -56,12 +56,6 @@ export function Header({ user }: HeaderProps) {
               </Link>
             </Button>
             <Button variant="ghost" size="sm" asChild className="rounded-full">
-              <Link href="/city-events" className="flex items-center gap-2">
-                <Landmark className="h-4 w-4" />
-                {t('cityEvents')}
-              </Link>
-            </Button>
-            <Button variant="ghost" size="sm" asChild className="rounded-full">
               <Link href="/calendar" className="flex items-center gap-2">
                 <CalendarDays className="h-4 w-4" />
                 {t('calendar')}

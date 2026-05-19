@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   ArrowRight, MapPin, Users, CalendarDays, Heart, Globe, Shield,
-  CalendarPlus, Bell, UsersRound, Sparkles,
+  CalendarPlus, Bell, UsersRound, Sparkles, MessageCircle,
 } from 'lucide-react';
 import {
   getCachedLandingEvents,
@@ -14,14 +14,19 @@ import {
 } from '@/lib/actions/landing-cached';
 import { getUser } from '@/lib/actions/auth';
 import { resolveEventTitle, resolveEventDescription } from '@/lib/event-i18n';
+import { getPublicCrewCountsBulk } from '@/lib/actions/crew';
+import { getAttendeeAvatarsBulk } from '@/lib/actions/events';
 import { EventCard } from '@/components/events/event-card';
 import { GroupCard } from '@/components/groups/group-card';
 import { HeroAuthCTA } from '@/components/landing/hero-auth-cta';
 import { LandingStats } from '@/components/landing/landing-stats';
 import { TonightInCity } from '@/components/landing/tonight-in-city';
+import { CitySelector } from '@/components/landing/city-selector';
 import { generateOrganizationJsonLd, generateWebSiteJsonLd } from '@/lib/json-ld';
 import { HeroImage } from '@/components/ui/hero-image';
 import { buildPageMetadata } from '@/lib/seo';
+import { resolveCityFilter } from '@/lib/resolve-city-filter';
+import { findSupportedCity } from '@/lib/cities';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({
@@ -42,19 +47,51 @@ export async function generateMetadata({
 
 export default async function HomePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ city?: string }>;
 }) {
   const { locale } = await params;
+  const { city: cityParam } = await searchParams;
   setRequestLocale(locale);
 
   const t = await getTranslations('landing');
+  const user = await getUser();
 
-  const [events, topGroups, user] = await Promise.all([
-    getCachedLandingEvents(24),
+  // Resolve city using shared logic
+  const cityFilter = await resolveCityFilter({
+    cityParam: cityParam,
+    geoOff: false, // landing page doesn't use geo_off
+    userId: user?.id,
+  });
+
+  // Find the slug for URL building (CTA button, CitySelector)
+  const activeCity: string | undefined = (() => {
+    if (cityFilter.cityName) {
+      const supported = findSupportedCity(cityFilter.cityName);
+      return supported?.slug;
+    }
+    return undefined;
+  })();
+
+  // dbName for filtering events
+  const cityForQuery = cityFilter.cityName;
+
+  const [events, topGroups] = await Promise.all([
+    getCachedLandingEvents(24, cityForQuery),
     getCachedLandingTopGroups(4),
-    getUser(),
   ]);
+
+  // Crew counts for event cards
+  const crewCounts = events.length > 0
+    ? await getPublicCrewCountsBulk(events.map((e) => e.id))
+    : {};
+
+  // Attendee avatars for social proof
+  const attendeeAvatars = events.length > 0
+    ? await getAttendeeAvatarsBulk(events.map((e) => e.id))
+    : {};
 
   const featureCards = [
     { icon: MapPin, title: t('features.localEvents'), desc: t('features.localEventsDesc') },
@@ -72,10 +109,12 @@ export default async function HomePage({
   });
 
   const howItWorks = [
-    { step: '01', icon: CalendarPlus, title: t('howItWorks.step1Title'), desc: t('howItWorks.step1Desc') },
-    { step: '02', icon: Globe, title: t('howItWorks.step2Title'), desc: t('howItWorks.step2Desc') },
-    { step: '03', icon: Bell, title: t('howItWorks.step3Title'), desc: t('howItWorks.step3Desc') },
-    { step: '04', icon: UsersRound, title: t('howItWorks.step4Title'), desc: t('howItWorks.step4Desc') },
+    { step: '01', icon: CalendarDays, title: t('howItWorks.step1Title'), desc: t('howItWorks.step1Desc') },
+    { step: '02', icon: CalendarPlus, title: t('howItWorks.step2Title'), desc: t('howItWorks.step2Desc') },
+    { step: '03', icon: UsersRound, title: t('howItWorks.step3Title'), desc: t('howItWorks.step3Desc') },
+    { step: '04', icon: Bell, title: t('howItWorks.step4Title'), desc: t('howItWorks.step4Desc') },
+    { step: '05', icon: Users, title: t('howItWorks.step5Title'), desc: t('howItWorks.step5Desc') },
+    { step: '06', icon: MessageCircle, title: t('howItWorks.step6Title'), desc: t('howItWorks.step6Desc') },
   ];
 
   const trustPoints = [
@@ -126,13 +165,21 @@ export default async function HomePage({
                 ))}
               </div>
 
-              <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row">
+              <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center">
                 <Button size="lg" asChild className="h-12 rounded-full px-6 text-sm shadow-xl sm:px-8 sm:text-base">
-                  <Link href="/events" className="flex items-center gap-2">
+                  <Link
+                    href={activeCity ? `/cities/${activeCity.toLowerCase().replace(/\s+/g, '-')}/events` : '/events'}
+                    className="flex items-center gap-2"
+                  >
                     {t('hero.cta')}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
+                <CitySelector
+                  locale={locale}
+                  currentCity={activeCity}
+                  allCitiesLabel={t('hero.allCities')}
+                />
                 <Suspense fallback={null}>
                   <HeroAuthCTA />
                 </Suspense>
@@ -192,6 +239,8 @@ export default async function HomePage({
               description: resolveEventDescription(e, locale) ?? e.description,
             }))}
             viewAllLabel={t('sections.viewAllEvents')}
+            crewCounts={crewCounts}
+            attendeeAvatars={attendeeAvatars}
           />
         </div>
       )}
@@ -245,8 +294,8 @@ export default async function HomePage({
               <p className="text-muted-foreground mx-auto max-w-2xl text-lg">{t('howItWorks.subtitle')}</p>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
-              {howItWorks.map(({ step, icon: Icon, title, desc }, i) => (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
+              {howItWorks.slice(0, 3).map(({ step, icon: Icon, title, desc }, i) => (
                 <React.Fragment key={step}>
                   <div className="bg-background group relative rounded-3xl border-border/50 p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                     <span className="text-primary/10 absolute right-6 top-6 text-5xl font-black transition-colors group-hover:text-primary/20">
@@ -258,7 +307,29 @@ export default async function HomePage({
                     <h3 className="mb-3 text-xl font-bold">{title}</h3>
                     <p className="text-muted-foreground leading-relaxed">{desc}</p>
                   </div>
-                  {i < howItWorks.length - 1 && (
+                  {i < 2 && (
+                    <div className="hidden items-center justify-center lg:flex">
+                      <ArrowRight className="text-muted-foreground/30 h-8 w-8" />
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
+              {howItWorks.slice(3).map(({ step, icon: Icon, title, desc }, i) => (
+                <React.Fragment key={step}>
+                  <div className="bg-background group relative rounded-3xl border-border/50 p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                    <span className="text-primary/10 absolute right-6 top-6 text-5xl font-black transition-colors group-hover:text-primary/20">
+                      {step}
+                    </span>
+                    <div className="bg-primary/10 mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl transition-colors group-hover:bg-primary/20">
+                      <Icon className="text-primary h-8 w-8" />
+                    </div>
+                    <h3 className="mb-3 text-xl font-bold">{title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{desc}</p>
+                  </div>
+                  {i < 2 && (
                     <div className="hidden items-center justify-center lg:flex">
                       <ArrowRight className="text-muted-foreground/30 h-8 w-8" />
                     </div>
@@ -308,10 +379,14 @@ function EventSection({
   title,
   events,
   viewAllLabel,
+  crewCounts,
+  attendeeAvatars,
 }: {
   title: string;
   events: LandingEvent[];
   viewAllLabel: string;
+  crewCounts?: Record<string, number>;
+  attendeeAvatars?: Record<string, { avatar_url: string | null; display_name: string }[]>;
 }) {
   return (
     <section className="py-14">
@@ -327,7 +402,12 @@ function EventSection({
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
-            <EventCard key={event.id} event={event} />
+            <EventCard
+              key={event.id}
+              event={event}
+              publicCrewCount={crewCounts ? (crewCounts[event.id] ?? 0) : undefined}
+              attendeeAvatars={attendeeAvatars ? attendeeAvatars[event.id] : undefined}
+            />
           ))}
         </div>
       </div>

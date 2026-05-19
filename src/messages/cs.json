@@ -75,9 +75,10 @@
   },
   "landing": {
     "hero": {
-      "title": "Najdi své lidi ve městě",
-      "subtitle": "Připoj se k místním komunitám, objevuj akce a navazuj skutečná přátelství",
-      "cta": "Najít lidi podle zájmů"
+      "title": "Nechoď sám — najdi partu",
+      "subtitle": "Vyber si akce ve svém městě a najdi lidi, se kterými můžeš jít. Přidej se k malé partě nebo si vytvoř vlastní na procházku, kávu, výstavu, koncert, jazykovou praxi nebo víkendové plány.",
+      "cta": "Najít akce",
+      "allCities": "Všechna města"
     },
     "sections": {
       "todayEvents": "Akce dnes",
@@ -111,16 +112,20 @@
     },
     "howItWorks": {
       "title": "Jak to funguje",
-      "subtitle": "Čtyři jednoduché kroky k začátku",
+      "subtitle": "Šest kroků od nápadu k opravdovým známostem",
       "step": "KROK",
-      "step1Title": "Vytvořte akci nebo skupinu",
-      "step1Desc": "Sdílejte svůj nápad — přidejte setkání, workshop nebo skupinu podle zájmů během pár kliknutí.",
-      "step2Title": "Zjistěte, co se děje",
-      "step2Desc": "Procházejte akce a skupiny podle města, zájmů nebo data. Najděte to své.",
-      "step3Title": "Připojte se a odebírejte",
-      "step3Desc": "Přihlaste se na akce, sledujte skupiny a dostávejte oznámení o novinkách.",
-      "step4Title": "Spojte se a patřte k nám",
-      "step4Desc": "Poznejte stejně smýšlející lidi, navažte přátelství a staňte se součástí komunity."
+      "step1Title": "Najdi akci",
+      "step1Desc": "Koncerty, výstavy, festivaly, sport — vše, co se děje ve tvém městě.",
+      "step2Title": "Nenašel jsi? Vytvoř vlastní",
+      "step2Desc": "Zveřejni setkání a pozvi přátele nebo nové známé.",
+      "step3Title": "Sestav partu",
+      "step3Desc": "Vytvoř skupinu 2–10 lidí nebo se přidej k těm, kdo už jdou.",
+      "step4Title": "Domluvte se v chatu",
+      "step4Desc": "Dohodněte se, kde se potkáte, a vyřešte detaily v soukromém skupinovém chatu.",
+      "step5Title": "Založ stálou skupinu",
+      "step5Desc": "Parta je na jednu akci. Skupina je vaše stálá komunita — organizujte pravidelná setkání, sdílejte fotky a rosťte spolu.",
+      "step6Title": "Zůstaň v kontaktu",
+      "step6Desc": "Přidej si do kontaktů lidi, které jsi potkal na akcích, a pokračuj v konverzaci přes soukromé zprávy."
     },
     "marketing": {
       "heroBadge": "Najděte své lidi na procházky, deskovky, jazykové kluby a další",
@@ -132,9 +137,9 @@
       "quickFormat3Body": "Seznamování je snazší, když vás spojí společná hra",
       "quickFormat4": "Procházky a výlety",
       "quickFormat4Body": "Poznávejte město a seznamujte se cestou",
-      "trustPoint1": "Vhodné pro malé skupiny",
-      "trustPoint2": "Skvělé pro nováčky",
-      "trustPoint3": "Vícejazyčné komunity",
+      "trustPoint1": "Party na jednorázové akce",
+      "trustPoint2": "Skupiny pro pravidelná setkání",
+      "trustPoint3": "Skvělé pro nováčky",
       "tonightLabel": "Dnes večer ve vašem městě",
       "quickTitle": "Najděte typ setkání, ke kterému se snadno přidáte",
       "quickMeta": "Zapojte se do konverzací ještě před příchodem",
@@ -258,7 +263,10 @@
       "inDays": "Za {count, plural, one {# den} few {# dny} other {# dní}}",
       "online": "Online",
       "alreadyIn": "{count, plural, one {# člověk už jde} few {# lidé už jdou} other {# lidí už jde}}",
-      "firstToJoin": "Buďte první, kdo se přidá",
+      "firstToJoin": "Buďte první",
+      "crewGoing": "{count, plural, one {# parta jde} few {# party jdou} other {# part jde}}",
+      "createFirstCrew": "Vytvořit první partu",
+      "matchesYourInterests": "Odpovídá vašim zájmům",
       "upcoming": "Brzy",
       "showing": "Právě probíhá",
       "tomorrow": "Zítra"
@@ -327,7 +335,10 @@
       "systemEditorialTitle": "Městská událost",
       "systemEditorialSubtitle": "Tuto akci nepořádáme — jen vám pomáháme, abyste ji nezmeškali.",
       "goWithGroupNew": "Jdeme ve skupině",
-      "goWithGroupExisting": "Přidat se ke skupině"
+      "goWithGroupExisting": "Přidat se ke skupině",
+      "whatToExpect": "Co očekávat",
+      "icebreaker": "Téma k rozhovoru",
+      "beFirstToGo": "Buďte první"
     },
     "meetup": {
       "sectionLabel": "Jdeme spolu",
@@ -547,7 +558,13 @@
       "translatedTitlePlaceholder": "Název akce v tomto jazyce",
       "translatedDescription": "Přeložený popis",
       "translatedDescriptionPlaceholder": "Popis akce v tomto jazyce",
-      "addTranslation": "Přidat překlad"
+      "addTranslation": "Přidat překlad",
+      "whatToExpect": "Co očekávat",
+      "whatToExpectPlaceholder": "Sejdeme se u hlavního vchodu, představíme se v prvních 5 minutách a pak jdeme společně. Žádná příprava není potřeba.",
+      "whatToExpectHint": "Pomozte nováčkům cítit se jistě — popište formát, místo setkání a atmosféru.",
+      "icebreaker": "Otázka pro seznámení",
+      "icebreakerPlaceholder": "Jaké poslední zajímavé místo jste ve městě objevili?",
+      "icebreakerHint": "Téma k rozhovoru, které uvidí účastníci — pomáhá navázat kontakt ještě před akcí."
     },
     "edit": {
       "title": "Upravit akci",

@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getEventsInBbox } from '@/lib/actions/events-map';
-import { getInterestCategories } from '@/lib/actions/profile';
+import { getInterestCategories, getInterests } from '@/lib/actions/profile';
 import { getUserProfile } from '@/lib/actions/auth';
 import { getCityById } from '@/lib/actions/cities';
 import { EventsMapLoader } from '@/components/events/events-map-loader';
@@ -106,9 +106,14 @@ export default async function EventsMapPage({
     zoom: parseIntParam(filters.zoom) ?? fallbackCenter.zoom,
   };
   const range = isMapTimeRange(filters.range) ? filters.range : DEFAULT_MAP_TIME_RANGE;
-  const categoryIds = filters.category
+  const categorySlugs = filters.category
     ? filters.category.split(',').filter(Boolean)
     : [];
+  // Resolve slugs to UUIDs — the map component passes these to DB queries
+  const interests = await getInterests();
+  const categoryIds = categorySlugs
+    .map((slug) => interests.find((i) => i.slug === slug)?.id)
+    .filter((id): id is string => !!id);
   const isFreeOnly = filters.is_free === 'true';
 
   return (
