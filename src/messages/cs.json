@@ -418,7 +418,8 @@
         "all": "Vše",
         "community": "Komunita",
         "afisha": "Afisha"
-      }
+      },
+      "cityGroupsLink": "Skupiny v {city} — přidej se ke komunitě"
     },
     "myEvents": {
       "heroBadge": "Vaše centrum organizátora",

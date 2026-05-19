@@ -30,6 +30,8 @@ import { AttendanceRoster, type RosterEntry } from '@/components/events/attendan
 import { EventReviewForm } from '@/components/events/event-review-form';
 import { EventPhotoGallery } from '@/components/events/event-photo-gallery';
 import { generateBreadcrumbJsonLd, generateEventJsonLd } from '@/lib/json-ld';
+import { findSupportedCity } from '@/lib/cities';
+import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import { resolveEventTitle, resolveEventDescription } from '@/lib/event-i18n';
 import { RichTextView } from '@/components/ui/rich-text-view';
 import type { RichTextDoc } from '@/lib/rich-text/types';
@@ -221,15 +223,16 @@ export default async function EventDetailPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground sm:mb-5">
-        <Link href="/events" className="transition-colors hover:text-foreground">{t('breadcrumbs')}</Link>
-        <span>/</span>
-        <span className="truncate">{localizedTitle}</span>
-      </div>
       {/* Photos */}
       {event.photos && event.photos.length > 0 && (
         <EventPhotoGallery photos={event.photos} title={event.title} />
       )}
+
+      <Breadcrumbs items={[
+        { label: t('breadcrumbs'), href: '/events' },
+        ...(event.city ? [{ label: event.city_name || event.city, href: `/cities/${(findSupportedCity(event.city)?.slug || event.city).toLowerCase().replace(/\s+/g, '-')}/events` }] : []),
+        { label: localizedTitle },
+      ]} />
 
       <div className="mt-6 grid grid-cols-1 gap-8 lg:mt-8 lg:gap-10 lg:grid-cols-3">
         {/* Main content */}

@@ -28,6 +28,7 @@ import { COUNTRIES, LANGUAGES, SITE_URL } from '@/lib/constants';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
 import { generateBreadcrumbJsonLd, generateGroupJsonLd } from '@/lib/json-ld';
+import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import type { Locale } from '@/i18n/config';
 
 interface Props {
@@ -192,10 +193,11 @@ export default async function GroupDetailPage({ params, searchParams }: Props) {
       </div>
 
       <div className="container mx-auto grid grid-cols-1 gap-6 px-4 py-6 sm:py-8 lg:grid-cols-[260px_1fr_280px]">
-        <div className="order-0 col-span-full flex items-center gap-2 text-sm text-muted-foreground">
-          <Link href="/groups" className="transition-colors hover:text-foreground">{tDetail('breadcrumbs')}</Link>
-          <span>/</span>
-          <span className="truncate">{group.name}</span>
+        <div className="order-0 col-span-full">
+          <Breadcrumbs items={[
+            { label: tDetail('breadcrumbs'), href: '/groups' },
+            { label: group.name },
+          ]} />
         </div>
 
         {/* LEFT sidebar — Info-only.

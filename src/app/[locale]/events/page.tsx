@@ -476,6 +476,18 @@ export default async function EventsPage({
             showCount
           />
         )}
+
+        {/* Cross-link to city groups — internal linking for SEO */}
+        {cityFromSlug && (
+          <div className="mt-10 rounded-2xl border border-border/50 bg-muted/30 p-5 text-center">
+            <Link
+              href={`/cities/${cityFromSlug.slug.toLowerCase().replace(/\s+/g, '-')}/groups`}
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              {tPage('cityGroupsLink', { city: cityFromSlug.labels[locale] || cityFromSlug.labels.en })}
+            </Link>
+          </div>
+        )}
       </section>
     </div>
   );

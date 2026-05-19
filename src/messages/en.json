@@ -419,7 +419,8 @@
         "all": "All",
         "community": "Community",
         "afisha": "Afisha"
-      }
+      },
+      "cityGroupsLink": "Groups in {city} — join a community"
     },
     "myEvents": {
       "heroBadge": "Your hosting hub",

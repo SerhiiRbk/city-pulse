@@ -418,7 +418,8 @@
         "all": "Todos",
         "community": "Comunidad",
         "afisha": "Afisha"
-      }
+      },
+      "cityGroupsLink": "Grupos en {city} — únete a una comunidad"
     },
     "myEvents": {
       "heroBadge": "Tu centro de organización",

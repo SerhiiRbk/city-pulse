@@ -418,7 +418,8 @@
         "all": "Alle",
         "community": "Community",
         "afisha": "Afisha"
-      }
+      },
+      "cityGroupsLink": "Gruppen in {city} — tritt einer Community bei"
     },
     "myEvents": {
       "heroBadge": "Dein Organisator-Hub",
