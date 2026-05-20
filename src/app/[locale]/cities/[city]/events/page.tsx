@@ -16,6 +16,8 @@ import {
   ArrowDownUp, CalendarCheck, CalendarPlus, Eye, EyeOff, Flame, List, Map as MapIcon, Sparkles, X,
 } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo';
+import { generateFaqJsonLd } from '@/lib/json-ld';
+import { getCitySeoContent } from '@/lib/city-seo-content';
 import { HeroImage } from '@/components/ui/hero-image';
 import { locales, type Locale } from '@/i18n/config';
 import { SUPPORTED_CITIES, findSupportedCity } from '@/lib/cities';
@@ -92,6 +94,7 @@ export default async function CityEventsPage({ params, searchParams }: Props) {
 
   const cityLabel = matched.labels[locale] || matched.labels.en;
   const citySlug = matched.slug.toLowerCase().replace(/\s+/g, '-');
+  const seoContent = getCitySeoContent(citySlug, locale);
 
   const categorySlugs = filters.category ? filters.category.split(',').filter(Boolean) : [];
   const categoryIds = categorySlugs
@@ -368,6 +371,54 @@ export default async function CityEventsPage({ params, searchParams }: Props) {
           pageSize={24}
           showCount
         />
+      )}
+
+      {/* SEO: Intro text */}
+      {seoContent && (
+        <div className="mt-12 rounded-2xl border border-border/50 bg-card p-6">
+          <p className="text-sm leading-relaxed text-muted-foreground">{seoContent.introText}</p>
+        </div>
+      )}
+
+      {/* SEO: Popular categories */}
+      {seoContent && seoContent.popularCategories.length > 0 && (
+        <div className="mt-8">
+          <h2 className="mb-4 text-lg font-semibold">{locale === 'ru' ? 'Популярные категории' : locale === 'uk' ? 'Популярні категорії' : locale === 'cs' ? 'Populární kategorie' : locale === 'de' ? 'Beliebte Kategorien' : locale === 'es' ? 'Categorías populares' : 'Popular categories'}</h2>
+          <div className="flex flex-wrap gap-2">
+            {seoContent.popularCategories.map((cat) => (
+              <Link
+                key={cat.slug}
+                href={`/cities/${citySlug}/events?category=${cat.slug}`}
+                className="rounded-full border border-border/60 bg-muted/30 px-3 py-1.5 text-sm transition-colors hover:bg-primary/10 hover:text-primary"
+              >
+                {cat.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* SEO: FAQ with JSON-LD */}
+      {seoContent && seoContent.faq.length > 0 && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(generateFaqJsonLd(seoContent.faq)),
+            }}
+          />
+          <div className="mt-8">
+            <h2 className="mb-4 text-lg font-semibold">{locale === 'ru' ? 'Часто задаваемые вопросы' : locale === 'uk' ? 'Часті питання' : locale === 'cs' ? 'Často kladené otázky' : locale === 'de' ? 'Häufige Fragen' : locale === 'es' ? 'Preguntas frecuentes' : 'FAQ'}</h2>
+            <div className="space-y-3">
+              {seoContent.faq.map((item, i) => (
+                <details key={i} className="group rounded-xl border border-border/50 bg-card p-4">
+                  <summary className="cursor-pointer text-sm font-medium">{item.question}</summary>
+                  <p className="mt-2 text-sm text-muted-foreground">{item.answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </>
       )}
 
       {/* Cross-link to city groups */}
