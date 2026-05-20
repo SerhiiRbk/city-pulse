@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { getEvent, getUserAttendance, getEventAttendees, getEventRoster, getComments, canEditEvent, getOrganizerEventCount } from '@/lib/actions/events';
+import { getEvent, getUserAttendance, getEventAttendees, getEventRoster, getComments, canEditEvent, getOrganizerEventCount, getRelatedEvents } from '@/lib/actions/events';
 import { recordEventView } from '@/lib/actions/event-funnel';
 import { getGroupPostByEventId } from '@/lib/actions/group-posts';
 import { Button } from '@/components/ui/button';
@@ -30,6 +30,8 @@ import { AttendanceRoster, type RosterEntry } from '@/components/events/attendan
 import { EventReviewForm } from '@/components/events/event-review-form';
 import { EventPhotoGallery } from '@/components/events/event-photo-gallery';
 import { generateBreadcrumbJsonLd, generateEventJsonLd } from '@/lib/json-ld';
+import { findSupportedCity } from '@/lib/cities';
+import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import { resolveEventTitle, resolveEventDescription } from '@/lib/event-i18n';
 import { RichTextView } from '@/components/ui/rich-text-view';
 import type { RichTextDoc } from '@/lib/rich-text/types';
@@ -175,6 +177,10 @@ export default async function EventDetailPage({ params }: Props) {
     };
   });
   const categoryLabel = event.category_translations?.[locale] || event.category_translations?.['en'] || '';
+
+  // Related events for internal linking (SEO)
+  const relatedEvents = await getRelatedEvents(id, event.city || null, event.category_id || null, 3);
+
   const orgInitials = (event.organizer_name || 'U')
     .split(' ')
     .map((n: string) => n[0])
@@ -217,15 +223,16 @@ export default async function EventDetailPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground sm:mb-5">
-        <Link href="/events" className="transition-colors hover:text-foreground">{t('breadcrumbs')}</Link>
-        <span>/</span>
-        <span className="truncate">{localizedTitle}</span>
-      </div>
       {/* Photos */}
       {event.photos && event.photos.length > 0 && (
         <EventPhotoGallery photos={event.photos} title={event.title} />
       )}
+
+      <Breadcrumbs items={[
+        { label: t('breadcrumbs'), href: '/events' },
+        ...(event.city ? [{ label: event.city_name || event.city, href: `/cities/${(findSupportedCity(event.city)?.slug || event.city).toLowerCase().replace(/\s+/g, '-')}/events` }] : []),
+        { label: localizedTitle },
+      ]} />
 
       <div className="mt-6 grid grid-cols-1 gap-8 lg:mt-8 lg:gap-10 lg:grid-cols-3">
         {/* Main content */}
@@ -480,6 +487,35 @@ export default async function EventDetailPage({ params }: Props) {
           {isAuthenticated && (
             <div className="flex justify-end">
               <ReportDialog targetType="event" targetId={id} />
+            </div>
+          )}
+
+          {/* Related events — internal linking for SEO */}
+          {relatedEvents.length > 0 && (
+            <div>
+              <Separator className="mb-6" />
+              <h2 className="mb-4 font-semibold">{t('relatedEvents')}</h2>
+              <div className="space-y-3">
+                {relatedEvents.map((related) => {
+                  const relatedTitle =
+                    related.title_translations?.[locale] ||
+                    related.title_translations?.['en'] ||
+                    related.title;
+                  return (
+                    <Link
+                      key={related.id}
+                      href={`/events/${related.id}`}
+                      className="block rounded-xl border border-border/50 p-3 transition-colors hover:bg-muted/50"
+                    >
+                      <p className="text-sm font-medium">{relatedTitle}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {formatDate(related.starts_at, locale)}
+                        {related.city && ` · ${related.city}`}
+                      </p>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>

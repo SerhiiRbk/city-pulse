@@ -47,8 +47,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/events', meta: { lastModified: buildTimestamp, changeFrequency: 'hourly', priority: 0.9 } },
     { path: '/events/map', meta: { lastModified: buildTimestamp, changeFrequency: 'hourly', priority: 0.7 } },
     { path: '/groups', meta: { lastModified: buildTimestamp, changeFrequency: 'hourly', priority: 0.8 } },
+    { path: '/cities', meta: { lastModified: buildTimestamp, changeFrequency: 'daily', priority: 0.8 } },
     { path: '/calendar', meta: { lastModified: buildTimestamp, changeFrequency: 'hourly', priority: 0.6 } },
     { path: '/city-events', meta: { lastModified: buildTimestamp, changeFrequency: 'hourly', priority: 0.8 } },
+    { path: '/blog', meta: { lastModified: buildTimestamp, changeFrequency: 'weekly', priority: 0.5 } },
     { path: '/about', meta: { lastModified: buildTimestamp, changeFrequency: 'monthly', priority: 0.6 } },
     { path: '/help', meta: { lastModified: buildTimestamp, changeFrequency: 'monthly', priority: 0.6 } },
     { path: '/contact', meta: { lastModified: buildTimestamp, changeFrequency: 'yearly', priority: 0.4 } },
@@ -69,6 +71,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'hourly',
       priority: 0.85,
     });
+    pushLocalized(entries, `/cities/${citySlug}/groups`, {
+      lastModified: buildTimestamp,
+      changeFrequency: 'hourly',
+      priority: 0.8,
+    });
+  }
+
+  // Category landing pages — indexable filtered views per city.
+  // Targets queries like "hiking events in Prague", "board games Berlin".
+  const { data: interests } = await supabase
+    .from('interests')
+    .select('slug')
+    .order('name', { ascending: true })
+    .limit(10);
+
+  if (interests) {
+    for (const city of SUPPORTED_CITIES) {
+      const citySlug = city.slug.toLowerCase().replace(/\s+/g, '-');
+      for (const interest of interests) {
+        pushLocalized(entries, `/cities/${citySlug}/events?category=${interest.slug}`, {
+          lastModified: buildTimestamp,
+          changeFrequency: 'daily',
+          priority: 0.7,
+        });
+      }
+    }
   }
 
   const { data: events } = await supabase

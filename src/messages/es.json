@@ -338,7 +338,8 @@
       "goWithGroupExisting": "Unirse a un grupo que va",
       "whatToExpect": "Qué esperar",
       "icebreaker": "Tema para romper el hielo",
-      "beFirstToGo": "Sé el primero"
+      "beFirstToGo": "Sé el primero",
+      "relatedEvents": "Más eventos en esta ciudad"
     },
     "meetup": {
       "sectionLabel": "Ir juntos",
@@ -417,7 +418,9 @@
         "all": "Todos",
         "community": "Comunidad",
         "afisha": "Afisha"
-      }
+      },
+      "cityGroupsLink": "Grupos en {city} — únete a una comunidad",
+      "allCities": "Todas las ciudades"
     },
     "myEvents": {
       "heroBadge": "Tu centro de organización",

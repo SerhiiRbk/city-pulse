@@ -24,18 +24,9 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       // Crew invite links are shared without locale prefix.
-      // Rewrite to the default locale route so crawlers get OG tags
-      // without a visible redirect.
       {
         source: '/invite/crew/:token',
         destination: '/en/invite/crew/:token',
-      },
-      // City events pages: /en/cities/prague/events → /en/events?city=Prague
-      // URL stays as /cities/prague/events in the browser, but internally
-      // serves the events page with city filter pre-applied.
-      {
-        source: '/:locale(en|ru|uk|cs|de|es)/cities/:city/events',
-        destination: '/:locale/events?city=:city',
       },
     ];
   },

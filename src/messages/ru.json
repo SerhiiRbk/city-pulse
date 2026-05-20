@@ -338,7 +338,8 @@
       "goWithGroupExisting": "Присоединиться к компании",
       "whatToExpect": "Что ожидать",
       "icebreaker": "Тема для разговора",
-      "beFirstToGo": "Будьте первым"
+      "beFirstToGo": "Будьте первым",
+      "relatedEvents": "Ещё мероприятия в этом городе"
     },
     "meetup": {
       "sectionLabel": "Идём вместе",
@@ -417,7 +418,9 @@
         "all": "Все",
         "community": "Сообщество",
         "afisha": "Афиша"
-      }
+      },
+      "cityGroupsLink": "Группы в городе {city} — присоединяйся к сообществу",
+      "allCities": "Все города"
     },
     "myEvents": {
       "heroBadge": "Ваш центр организатора",

@@ -27,20 +27,54 @@ import { buildPageMetadata } from '@/lib/seo';
 import { HeroImage } from '@/components/ui/hero-image';
 import { resolveCityFilter } from '@/lib/resolve-city-filter';
 import { findSupportedCity } from '@/lib/cities';
+import { generateFaqJsonLd } from '@/lib/json-ld';
+import { SITE_URL } from '@/lib/constants';
 import type { EventSort } from '@/lib/actions/events';
 import type { LoadMoreFilters } from '@/lib/actions/events-load-more';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: 'en' | 'ru' | 'uk' | 'cs' | 'de' }>;
+  searchParams: Promise<{ city?: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const { city } = await searchParams;
   const [t, tPage] = await Promise.all([
     getTranslations({ locale, namespace: 'events' }),
     getTranslations({ locale, namespace: 'events.page' }),
   ]);
+
+  // City-specific SEO metadata when accessed via /cities/:city/events rewrite
+  const matchedCity = city ? findSupportedCity(city) : undefined;
+  if (matchedCity) {
+    const cityLabel = matchedCity.labels[locale] || matchedCity.labels.en;
+    const citySlug = matchedCity.slug.toLowerCase().replace(/\s+/g, '-');
+    const SEO_TITLES: Record<string, (c: string) => string> = {
+      en: (c) => `Events in ${c} — find people to go with`,
+      ru: (c) => `Мероприятия в городе ${c} — найди компанию`,
+      uk: (c) => `Заходи у місті ${c} — знайди компанію`,
+      cs: (c) => `Akce v ${c} — najdi partu`,
+      de: (c) => `Veranstaltungen in ${c} — finde eine Crew`,
+      es: (c) => `Eventos en ${c} — encuentra tu crew`,
+    };
+    const SEO_DESCS: Record<string, (c: string) => string> = {
+      en: (c) => `Discover events in ${c}: concerts, exhibitions, language exchanges, walks, board games, and more. Join a small crew or create your own.`,
+      ru: (c) => `Мероприятия в ${c}: концерты, выставки, языковые обмены, прогулки, настольные игры и многое другое. Присоединяйся к компании или создай свою.`,
+      uk: (c) => `Заходи у ${c}: концерти, виставки, мовні обміни, прогулянки, настільні ігри та багато іншого. Приєднуйся до компанії або створи свою.`,
+      cs: (c) => `Akce v ${c}: koncerty, výstavy, jazykové výměny, procházky, deskové hry a další. Přidej se k partě nebo si vytvoř vlastní.`,
+      de: (c) => `Veranstaltungen in ${c}: Konzerte, Ausstellungen, Sprachtandems, Spaziergänge, Brettspiele und mehr. Schließ dich einer Crew an oder erstelle deine eigene.`,
+      es: (c) => `Eventos en ${c}: conciertos, exposiciones, intercambios de idiomas, paseos, juegos de mesa y más. Únete a un crew o crea el tuyo.`,
+    };
+    return buildPageMetadata({
+      locale,
+      path: `/cities/${citySlug}/events`,
+      title: (SEO_TITLES[locale] || SEO_TITLES.en)(cityLabel),
+      description: (SEO_DESCS[locale] || SEO_DESCS.en)(cityLabel),
+    });
+  }
 
   return buildPageMetadata({
     locale,
@@ -204,6 +238,43 @@ export default async function EventsPage({
 
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            generateFaqJsonLd([
+              {
+                question: 'How do I find events near me?',
+                answer: 'Use the city filter or enable location to see events in your area.',
+              },
+              {
+                question: 'Are events free?',
+                answer: 'Many events are free. Use the price filter to find free events.',
+              },
+              {
+                question: 'Can I go with friends?',
+                answer: 'Yes! Create a crew of 2-10 people or join an existing one.',
+              },
+            ]),
+          ),
+        }}
+      />
+      {events.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'ItemList',
+              itemListElement: events.slice(0, 10).map((e, i) => ({
+                '@type': 'ListItem',
+                position: i + 1,
+                url: `${SITE_URL}/${locale}/events/${e.id}`,
+              })),
+            }),
+          }}
+        />
+      )}
       <FilterPersistence />
       <section className="relative overflow-hidden bg-slate-950">
         <HeroImage src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1800&q=80" />
@@ -436,6 +507,18 @@ export default async function EventsPage({
             pageSize={24}
             showCount
           />
+        )}
+
+        {/* Cross-link to city groups — internal linking for SEO */}
+        {cityFromSlug && (
+          <div className="mt-10 rounded-2xl border border-border/50 bg-muted/30 p-5 text-center">
+            <Link
+              href={`/cities/${cityFromSlug.slug.toLowerCase().replace(/\s+/g, '-')}/groups`}
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              {tPage('cityGroupsLink', { city: cityFromSlug.labels[locale] || cityFromSlug.labels.en })}
+            </Link>
+          </div>
         )}
       </section>
     </div>
