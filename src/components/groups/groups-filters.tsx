@@ -134,7 +134,11 @@ export function GroupsFilters({ interests, categories, initialCity, hideCity, ba
     setSelectedCity(null);
     setSearchQuery('');
     clearSavedFilters();
-    router.push(`${pathname}?geo_off=1`);
+    if (basePath) {
+      router.push(basePath);
+    } else {
+      router.push(`${pathname}?geo_off=1`);
+    }
   }
 
   function applyTextSearch(value: string) {
@@ -150,7 +154,12 @@ export function GroupsFilters({ interests, categories, initialCity, hideCity, ba
     });
   }
 
-  const hasFilters = Object.entries(currentFilters).some(([k, v]) => v && k !== 'geo_off');
+  const hasFilters = Object.entries(currentFilters).some(([k, v]) => {
+    if (!v) return false;
+    if (k === 'geo_off') return false;
+    if (hideCity && (k === 'city' || k === 'city_id' || k === 'country')) return false;
+    return true;
+  });
   const uncategorizedCatId = categories.find((category) => category.slug === 'other')?.id;
   const groupedInterests = categories
     .map((category) => ({
