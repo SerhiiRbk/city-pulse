@@ -19,7 +19,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Link } from '@/i18n/navigation';
 import { MapPin, Calendar, Clock, Users, Globe, Star, Lock, Pencil } from 'lucide-react';
-import { formatDate, formatDuration, nowMs } from '@/lib/utils';
+import { formatDate, formatDuration, nowMs, getEventTimeZone } from '@/lib/utils';
 import { COUNTRIES, LANGUAGES } from '@/lib/constants';
 import { EventMap } from '@/components/maps/event-map';
 import { ReportDialog } from '@/components/reports/report-dialog';
@@ -525,7 +525,7 @@ export default async function EventDetailPage({ params }: Props) {
                     >
                       <p className="text-sm font-medium">{relatedTitle}</p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        {formatDate(related.starts_at, locale)}
+                        {formatDate(related.starts_at, locale, getEventTimeZone(related.country))}
                         {related.city && ` · ${related.city}`}
                       </p>
                     </Link>
@@ -608,7 +608,7 @@ export default async function EventDetailPage({ params }: Props) {
                 <div className="flex items-center gap-3">
                   <Calendar className="text-muted-foreground h-5 w-5 shrink-0" />
                   <div>
-                    <p className="text-sm font-medium">{formatDate(event.starts_at, locale)}</p>
+                    <p className="text-sm font-medium">{formatDate(event.starts_at, locale, getEventTimeZone(event.country))}</p>
                     <p className="text-muted-foreground text-xs">
                       <Clock className="mr-1 inline h-3 w-3" />
                       {formatDuration(event.duration_minutes)}
@@ -732,7 +732,7 @@ export default async function EventDetailPage({ params }: Props) {
         <div className="container mx-auto flex items-center gap-3">
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold">{event.title}</p>
-            <p className="text-xs text-muted-foreground">{formatDate(event.starts_at, locale)}</p>
+            <p className="text-xs text-muted-foreground">{formatDate(event.starts_at, locale, getEventTimeZone(event.country))}</p>
           </div>
           <EventActions
             eventId={id}

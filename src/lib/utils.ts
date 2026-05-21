@@ -15,7 +15,7 @@ export function nanoid(size = 21): string {
   return id;
 }
 
-export function formatDate(date: string | Date, locale: string = 'en'): string {
+export function formatDate(date: string | Date, locale: string = 'en', timeZone?: string): string {
   return new Intl.DateTimeFormat(locale, {
     weekday: 'short',
     year: 'numeric',
@@ -23,6 +23,7 @@ export function formatDate(date: string | Date, locale: string = 'en'): string {
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: timeZone || undefined,
   }).format(new Date(date));
 }
 
@@ -40,6 +41,25 @@ export function countryCodeToFlag(code: string): string {
     .split('')
     .map((c) => String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65))
     .join('');
+}
+
+/** Map country code to primary IANA timezone for event time display. */
+const COUNTRY_TIMEZONES: Record<string, string> = {
+  CZ: 'Europe/Prague',
+  DE: 'Europe/Berlin',
+  AT: 'Europe/Vienna',
+  PL: 'Europe/Warsaw',
+  SK: 'Europe/Bratislava',
+  HU: 'Europe/Budapest',
+  ES: 'Europe/Madrid',
+  IL: 'Asia/Jerusalem',
+  ID: 'Asia/Makassar', // Bali = WITA (UTC+8)
+  UY: 'America/Montevideo',
+};
+
+export function getEventTimeZone(country: string | null | undefined): string | undefined {
+  if (!country) return undefined;
+  return COUNTRY_TIMEZONES[country.toUpperCase()];
 }
 
 export function toSlug(text: string): string {

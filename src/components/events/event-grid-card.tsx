@@ -4,7 +4,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Heart, MapPin, Calendar, Users, Globe, Sparkles } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { formatDate, getEventTimeZone } from '@/lib/utils';
 import { toggleFavorite } from '@/lib/actions/events';
 import { toast } from 'sonner';
 import { useState } from 'react';
@@ -114,7 +114,7 @@ export function EventGridCard({ event, isFavorited: initialFav, isAuthenticated 
             )}
             <span className="text-muted-foreground flex items-center gap-1 text-sm">
               <Calendar className="h-3.5 w-3.5" />
-              {formatDate(event.starts_at, locale)}
+              {formatDate(event.starts_at, locale, getEventTimeZone(event.country))}
             </span>
           </div>
 

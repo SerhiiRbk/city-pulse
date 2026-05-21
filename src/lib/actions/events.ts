@@ -306,7 +306,7 @@ export async function getRelatedEvents(
   const supabase = await createClient();
   let query = supabase
     .from('events_with_counts')
-    .select('id, title, starts_at, city, title_translations')
+    .select('id, title, starts_at, city, country, title_translations')
     .eq('status', 'published')
     .eq('is_private', false)
     .eq('is_blocked', false)
@@ -330,7 +330,7 @@ export async function getRelatedEvents(
     const existingIds = [eventId, ...data.map((e) => e.id)];
     const { data: backfill } = await supabase
       .from('events_with_counts')
-      .select('id, title, starts_at, city, title_translations')
+      .select('id, title, starts_at, city, country, title_translations')
       .eq('status', 'published')
       .eq('is_private', false)
       .eq('is_blocked', false)

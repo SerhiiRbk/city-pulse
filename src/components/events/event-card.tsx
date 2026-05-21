@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Heart, MapPin, Calendar, Users, Globe, Sparkles, UsersRound } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { formatDate, getEventTimeZone } from '@/lib/utils';
 import {
   toggleAttendance,
   toggleFavorite,
@@ -343,7 +343,7 @@ export function EventCard({
           <div className="text-muted-foreground mb-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium">
             <span className="flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />
-              {formatDate(event.starts_at, locale)}
+              {formatDate(event.starts_at, locale, getEventTimeZone(event.country))}
             </span>
             <span className="flex min-w-0 items-center gap-1.5 truncate">
               {event.is_online ? (

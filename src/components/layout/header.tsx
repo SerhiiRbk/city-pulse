@@ -172,7 +172,10 @@ function UserMenu({ user }: { user: Profile }) {
         )}
         <DropdownMenuSeparator />
         <div className="flex items-center justify-between gap-2 px-2 py-2">
-          <LanguageSwitcher />
+          <div className="flex items-center gap-1">
+            <LanguageSwitcher />
+            <span className="text-xs text-muted-foreground">{t('language')}</span>
+          </div>
           <ThemeToggle />
         </div>
         <DropdownMenuSeparator />

@@ -5,7 +5,7 @@ import { Link } from '@/i18n/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Heart, MapPin, Calendar, Users, Globe, Clock, Sparkles } from 'lucide-react';
-import { formatDate, formatDuration } from '@/lib/utils';
+import { formatDate, formatDuration, getEventTimeZone } from '@/lib/utils';
 import {
   toggleAttendance,
   toggleFavorite,
@@ -201,7 +201,7 @@ export function EventListCard({
               {/* Date */}
               <p className="text-primary mb-1.5 flex items-center gap-1.5 text-sm font-medium">
                 <Calendar className="h-4 w-4" />
-                {formatDate(event.starts_at, locale)}
+                {formatDate(event.starts_at, locale, getEventTimeZone(event.country))}
               </p>
 
               {/* Title */}
