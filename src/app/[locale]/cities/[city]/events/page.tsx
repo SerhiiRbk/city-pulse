@@ -72,6 +72,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: `/cities/${citySlug}/events`,
     title: (SEO_TITLES[locale] || SEO_TITLES.en)(cityLabel),
     description: (SEO_DESCS[locale] || SEO_DESCS.en)(cityLabel),
+    image: matched.image,
+    imageAlt: `${cityLabel} — events and activities`,
   });
 }
 

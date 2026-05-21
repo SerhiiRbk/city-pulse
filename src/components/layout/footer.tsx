@@ -96,7 +96,11 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-3 font-semibold">{t('cities')}</h4>
+            <h4 className="mb-3 font-semibold">
+              <Link href="/cities" className="hover:text-foreground transition-colors">
+                {t('cities')}
+              </Link>
+            </h4>
             <ul className="text-muted-foreground grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
               {FOOTER_CITIES.map((city) => (
                 <li key={city.slug}>

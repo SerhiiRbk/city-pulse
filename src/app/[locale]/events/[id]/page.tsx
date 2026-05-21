@@ -325,6 +325,17 @@ export default async function EventDetailPage({ params }: Props) {
             {friendsGoing.length > 0 && (
               <FriendsGoingCue friends={friendsGoing} variant="detail" className="mt-3" />
             )}
+            {isSystemEvent && event.source_url && (
+              <a
+                href={event.source_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-flex items-center gap-1.5 text-xs text-primary hover:underline"
+              >
+                {t('source')}: {new URL(event.source_url).hostname.replace('www.', '')}
+                <span aria-hidden>↗</span>
+              </a>
+            )}
           </div>
 
           <Separator />

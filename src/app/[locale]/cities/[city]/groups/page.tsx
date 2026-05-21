@@ -59,6 +59,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: `/cities/${citySlug}/groups`,
     title: (SEO_TITLES[locale] || SEO_TITLES.en)(cityLabel),
     description: (SEO_DESCS[locale] || SEO_DESCS.en)(cityLabel),
+    image: matched.image,
+    imageAlt: `${cityLabel} — groups and communities`,
   });
 }
 

@@ -4,7 +4,7 @@ import { locales, type Locale } from '@/i18n/config';
 import { Link } from '@/i18n/navigation';
 import { buildPageMetadata } from '@/lib/seo';
 import { generateBreadcrumbJsonLd } from '@/lib/json-ld';
-import { MapPin, Users, ArrowRight } from 'lucide-react';
+import { MapPin, Users } from 'lucide-react';
 import type { Metadata } from 'next';
 
 type Props = {
@@ -92,25 +92,37 @@ export default async function CitiesPage({ params }: Props) {
           return (
             <div
               key={city.slug}
-              className="rounded-3xl border border-border/50 bg-card p-5 shadow-sm transition-shadow hover:shadow-md"
+              className="overflow-hidden rounded-3xl border border-border/50 bg-card shadow-sm transition-shadow hover:shadow-md"
             >
-              <h2 className="text-lg font-semibold">{cityName}</h2>
-              <div className="mt-4 flex flex-col gap-2">
+              <Link href={`/cities/${citySlug}/events`} className="block">
+                <div className="relative h-36 w-full">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={city.image.replace('w=1200', 'w=600')}
+                    alt={cityName}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                  <h2 className="absolute bottom-3 left-4 text-lg font-semibold text-white drop-shadow-sm">
+                    {cityName}
+                  </h2>
+                </div>
+              </Link>
+              <div className="flex gap-2 p-4">
                 <Link
                   href={`/cities/${citySlug}/events`}
-                  className="group flex items-center gap-2 rounded-xl border border-border/50 px-3 py-2 text-sm transition-colors hover:bg-muted/50"
+                  className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-border/50 px-3 py-2 text-sm transition-colors hover:bg-muted/50"
                 >
                   <MapPin className="h-4 w-4 shrink-0 text-primary" />
-                  <span className="flex-1">{labels.events}</span>
-                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                  <span>{labels.events}</span>
                 </Link>
                 <Link
                   href={`/cities/${citySlug}/groups`}
-                  className="group flex items-center gap-2 rounded-xl border border-border/50 px-3 py-2 text-sm transition-colors hover:bg-muted/50"
+                  className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-border/50 px-3 py-2 text-sm transition-colors hover:bg-muted/50"
                 >
                   <Users className="h-4 w-4 shrink-0 text-primary" />
-                  <span className="flex-1">{labels.groups}</span>
-                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                  <span>{labels.groups}</span>
                 </Link>
               </div>
             </div>
