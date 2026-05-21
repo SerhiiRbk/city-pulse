@@ -195,9 +195,11 @@ export default async function HomePage({
         </div>
       </section>
 
+      {/* LandingStats hidden until we have enough users
       <Suspense fallback={null}>
         <LandingStats locale={locale} />
       </Suspense>
+      */}
 
       {/* Features — only shown to anonymous visitors as a marketing pitch */}
       {!user && (

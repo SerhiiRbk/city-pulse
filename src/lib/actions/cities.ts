@@ -26,6 +26,16 @@ export async function getCityById(cityId: string): Promise<City | null> {
   return data;
 }
 
+export async function getCityByName(name: string): Promise<City | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('cities')
+    .select('*')
+    .eq('name', name)
+    .maybeSingle();
+  return data;
+}
+
 export async function upsertCityFromNominatim(params: {
   name: string;
   country: string;

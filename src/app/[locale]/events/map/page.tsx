@@ -3,7 +3,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getEventsInBbox } from '@/lib/actions/events-map';
 import { getInterestCategories, getInterests } from '@/lib/actions/profile';
 import { getUserProfile } from '@/lib/actions/auth';
-import { getCityById } from '@/lib/actions/cities';
+import { getCityById, getCityByName } from '@/lib/actions/cities';
+import { findSupportedCity } from '@/lib/cities';
 import { EventsMapLoader } from '@/components/events/events-map-loader';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
@@ -46,14 +47,24 @@ function buildListHref(
   range: MapTimeRange,
   categoryIds: string[],
   isFreeOnly: boolean,
+  cityName?: string,
 ): string {
-  const { from, to } = resolveMapTimeRange(range);
   const qs = new URLSearchParams();
-  qs.set('date_from', from.toISOString().slice(0, 10));
-  qs.set('date_to', to.toISOString().slice(0, 10));
+  // Don't carry over date range from map — list page shows all upcoming by default
   if (categoryIds.length > 0) qs.set('category', categoryIds.join(','));
   if (isFreeOnly) qs.set('is_free', 'true');
   const query = qs.toString();
+
+  // If we came from a city page, return to it
+  if (cityName) {
+    const supported = findSupportedCity(cityName);
+    if (supported) {
+      const slug = supported.slug.toLowerCase().replace(/\s+/g, '-');
+      const base = `/cities/${slug}/events`;
+      return query ? `${base}?${query}` : base;
+    }
+  }
+
   return query ? `/events?${query}` : '/events';
 }
 
@@ -86,14 +97,24 @@ export default async function EventsMapPage({
 
   // Fallback viewport resolution:
   //   1. explicit lat/lng/zoom in URL (always wins)
-  //   2. user profile city → cities.lat/lng
-  //   3. Prague default
-  // We load the profile once and hand it to MapHero so it doesn't re-fetch.
+  //   2. city param from URL → resolve to coordinates
+  //   3. user profile city → cities.lat/lng
+  //   4. Prague default
   const profile = await getUserProfile();
   const hasExplicitCenter =
     filters.lat !== undefined && filters.lng !== undefined;
   let fallbackCenter = DEFAULT_VIEWPORT;
-  if (!hasExplicitCenter && profile?.city_id) {
+
+  if (!hasExplicitCenter && filters.city) {
+    // Resolve city name to coordinates from the cities table
+    const supported = findSupportedCity(filters.city);
+    if (supported) {
+      const city = await getCityByName(supported.dbName);
+      if (city?.lat && city?.lng) {
+        fallbackCenter = { lat: city.lat, lng: city.lng, zoom: 12 };
+      }
+    }
+  } else if (!hasExplicitCenter && profile?.city_id) {
     const city = await getCityById(profile.city_id);
     if (city?.lat && city?.lng) {
       fallbackCenter = { lat: city.lat, lng: city.lng, zoom: 12 };
@@ -123,6 +144,7 @@ export default async function EventsMapPage({
         range={range}
         categoryIds={categoryIds}
         isFreeOnly={isFreeOnly}
+        cityName={filters.city}
       />
       <section className="container mx-auto max-w-6xl px-4 py-6 sm:py-8">
         <Suspense
@@ -149,11 +171,13 @@ async function MapHero({
   range,
   categoryIds,
   isFreeOnly,
+  cityName,
 }: {
   profile: Profile | null;
   range: MapTimeRange;
   categoryIds: string[];
   isFreeOnly: boolean;
+  cityName?: string;
 }) {
   const [t, tPage, tMap] = await Promise.all([
     getTranslations('events'),
@@ -161,7 +185,7 @@ async function MapHero({
     getTranslations('events.map'),
   ]);
 
-  const listHref = buildListHref(range, categoryIds, isFreeOnly);
+  const listHref = buildListHref(range, categoryIds, isFreeOnly, cityName);
 
   return (
     <section className="relative overflow-hidden bg-slate-950">

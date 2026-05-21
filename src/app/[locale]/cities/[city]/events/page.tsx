@@ -214,7 +214,7 @@ export default async function CityEventsPage({ params, searchParams }: Props) {
                   </span>
                 </span>
                 <Button asChild variant="ghost" size="sm" className="rounded-full text-white/90 hover:bg-white/10 hover:text-white">
-                  <Link href="/events/map" className="flex items-center gap-2">
+                  <Link href={`/events/map?city=${matched.dbName}`} className="flex items-center gap-2">
                     <MapIcon className="h-4 w-4" />
                     {tMap('viewMap')}
                   </Link>

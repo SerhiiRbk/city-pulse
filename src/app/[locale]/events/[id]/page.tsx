@@ -333,11 +333,16 @@ export default async function EventDetailPage({ params }: Props) {
           {(event.description_json || (localizedDescription && localizedDescription.trim())) && (
             <div>
               <h2 className="mb-2 font-semibold">{t('description')}</h2>
-              <RichTextView
-                doc={event.description_json as RichTextDoc | null}
-                fallbackText={localizedDescription}
-                className="text-sm leading-7 text-foreground/90"
-              />
+              {/* For system events with translations, show only the user's language */}
+              {isSystemEvent && localizedDescription ? (
+                <p className="text-sm leading-7 text-foreground/90 whitespace-pre-line">{localizedDescription}</p>
+              ) : (
+                <RichTextView
+                  doc={event.description_json as RichTextDoc | null}
+                  fallbackText={localizedDescription}
+                  className="text-sm leading-7 text-foreground/90"
+                />
+              )}
             </div>
           )}
 
