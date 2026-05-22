@@ -126,7 +126,7 @@ export function EventPhotoGallery({ photos, title }: EventPhotoGalleryProps) {
           <img
             src={photos[0]}
             alt={title}
-            className="h-64 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] sm:h-96 md:h-[450px]"
+            className="h-64 w-full object-contain bg-muted/50 transition-transform duration-500 group-hover:scale-[1.03] sm:h-96 md:h-[450px]"
           />
           <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
         </button>
