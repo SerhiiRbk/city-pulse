@@ -157,6 +157,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
+  // Blog posts
+  const { getAllSlugs } = await import('@/lib/blog');
+  const blogSlugs = getAllSlugs();
+  for (const { locale: blogLocale, slug } of blogSlugs) {
+    // Each blog post gets an entry for its locale only (content is locale-specific)
+    entries.push({
+      url: `${SITE_URL}/${blogLocale}/blog/${slug}`,
+      lastModified: buildTimestamp,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    });
+  }
+
   const { data: profiles } = await supabase
     .from('profiles')
     .select('id, updated_at')

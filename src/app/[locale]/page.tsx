@@ -18,6 +18,7 @@ import { getPublicCrewCountsBulk } from '@/lib/actions/crew';
 import { getAttendeeAvatarsBulk } from '@/lib/actions/events';
 import { EventCard } from '@/components/events/event-card';
 import { GroupCard } from '@/components/groups/group-card';
+import { getAllPosts } from '@/lib/blog';
 import { HeroAuthCTA } from '@/components/landing/hero-auth-cta';
 import { LandingStats } from '@/components/landing/landing-stats';
 import { TonightInCity } from '@/components/landing/tonight-in-city';
@@ -342,6 +343,62 @@ export default async function HomePage({
           </div>
         </section>
       )}
+
+      {/* Blog section */}
+      {(() => {
+        const posts = getAllPosts(locale);
+        if (posts.length === 0) return null;
+        const BLOG_TITLES: Record<string, string> = {
+          en: 'From the blog', ru: 'Из блога', uk: 'З блогу',
+          cs: 'Z blogu', de: 'Aus dem Blog', es: 'Del blog',
+        };
+        const BLOG_CTA: Record<string, string> = {
+          en: 'All articles', ru: 'Все статьи', uk: 'Усі статті',
+          cs: 'Všechny články', de: 'Alle Artikel', es: 'Todos los artículos',
+        };
+        return (
+          <section className="py-14">
+            <div className="container mx-auto px-4">
+              <div className="mb-8 flex items-end justify-between">
+                <h2 className="text-2xl font-bold tracking-tight">{BLOG_TITLES[locale] || BLOG_TITLES.en}</h2>
+                <Button variant="ghost" className="group" asChild>
+                  <Link href="/blog" className="flex items-center gap-2">
+                    {BLOG_CTA[locale] || BLOG_CTA.en}
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </Button>
+              </div>
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {posts.slice(0, 3).map((post) => (
+                  <Link
+                    key={post.slug}
+                    href={`/blog/${post.slug}`}
+                    className="group overflow-hidden rounded-2xl border border-border/60 bg-card transition-shadow hover:shadow-md"
+                  >
+                    {post.image && (
+                      <div className="h-36 overflow-hidden">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={post.image.replace('w=1200', 'w=600')}
+                          alt={post.title}
+                          className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
+                    <div className="p-4">
+                      <h3 className="text-sm font-semibold leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                        {post.title}
+                      </h3>
+                      <p className="mt-1.5 text-xs text-muted-foreground line-clamp-2">{post.description}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* Marketing CTA — only for anonymous visitors */}
       {!user && (

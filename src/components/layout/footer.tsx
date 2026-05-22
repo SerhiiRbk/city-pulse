@@ -134,6 +134,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/blog" className="hover:text-foreground transition-colors">
+                  {t('blog')}
+                </Link>
+              </li>
+              <li>
                 <Link href="/terms" className="hover:text-foreground transition-colors">
                   {t('terms')}
                 </Link>
