@@ -130,7 +130,7 @@ export function CityPicker({
   }
 
   async function handleSelectNominatim(result: NominatimResult) {
-    const cityName = result.address.city || result.address.town || result.address.village || '';
+    const localCityName = result.address.city || result.address.town || result.address.village || '';
     const countryCode = result.address.country_code?.toUpperCase() || '';
 
     const translations: Record<string, string> = {};
@@ -144,12 +144,15 @@ export function CityPicker({
       }
     }
 
+    // Always use English name for the DB `name` field; fall back to local name
+    const englishName = result.namedetails?.['name:en'] || localCityName;
+
     const city = await upsertCityFromNominatim({
-      name: cityName,
+      name: englishName,
       country: countryCode,
       lat: parseFloat(result.lat),
       lng: parseFloat(result.lon),
-      translations,
+      translations: { ...translations, [locale]: localCityName },
     });
 
     if (city) {

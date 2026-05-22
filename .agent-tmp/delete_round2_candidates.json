@@ -1,0 +1,1397 @@
+[
+  {
+    "id": "c529fc4d-ca78-4f77-9763-617564ceecae",
+    "title": "Prague Spring Closing Concert — Beethoven's Ninth",
+    "city": "Prague",
+    "starts_at": "2026-06-03T18:00:00+00:00",
+    "source_url": "https://festival.cz/en/program",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "bb304cac-ef5b-4e8f-9af6-4fd8bc5e8403",
+    "title": "Prague Spring Festival — Dvořák's New World Symphony",
+    "city": "Prague",
+    "starts_at": "2026-05-23T18:00:00+00:00",
+    "source_url": "https://festival.cz/en/program",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "6f4a8429-19d8-47b7-927d-e53e9fda5bb6",
+    "title": "Oživlý hrad Boskovice 2026",
+    "city": "Brno",
+    "starts_at": "2026-05-16T08:00:00+00:00",
+    "source_url": "https://www.kudyznudy.cz/akce/ozivly-hrad-boskovice-ix",
+    "is_system": true,
+    "status": "completed"
+  },
+  {
+    "id": "0a9e3a53-f46a-483d-bf73-0397a8443eb6",
+    "title": "Prague Spring Festival — Piano Recital",
+    "city": "Prague",
+    "starts_at": "2026-05-26T17:30:00+00:00",
+    "source_url": "https://festival.cz/en/program",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "c2fe231a-1758-4783-9df6-de36fd5a60c0",
+    "title": "Spring Wine Festival 2026 at Písecká brána",
+    "city": "Prague",
+    "starts_at": "2026-05-16T09:00:00+00:00",
+    "source_url": "https://springfestival.fun/",
+    "is_system": true,
+    "status": "completed"
+  },
+  {
+    "id": "730e231e-3091-4e3a-b904-31d61e8513f9",
+    "title": "Speedway FIM Grand Prix of Czech Republic 2026",
+    "city": "Prague",
+    "starts_at": "2026-05-22T16:30:00+00:00",
+    "source_url": "https://www.speedway-prague.cz/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "e607e129-8ccf-4ad7-9e36-eb4b6db2f135",
+    "title": "Open House Prague 2026 — Free Architecture Weekend",
+    "city": "Prague",
+    "starts_at": "2026-05-23T08:00:00+00:00",
+    "source_url": "https://www.openhousepraha.cz/en/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "7afa1ff4-ff5b-47a1-8161-0640b2ab742e",
+    "title": "Metronome Prague 2026 — Day 3",
+    "city": "Prague",
+    "starts_at": "2026-06-21T12:00:00+00:00",
+    "source_url": "https://www.metronomefestival.cz/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "6e09cb2b-f301-4b98-96f4-25f41b49b518",
+    "title": "Vltava Sunset Dinner Cruise",
+    "city": "Prague",
+    "starts_at": "2026-06-17T17:00:00+00:00",
+    "source_url": "https://www.eventbrite.com/d/czech-republic--prague/dinner-cruise/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "fffb8d48-9c05-4bc3-a9a2-f159675e2049",
+    "title": "Prague Fringe Festival 2026 — English-Language Theatre",
+    "city": "Prague",
+    "starts_at": "2026-05-25T17:00:00+00:00",
+    "source_url": "https://www.praguefringe.com/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "2929fe8e-2a2d-4d9b-bb7c-3a8a45cc0d6d",
+    "title": "Free Admission Day at the National Gallery Prague",
+    "city": "Prague",
+    "starts_at": "2026-05-17T08:00:00+00:00",
+    "source_url": "https://www.ngprague.cz/en/about/page/opening-hours",
+    "is_system": true,
+    "status": "completed"
+  },
+  {
+    "id": "68b0c63a-e2c9-4bb3-bfb6-4cc9f8267a0f",
+    "title": "Sónar Festival — Night",
+    "city": "Barcelona",
+    "starts_at": "2026-06-18T20:00:00+00:00",
+    "source_url": "https://sonar.es",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "9affd5f5-91f2-4022-920b-3d5fad2ba2fa",
+    "title": "Open Day at the Senate — Wallenstein Palace",
+    "city": "Prague",
+    "starts_at": "2026-05-08T06:00:00+00:00",
+    "source_url": "https://www.senat.cz/informace/pro_verejnost/index-eng.php",
+    "is_system": true,
+    "status": "completed"
+  },
+  {
+    "id": "c5ace279-f609-4575-8445-03867ceca0f8",
+    "title": "Rosé May — Rosé & Claret Wine Festival at Náplavka",
+    "city": "Prague",
+    "starts_at": "2026-05-16T09:00:00+00:00",
+    "source_url": "http://www.ruzovymaj.cz/",
+    "is_system": true,
+    "status": "completed"
+  },
+  {
+    "id": "b6c769d0-02df-4190-93f5-098d914022b4",
+    "title": "FaVU VUT — Plochy & Prostory",
+    "city": "Brno",
+    "starts_at": "2026-05-06T08:00:00+00:00",
+    "source_url": "https://www.kudyznudy.cz/akce/favu-vut-plochy-prostory",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "827eac32-1d2c-4fdc-90e3-816847aede80",
+    "title": "Prague Spring International Music Festival — Opening Night",
+    "city": "Prague",
+    "starts_at": "2026-05-12T18:00:00+00:00",
+    "source_url": "https://festival.cz/en/",
+    "is_system": true,
+    "status": "completed"
+  },
+  {
+    "id": "a4d382db-985e-4124-9e3b-0b05bf12602d",
+    "title": "Open-Air Cinema at Freiluftkino Kreuzberg",
+    "city": "Berlin",
+    "starts_at": "2026-06-12T19:30:00+00:00",
+    "source_url": "https://www.freiluftkino-kreuzberg.de",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "2b72e17f-d5a2-450b-80a4-dfc5897299f9",
+    "title": "Mauerpark Karaoke",
+    "city": "Berlin",
+    "starts_at": "2026-05-25T13:00:00+00:00",
+    "source_url": "https://www.mauerpark.info",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "f6772644-d37a-47b2-a165-894b9fb73b18",
+    "title": "Open-Air Cinema at Kasárna Karlín",
+    "city": "Prague",
+    "starts_at": "2026-06-12T19:00:00+00:00",
+    "source_url": "https://www.kasarnakarlin.cz",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "4319242f-21bf-47ba-aad8-39b0a6be2a46",
+    "title": "Noc kostelů — Night of Churches",
+    "city": "Prague",
+    "starts_at": "2026-06-05T16:00:00+00:00",
+    "source_url": "https://www.nockostelu.cz",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "62a537b8-d98f-4812-b3ad-651777d0e5de",
+    "title": "Expat Meetup at St. Oberholz",
+    "city": "Berlin",
+    "starts_at": "2026-06-04T17:30:00+00:00",
+    "source_url": "https://www.meetup.com/berlin-expats",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "a228757a-690e-4ef2-b722-937586ec68b7",
+    "title": "Legiovlak 2026 — legionářské muzeum na kolejích v Brně",
+    "city": "Brno",
+    "starts_at": "2026-05-05T07:00:00+00:00",
+    "source_url": "https://www.kudyznudy.cz/akce/legiovlak-2015",
+    "is_system": true,
+    "status": "completed"
+  },
+  {
+    "id": "dc0f73a1-5a6a-4507-a38d-a5b40f89e8b5",
+    "title": "Stand-Up Comedy in English at Comedy Café",
+    "city": "Berlin",
+    "starts_at": "2026-06-17T18:00:00+00:00",
+    "source_url": "https://www.comedycafeberlin.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "7272eea0-7a2f-406c-b3d7-0c107c777d74",
+    "title": "United Islands of Prague — Day 2",
+    "city": "Prague",
+    "starts_at": "2026-06-13T12:00:00+00:00",
+    "source_url": "https://www.unitedislands.cz/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "ebbccdd9-bb93-4a3d-8380-2dd31fa6d3fc",
+    "title": "Wiener Festwochen — Opening",
+    "city": "Vienna",
+    "starts_at": "2026-05-23T18:00:00+00:00",
+    "source_url": "https://www.festwochen.at",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "8e50ef77-282e-46d5-9090-f93db20db6e7",
+    "title": "Viennese Cooking Class — Schnitzel & Strudel",
+    "city": "Vienna",
+    "starts_at": "2026-06-09T15:00:00+00:00",
+    "source_url": "https://www.viennacookingclass.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "62437004-66b1-4829-a9f5-500ad0626d2e",
+    "title": "Board Games Night at Palác Akropolis",
+    "city": "Prague",
+    "starts_at": "2026-06-04T17:00:00+00:00",
+    "source_url": "https://www.palacakropolis.cz",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "fa73bb35-d55b-474d-9c22-d9eb95528839",
+    "title": "Karneval der Kulturen — Parade",
+    "city": "Berlin",
+    "starts_at": "2026-06-07T10:00:00+00:00",
+    "source_url": "https://www.karneval-berlin.de",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "49316da7-5351-41a0-a550-a1172793028a",
+    "title": "Sunrise Photo Walk on Charles Bridge",
+    "city": "Prague",
+    "starts_at": "2026-06-25T03:30:00+00:00",
+    "source_url": "https://www.eventbrite.com/d/czech-republic--prague/photography-walk/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "1c68b6dc-eace-48ac-b9bd-4c8b593f4b87",
+    "title": "Metronome Prague — Day 2 at Výstaviště",
+    "city": "Prague",
+    "starts_at": "2026-06-27T12:00:00+00:00",
+    "source_url": "https://www.metronomefestival.cz/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "9b1f3ccc-cc0f-4ae1-90d7-b6029e28088f",
+    "title": "Startup Meetup at Factory Berlin",
+    "city": "Berlin",
+    "starts_at": "2026-06-10T17:00:00+00:00",
+    "source_url": "https://www.factoryberlin.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "670d614f-41d6-4afc-ad44-8e46ae39a287",
+    "title": "Czech Beer Tasting Tour — U Fleků Brewery",
+    "city": "Prague",
+    "starts_at": "2026-06-09T17:00:00+00:00",
+    "source_url": "https://www.eventbrite.com/d/czech-republic--prague/beer-tasting/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "2e43cafd-1fa8-4948-aa8d-ba7df48968a5",
+    "title": "Večerníček 60 let — výstava plná pohádek v Brně",
+    "city": "Brno",
+    "starts_at": "2026-05-06T08:00:00+00:00",
+    "source_url": "https://www.kudyznudy.cz/akce/vecernicek-60-let-vystava-plna-pohadek-v-brne",
+    "is_system": true,
+    "status": "completed"
+  },
+  {
+    "id": "8fe30242-e32e-4b90-90f8-f098559418cc",
+    "title": "Open'er Festival Warm-Up Party",
+    "city": "Warsaw",
+    "starts_at": "2026-06-20T19:00:00+00:00",
+    "source_url": "https://opener.pl",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "3d91bba8-4eb8-4370-a1be-beb076240026",
+    "title": "Prague Rumfest 2026 at Vnitroblock",
+    "city": "Prague",
+    "starts_at": "2026-05-23T10:00:00+00:00",
+    "source_url": "https://www.rumfest.cz/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "e918b477-bbae-4aaa-825f-fcb2ec917a60",
+    "title": "Flamenco Night — Café del Duende",
+    "city": "Valencia",
+    "starts_at": "2026-06-22T19:00:00+00:00",
+    "source_url": "https://www.cafedelduende.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "2755cc4c-6a64-4c98-98a0-28eb74f31e76",
+    "title": "Chopin Concert in Łazienki Park",
+    "city": "Warsaw",
+    "starts_at": "2026-06-14T10:00:00+00:00",
+    "source_url": "https://www.lazienki-krolewskie.pl",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "4d0aa829-7bc7-4fed-adea-9a8a0d993f9d",
+    "title": "Karneval der Kulturen — Street Festival Day 1",
+    "city": "Berlin",
+    "starts_at": "2026-06-05T13:00:00+00:00",
+    "source_url": "https://www.karneval-berlin.de",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "e3b503d7-4ffc-4846-bed4-9b4631f4e888",
+    "title": "Brněnská muzejní noc 2026",
+    "city": "Brno",
+    "starts_at": "2026-05-16T16:00:00+00:00",
+    "source_url": "https://www.kudyznudy.cz/akce/brnenska-muzejni-noc-2013",
+    "is_system": true,
+    "status": "completed"
+  },
+  {
+    "id": "f88da085-99bb-4173-bd8e-7a24e474f2a1",
+    "title": "Aerofilms Open-Air Cinema in Letná Park",
+    "city": "Prague",
+    "starts_at": "2026-06-18T19:30:00+00:00",
+    "source_url": "https://kinoaero.cz/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "cbc4f2aa-3328-49e8-aff3-7921a5c5cac8",
+    "title": "Mozart — A Little Night Music in the Mirror Chapel",
+    "city": "Prague",
+    "starts_at": "2026-06-08T18:00:00+00:00",
+    "source_url": "https://www.pragueexperience.com/opera-concerts/opera-concerts.asp?EventYear=2026&EventMonth=06",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "064cb275-bdf6-4567-8949-795cc36be204",
+    "title": "Tanec Praha — International Dance Festival at the New Stage",
+    "city": "Prague",
+    "starts_at": "2026-06-16T18:00:00+00:00",
+    "source_url": "https://www.tanecpraha.org/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "f360d1d6-1539-465c-bfc8-370a110beced",
+    "title": "Stand-up Comedy Night at Sala Zitarrosa",
+    "city": "Montevideo",
+    "starts_at": "2026-06-17T22:00:00+00:00",
+    "source_url": "https://www.salazitarrosa.montevideo.gub.uy",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "15501155-b8f8-4d13-aa25-45014fef2623",
+    "title": "Beer Garden Evening — Englischer Garten",
+    "city": "Munich",
+    "starts_at": "2026-06-06T15:00:00+00:00",
+    "source_url": "https://www.chinaturm.de",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "914dce76-5841-4e6c-9179-b88187bee6ee",
+    "title": "Primavera Sound 2026 — Day 1",
+    "city": "Barcelona",
+    "starts_at": "2026-06-04T14:00:00+00:00",
+    "source_url": "https://www.primaverasound.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "b1f88e4c-67d7-4222-a7d8-166ad9a80adc",
+    "title": "Tannat Wine Masterclass at Bodegas Carrau",
+    "city": "Montevideo",
+    "starts_at": "2026-06-19T21:00:00+00:00",
+    "source_url": "https://www.bodegascarrau.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "50ce14b9-bed2-434a-98d0-d80afd4a091a",
+    "title": "Primavera Sound 2026 — Day 3",
+    "city": "Barcelona",
+    "starts_at": "2026-06-06T14:00:00+00:00",
+    "source_url": "https://www.primaverasound.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "4cfa4b79-269d-4a34-b744-96c0813b6bfc",
+    "title": "Yoga Retreat — Morning Vinyasa at Yoga Barn",
+    "city": "Ubud",
+    "starts_at": "2026-06-07T23:00:00+00:00",
+    "source_url": "https://www.theyogabarn.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "0c10d57c-ac6a-40b4-9d85-479c644595dd",
+    "title": "Primavera Sound 2026 — Day 2",
+    "city": "Barcelona",
+    "starts_at": "2026-06-05T14:00:00+00:00",
+    "source_url": "https://www.primaverasound.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "ac78c67d-a12c-41c7-97ae-606154c7b0cc",
+    "title": "Balloon Story — Immersive Exhibition",
+    "city": "Barcelona",
+    "starts_at": "2026-06-01T08:00:00+00:00",
+    "source_url": "https://www.espacioinmersa.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "fd82df90-84f4-4212-94e0-48a9d7f07bf6",
+    "title": "Grec Festival Opening — Teatre Grec",
+    "city": "Barcelona",
+    "starts_at": "2026-06-28T19:30:00+00:00",
+    "source_url": "https://www.barcelona.cat/grec",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "d29a289d-873b-41bd-a5c1-8bf797b3e4a8",
+    "title": "Craft Beer Tasting: Uruguayan Microbreweries",
+    "city": "Montevideo",
+    "starts_at": "2026-05-22T22:00:00+00:00",
+    "source_url": "https://www.meetup.com/find/uy--montevideo/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "818bc815-d24a-44b3-9daf-f2aa178cb7e1",
+    "title": "Book Club: Latin American Literature",
+    "city": "Montevideo",
+    "starts_at": "2026-06-04T21:00:00+00:00",
+    "source_url": "https://www.meetup.com/find/uy--montevideo/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "641434da-91cd-45b3-944b-b7caf3da477f",
+    "title": "Bauhaus Architecture Tour — White City",
+    "city": "Tel Aviv",
+    "starts_at": "2026-06-15T07:00:00+00:00",
+    "source_url": "https://www.bauhaus-center.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "c14d3c18-075d-4280-bdea-e4288712110c",
+    "title": "Estadio Centenario Tour & Football Museum",
+    "city": "Montevideo",
+    "starts_at": "2026-06-09T13:00:00+00:00",
+    "source_url": "https://www.estadiocentenario.com.uy",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "e97df046-45f6-470e-b448-5f7f2c355e46",
+    "title": "Morning Meditation — Sacred Monkey Forest",
+    "city": "Ubud",
+    "starts_at": "2026-06-08T22:30:00+00:00",
+    "source_url": "https://www.monkeyforestubud.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "c15afa50-4d3e-4ae4-8095-d7adb770a05f",
+    "title": "Jazz at Porgy & Bess",
+    "city": "Vienna",
+    "starts_at": "2026-06-18T18:00:00+00:00",
+    "source_url": "https://www.porgy.at",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "e01e0371-8e5c-47d9-9778-de2fa8db33ba",
+    "title": "Tech Meetup: Startups & Innovation in Uruguay",
+    "city": "Montevideo",
+    "starts_at": "2026-06-18T21:30:00+00:00",
+    "source_url": "https://www.meetup.com/find/uy--montevideo/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "a417614b-6956-41c4-9055-2f9afcd9ac33",
+    "title": "Expat Meetup at Dow Jones Bar",
+    "city": "Barcelona",
+    "starts_at": "2026-06-05T18:30:00+00:00",
+    "source_url": "https://www.meetup.com/barcelona-expats",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "8acea586-d195-43d9-98d9-bb34336a7949",
+    "title": "Free Tour: Palacio Legislativo — Uruguay's Parliament",
+    "city": "Montevideo",
+    "starts_at": "2026-06-28T14:00:00+00:00",
+    "source_url": "https://www.parlamento.gub.uy",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "b5fa34a1-589b-4a69-a5b4-91610ec192b7",
+    "title": "Outdoor Yoga in Parque Batlle",
+    "city": "Montevideo",
+    "starts_at": "2026-05-27T20:30:00+00:00",
+    "source_url": "https://www.meetup.com/find/uy--montevideo/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "3313a96c-02ca-4fce-bb81-e7230059055b",
+    "title": "Vinarske slavnosti 2026 — Wine Festival on Strelecky Island",
+    "city": "Prague",
+    "starts_at": "2026-05-22T12:30:00+00:00",
+    "source_url": "https://www.vinegret.cz/719810/v-tsentre-pragi-nachalsia-dvukhdnevnyi-festival-vina-vinarske-slavnosti-2026",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "078300f6-bb61-4564-b70f-84f432586f5c",
+    "title": "Sunset Wine Tasting at Bodega Bouza",
+    "city": "Montevideo",
+    "starts_at": "2026-05-25T20:00:00+00:00",
+    "source_url": "https://www.bodegabouza.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "0e879350-bc62-4352-b20e-912bb43dde4c",
+    "title": "Sunrise Yoga on Pocitos Beach",
+    "city": "Montevideo",
+    "starts_at": "2026-06-14T11:00:00+00:00",
+    "source_url": "https://www.meetup.com/find/uy--montevideo/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "f0dfb0cd-3195-4c8d-8f39-8b0635086132",
+    "title": "Jazz Night at Budapest Jazz Club",
+    "city": "Budapest",
+    "starts_at": "2026-06-12T18:30:00+00:00",
+    "source_url": "https://www.bjc.hu",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "155dd918-d918-4805-8b1e-fdfd87c8d094",
+    "title": "Bali Bird Park — Tropical Wildlife Morning",
+    "city": "Ubud",
+    "starts_at": "2026-06-10T01:00:00+00:00",
+    "source_url": "https://www.balibirdpark.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "ae70c50e-1bdd-40c9-aeb2-e3f43942aeea",
+    "title": "Metronome Prague — Day 1 at Výstaviště",
+    "city": "Prague",
+    "starts_at": "2026-06-26T16:00:00+00:00",
+    "source_url": "https://www.metronomefestival.cz/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "fce4b12f-e225-4620-8b01-3428e50522fa",
+    "title": "United Islands of Prague — Day 1",
+    "city": "Prague",
+    "starts_at": "2026-06-12T14:00:00+00:00",
+    "source_url": "https://www.unitedislands.cz/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "bd70a8ee-a8e6-4c4d-ac41-264e039d3568",
+    "title": "Independent Theater: 'El Sur' at Teatro El Galpón",
+    "city": "Montevideo",
+    "starts_at": "2026-06-20T23:30:00+00:00",
+    "source_url": "https://www.teatroelgalpon.org.uy",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "3d074e36-b97f-461d-acbb-ad74a081039f",
+    "title": "Mladá Praha — Chamber Music at Liechtenstein Palace",
+    "city": "Prague",
+    "starts_at": "2026-06-15T17:30:00+00:00",
+    "source_url": "https://www.mladapraha.cz",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "44a9f19f-1acb-4e78-9ce5-45e9aeb17a44",
+    "title": "Štvanice Open Day — Tennis & Padel",
+    "city": "Prague",
+    "starts_at": "2026-06-21T07:00:00+00:00",
+    "source_url": "https://www.cltk.cz",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "14b434f5-cf92-4dae-9f93-5a7d18d8cf62",
+    "title": "Raw Food & Fermentation Workshop — Alchemy",
+    "city": "Ubud",
+    "starts_at": "2026-06-24T10:30:00+00:00",
+    "source_url": "https://www.alchemybali.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "c1138334-876d-4849-9146-592ab5e58170",
+    "title": "Czech Wine Tasting at Bokovka",
+    "city": "Prague",
+    "starts_at": "2026-06-29T17:00:00+00:00",
+    "source_url": "https://www.bokovka.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "d3a94722-96b5-4edf-b7a0-5c79a5728917",
+    "title": "Czech Cooking Class — Goulash, Knedlíky & Pilsner",
+    "city": "Prague",
+    "starts_at": "2026-06-22T16:00:00+00:00",
+    "source_url": "https://www.chefparade.cz/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "fd7c5e3f-82aa-49d6-bfb9-a298812b2300",
+    "title": "Street Food Thursday at Markthalle Neun",
+    "city": "Berlin",
+    "starts_at": "2026-05-22T15:00:00+00:00",
+    "source_url": "https://markthalleneun.de",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "9030dbd0-2b29-4932-b0cc-b0153ecef1a0",
+    "title": "Metronome Prague 2026 — Day 2",
+    "city": "Prague",
+    "starts_at": "2026-06-20T12:00:00+00:00",
+    "source_url": "https://www.metronomefestival.cz/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "d9af1793-532d-4140-8d4f-d1c26f4e9add",
+    "title": "Berlin Art Week Preview — Gallery Walk",
+    "city": "Berlin",
+    "starts_at": "2026-06-15T12:00:00+00:00",
+    "source_url": "https://www.berlinartweek.de",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "035c13e3-1226-4f2a-af8e-04237a86e74f",
+    "title": "Signal Festival Preview — Light Art Walk",
+    "city": "Prague",
+    "starts_at": "2026-06-14T19:00:00+00:00",
+    "source_url": "https://www.signalfestival.com/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "784d11ad-068f-4ffb-a92e-ca8e93425d75",
+    "title": "Jazz at A-Trane Club",
+    "city": "Berlin",
+    "starts_at": "2026-06-18T19:00:00+00:00",
+    "source_url": "https://www.a-trane.de",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "06b25588-ac01-4b5e-866d-efe78c99c76a",
+    "title": "Czech Craft Beer Tasting — BeerGeek Vinohrady",
+    "city": "Prague",
+    "starts_at": "2026-06-01T16:00:00+00:00",
+    "source_url": "https://www.beergeek.cz",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "3f502d16-5a1e-4473-aaa7-337a9036a776",
+    "title": "Pergamon Museum — Guided Tour",
+    "city": "Berlin",
+    "starts_at": "2026-06-16T09:00:00+00:00",
+    "source_url": "https://www.smb.museum/museen-einrichtungen/pergamonmuseum",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "1cbead26-7796-4e11-836b-04a1ade13107",
+    "title": "Vienna Philharmonic — Summer Night Concert",
+    "city": "Vienna",
+    "starts_at": "2026-06-04T18:30:00+00:00",
+    "source_url": "https://www.wienerphilharmoniker.at",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "615b93d5-6585-401a-9d3a-c57ba80e5193",
+    "title": "Jazz Night — Jazz Dock on the River",
+    "city": "Prague",
+    "starts_at": "2026-06-12T18:00:00+00:00",
+    "source_url": "https://www.jazzdock.cz",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "1ea8063d-bf3e-4eb1-9f4f-0c3f15851aa7",
+    "title": "Museumsquartier Open-Air Cinema",
+    "city": "Vienna",
+    "starts_at": "2026-06-12T19:00:00+00:00",
+    "source_url": "https://www.mqw.at",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "0656a2e8-b678-4dde-8053-de83f9c88905",
+    "title": "DOX Centre — New Media Art Exhibition",
+    "city": "Prague",
+    "starts_at": "2026-06-08T08:00:00+00:00",
+    "source_url": "https://www.dox.cz/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "bc35148c-511c-4e58-810b-ef96fbf39851",
+    "title": "Startup Meetup at weXelerate",
+    "city": "Vienna",
+    "starts_at": "2026-06-10T17:00:00+00:00",
+    "source_url": "https://www.wexelerate.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "c542fe66-aa39-45f6-ac05-fb3dfb9f06e3",
+    "title": "Photography Walk — Ringstraße Architecture",
+    "city": "Vienna",
+    "starts_at": "2026-05-28T14:00:00+00:00",
+    "source_url": "https://www.meetup.com/vienna-photography",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "35f7b299-2398-4645-bc37-0de0ec61d05b",
+    "title": "Flohmarkt am Naschmarkt",
+    "city": "Vienna",
+    "starts_at": "2026-05-31T04:30:00+00:00",
+    "source_url": "https://www.wien.gv.at/freizeit/einkaufen/maerkte/flohmarkt",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "2ad86870-621f-4951-b188-965946553bff",
+    "title": "Prater Amusement Park — Riesenrad Sunset",
+    "city": "Vienna",
+    "starts_at": "2026-06-22T17:00:00+00:00",
+    "source_url": "https://www.wienerriesenrad.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "85ee7048-60ef-4655-a293-c23d4431c052",
+    "title": "Slavnost Cideru — Cider Festival",
+    "city": "Prague",
+    "starts_at": "2026-06-05T15:00:00+00:00",
+    "source_url": "https://slavnostcideru.cz/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "ae6f8810-6a22-4b73-bf91-ae0c40ba4b41",
+    "title": "Belvedere Palace — Klimt Exhibition",
+    "city": "Vienna",
+    "starts_at": "2026-06-15T08:00:00+00:00",
+    "source_url": "https://www.belvedere.at",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "419d4e56-89ba-4da6-83d1-479991c02edb",
+    "title": "Thermal Bath Party — Széchenyi Sparty",
+    "city": "Budapest",
+    "starts_at": "2026-06-13T19:00:00+00:00",
+    "source_url": "https://www.szechenyibath.hu",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "63cdfb09-0df2-4db6-9e35-611ab2e55748",
+    "title": "Expat Meetup — Budapest Internationals",
+    "city": "Budapest",
+    "starts_at": "2026-06-18T17:00:00+00:00",
+    "source_url": "https://www.meetup.com/budapest-expats",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "30c876b0-217b-411b-8871-6cdfd1d5a04c",
+    "title": "Bubble Wine Festival at St. Wenceslas Vineyard",
+    "city": "Prague",
+    "starts_at": "2026-05-30T12:00:00+00:00",
+    "source_url": "https://www.villarichter.cz/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "bde940a2-fc4a-47bb-9787-9291bbce5831",
+    "title": "BTC Prague 2026",
+    "city": "Prague",
+    "starts_at": "2026-06-11T07:00:00+00:00",
+    "source_url": "https://btcprague.com/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "1dd323c2-f3e1-4a96-beb0-5da6f7d8455e",
+    "title": "Prague Relay — Team Run in Stromovka",
+    "city": "Prague",
+    "starts_at": "2026-06-17T16:00:00+00:00",
+    "source_url": "https://www.runczech.com/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "a77a6e47-c3b9-485a-b1a1-561fae23c752",
+    "title": "Craft Beer Tour — Budapest Breweries",
+    "city": "Budapest",
+    "starts_at": "2026-06-19T16:00:00+00:00",
+    "source_url": "https://www.firstcraftbeer.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "1217d572-39c4-44c5-89e7-7f1f721988de",
+    "title": "Climbing World Cup — Letná Park",
+    "city": "Prague",
+    "starts_at": "2026-06-04T16:00:00+00:00",
+    "source_url": "https://www.climbingworldcup.cz/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "c3cb39ee-34e5-4c9b-89ca-eab4bb328a11",
+    "title": "Polish Cooking Class — Pierogi & Bigos",
+    "city": "Warsaw",
+    "starts_at": "2026-06-08T14:00:00+00:00",
+    "source_url": "https://www.polishyourcooking.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "d682cb0e-acfe-40ad-bd61-8bee82bfa64b",
+    "title": "Tollwood Festival — Summer Edition",
+    "city": "Munich",
+    "starts_at": "2026-06-18T14:00:00+00:00",
+    "source_url": "https://www.tollwood.de",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "f49b94f1-c64b-4508-a7d5-1b7183a9160d",
+    "title": "Pinakothek Museum Night",
+    "city": "Munich",
+    "starts_at": "2026-06-27T16:00:00+00:00",
+    "source_url": "https://www.pinakothek.de",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "322bbf85-f526-496a-9283-6c4e058a1ca2",
+    "title": "Ricky Martin at O2 arena",
+    "city": "Prague",
+    "starts_at": "2026-06-29T18:00:00+00:00",
+    "source_url": "https://www.rickymartinmusic.com/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "0a3eb364-40a0-484a-97f4-a1ddbf45d594",
+    "title": "Surfing at Eisbach Wave",
+    "city": "Munich",
+    "starts_at": "2026-06-13T08:00:00+00:00",
+    "source_url": "https://www.eisbachwelle.de",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "bef641d0-51f0-4428-bb4a-9ace9ea832b6",
+    "title": "Jazz Night at Jazzbar Vogler",
+    "city": "Munich",
+    "starts_at": "2026-06-12T18:30:00+00:00",
+    "source_url": "https://www.jazzbar-vogler.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "4715114e-54c6-4220-a601-889a6ded3a71",
+    "title": "Open-Air Cinema — Kino am Olympiasee",
+    "city": "Munich",
+    "starts_at": "2026-06-25T19:00:00+00:00",
+    "source_url": "https://www.kino-am-olympiasee.de",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "49530302-c9d9-4c6b-aee5-13a219a8547f",
+    "title": "Morning Run in Englischer Garten",
+    "city": "Munich",
+    "starts_at": "2026-06-14T05:00:00+00:00",
+    "source_url": "https://www.meetup.com/munich-runners",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "ceb0fe4e-45f8-4936-b9ed-7d5eb40cd825",
+    "title": "Old Town Walking Tour — Bratislava Highlights",
+    "city": "Bratislava",
+    "starts_at": "2026-06-08T08:00:00+00:00",
+    "source_url": "https://www.freetour.com/bratislava",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "01baec95-1ed3-45c3-b407-a8c4477356da",
+    "title": "Slovak Cooking Class — Bryndzové Halušky",
+    "city": "Bratislava",
+    "starts_at": "2026-06-10T15:00:00+00:00",
+    "source_url": "https://www.slovakcooking.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "2221ca5f-3f04-4b68-a286-dc98f4c1d935",
+    "title": "Fête de la Musique Berlin",
+    "city": "Berlin",
+    "starts_at": "2026-06-21T14:00:00+00:00",
+    "source_url": "https://www.fetedelamusique.de",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "852e0871-1beb-4b5f-86c0-d77d3e31cd79",
+    "title": "Sound Healing — Crystal Bowls at Pyramids of Chi",
+    "city": "Ubud",
+    "starts_at": "2026-06-20T09:00:00+00:00",
+    "source_url": "https://www.pyramidsofchi.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "643c93f8-67dc-4dd3-a077-ba24efdaf099",
+    "title": "Balinese Cooking Class — Traditional Recipes",
+    "city": "Ubud",
+    "starts_at": "2026-06-12T01:00:00+00:00",
+    "source_url": "https://www.paon-bali.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "0ba1c387-7e66-4d82-8e27-5705b23cd78d",
+    "title": "Ignis Brunensis — International Fireworks Competition",
+    "city": "Brno",
+    "starts_at": "2026-06-06T20:30:00+00:00",
+    "source_url": "https://www.ignisbrunensis.cz",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "5d9cc529-aada-4a6b-b747-bd8ce8994e18",
+    "title": "Power Yoga — Radiantly Alive Studio",
+    "city": "Ubud",
+    "starts_at": "2026-05-22T23:30:00+00:00",
+    "source_url": "https://www.radiantlyalive.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "3ed896bd-b426-477b-8bed-6c5e2f7483b9",
+    "title": "Half-Day Silent Retreat — Digital Detox",
+    "city": "Ubud",
+    "starts_at": "2026-06-13T02:00:00+00:00",
+    "source_url": "https://www.balisilentretreat.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "23c5dde5-8cc7-403c-927c-d6e26ed896ee",
+    "title": "English Standup Comedy — Open Mic Night",
+    "city": "Tel Aviv",
+    "starts_at": "2026-06-07T17:30:00+00:00",
+    "source_url": "https://www.comedybar.co.il",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "d487c29f-910c-4153-b92f-bf2a3b938f5f",
+    "title": "Balinese Massage Workshop — Learn Traditional Techniques",
+    "city": "Ubud",
+    "starts_at": "2026-06-23T01:00:00+00:00",
+    "source_url": "https://www.ubudbodyworkscentre.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "2caba899-05b0-4724-960e-443166d33b3d",
+    "title": "Khamoro World Roma Festival 2026",
+    "city": "Prague",
+    "starts_at": "2026-05-24T16:00:00+00:00",
+    "source_url": "https://www.khamoro.cz/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "d8549cd6-a3ba-4e1f-9a9f-700cc77b5115",
+    "title": "Tempelhofer Feld Kite Festival",
+    "city": "Berlin",
+    "starts_at": "2026-06-21T09:00:00+00:00",
+    "source_url": "https://www.gruen-berlin.de/tempelhofer-feld",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "42e3a788-6de8-4bc1-b884-63287ecb9ac3",
+    "title": "Berghain — Klubnacht",
+    "city": "Berlin",
+    "starts_at": "2026-05-23T22:00:00+00:00",
+    "source_url": "https://www.berghain.berlin",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "736936aa-1a6b-4237-b107-3511732aca5e",
+    "title": "Friday Night Shabbat Dinner — Community",
+    "city": "Tel Aviv",
+    "starts_at": "2026-05-30T16:00:00+00:00",
+    "source_url": "https://www.abrahamhostels.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "ab86fa04-7102-4d61-bf8a-44492cb734c0",
+    "title": "Pub Quiz — English Trivia Night",
+    "city": "Tel Aviv",
+    "starts_at": "2026-06-24T17:00:00+00:00",
+    "source_url": "https://www.mikesplacebars.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "ee3977f0-b39c-461f-9c96-4385c5cbe109",
+    "title": "Outdoor Cinema — Sarona Market",
+    "city": "Tel Aviv",
+    "starts_at": "2026-06-17T17:30:00+00:00",
+    "source_url": "https://www.saronamarket.co.il",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "45f840d7-2121-4fc6-9dc0-a534fd5ce61c",
+    "title": "Startup Meetup — Brno Tech Community",
+    "city": "Brno",
+    "starts_at": "2026-06-04T16:00:00+00:00",
+    "source_url": "https://www.hubbrno.cz",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "0533dfac-3c85-4526-8e0c-66cde075eb68",
+    "title": "Villa Tugendhat — UNESCO Modernist Masterpiece",
+    "city": "Brno",
+    "starts_at": "2026-06-06T07:00:00+00:00",
+    "source_url": "https://www.tugendhat.eu",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "675c0fb1-6f0d-42f9-9ebe-871dd5d550fd",
+    "title": "Mendel Museum — Father of Genetics Walk",
+    "city": "Brno",
+    "starts_at": "2026-06-08T08:00:00+00:00",
+    "source_url": "https://www.mendelmuseum.muni.cz",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "8147199a-e8fb-46fe-96fe-6ff5d5603ae8",
+    "title": "Metronome Prague 2026 — Day 1",
+    "city": "Prague",
+    "starts_at": "2026-06-19T12:00:00+00:00",
+    "source_url": "https://www.metronomefestival.cz/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "d898a911-5cf1-45df-834a-317d4e76ae68",
+    "title": "Kunsthalle Praha — William Kentridge Exhibition",
+    "city": "Prague",
+    "starts_at": "2026-06-01T08:00:00+00:00",
+    "source_url": "https://www.kunsthallepraha.org/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "70956810-b8dd-46b4-9b23-045dfb40663b",
+    "title": "Prague Pride Warm-Up Party",
+    "city": "Prague",
+    "starts_at": "2026-06-28T18:00:00+00:00",
+    "source_url": "https://www.praguepride.cz/en",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "f9b02889-828f-477b-a398-fa37bfbb1362",
+    "title": "Salsa Night at Lucerna Music Bar",
+    "city": "Prague",
+    "starts_at": "2026-06-06T19:00:00+00:00",
+    "source_url": "https://www.musicbar.cz",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "43f13c4c-0e7e-437a-8118-51ebc6742e66",
+    "title": "Rooftop Cinema at Hotel Pulitzer",
+    "city": "Barcelona",
+    "starts_at": "2026-06-12T19:30:00+00:00",
+    "source_url": "https://www.hotelpulitzer.es",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "4cedcf36-a4b3-41d0-99aa-6826b6b11d5b",
+    "title": "Vegan Food Market at Manifesto Florenc",
+    "city": "Prague",
+    "starts_at": "2026-06-01T09:00:00+00:00",
+    "source_url": "https://www.manifestomarket.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "47bc6b23-2ec6-4c4a-bd88-ff9b6a3fc48a",
+    "title": "Tapas & Wine Walking Tour — El Born",
+    "city": "Barcelona",
+    "starts_at": "2026-05-29T17:00:00+00:00",
+    "source_url": "https://www.devourbarcelonafoodtours.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "9a029daf-4599-4502-980f-0b0f3c35dc8f",
+    "title": "Sónar Festival — Day",
+    "city": "Barcelona",
+    "starts_at": "2026-06-18T10:00:00+00:00",
+    "source_url": "https://sonar.es",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "ad522970-2f17-462a-8fe8-69df67c88769",
+    "title": "Food Tour: Mercado Agrícola Tasting Trail",
+    "city": "Montevideo",
+    "starts_at": "2026-05-29T15:30:00+00:00",
+    "source_url": "https://www.mam.com.uy",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "e0ec8c99-d29d-4136-ad58-e952c29c3188",
+    "title": "Wine & Cheese Evening at Bodega Spinoglio",
+    "city": "Montevideo",
+    "starts_at": "2026-06-16T22:00:00+00:00",
+    "source_url": "https://www.bodegaspinoglio.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "d8655c60-1c78-4d66-ac00-f1ad4a9d619e",
+    "title": "Live Candombe & Dancing at Baar Fun Fun",
+    "city": "Montevideo",
+    "starts_at": "2026-06-07T00:00:00+00:00",
+    "source_url": "https://www.baarfunfun.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "919f2d35-3152-4f21-802f-7a5db65b57d6",
+    "title": "Tempelhof Field Running Group",
+    "city": "Berlin",
+    "starts_at": "2026-05-25T07:00:00+00:00",
+    "source_url": "https://www.meetup.com/berlin-running",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "131296de-82c9-4608-a9a5-878cfe0f4ddb",
+    "title": "Guided Visit: Torres García Museum",
+    "city": "Montevideo",
+    "starts_at": "2026-06-01T18:00:00+00:00",
+    "source_url": "https://www.torresgarcia.org.uy",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "868d0617-6ff9-4307-9858-2594e259830c",
+    "title": "Acoustic Music Night — Jamboree Jazz Club",
+    "city": "Barcelona",
+    "starts_at": "2026-06-25T19:00:00+00:00",
+    "source_url": "https://www.masimas.com/jamboree",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "376ca108-7a3f-4173-a0d1-dbe03ac4ee36",
+    "title": "Albertina Museum — Monet to Picasso",
+    "city": "Vienna",
+    "starts_at": "2026-06-01T08:00:00+00:00",
+    "source_url": "https://www.albertina.at",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "a0784b82-9c11-4b6d-a282-c1b0c3565c5a",
+    "title": "Sziget Festival Warm-Up Party",
+    "city": "Budapest",
+    "starts_at": "2026-06-20T18:00:00+00:00",
+    "source_url": "https://szigetfestival.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "fa213d75-e2ea-4df9-bee0-63c4f0a6580e",
+    "title": "Danube Boat Cruise — Sunset Edition",
+    "city": "Budapest",
+    "starts_at": "2026-06-07T17:00:00+00:00",
+    "source_url": "https://www.budapestrivercruise.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "30b5dc5c-5ad3-449d-be36-2374fd3222d6",
+    "title": "Danube River Party — Bratislava Summer",
+    "city": "Bratislava",
+    "starts_at": "2026-06-06T17:00:00+00:00",
+    "source_url": "https://www.visitbratislava.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "64aecf46-4c68-4159-ac52-8534c84a1478",
+    "title": "Carmel Market Food Tour — Taste of Tel Aviv",
+    "city": "Tel Aviv",
+    "starts_at": "2026-06-09T07:00:00+00:00",
+    "source_url": "https://www.deliciousisrael.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "fa9d0d3a-4df6-4a19-8761-e257183b158c",
+    "title": "Jazz Night at Tygmont Club",
+    "city": "Warsaw",
+    "starts_at": "2026-06-12T18:30:00+00:00",
+    "source_url": "https://www.tygmont.com.pl",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "10232de9-2062-4021-b2d3-d05c969a0de9",
+    "title": "Language Exchange — Sprachcafé Munich",
+    "city": "Munich",
+    "starts_at": "2026-06-11T16:30:00+00:00",
+    "source_url": "https://www.meetup.com/munich-sprachcafe",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "4c68072c-a5b6-4000-996a-71288a5af5eb",
+    "title": "Expat Meetup — Munich Internationals",
+    "city": "Munich",
+    "starts_at": "2026-06-19T17:00:00+00:00",
+    "source_url": "https://www.meetup.com/munich-expats",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "504bdafa-4699-4bf2-8f65-3973625f2118",
+    "title": "Kecak Fire Dance — ARMA Museum",
+    "city": "Ubud",
+    "starts_at": "2026-06-09T11:00:00+00:00",
+    "source_url": "https://www.armabali.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "874bc9b0-281e-49e0-a314-cf31f6c91c0c",
+    "title": "Batik Workshop — Traditional Textile Art",
+    "city": "Ubud",
+    "starts_at": "2026-06-15T06:00:00+00:00",
+    "source_url": "https://www.threadsoflife.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "94d7f5c0-8a17-4936-a711-ca044f0c7a34",
+    "title": "Yin Yoga & Meditation — Sunset Session",
+    "city": "Ubud",
+    "starts_at": "2026-06-05T09:30:00+00:00",
+    "source_url": "https://www.intuitiveflow.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "54c75120-49ce-4875-a329-ef0ebcbca552",
+    "title": "Sailing Experience — Port Olímpic",
+    "city": "Barcelona",
+    "starts_at": "2026-06-14T08:00:00+00:00",
+    "source_url": "https://www.sailingbarcelona.com",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "41790830-8547-4213-8cd8-45e50d82aa7d",
+    "title": "Saturday Morning Run along the Rambla",
+    "city": "Montevideo",
+    "starts_at": "2026-05-30T12:00:00+00:00",
+    "source_url": "https://www.meetup.com/find/uy--montevideo/",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "43ece783-4b4f-4cff-91ad-e62a19a85521",
+    "title": "Startup Pitch Night — Hubud Coworking",
+    "city": "Ubud",
+    "starts_at": "2026-06-27T09:00:00+00:00",
+    "source_url": "https://www.hubud.org",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "1235c6fb-6db5-4ef8-8410-f67f78a16e6e",
+    "title": "Morning Swim & Coffee — Gordon Pool",
+    "city": "Tel Aviv",
+    "starts_at": "2026-06-10T04:00:00+00:00",
+    "source_url": "https://www.gordon-pool.co.il",
+    "is_system": true,
+    "status": "published"
+  },
+  {
+    "id": "ee2c4d47-f96c-4579-9577-01048e66995b",
+    "title": "Asado & Market Tour at Mercado del Puerto",
+    "city": "Montevideo",
+    "starts_at": "2026-05-31T15:00:00+00:00",
+    "source_url": "https://www.mercadodelpuerto.com.uy",
+    "is_system": true,
+    "status": "published"
+  }
+]

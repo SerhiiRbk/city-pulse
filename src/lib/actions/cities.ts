@@ -45,6 +45,7 @@ export async function upsertCityFromNominatim(params: {
 }): Promise<City | null> {
   const supabase = await createClient();
 
+  // First try exact name match
   const { data: existing } = await supabase
     .from('cities')
     .select('*')
@@ -53,6 +54,32 @@ export async function upsertCityFromNominatim(params: {
     .single();
 
   if (existing) return existing as City;
+
+  // Also try matching by any translation value (handles localized lookups)
+  if (params.translations) {
+    for (const translatedName of Object.values(params.translations)) {
+      if (!translatedName) continue;
+      const { data: byTranslation } = await supabase
+        .from('cities')
+        .select('*')
+        .eq('country', params.country)
+        .contains('translations', JSON.parse(`{"${Object.entries(params.translations).find(([, v]) => v === translatedName)?.[0] || 'en'}":"${translatedName}"}`))
+        .maybeSingle();
+      if (byTranslation) return byTranslation as City;
+    }
+    // Try matching name against any existing city name in same country with close coordinates
+    const { data: nearby } = await supabase
+      .from('cities')
+      .select('*')
+      .eq('country', params.country)
+      .gte('lat', params.lat - 0.1)
+      .lte('lat', params.lat + 0.1)
+      .gte('lng', params.lng - 0.1)
+      .lte('lng', params.lng + 0.1)
+      .limit(1)
+      .maybeSingle();
+    if (nearby) return nearby as City;
+  }
 
   const { data: inserted, error } = await supabase
     .from('cities')
