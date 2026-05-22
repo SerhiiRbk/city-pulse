@@ -55,6 +55,7 @@ const COUNTRY_TIMEZONES: Record<string, string> = {
   IL: 'Asia/Jerusalem',
   ID: 'Asia/Makassar', // Bali = WITA (UTC+8)
   UY: 'America/Montevideo',
+  RS: 'Europe/Belgrade',
 };
 
 export function getEventTimeZone(country: string | null | undefined): string | undefined {

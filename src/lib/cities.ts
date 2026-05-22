@@ -24,6 +24,7 @@ export const SUPPORTED_CITIES: {
   { slug: 'tel-aviv', dbName: 'Tel Aviv', labels: { en: 'Tel Aviv', ru: 'Тель-Авив', uk: 'Тель-Авів', cs: 'Tel Aviv', de: 'Tel Aviv', es: 'Tel Aviv' }, image: 'https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=1200&q=80' },
   { slug: 'Ubud', dbName: 'Ubud', labels: { en: 'Ubud', ru: 'Убуд', uk: 'Убуд', cs: 'Ubud', de: 'Ubud', es: 'Ubud' }, image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&q=80' },
   { slug: 'Montevideo', dbName: 'Montevideo', labels: { en: 'Montevideo', ru: 'Монтевидео', uk: 'Монтевідео', cs: 'Montevideo', de: 'Montevideo', es: 'Montevideo' }, image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80' },
+  { slug: 'Belgrade', dbName: 'Belgrade', labels: { en: 'Belgrade', ru: 'Белград', uk: 'Белград', cs: 'Bělehrad', de: 'Belgrad', es: 'Belgrado' }, image: 'https://images.unsplash.com/photo-1580137189272-c9379f8864fd?w=1200&q=80' },
 ];
 
 /** Find a supported city by its slug (English name). */
