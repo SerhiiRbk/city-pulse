@@ -162,10 +162,10 @@ export function CreateGroupForm({ interests, categories }: CreateGroupFormProps)
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="rounded-[2rem] border border-border/50 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 p-6 shadow-sm">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Build a community</p>
-        <h2 className="mt-2 text-2xl font-bold tracking-tight">Create a group people will want to come back to</h2>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{t('heroLabel')}</p>
+        <h2 className="mt-2 text-2xl font-bold tracking-tight">{t('heroTitle')}</h2>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          The best groups signal who they are for, what kind of energy they have, and why joining feels like a good first step.
+          {t('heroDescription')}
         </p>
       </div>
 

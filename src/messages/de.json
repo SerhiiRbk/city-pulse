@@ -568,7 +568,16 @@
       "whatToExpectHint": "Hilf Neulingen, sich sicher zu fühlen — beschreibe Format, Treffpunkt und Atmosphäre.",
       "icebreaker": "Gesprächsstarter",
       "icebreakerPlaceholder": "Was ist der letzte interessante Ort, den du in der Stadt entdeckt hast?",
-      "icebreakerHint": "Eine Gesprächsfrage, die Teilnehmende sehen — hilft, vor dem Event ins Gespräch zu kommen."
+      "icebreakerHint": "Eine Gesprächsfrage, die Teilnehmende sehen — hilft, vor dem Event ins Gespräch zu kommen.",
+      "heroLabel": "Erstelle einen einladenden Plan",
+      "heroTitle": "Gestalte ein Event, bei dem sich alle willkommen fühlen",
+      "heroDescription": "Die besten Events machen klar: was passiert, für wen es ist, und wie einfach es ist, zum ersten Mal zu kommen.",
+      "noCategorySelected": "Keine Kategorie ausgewählt",
+      "selectCategories": "Kategorien auswählen...",
+      "nSelected": "{count} ausgewählt",
+      "fillRequired": "Bitte fülle alle Pflichtfelder aus",
+      "createFailed": "Event konnte nicht erstellt werden. Bitte versuche es erneut.",
+      "createSuccess": "Event erstellt!"
     },
     "edit": {
       "title": "Veranstaltung bearbeiten",
@@ -654,7 +663,10 @@
       "cityPlaceholder": "Stadtname eingeben",
       "language": "Sprachen",
       "interests": "Interessen",
-      "submit": "Gruppe erstellen"
+      "submit": "Gruppe erstellen",
+      "heroLabel": "Baue eine Community auf",
+      "heroTitle": "Erstelle eine Gruppe, zu der Menschen zurückkommen wollen",
+      "heroDescription": "Die besten Gruppen zeigen, für wen sie sind, welche Energie sie haben, und warum Beitreten ein guter erster Schritt ist."
     },
     "detail": {
       "creator": "Erstellt von",
@@ -832,6 +844,11 @@
       "noResultsTitle": "Noch keine Gruppen",
       "sectionBody": "Wähle Communities, zu denen du gern zurückkehrst: Dort sieht man bekannte Gesichter wieder und baut Freundschaften über gemeinsame Routinen auf.",
       "emptyDescription": "Erstelle die erste Community und bringe Menschen rund um ein gemeinsames Interesse zusammen"
+    },
+    "createForm": {
+      "heroLabel": "Baue eine Community auf",
+      "heroTitle": "Erstelle eine Gruppe, zu der Menschen zurückkommen wollen",
+      "heroDescription": "Die besten Gruppen haben ein klares Ziel, einen regelmäßigen Rhythmus und heißen Neulinge vom ersten Tag an willkommen."
     }
   },
   "feed": {
@@ -1312,14 +1329,14 @@
   },
   "crew": {
     "invitation_default": "{hostName} lädt dich ein, einer Gruppe für {eventTitle} beizutreten",
-    "join_request_accepted": "Deine Anfrage, \u201E{crewName}\u201C beizutreten, wurde angenommen",
-    "join_request_rejected": "Deine Anfrage, \u201E{crewName}\u201C beizutreten, wurde abgelehnt",
+    "join_request_accepted": "Deine Anfrage, „{crewName}“ beizutreten, wurde angenommen",
+    "join_request_rejected": "Deine Anfrage, „{crewName}“ beizutreten, wurde abgelehnt",
     "crew_created": "Gruppe erstellt",
     "member_joined": "{userName} ist der Gruppe beigetreten",
     "member_left": "{userName} hat die Gruppe verlassen",
     "member_removed": "{userName} wurde aus der Gruppe entfernt",
     "host_updated_description": "Der Host hat die Beschreibung der Gruppe aktualisiert",
-    "crew_deleted": "Die Gruppe \u201E{crewName}\u201C wurde vom Host gelöscht",
+    "crew_deleted": "Die Gruppe „{crewName}“ wurde vom Host gelöscht",
     "crew_full": "Gruppe ist voll",
     "create_crew_button": "Gruppe erstellen",
     "ctaLogin": "Anmelden, um eine Gruppe zu erstellen",
@@ -1416,11 +1433,11 @@
       "copySuccess": "Einladungslink in die Zwischenablage kopiert!",
       "copyButton": "Link kopieren",
       "shareButton": "Teilen",
-      "shareText": "Tritt der Crew \u201E{crewName}\u201C f\u00FCr {eventName} bei! {url}"
+      "shareText": "Tritt der Crew „{crewName}“ für {eventName} bei! {url}"
     },
     "join": {
       "confirmTitle": "Crew beitreten",
-      "confirmMessage": "M\u00F6chten Sie der Crew \u201E{crewName}\u201C f\u00FCr das Event \u201E{eventName}\u201C auf Einladung von {inviterName} beitreten?",
+      "confirmMessage": "Möchten Sie der Crew „{crewName}“ für das Event „{eventName}“ auf Einladung von {inviterName} beitreten?",
       "joinButton": "Beitreten",
       "declineButton": "Ablehnen",
       "joining": "Beitritt läuft..."

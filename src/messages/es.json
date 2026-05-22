@@ -568,7 +568,16 @@
       "whatToExpectHint": "Ayuda a los nuevos a sentirse seguros — describe el formato, punto de encuentro y ambiente.",
       "icebreaker": "Pregunta para romper el hielo",
       "icebreakerPlaceholder": "¿Cuál es el último lugar interesante que descubriste en la ciudad?",
-      "icebreakerHint": "Una pregunta para iniciar conversación que verán los asistentes — ayuda a conectar antes del evento."
+      "icebreakerHint": "Una pregunta para iniciar conversación que verán los asistentes — ayuda a conectar antes del evento.",
+      "heroLabel": "Crea un plan acogedor",
+      "heroTitle": "Diseña un evento al que la gente se sienta cómoda asistiendo",
+      "heroDescription": "Los mejores eventos dejan claro: qué es, para quién es, y lo fácil que es venir por primera vez.",
+      "noCategorySelected": "Sin categoría seleccionada",
+      "selectCategories": "Seleccionar categorías...",
+      "nSelected": "{count} seleccionados",
+      "fillRequired": "Por favor, completa todos los campos obligatorios",
+      "createFailed": "No se pudo crear el evento. Inténtalo de nuevo.",
+      "createSuccess": "¡Evento creado!"
     },
     "edit": {
       "title": "Editar evento",
@@ -654,7 +663,10 @@
       "cityPlaceholder": "Introduce el nombre de la ciudad",
       "language": "Idiomas",
       "interests": "Intereses",
-      "submit": "Crear grupo"
+      "submit": "Crear grupo",
+      "heroLabel": "Construye una comunidad",
+      "heroTitle": "Crea un grupo al que la gente quiera volver",
+      "heroDescription": "Los mejores grupos muestran para quién son, qué tipo de energía tienen, y por qué unirse es un buen primer paso."
     },
     "detail": {
       "creator": "Creado por",
@@ -832,6 +844,11 @@
       "noResultsTitle": "Aún no hay grupos",
       "sectionBody": "Elige comunidades que faciliten volver regularmente, ver caras familiares y construir amistades en torno a rutinas compartidas.",
       "emptyDescription": "Sé el primero en crear una comunidad"
+    },
+    "createForm": {
+      "heroLabel": "Construye una comunidad",
+      "heroTitle": "Crea un grupo al que la gente quiera volver",
+      "heroDescription": "Los mejores grupos tienen un propósito claro, ritmo regular y hacen que los nuevos se sientan bienvenidos desde el primer día."
     }
   },
   "feed": {

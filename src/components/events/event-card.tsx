@@ -233,7 +233,7 @@ export function EventCard({
             {(() => {
               const rel = getRelativeTime(event.starts_at);
               return rel ? (
-                <Badge variant="secondary" className="bg-white/90 backdrop-blur-md text-xs font-medium">
+                <Badge suppressHydrationWarning variant="secondary" className="bg-white/90 backdrop-blur-md text-xs font-medium">
                   {rel}
                 </Badge>
               ) : null;

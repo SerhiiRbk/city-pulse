@@ -294,7 +294,6 @@
       "registeredForEvent": "You're going to this event!",
       "cancelledAttendance": "Attendance cancelled",
       "addedToWaitlist": "Added to waitlist — you'll be moved up when a spot opens",
-
       "breadcrumbs": "Events",
       "popularCue": "Popular social event",
       "soloCue": "Easy to join even if you come solo",
@@ -570,7 +569,16 @@
       "whatToExpectHint": "Help newcomers feel confident — describe the format, meeting point, and vibe.",
       "icebreaker": "Icebreaker question",
       "icebreakerPlaceholder": "What's the last interesting place you discovered in the city?",
-      "icebreakerHint": "A conversation starter shown to attendees — helps people connect before the event."
+      "icebreakerHint": "A conversation starter shown to attendees — helps people connect before the event.",
+      "heroLabel": "Create a welcoming plan",
+      "heroTitle": "Design an event people will feel comfortable joining",
+      "heroDescription": "The best events make expectations clear: what it is, who it is for, and how easy it feels to show up for the first time.",
+      "noCategorySelected": "No category selected",
+      "selectCategories": "Select categories...",
+      "nSelected": "{count} selected",
+      "fillRequired": "Please fill all required fields",
+      "createFailed": "Failed to create event. Please try again.",
+      "createSuccess": "Event created!"
     },
     "edit": {
       "title": "Edit event",
@@ -656,7 +664,10 @@
       "cityPlaceholder": "Enter city name",
       "language": "Languages",
       "interests": "Interests",
-      "submit": "Create group"
+      "submit": "Create group",
+      "heroLabel": "Build a community",
+      "heroTitle": "Create a group people will want to come back to",
+      "heroDescription": "The best groups signal who they are for, what kind of energy they have, and why joining feels like a good first step."
     },
     "detail": {
       "creator": "Created by",
@@ -834,6 +845,11 @@
       "noResultsTitle": "No groups yet",
       "sectionBody": "Pick communities that make it easy to come back regularly, see familiar faces, and build friendships around shared routines.",
       "emptyDescription": "Be the first to create a community"
+    },
+    "createForm": {
+      "heroLabel": "Build a community",
+      "heroTitle": "Create a group people will want to come back to",
+      "heroDescription": "The best groups have a clear purpose, regular rhythm, and make newcomers feel welcome from day one."
     }
   },
   "feed": {

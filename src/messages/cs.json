@@ -568,7 +568,16 @@
       "whatToExpectHint": "Pomozte nováčkům cítit se jistě — popište formát, místo setkání a atmosféru.",
       "icebreaker": "Otázka pro seznámení",
       "icebreakerPlaceholder": "Jaké poslední zajímavé místo jste ve městě objevili?",
-      "icebreakerHint": "Téma k rozhovoru, které uvidí účastníci — pomáhá navázat kontakt ještě před akcí."
+      "icebreakerHint": "Téma k rozhovoru, které uvidí účastníci — pomáhá navázat kontakt ještě před akcí.",
+      "heroLabel": "Vytvořte přívětivý plán",
+      "heroTitle": "Navrhněte akci, na kterou se lidé budou cítit pohodlně přijít",
+      "heroDescription": "Nejlepší akce jasně říkají: co to je, pro koho to je, a jak snadné je přijít poprvé.",
+      "noCategorySelected": "Žádná kategorie nevybrána",
+      "selectCategories": "Vyberte kategorie...",
+      "nSelected": "{count} vybráno",
+      "fillRequired": "Prosím vyplňte všechna povinná pole",
+      "createFailed": "Nepodařilo se vytvořit akci. Zkuste to znovu.",
+      "createSuccess": "Akce vytvořena!"
     },
     "edit": {
       "title": "Upravit akci",
@@ -654,7 +663,10 @@
       "cityPlaceholder": "Zadejte název města",
       "language": "Jazyky",
       "interests": "Zájmy",
-      "submit": "Vytvořit skupinu"
+      "submit": "Vytvořit skupinu",
+      "heroLabel": "Vybudujte komunitu",
+      "heroTitle": "Vytvořte skupinu, do které se lidé budou chtít vracet",
+      "heroDescription": "Nejlepší skupiny ukazují, pro koho jsou, jakou mají energii, a proč se připojit je dobrý první krok."
     },
     "detail": {
       "creator": "Vytvořil",
@@ -832,6 +844,11 @@
       "noResultsTitle": "Zatím žádné skupiny",
       "sectionBody": "Vyberte si komunity, kam se budete chtít vracet: snadněji tam uvidíte známé tváře a vybudujete přátelství kolem společných rytmů.",
       "emptyDescription": "Vytvořte první komunitu a propojte lidi kolem společného zájmu"
+    },
+    "createForm": {
+      "heroLabel": "Vybudujte komunitu",
+      "heroTitle": "Vytvořte skupinu, do které se lidé budou chtít vracet",
+      "heroDescription": "Nejlepší skupiny mají jasný účel, pravidelný rytmus a noví členové se cítí vítáni od prvního dne."
     }
   },
   "feed": {
@@ -875,7 +892,7 @@
     "selectedCount": "{count, plural, one {# vybráno} few {# vybráno} other {# vybráno}}",
     "selectInterests": "Vyberte zájmy...",
     "age": "Věk",
-      "available": "Otevřený kontaktu",
+    "available": "Otevřený kontaktu",
     "unavailable": "Nedostupný",
     "eventsCreated": "Vytvořených akcí",
     "eventsAttended": "Navštívených akcí",
@@ -1312,14 +1329,14 @@
   },
   "crew": {
     "invitation_default": "{hostName} vás zve do party na {eventTitle}",
-    "join_request_accepted": "Vaše žádost o vstup do \u201E{crewName}\u201C byla přijata",
-    "join_request_rejected": "Vaše žádost o vstup do \u201E{crewName}\u201C byla zamítnuta",
+    "join_request_accepted": "Vaše žádost o vstup do „{crewName}“ byla přijata",
+    "join_request_rejected": "Vaše žádost o vstup do „{crewName}“ byla zamítnuta",
     "crew_created": "Skupina vytvořena",
     "member_joined": "{userName} se připojil ke skupině",
     "member_left": "{userName} opustil skupinu",
     "member_removed": "{userName} byl odebrán ze skupiny",
     "host_updated_description": "Hostitel aktualizoval popis skupiny",
-    "crew_deleted": "Skupina \u201E{crewName}\u201C byla smazána hostitelem",
+    "crew_deleted": "Skupina „{crewName}“ byla smazána hostitelem",
     "crew_full": "Skupina je plná",
     "create_crew_button": "Vytvořit skupinu",
     "ctaLogin": "Přihlaste se pro vytvoření skupiny",
@@ -1416,11 +1433,11 @@
       "copySuccess": "Odkaz na pozvánku zkopírován!",
       "copyButton": "Kopírovat odkaz",
       "shareButton": "Sdílet",
-      "shareText": "P\u0159ipoj se ke crew \u201E{crewName}\u201C na {eventName}! {url}"
+      "shareText": "Připoj se ke crew „{crewName}“ na {eventName}! {url}"
     },
     "join": {
       "confirmTitle": "Připojit se ke crew",
-      "confirmMessage": "Chcete se p\u0159ipojit ke crew \u201E{crewName}\u201C na akci \u201E{eventName}\u201C na pozv\u00E1n\u00ED od {inviterName}?",
+      "confirmMessage": "Chcete se připojit ke crew „{crewName}“ na akci „{eventName}“ na pozvání od {inviterName}?",
       "joinButton": "Připojit se",
       "declineButton": "Odmítnout",
       "joining": "Připojování..."

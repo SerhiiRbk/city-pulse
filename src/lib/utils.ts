@@ -23,7 +23,7 @@ export function formatDate(date: string | Date, locale: string = 'en', timeZone?
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: timeZone || undefined,
+    timeZone: timeZone || 'UTC',
   }).format(new Date(date));
 }
 

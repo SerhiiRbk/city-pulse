@@ -401,15 +401,15 @@ export function EditEventForm({ event, interests, categories, moderators: initia
                 );
               })}
               {selectedInterests.length === 0 && (
-                <span className="text-muted-foreground text-sm">No category selected</span>
+                <span className="text-muted-foreground text-sm">{t('noCategorySelected')}</span>
               )}
             </div>
             <Popover open={interestsPopoverOpen} onOpenChange={setInterestsPopoverOpen}>
               <PopoverTrigger asChild>
                 <Button variant="outline" type="button" className="w-full justify-between">
                   {selectedInterests.length > 0
-                    ? `${selectedInterests.length} selected`
-                    : 'Select categories...'}
+                    ? t('nSelected', { count: selectedInterests.length })
+                    : t('selectCategories')}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>

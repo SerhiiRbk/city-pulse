@@ -264,7 +264,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
     };
 
     if (!data.title || !data.starts_at || !primaryCategory) {
-      toast.error('Please fill all required fields');
+      toast.error(t('fillRequired'));
       setIsLoading(false);
       return;
     }
@@ -273,7 +273,7 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
     try {
       result = await createEvent(data);
     } catch (err) {
-      toast.error('Failed to create event. Please try again.');
+      toast.error(t('createFailed'));
       setIsLoading(false);
       return;
     }
@@ -299,17 +299,17 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
       }
     }
 
-    toast.success('Event created!');
+    toast.success(t('createSuccess'));
     router.push(`/events/${newEventId}`);
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="rounded-[2rem] border border-border/50 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 p-6 shadow-sm">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Create a welcoming plan</p>
-        <h2 className="mt-2 text-2xl font-bold tracking-tight">Design an event people will feel comfortable joining</h2>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{t('heroLabel')}</p>
+        <h2 className="mt-2 text-2xl font-bold tracking-tight">{t('heroTitle')}</h2>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          The best events make expectations clear: what it is, who it is for, and how easy it feels to show up for the first time.
+          {t('heroDescription')}
         </p>
       </div>
       {/* Group selector */}
@@ -386,15 +386,15 @@ export function CreateEventForm({ interests, categories, groups = [], defaultGro
                 );
               })}
               {selectedInterests.length === 0 && (
-                <span className="text-muted-foreground text-sm">No category selected</span>
+                <span className="text-muted-foreground text-sm">{t('noCategorySelected')}</span>
               )}
             </div>
             <Popover open={interestsPopoverOpen} onOpenChange={setInterestsPopoverOpen}>
               <PopoverTrigger asChild>
                 <Button variant="outline" type="button" className="w-full justify-between">
                   {selectedInterests.length > 0
-                    ? `${selectedInterests.length} selected`
-                    : 'Select categories...'}
+                    ? t('nSelected', { count: selectedInterests.length })
+                    : t('selectCategories')}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
